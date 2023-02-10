@@ -49,6 +49,28 @@ abstract class AbstractDemand
 
     protected function parseType(ReflectionProperty $reflection, ColumnMap $columnMap): ?string
     {
+
+        // The field must not be defined in table controls
+        if ($ctrl = $GLOBALS['TCA'][$this->dataMap->getTableName()]['ctrl']) {
+            $fieldName = $columnMap->getColumnName();
+
+            if (
+                ($ctrl['descriptionColumn'] ?? null) === $fieldName ||
+                ($ctrl['enableColumns']['disabled'] ?? null) === $fieldName ||
+                ($ctrl['enableColumns']['fe_group'] ?? null) === $fieldName ||
+                ($ctrl['enableColumns']['endtime'] ?? null) === $fieldName ||
+                ($ctrl['enableColumns']['starttime'] ?? null) === $fieldName ||
+                ($ctrl['languageField'] ?? null) === $fieldName ||
+                ($ctrl['origUid'] ?? null) === $fieldName ||
+                ($ctrl['translationSource'] ?? null) === $fieldName ||
+                ($ctrl['transOrigDiffSourceField'] ?? null) === $fieldName ||
+                ($ctrl['transOrigPointerField'] ?? null) === $fieldName ||
+                ($ctrl['type'] ?? null) === $fieldName
+            ) {
+                return null;
+            }
+        }
+
         // Get type by class reflection
         if ($reflectionType = $reflection->getType()) {
             if (in_array(($type = $reflectionType->getName()), ['int', 'bool', 'array', 'string'])) {
