@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Domain\Model;
 
+use TYPO3\CMS\Extbase\Annotation as Annotation;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -17,15 +18,15 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Zeroseven\Rampage\Domain\Model\AbstractPage>
-     * @TYPO3\CMS\Extbase\Annotation\Cascade("remove")
-     * @TYPO3\CMS\Extbase\Annotation\Lazy
+     * Annotation\Cascade("remove")
+     * Annotation\Lazy
      */
     protected ObjectStorage $relationsTo;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Zeroseven\Rampage\Domain\Model\AbstractPage>
-     * @TYPO3\CMS\Extbase\Annotation\Cascade("remove")
-     * @TYPO3\CMS\Extbase\Annotation\Lazy
+     * Annotation\Cascade("remove")
+     * Annotation\Lazy
      */
     protected ObjectStorage $relationsFrom;
 
