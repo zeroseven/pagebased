@@ -16,6 +16,14 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 abstract class AbstractDemand
 {
+    public const PARAMETER_ID_LIST = '_id';
+    public const PARAMETER_ORDER_BY = '_sorting';
+
+    public const TYPE_ARRAY = 'array';
+    public const TYPE_INTEGER = 'int';
+    public const TYPE_BOOLEAN = 'bool';
+    public const TYPE_STRING = 'string';
+
     protected array $parameter = [];
     protected array $types = [];
     protected DataMap $dataMap;
@@ -25,14 +33,29 @@ abstract class AbstractDemand
     public function __construct(string $className)
     {
         $this->dataMap = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($className);
+        $this->initProperties();
+    }
 
-        foreach (GeneralUtility::makeInstance(ReflectionClass::class, $className)->getProperties() ?? [] as $reflection) {
+    public function addProperty(string $name, string $type): void
+    {
+        $this->parameter[$name] = GeneralUtility::camelCaseToLowerCaseUnderscored($name);
+        $this->types[$name] = $type;
+    }
+
+    protected function initProperties(): void
+    {
+        // Add default properties
+        foreach ([self::PARAMETER_ID_LIST => self::TYPE_ARRAY, self::PARAMETER_ORDER_BY => self::TYPE_STRING] as $name => $type) {
+            $this->addProperty($name, $type);
+        }
+
+        // Get properties from class
+        foreach (GeneralUtility::makeInstance(ReflectionClass::class, $this->dataMap->getClassName())->getProperties() ?? [] as $reflection) {
             $name = $reflection->getName();
 
             // Check if the property exists in the database and the type can be handled
-            if (($columnMap = $this->dataMap->getColumnMap($name)) && $type = $this->parseType($reflection, $columnMap)) {
-                $this->parameter[$name] = GeneralUtility::camelCaseToLowerCaseUnderscored($name);
-                $this->types[$name] = $type;
+            if (($columnMap = $this->dataMap->getColumnMap($name)) && $type = $this->getType($reflection, $columnMap)) {
+                $this->addProperty($name, $type);
             }
         }
     }
@@ -47,7 +70,7 @@ abstract class AbstractDemand
         return $this->tableDefinition;
     }
 
-    protected function parseType(ReflectionProperty $reflection, ColumnMap $columnMap): ?string
+    protected function getType(ReflectionProperty $reflection, ColumnMap $columnMap): ?string
     {
 
         // The field must not be defined in table controls
@@ -55,7 +78,11 @@ abstract class AbstractDemand
             $fieldName = $columnMap->getColumnName();
 
             if (
+                'uid' === $fieldName ||
+                'pid' === $fieldName ||
+                ($ctrl['cruser_id'] ?? null) === $fieldName ||
                 ($ctrl['descriptionColumn'] ?? null) === $fieldName ||
+                ($ctrl['editlock'] ?? null) === $fieldName ||
                 ($ctrl['enableColumns']['disabled'] ?? null) === $fieldName ||
                 ($ctrl['enableColumns']['fe_group'] ?? null) === $fieldName ||
                 ($ctrl['enableColumns']['endtime'] ?? null) === $fieldName ||
@@ -73,32 +100,32 @@ abstract class AbstractDemand
 
         // Get type by class reflection
         if ($reflectionType = $reflection->getType()) {
-            if (in_array(($type = $reflectionType->getName()), ['int', 'bool', 'array', 'string'])) {
+            if (in_array(($type = $reflectionType->getName()), [self::TYPE_ARRAY, self::TYPE_INTEGER, self::TYPE_BOOLEAN, self::TYPE_STRING])) {
                 return $type;
             }
 
             if ($reflectionType->getName() === ObjectStorage::class) {
-                return 'array';
+                return self::TYPE_ARRAY;
             }
         }
 
         // Get type by column map
         if (in_array($columnMap->getTypeOfRelation(), [ColumnMap::RELATION_HAS_MANY, ColumnMap::RELATION_HAS_AND_BELONGS_TO_MANY], true)) {
-            return 'array';
+            return self::TYPE_ARRAY;
         }
 
         // Check table definition
         if (($tableDefinition = $this->getTableDefinition()) && ($column = $tableDefinition[$columnMap->getColumnName()] ?? null) && $type = $column->getType()) {
             if ($type->getName() === 'smallint') {
-                return 'bool';
+                return self::TYPE_BOOLEAN;
             }
 
             if ($type->getBindingType() === 1) {
-                return 'int';
+                return self::TYPE_INTEGER;
 
             }
             if ($type->getBindingType() === 2) {
-                return 'string';
+                return self::TYPE_STRING;
             }
         }
 
