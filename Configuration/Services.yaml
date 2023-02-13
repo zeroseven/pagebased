@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Zeroseven\Rampage\:
+        resource: '../Classes/*'
+
+    Zeroseven\Rampage\Registration\Event\ValidateRegistrationEvent:
+        tags:
+            - name: event.listener
+              identifier: 'rampage/validate-registration'
+              event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
