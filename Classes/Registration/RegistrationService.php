@@ -21,6 +21,6 @@ class RegistrationService
 
     public static function addRegistration(Registration $registration): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven-rampage']['registrations'][$registration->getExtensionName()][$registration->getObect()->getTitle()] = $registration;
+        $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven-rampage']['registrations'][$registration->getExtensionName() . '-' . md5($registration->getObject()->getObjectClassName())] = $registration;
     }
 }

@@ -7,6 +7,7 @@ namespace Zeroseven\Rampage\Registration\Event;
 use LogicException;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use Zeroseven\Rampage\Domain\Model\AbstractPageCategory;
@@ -21,20 +22,21 @@ class ValidateRegistrationEvent
 {
     protected function checkPageObjectRegistration(PageObjectRegistration $pageObjectRegistration): void
     {
-        $className = $pageObjectRegistration->getObjectClassName();
+        $objectClassName = $pageObjectRegistration->getObjectClassName();
+        $controllerClassName = $pageObjectRegistration->getControllerClassName();
 
-        // Check class inheritance
-        if (!is_subclass_of($className, PageTypeInterface::class)) {
-            throw new ValueException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s" or "%s".', $className, PageTypeInterface::class, AbstractPageType::class, AbstractPageCategory::class), 1676063874);
+        // Check class inheritance of object model
+        if (!is_subclass_of($objectClassName, PageTypeInterface::class)) {
+            throw new ValueException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s" or "%s".', $objectClassName, PageTypeInterface::class, AbstractPageType::class, AbstractPageCategory::class), 1676063874);
         }
 
         // Check the persistence configuration
         try {
-            if (($tableName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($className)->getTableName()) !== 'pages') {
+            if (($tableName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($objectClassName)->getTableName()) !== 'pages') {
                 throw new RegistrationException(sprintf('The object must be stored in table "pages" instead of "%s". See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $tableName), 1676066023);
             }
         } catch (Exception $e) {
-            throw new RegistrationException(sprintf('The class "%s" does not exists. %s', $className, $e->getMessage()), 1676065930);
+            throw new RegistrationException(sprintf('The class "%s" does not exists. %s', $objectClassName, $e->getMessage()), 1676065930);
         } catch (LogicException $e) {
         }
     }
@@ -43,7 +45,7 @@ class ValidateRegistrationEvent
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
         foreach (RegistrationService::getRegistrations() as $registration) {
-            $this->checkPageObjectRegistration($registration->getObect());
+            $this->checkPageObjectRegistration($registration->getObject());
 
             if ($registration->getCategory()->isEnabled()) {
                 $this->checkPageObjectRegistration($registration->getCategory());

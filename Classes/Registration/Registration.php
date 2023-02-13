@@ -28,7 +28,7 @@ class Registration
         return $this->extensionName;
     }
 
-    public function getObect(): PageObjectRegistration
+    public function getObject(): PageObjectRegistration
     {
         return $this->object;
     }
