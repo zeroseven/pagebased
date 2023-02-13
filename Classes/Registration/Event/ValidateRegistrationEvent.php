@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Register\Event;
+namespace Zeroseven\Rampage\Registration\Event;
 
 use LogicException;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
@@ -14,8 +14,8 @@ use Zeroseven\Rampage\Domain\Model\AbstractPageType;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Register\PageObjectRegistration;
-use Zeroseven\Rampage\Register\RegisterService;
+use Zeroseven\Rampage\Registration\PageObjectRegistration;
+use Zeroseven\Rampage\Registration\RegistrationService;
 
 class ValidateRegistrationEvent
 {
@@ -42,7 +42,7 @@ class ValidateRegistrationEvent
     /** @throws ValueException | RegistrationException | Exception */
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
-        foreach (RegisterService::getRegistrations() as $registration) {
+        foreach (RegistrationService::getRegistrations() as $registration) {
             $this->checkPageObjectRegistration($registration->getObect());
 
             if ($registration->getCategory()->isEnabled()) {

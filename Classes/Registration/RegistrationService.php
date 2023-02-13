@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Register;
+namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class RegisterService
+class RegistrationService
 {
     public static function createRegistration(string $extensionName, string $objectClassName, string $controllerClassName, string $repositoryClassName): Registration
     {

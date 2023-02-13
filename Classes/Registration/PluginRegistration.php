@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Register;
+namespace Zeroseven\Rampage\Registration;
 
 class PluginRegistration
 {

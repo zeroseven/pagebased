@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Register;
+namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -110,6 +110,6 @@ class Registration
 
     public function store(): void
     {
-        RegisterService::addRegistration($this);
+        RegistrationService::addRegistration($this);
     }
 }
