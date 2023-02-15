@@ -9,6 +9,8 @@ use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use Zeroseven\Rampage\Controller\AbstractPageTypeController;
+use Zeroseven\Rampage\Controller\PageTypeControllerInterface;
 use Zeroseven\Rampage\Domain\Model\AbstractPageCategory;
 use Zeroseven\Rampage\Domain\Model\AbstractPageType;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
@@ -27,6 +29,11 @@ class ValidateRegistrationEvent
         // Check class inheritance of object model
         if (!is_subclass_of($objectClassName, PageTypeInterface::class)) {
             throw new ValueException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s" or "%s".', $objectClassName, PageTypeInterface::class, AbstractPageType::class, AbstractPageCategory::class), 1676063874);
+        }
+
+        // Check class inheritance of the controller
+        if (!is_subclass_of($controllerClassName, PageTypeControllerInterface::class)) {
+            throw new ValueException(sprintf('The controller "%s" is not an instance of "%s". You can simply extend class "%s".', $controllerClassName, PageTypeControllerInterface::class, AbstractPageTypeController::class), 1676498615);
         }
 
         // Check the persistence configuration

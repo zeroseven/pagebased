@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Domain\Model\Demand;
 
+use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionProperty;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -22,16 +23,19 @@ abstract class AbstractDemand
     public const PARAMETER_ID_LIST = '_id';
     public const PARAMETER_ORDER_BY = '_sorting';
 
-    /** @var DemandProperty[]  */
+    /** @var DemandProperty[] */
     protected array $properties = [];
     protected array $types = [];
-    protected DataMap $dataMap;
+    protected ?DataMap $dataMap = null;
     protected ?array $tableDefinition = null;
 
     /** @throws ValueException | TypeException | Exception */
     public function __construct(string $className, array $parameterArray = null)
     {
-        $this->dataMap = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($className);
+        try {
+            $this->dataMap = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($className);
+        } catch (InvalidArgumentException $e) {
+        }
 
         $this->initProperties();
 
@@ -55,19 +59,21 @@ abstract class AbstractDemand
         }
 
         // Get properties from class
-        foreach (GeneralUtility::makeInstance(ReflectionClass::class, $this->dataMap->getClassName())->getProperties() ?? [] as $reflection) {
-            $name = $reflection->getName();
+        if ($this->dataMap) {
+            foreach (GeneralUtility::makeInstance(ReflectionClass::class, $this->dataMap->getClassName())->getProperties() ?? [] as $reflection) {
+                $name = $reflection->getName();
 
-            // Check if the property exists in the database and the type can be handled
-            if (($columnMap = $this->dataMap->getColumnMap($name)) && $type = $this->getType($reflection, $columnMap)) {
-                $this->addProperty($name, $type);
+                // Check if the property exists in the database and the type can be handled
+                if (($columnMap = $this->dataMap->getColumnMap($name)) && $type = $this->getType($reflection, $columnMap)) {
+                    $this->addProperty($name, $type);
+                }
             }
         }
     }
 
     protected function getTableDefinition(): ?array
     {
-        if ($this->tableDefinition === null) {
+        if ($this->tableDefinition === null && $this->dataMap) {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->dataMap->getTableName());
             $this->tableDefinition = $queryBuilder->getSchemaManager()->listTableColumns($this->dataMap->getTableName());
         }
