@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Registration;
 
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
 
 class Registration
 {
@@ -19,8 +21,8 @@ class Registration
         $this->extensionName = $extensionName;
         $this->object = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $controllerClassName, $repositoryClassName);
         $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class);
-        $this->listPlugin = GeneralUtility::makeInstance(PluginRegistration::class, $this->object->getTitle());
-        $this->filterPlugin = GeneralUtility::makeInstance(PluginRegistration::class);
+        $this->listPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_LIST, $this->object->getTitle());
+        $this->filterPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_FILTER);
     }
 
     public function getExtensionName(): string
@@ -46,6 +48,27 @@ class Registration
     public function getFilterPlugin(): PluginRegistration
     {
         return $this->filterPlugin;
+    }
+
+    public function addCategory(string $objectClassName, string $controllerClassName, string $repositoryClassName): self
+    {
+        $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $controllerClassName, $repositoryClassName);
+
+        return $this;
+    }
+
+    public function addListPlugin(string $title, string $description = null, string $iconIdentifier = null): self
+    {
+        $this->listPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_LIST, $title, $description, $iconIdentifier);
+
+        return $this;
+    }
+
+    public function addFilterPlugin(string $title, string $description = null, string $iconIdentifier = null): self
+    {
+        $this->filterPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_FILTER, $title, $description, $iconIdentifier);
+
+        return $this;
     }
 
     public function setObjectTitle(string $value): self
@@ -110,6 +133,8 @@ class Registration
 
     public function store(): void
     {
-        RegistrationService::addRegistration($this);
+        $registration = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new StoreRegistrationEvent($this))->getRegistration();
+
+        RegistrationService::addRegistration($registration);
     }
 }

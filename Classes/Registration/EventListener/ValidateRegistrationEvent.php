@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration\Event;
+namespace Zeroseven\Rampage\Registration\EventListener;
 
 use LogicException;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use Zeroseven\Rampage\Domain\Model\AbstractPageCategory;
