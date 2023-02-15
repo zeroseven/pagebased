@@ -19,6 +19,12 @@ services:
               identifier: 'rampage/registration-add-tca'
               event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
 
+    Zeroseven\Rampage\Registration\EventListener\AddTSConfigEvent:
+        tags:
+            - name: event.listener
+              identifier: 'rampage/registration-add-tsconfig'
+              event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
+
     Zeroseven\Rampage\Registration\EventListener\RegisterPluginEvent:
         tags:
             - name: event.listener

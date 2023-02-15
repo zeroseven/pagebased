@@ -13,7 +13,7 @@ class AddTCAEvent
 {
     protected function createPlugin(Registration $registration, PluginRegistration $pluginRegistration): void
     {
-        $CType = str_replace('_', '', $registration->getExtensionName()) . '_' . $pluginRegistration->getType();
+        $CType = $pluginRegistration->getCType($registration);
 
         // Add some default fields to the content elements by copy configuration of "header"
         $GLOBALS['TCA']['tt_content']['types'][$CType]['showitem'] = $GLOBALS['TCA']['tt_content']['types']['header']['showitem'];
@@ -50,7 +50,7 @@ class AddTCAEvent
     protected function addFilterPlugin(Registration $registration): void
     {
         if ($registration->getFilterPlugin()->isEnabled()) {
-
+            $this->createPlugin($registration, $registration->getFilterPlugin());
         }
     }
 

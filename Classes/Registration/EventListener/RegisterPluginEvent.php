@@ -4,35 +4,40 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Registration\EventListener;
 
+use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
+use Zeroseven\Rampage\Registration\PluginRegistration;
 use Zeroseven\Rampage\Registration\Registration;
 
 class RegisterPluginEvent
 {
-    protected function registerListPlugin(Registration $registration): void
-    {
-        if (($listPlugin = $registration->getListPlugin()) && $registration->getListPlugin()->isEnabled()) {
-            $controllerClassName = $registration->getObject()->getControllerClassName();
-            $uncachedAction = $listPlugin->getType() . 'Uncached';
+    protected ?Registration $registration;
 
-            if (GeneralUtility::makeInstance(\ReflectionClass::class, $controllerClassName)->hasMethod($uncachedAction)) {
-                $controllerActions = [$controllerClassName => $listPlugin->getType(), $uncachedAction];
+    protected function registerPlugin(PluginRegistration $plugin): void
+    {
+        if ($plugin->isEnabled()) {
+            $controllerClassName = $this->registration->getObject()->getControllerClassName();
+            $uncachedAction = $plugin->getType() . 'Uncached';
+
+            if (GeneralUtility::makeInstance(ReflectionClass::class, $controllerClassName)->hasMethod($uncachedAction)) {
+                $controllerActions = [$controllerClassName => $plugin->getType(), $uncachedAction];
                 $nonCacheableControllerActions = [$controllerClassName => $uncachedAction];
             } else {
-                $controllerActions = [$controllerClassName => $listPlugin->getType()];
+                $controllerActions = [$controllerClassName => $plugin->getType()];
                 $nonCacheableControllerActions = [];
             }
 
-            ExtensionUtility::configurePlugin($registration->getExtensionName(), ucfirst($listPlugin->getType()), $controllerActions, $nonCacheableControllerActions, ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT);
+            ExtensionUtility::configurePlugin($this->registration->getExtensionName(), ucfirst($plugin->getType()), $controllerActions, $nonCacheableControllerActions, ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT);
         }
     }
 
     public function __invoke(StoreRegistrationEvent $event)
     {
-        $registration = $event->getRegistration();
+        $this->registration = $event->getRegistration();
 
-        $this->registerListPlugin($registration);
+        $this->registerPlugin($this->registration->getListPlugin());
+        $this->registerPlugin($this->registration->getFilterPlugin());
     }
 }

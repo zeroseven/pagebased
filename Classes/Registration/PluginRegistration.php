@@ -60,6 +60,11 @@ class PluginRegistration
         return $this;
     }
 
+    public function getCType(Registration $registration): string
+    {
+        return str_replace('_', '', $registration->getExtensionName()) . '_' . $this->type;
+    }
+
     public function isEnabled(): bool
     {
         return $this->title !== null;
