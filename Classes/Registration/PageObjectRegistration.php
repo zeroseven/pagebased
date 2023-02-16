@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Registration;
 
 use ReflectionClass;
 use ReflectionException;
+use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
 
 class PageObjectRegistration
 {
@@ -57,9 +58,9 @@ class PageObjectRegistration
         return $this;
     }
 
-    public function getDemandClassName(): ?string
+    public function getDemandClassName(): string
     {
-        return $this->demandClassName;
+        return $this->demandClassName ?? ObjectDemand::class;
     }
 
     public function setDemandClassName(string $demandClassName): self
