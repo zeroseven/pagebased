@@ -16,6 +16,7 @@ class PageObjectRegistration
     protected ?string $demandClassName;
     protected ?string $title;
     protected ?string $iconIdentifier;
+    protected bool $enabled = false;
 
     public function __construct(string $objectClassName = null, string $repositoryClassName = null, string $controllerClassName = null, string $demandClassName = null)
     {
@@ -95,8 +96,22 @@ class PageObjectRegistration
         return $this;
     }
 
+    public function enable(): self
+    {
+        $this->enabled = true;
+
+        return $this;
+    }
+
+    public function disable(): self
+    {
+        $this->enabled = false;
+
+        return $this;
+    }
+
     public function isEnabled(): bool
     {
-        return $this->objectClassName && $this->repositoryClassName;
+        return $this->enabled && $this->objectClassName;
     }
 }

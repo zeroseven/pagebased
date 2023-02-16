@@ -13,6 +13,8 @@ class PluginRegistration
     protected ?string $title;
     protected ?string $description;
     protected ?string $iconIdentifier;
+    protected bool $enabled = false;
+
 
     public function __construct(string $type, string $title = null, string $description = null, string $iconIdentifier = null)
     {
@@ -65,8 +67,22 @@ class PluginRegistration
         return str_replace('_', '', $registration->getExtensionName()) . '_' . $this->type;
     }
 
+    public function enable(): self
+    {
+        $this->enabled = true;
+
+        return $this;
+    }
+
+    public function disable(): self
+    {
+        $this->enabled = false;
+
+        return $this;
+    }
+
     public function isEnabled(): bool
     {
-        return $this->title !== null;
+        return $this->enabled && $this->title !== null;
     }
 }

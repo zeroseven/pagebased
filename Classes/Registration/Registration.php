@@ -19,10 +19,10 @@ class Registration
     public function __construct(string $extensionName, string $objectClassName, string $repositoryClassName, string $controllerClassName)
     {
         $this->extensionName = $extensionName;
-        $this->object = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $repositoryClassName, $controllerClassName);
-        $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class);
-        $this->listPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_LIST, $this->object->getTitle());
-        $this->filterPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_FILTER);
+        $this->object = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $repositoryClassName, $controllerClassName)->enable();
+        $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class)->disable();
+        $this->listPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_LIST, $this->object->getTitle())->enable();
+        $this->filterPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_FILTER)->disable();
     }
 
     public function getExtensionName(): string
@@ -52,21 +52,21 @@ class Registration
 
     public function addCategory(string $objectClassName, string $repositoryClassName, string $controllerClassName = null): self
     {
-        $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $repositoryClassName, $controllerClassName);
+        $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $repositoryClassName, $controllerClassName)->enable();
 
         return $this;
     }
 
     public function addListPlugin(string $title, string $description = null, string $iconIdentifier = null): self
     {
-        $this->listPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_LIST, $title, $description, $iconIdentifier);
+        $this->listPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_LIST, $title, $description, $iconIdentifier)->enable();
 
         return $this;
     }
 
     public function addFilterPlugin(string $title, string $description = null, string $iconIdentifier = null): self
     {
-        $this->filterPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_FILTER, $title, $description, $iconIdentifier);
+        $this->filterPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_FILTER, $title, $description, $iconIdentifier)->enable();
 
         return $this;
     }
@@ -99,6 +99,13 @@ class Registration
         return $this;
     }
 
+    public function setCategoryEnabled(bool $enable): self
+    {
+        $enable ? $this->category->enable() : $this->category->disable();
+
+        return $this;
+    }
+
     public function setListPluginTitle(string $title): self
     {
         $this->listPlugin->setTitle($title);
@@ -120,6 +127,13 @@ class Registration
         return $this;
     }
 
+    public function setListPluginEnabled(bool $enable): self
+    {
+        $enable ? $this->listPlugin->enable() : $this->listPlugin->disable();
+
+        return $this;
+    }
+
     public function setFilterPluginTitle(string $title): self
     {
         $this->filterPlugin->setTitle($title);
@@ -137,6 +151,13 @@ class Registration
     public function setFilterPluginIconIdentifier(string $iconIdentifier): self
     {
         $this->filterPlugin->setIconIdentifier($iconIdentifier);
+
+        return $this;
+    }
+
+    public function setFilterPluginEnabled(bool $enable): self
+    {
+        $enable ? $this->filterPlugin->enable() : $this->filterPlugin->disable();
 
         return $this;
     }
