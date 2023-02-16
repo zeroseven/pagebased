@@ -8,9 +8,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RegistrationService
 {
-    public static function createRegistration(string $extensionName, string $objectClassName, string $controllerClassName, string $repositoryClassName): Registration
+    public static function createRegistration(string $extensionName, string $objectClassName, string $repositoryClassName,  string $controllerClassName): Registration
     {
-        return GeneralUtility::makeInstance(Registration::class, $extensionName, $objectClassName, $controllerClassName, $repositoryClassName);
+        return GeneralUtility::makeInstance(Registration::class, $extensionName, $objectClassName, $repositoryClassName, $controllerClassName);
     }
 
     /** @return Registration[] */

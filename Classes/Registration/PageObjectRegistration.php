@@ -11,17 +11,17 @@ use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
 class PageObjectRegistration
 {
     protected ?string $objectClassName;
-    protected ?string $controllerClassName;
     protected ?string $repositoryClassName;
+    protected ?string $controllerClassName;
     protected ?string $demandClassName;
     protected ?string $title;
     protected ?string $iconIdentifier;
 
-    public function __construct(string $objectClassName = null, string $controllerClassName = null, string $repositoryClassName = null, string $demandClassName = null)
+    public function __construct(string $objectClassName = null, string $repositoryClassName = null, string $controllerClassName = null, string $demandClassName = null)
     {
         $this->objectClassName = $objectClassName;
-        $this->controllerClassName = $controllerClassName;
         $this->repositoryClassName = $repositoryClassName;
+        $this->controllerClassName = $controllerClassName;
         $this->demandClassName = $demandClassName;
     }
 
@@ -36,17 +36,6 @@ class PageObjectRegistration
         return $this;
     }
 
-    public function getControllerClassName(): ?string
-    {
-        return $this->controllerClassName;
-    }
-
-    public function setControllerClassName(string $controllerClassName): self
-    {
-        $this->controllerClassName = $controllerClassName;
-        return $this;
-    }
-
     public function getRepositoryClassName(): ?string
     {
         return $this->repositoryClassName;
@@ -55,6 +44,17 @@ class PageObjectRegistration
     public function setRepositoryClassName(string $repositoryClassName): self
     {
         $this->repositoryClassName = $repositoryClassName;
+        return $this;
+    }
+
+    public function getControllerClassName(): ?string
+    {
+        return $this->controllerClassName;
+    }
+
+    public function setControllerClassName(string $controllerClassName): self
+    {
+        $this->controllerClassName = $controllerClassName;
         return $this;
     }
 
@@ -97,6 +97,6 @@ class PageObjectRegistration
 
     public function isEnabled(): bool
     {
-        return $this->objectClassName && $this->controllerClassName && $this->repositoryClassName;
+        return $this->objectClassName && $this->repositoryClassName;
     }
 }

@@ -16,10 +16,10 @@ class Registration
     protected PluginRegistration $listPlugin;
     protected PluginRegistration $filterPlugin;
 
-    public function __construct(string $extensionName, string $objectClassName, string $controllerClassName, string $repositoryClassName)
+    public function __construct(string $extensionName, string $objectClassName, string $repositoryClassName, string $controllerClassName)
     {
         $this->extensionName = $extensionName;
-        $this->object = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $controllerClassName, $repositoryClassName);
+        $this->object = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $repositoryClassName, $controllerClassName);
         $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class);
         $this->listPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_LIST, $this->object->getTitle());
         $this->filterPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_FILTER);
@@ -50,9 +50,9 @@ class Registration
         return $this->filterPlugin;
     }
 
-    public function addCategory(string $objectClassName, string $controllerClassName, string $repositoryClassName): self
+    public function addCategory(string $objectClassName, string $repositoryClassName, string $controllerClassName = null): self
     {
-        $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $controllerClassName, $repositoryClassName);
+        $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $repositoryClassName, $controllerClassName);
 
         return $this;
     }

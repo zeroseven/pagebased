@@ -40,7 +40,7 @@ class ValidateRegistrationEvent
         if ($objectClassName = $pageObjectRegistration->getObjectClassName()) {
             try {
                 if (($tableName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($objectClassName)->getTableName()) !== 'pages') {
-                    throw new RegistrationException(sprintf('The object must be stored in table "pages" instead of "%s". See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $tableName), 1676066023);
+                    throw new RegistrationException(sprintf('The object "%s" must be stored in table "pages" instead of "%s". See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $pageObjectRegistration->getTitle(), $tableName), 1676066023);
                 }
             } catch (Exception $e) {
                 throw new RegistrationException(sprintf('The class "%s" does not exists. %s', $objectClassName, $e->getMessage()), 1676065930);
@@ -82,7 +82,7 @@ class ValidateRegistrationEvent
             $this->checkPageTypeRegistration($registration->getObject());
 
             if ($registration->getCategory()->isEnabled()) {
-                $this->checkPageObjectRegistration($registration->getCategory());
+                $this->checkPageTypeRegistration($registration->getCategory());
             }
         }
     }
