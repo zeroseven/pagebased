@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Controller;
 
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use Zeroseven\Z7Blog\Service\RequestService;
 
 abstract class AbstractController extends ActionController
 {
-    /** @var array */
-    protected $contentData;
-
-    /** @var array */
-    protected $requestArguments;
+    protected ?array $contentData;
+    protected ?array $requestArguments;
 
     public function initializeAction()
     {
@@ -22,5 +20,19 @@ abstract class AbstractController extends ActionController
         /** @extensionScannerIgnoreLine */
         $this->contentData = $this->configurationManager->getContentObject()->data;
         $this->requestArguments = RequestService::getArguments();
+    }
+
+    protected function resolveView(): ViewInterface
+    {
+        // Get "original" view object
+        $view = parent::resolveView();
+
+        // Assign variables to all actions
+        $view->assignMultiple([
+            'requestArguments' => $this->requestArguments,
+            'data' => $this->contentData
+        ]);
+
+        return $view;
     }
 }

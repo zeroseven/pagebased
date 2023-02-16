@@ -23,4 +23,15 @@ class RegistrationService
     {
         $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven-rampage']['registrations'][$registration->getExtensionName() . '-' . md5($registration->getObject()->getObjectClassName())] = $registration;
     }
+
+    public static function getRegistrationByController($className): ?Registration
+    {
+        foreach (self::getRegistrations() as $registration) {
+            if ($registration->getObject()->getControllerClassName() === $className) {
+                return $registration;
+            }
+        }
+
+        return null;
+    }
 }

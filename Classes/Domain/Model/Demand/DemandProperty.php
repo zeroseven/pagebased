@@ -52,13 +52,13 @@ class DemandProperty
     public function setValue(mixed $value): self
     {
         if ($this->type === self::TYPE_ARRAY) {
-            $value->value = CastUtility::array($value);
+            $this->value = CastUtility::array($value);
         } elseif ($this->type === self::TYPE_INTEGER) {
-            $value->value = CastUtility::int($value);
+            $this->value = CastUtility::int($value);
         } elseif ($this->type === self::TYPE_BOOLEAN) {
-            $value->value = CastUtility::bool($value);
+            $this->value = CastUtility::bool($value);
         } elseif ($this->type === self::TYPE_STRING) {
-            $value->value = CastUtility::string($value);
+            $this->value = CastUtility::string($value);
         }
 
         return $this;

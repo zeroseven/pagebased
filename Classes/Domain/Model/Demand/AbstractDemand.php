@@ -20,12 +20,12 @@ use Zeroseven\Rampage\Exception\ValueException;
 
 abstract class AbstractDemand implements DemandInterface
 {
-    public const PARAMETER_ID_LIST = '_id';
+    public const PARAMETER_UID_LIST = '_id';
     public const PARAMETER_ORDER_BY = '_sorting';
+    public const PARAMETER_CONTENT_ID = '_c';
 
     /** @var DemandProperty[] */
     protected array $properties = [];
-    protected array $types = [];
     protected ?DataMap $dataMap = null;
     protected ?array $tableDefinition = null;
 
@@ -54,7 +54,7 @@ abstract class AbstractDemand implements DemandInterface
     protected function initProperties(): void
     {
         // Add default properties
-        foreach ([self::PARAMETER_ID_LIST => DemandProperty::TYPE_ARRAY, self::PARAMETER_ORDER_BY => DemandProperty::TYPE_STRING] as $name => $type) {
+        foreach ([self::PARAMETER_UID_LIST => DemandProperty::TYPE_ARRAY, self::PARAMETER_ORDER_BY => DemandProperty::TYPE_STRING, self::PARAMETER_CONTENT_ID => DemandProperty::TYPE_INTEGER] as $name => $type) {
             $this->addProperty($name, $type);
         }
 
@@ -216,6 +216,42 @@ abstract class AbstractDemand implements DemandInterface
 
         // Return array with/without empty values
         return !$ignoreEmptyValues ? $params : array_filter($params);
+    }
+
+    public function getUidList(): array
+    {
+        return $this->getProperty(self::PARAMETER_UID_LIST);
+    }
+
+    public function setUidList(mixed $value): self
+    {
+        $this->setProperty(self::PARAMETER_UID_LIST, $value);
+
+        return $this;
+    }
+
+    public function getOrderBy(): string
+    {
+        return $this->getProperty(self::PARAMETER_ORDER_BY);
+    }
+
+    public function setOrderBy(mixed $value): self
+    {
+        $this->setProperty(self::PARAMETER_ORDER_BY, $value);
+
+        return $this;
+    }
+
+    public function getContentId(): int
+    {
+        return $this->getProperty(self::PARAMETER_CONTENT_ID);
+    }
+
+    public function setContentId(mixed $value): self
+    {
+        $this->setProperty(self::PARAMETER_CONTENT_ID, $value);
+
+        return $this;
     }
 
     /** @throws TypeException | PropertyException | ValueException */
