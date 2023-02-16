@@ -57,6 +57,7 @@ class AddTCAEvent
 
             // Add icon
             $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$documentType] = $pageObjectRegistration->getIconIdentifier();
+            $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$documentType . '-hideinmenu'] = $pageObjectRegistration->getIconIdentifier(true);
         }
     }
 
