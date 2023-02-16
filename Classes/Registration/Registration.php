@@ -71,63 +71,73 @@ class Registration
         return $this;
     }
 
-    public function setObjectTitle(string $value): self
+    public function setObjectTitle(string $title): self
     {
+        $this->object->setTitle($title);
+
         return $this;
     }
 
-    public function setObjectIconIdentifier(string $value): self
+    public function setObjectIconIdentifier(string $iconIdentifier): self
     {
+        $this->object->setIconIdentifier($iconIdentifier);
+
         return $this;
     }
 
-    public function setCategoryTitle(string $value): self
+    public function setCategoryTitle(string $title): self
     {
+        $this->category->setTitle($title);
+
         return $this;
     }
 
-    public function setCategoryIdentifier(string $value): self
+    public function setCategoryIconIdentifier(string $iconIdentifier): self
     {
+        $this->category->setIconIdentifier($iconIdentifier);
+
         return $this;
     }
 
-    public function setListPluginTitle(string $value): self
+    public function setListPluginTitle(string $title): self
     {
+        $this->listPlugin->setTitle($title);
+
         return $this;
     }
 
-    public function setListPluginDescription(string $value): self
+    public function setListPluginDescription(string $description): self
     {
+        $this->listPlugin->setDescription($description);
+
         return $this;
     }
 
-    public function setListPluginIconIdentifier(string $value): self
+    public function setListPluginIconIdentifier(string $iconIdentifier): self
     {
+        $this->listPlugin->setIconIdentifier($iconIdentifier);
+
         return $this;
     }
 
-    public function setListPluginEnableFilterPlugin(string $value): self
+    public function setFilterPluginTitle(string $title): self
     {
+        $this->filterPlugin->setTitle($title);
+
         return $this;
     }
 
-    public function setFilterPluginTitle(string $value): self
+    public function setFilterPluginDescription(string $description): self
     {
+        $this->filterPlugin->setDescription($description);
+
         return $this;
     }
 
-    public function setFilterPluginDescription(string $value): self
+    public function setFilterPluginIconIdentifier(string $iconIdentifier): self
     {
-        return $this;
-    }
+        $this->filterPlugin->setIconIdentifier($iconIdentifier);
 
-    public function setFilterPluginIconIdentifier(string $value): self
-    {
-        return $this;
-    }
-
-    public function setFilterPluginEnableFilterPlugin(string $value): self
-    {
         return $this;
     }
 

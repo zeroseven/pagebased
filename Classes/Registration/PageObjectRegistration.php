@@ -84,9 +84,9 @@ class PageObjectRegistration
         return $this;
     }
 
-    public function getIconIdentifier(): string
+    public function getIconIdentifier(bool $hideInMenu = null): string
     {
-        return $this->iconIdentifier ?? 'apps-pagetree-page-content-from-page';
+        return ($this->iconIdentifier ?? 'apps-pagetree-page-content-from-page') . ($hideInMenu === true ? '-hideinmenu' : '');
     }
 
     public function setIconIdentifier(string $iconIdentifier): self

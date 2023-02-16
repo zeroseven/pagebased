@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Registration\EventListener;
 
 use LogicException;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
@@ -56,6 +57,19 @@ class ValidateRegistrationEvent
         // Check class inheritance of object model
         if (!is_subclass_of($objectClassName, PageTypeInterface::class)) {
             throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s" or "%s".', $objectClassName, PageTypeInterface::class, AbstractPageType::class, AbstractPageCategory::class), 1676063874);
+        }
+
+        // Check page icons
+        if (($iconRegistry = GeneralUtility::makeInstance(IconRegistry::class)) && $iconIdentifier = $pageTypeRegistration->getIconIdentifier()) {
+            if (!$iconRegistry->isRegistered($iconIdentifier)) {
+                throw new RegistrationException(sprintf('The icon "%s" for the page type "%s" is not registered. More information: https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Icon/Index.html#registration', $iconIdentifier, $pageTypeRegistration->getTitle()), 1676552125);
+            }
+
+            $hideInMenuIconIdentifier = $pageTypeRegistration->getIconIdentifier(true);
+
+            if (!$iconRegistry->isRegistered($hideInMenuIconIdentifier)) {
+                throw new RegistrationException(sprintf('For icon "%s", icon "%s" must also be present for pages that are hidden in the navigation.', $iconIdentifier, $hideInMenuIconIdentifier), 1676553316);
+            }
         }
 
         $this->checkPageObjectRegistration($pageTypeRegistration);
