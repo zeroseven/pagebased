@@ -25,6 +25,12 @@ services:
               identifier: 'rampage/registration-add-tsconfig'
               event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
 
+    Zeroseven\Rampage\Registration\EventListener\AddUserTSConfigEvent:
+        tags:
+            - name: event.listener
+              identifier: 'rampage/registration-add-usertsconfig'
+              event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
+
     Zeroseven\Rampage\Registration\EventListener\RegisterPluginEvent:
         tags:
             - name: event.listener
