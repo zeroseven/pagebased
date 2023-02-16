@@ -1,0 +1,32 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Zeroseven\Rampage\:
+        resource: '../Classes/*'
+
+    Zeroseven\Rampage\Registration\EventListener\ValidateRegistrationEvent:
+        tags:
+            - name: event.listener
+              identifier: 'rampage/registration-validation'
+              event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
+
+    Zeroseven\Rampage\Registration\EventListener\AddTCAEvent:
+        tags:
+            - name: event.listener
+              identifier: 'rampage/registration-add-tca'
+              event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
+
+    Zeroseven\Rampage\Registration\EventListener\AddTSConfigEvent:
+        tags:
+            - name: event.listener
+              identifier: 'rampage/registration-add-tsconfig'
+              event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
+
+    Zeroseven\Rampage\Registration\EventListener\RegisterPluginEvent:
+        tags:
+            - name: event.listener
+              identifier: 'rampage/registration-plugin'
+              event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
