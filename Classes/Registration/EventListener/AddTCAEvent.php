@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration\EventListener;
 
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
+use Zeroseven\Rampage\Registration\PageObjectRegistration;
 use Zeroseven\Rampage\Registration\PluginRegistration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
@@ -30,14 +33,45 @@ class AddTCAEvent
         $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$CType] = $pluginRegistration->getIconIdentifier();
     }
 
+    protected function createPageType(PageObjectRegistration $pageObjectRegistration): void
+    {
+        if (is_subclass_of($pageObjectRegistration->getObjectClassName(), PageTypeInterface::class) && $documentType = $pageObjectRegistration->getObjectClassName()::getType()) {
+
+            // Add to type list
+            if (($tcaTypeField = $GLOBALS['TCA']['pages']['ctrl']['type'] ?? null)) {
+                ExtensionManagementUtility::addTcaSelectItem(
+                    'pages',
+                    $tcaTypeField,
+                    [
+                        $pageObjectRegistration->getTitle(),
+                        $documentType,
+                        $pageObjectRegistration->getIconIdentifier()
+                    ],
+                    '1',
+                    'after'
+                );
+            }
+
+            // Add basic fields
+            $GLOBALS['TCA']['pages']['types'][$documentType]['showitem'] = $GLOBALS['TCA']['pages']['types'][1]['showitem'];
+
+            // Add icon
+            $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$documentType] = $pageObjectRegistration->getIconIdentifier();
+        }
+    }
+
     protected function addPageType(Registration $registration): void
     {
-
+        if (($pageObject = $registration->getObject()) && $pageObject->isEnabled()) {
+            $this->createPageType($pageObject);
+        }
     }
 
     protected function addPageCategory(Registration $registration): void
     {
-
+        if (($pageCategory = $registration->getCategory()) && $pageCategory->isEnabled()) {
+            $this->createPageType($pageCategory);
+        }
     }
 
     protected function addListPlugin(Registration $registration): void

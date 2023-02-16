@@ -20,7 +20,6 @@ class AddUserTSConfigEvent
 
     protected function addPageTypes(): void
     {
-
         if (($pageObject = $this->registration->getObject()) && $pageObject->isEnabled() && is_subclass_of(($className = $pageObject->getObjectClassName()), PageTypeInterface::class)) {
             $this->addPageType($className::getType());
         }
