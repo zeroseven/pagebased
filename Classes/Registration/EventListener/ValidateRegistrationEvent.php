@@ -13,27 +13,32 @@ use Zeroseven\Rampage\Controller\AbstractPageTypeController;
 use Zeroseven\Rampage\Controller\PageTypeControllerInterface;
 use Zeroseven\Rampage\Domain\Model\AbstractPageCategory;
 use Zeroseven\Rampage\Domain\Model\AbstractPageType;
+use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
+use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Exception\ValueException;
 use Zeroseven\Rampage\Registration\PageObjectRegistration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 
 class ValidateRegistrationEvent
 {
+    /** @throws RegistrationException */
     protected function checkPageObjectRegistration(PageObjectRegistration $pageObjectRegistration): void
     {
         $objectClassName = $pageObjectRegistration->getObjectClassName();
-        $controllerClassName = $pageObjectRegistration->getControllerClassName();
 
         // Check class inheritance of object model
         if (!is_subclass_of($objectClassName, PageTypeInterface::class)) {
-            throw new ValueException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s" or "%s".', $objectClassName, PageTypeInterface::class, AbstractPageType::class, AbstractPageCategory::class), 1676063874);
+            throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s" or "%s".', $objectClassName, PageTypeInterface::class, AbstractPageType::class, AbstractPageCategory::class), 1676063874);
         }
 
         // Check class inheritance of the controller
-        if (!is_subclass_of($controllerClassName, PageTypeControllerInterface::class)) {
-            throw new ValueException(sprintf('The controller "%s" is not an instance of "%s". You can simply extend class "%s".', $controllerClassName, PageTypeControllerInterface::class, AbstractPageTypeController::class), 1676498615);
+        if (($controllerClassName = $pageObjectRegistration->getControllerClassName()) && !is_subclass_of($controllerClassName, PageTypeControllerInterface::class)) {
+            throw new RegistrationException(sprintf('The controller "%s" is not an instance of "%s". You can simply extend class "%s".', $controllerClassName, PageTypeControllerInterface::class, AbstractPageTypeController::class), 1676498615);
+        }
+
+        if (($demandClassName = $pageObjectRegistration->getDemandClassName()) && !is_subclass_of($demandClassName, DemandInterface::class)) {
+            throw new RegistrationException(sprintf('The demand "%s" is not an instance of "%s". You can simply extend the class "%s".', $demandClassName, DemandInterface::class, AbstractDemand::class), 1676535114);
         }
 
         // Check the persistence configuration
@@ -47,7 +52,7 @@ class ValidateRegistrationEvent
         }
     }
 
-    /** @throws ValueException | RegistrationException | Exception */
+    /** @throws RegistrationException | Exception */
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
         foreach (RegistrationService::getRegistrations() as $registration) {

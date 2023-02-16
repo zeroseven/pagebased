@@ -12,17 +12,19 @@ class PageObjectRegistration
     protected ?string $objectClassName;
     protected ?string $controllerClassName;
     protected ?string $repositoryClassName;
+    protected ?string $demandClassName;
     protected ?string $title;
     protected ?string $iconIdentifier;
 
-    public function __construct(string $objectClassName = null, string $controllerClassName = null, string $repositoryClassName = null)
+    public function __construct(string $objectClassName = null, string $controllerClassName = null, string $repositoryClassName = null, string $demandClassName = null)
     {
         $this->objectClassName = $objectClassName;
         $this->controllerClassName = $controllerClassName;
         $this->repositoryClassName = $repositoryClassName;
+        $this->demandClassName = $demandClassName;
     }
 
-    public function getObjectClassName(): string
+    public function getObjectClassName(): ?string
     {
         return $this->objectClassName;
     }
@@ -33,7 +35,7 @@ class PageObjectRegistration
         return $this;
     }
 
-    public function getControllerClassName(): string
+    public function getControllerClassName(): ?string
     {
         return $this->controllerClassName;
     }
@@ -44,7 +46,7 @@ class PageObjectRegistration
         return $this;
     }
 
-    public function getRepositoryClassName(): string
+    public function getRepositoryClassName(): ?string
     {
         return $this->repositoryClassName;
     }
@@ -52,6 +54,17 @@ class PageObjectRegistration
     public function setRepositoryClassName(string $repositoryClassName): self
     {
         $this->repositoryClassName = $repositoryClassName;
+        return $this;
+    }
+
+    public function getDemandClassName(): ?string
+    {
+        return $this->demandClassName;
+    }
+
+    public function setDemandClassName(string $demandClassName): self
+    {
+        $this->demandClassName = $demandClassName;
         return $this;
     }
 
@@ -70,7 +83,7 @@ class PageObjectRegistration
         return $this;
     }
 
-    public function getIconIdentifier(): ?string
+    public function getIconIdentifier(): string
     {
         return $this->iconIdentifier ?? 'apps-pagetree-page-content-from-page';
     }

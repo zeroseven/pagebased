@@ -18,7 +18,7 @@ use Zeroseven\Rampage\Exception\PropertyException;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Exception\ValueException;
 
-abstract class AbstractDemand
+abstract class AbstractDemand implements DemandInterface
 {
     public const PARAMETER_ID_LIST = '_id';
     public const PARAMETER_ORDER_BY = '_sorting';
