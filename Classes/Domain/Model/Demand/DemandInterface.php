@@ -10,6 +10,8 @@ interface DemandInterface
 
     public function getProperty(string $propertyName): mixed;
 
+    public function getProperties(): array;
+
     public function hasProperty(string $propertyName): bool;
 
     public function setProperty(string $propertyName, mixed $value): self;
@@ -21,4 +23,10 @@ interface DemandInterface
     public function removeFromProperty(string $propertyName, mixed $value): self;
 
     public function getParameterArray(bool $ignoreEmptyValues = null): array;
+
+    public function getUidList(): array;
+
+    public function getOrderBy(): string;
+
+    public function getContentId(): int;
 }

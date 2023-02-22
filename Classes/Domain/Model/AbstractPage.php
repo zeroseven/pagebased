@@ -11,6 +11,7 @@ use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use Zeroseven\Rampage\Domain\Model\Entity\ParentPage;
 
 abstract class AbstractPage extends AbstractEntity
 {
@@ -21,7 +22,7 @@ abstract class AbstractPage extends AbstractEntity
     protected string $navigationTitle;
     protected string $description;
     protected string $abstract;
-    protected AbstractPage $parentPage;
+    protected ParentPage $parentPage;
     protected DateTime $lastChange;
     protected ?FileReference $firstMedia;
     protected ?FileReference $firstImage;
@@ -124,7 +125,7 @@ abstract class AbstractPage extends AbstractEntity
         return $this->lastChange;
     }
 
-    public function getParentPage(): AbstractPage
+    public function getParentPage(): ParentPage
     {
         return $this->parentPage;
     }

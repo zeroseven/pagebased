@@ -17,6 +17,8 @@ use Zeroseven\Rampage\Domain\Model\AbstractPageType;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
+use Zeroseven\Rampage\Domain\Repository\AbstractPageRepository;
+use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\PageObjectRegistration;
 use Zeroseven\Rampage\Registration\RegistrationService;
@@ -34,6 +36,11 @@ class ValidateRegistrationEvent
         // Check demand
         if (($demandClassName = $pageObjectRegistration->getDemandClassName()) && !is_subclass_of($demandClassName, DemandInterface::class)) {
             throw new RegistrationException(sprintf('The demand "%s" is not an instance of "%s". You can simply extend the class "%s".', $demandClassName, DemandInterface::class, AbstractDemand::class), 1676535114);
+        }
+
+        // Check repository
+        if (($repositoryClassName = $pageObjectRegistration->getRepositoryClassName()) && !is_subclass_of($repositoryClassName, RepositoryInterface::class)) {
+            throw new RegistrationException(sprintf('The repository "%s" is not an instance of "%s". You can simply extend the class "%s".', $repositoryClassName, RepositoryInterface::class, AbstractPageRepository::class), 1676667419);
         }
 
         // Check the persistence configuration

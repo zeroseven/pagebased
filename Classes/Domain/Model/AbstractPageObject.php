@@ -8,10 +8,12 @@ use TYPO3\CMS\Extbase\Annotation as Annotation;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
 
 abstract class AbstractPageObject extends AbstractPage implements PageObjectInterface
 {
-    protected ?AbstractPage $parentObject;
+    protected bool $top;
+    protected ?PageObject $parentObject;
     protected ?QueryResultInterface $childObjects;
     protected ?AbstractPageCategory $category;
     protected ?ObjectStorage $relations;
@@ -39,7 +41,19 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
         $this->relationsFrom = new ObjectStorage();
     }
 
-    public function getParentObject(): ?AbstractPage
+    public function isTop(): bool
+    {
+        return $this->top;
+    }
+
+    public function setTop(bool $value): self
+    {
+        $this->top = $value;
+
+        return $this;
+    }
+
+    public function getParentObject(): ?PageObject
     {
         // Todo: find parent object
 

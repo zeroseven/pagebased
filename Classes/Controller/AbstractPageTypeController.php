@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
@@ -43,13 +44,21 @@ abstract class AbstractPageTypeController extends AbstractController implements 
 
     public function listAction(): void
     {
-//        $objects = $this->registration->getObject()->getRepositoryClassName()->findByDemand($this->demand);
-
+        $repository = GeneralUtility::makeInstance(ObjectManager::class)->get($this->registration->getObject()->getRepositoryClassName());
+        $objects = $repository->findByDemand($this->demand);
 
         if (($contentID = ($this->contentData['uid'] ?? null)) && !$this->demand->getContentId()) {
             $this->demand->setContentId($contentID);
         }
 
-        debug($this->demand);
+        // Pass variables to the fluid template
+        $this->view->assignMultiple([
+            'objects' => $objects
+        ]);
+    }
+
+    public function filterAction(): void
+    {
+
     }
 }
