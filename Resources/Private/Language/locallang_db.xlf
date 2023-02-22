@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="messages">
+    <header />
+    <body>
+	  <trans-unit id="pages._rampage_top">
+	    <source>Top</source>
+	  </trans-unit>
+	  <trans-unit id="pages._rampage_relations_to">
+	    <source>Relations to</source>
+	  </trans-unit>
+	  <trans-unit id="pages._rampage_relations_from">
+	    <source>Relations from</source>
+	  </trans-unit>
+	  <trans-unit id="pages._rampage_redirect_category">
+	    <source>Redirect category</source>
+	  </trans-unit>
+    </body>
+  </file>
+</xliff>

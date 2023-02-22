@@ -11,6 +11,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 abstract class AbstractPageObject extends AbstractPage implements PageObjectInterface
 {
+    protected bool $top;
     protected ?AbstractPage $parentObject;
     protected ?QueryResultInterface $childObjects;
     protected ?AbstractPageCategory $category;
@@ -37,6 +38,18 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
         $this->relations = new ObjectStorage();
         $this->relationsTo = new ObjectStorage();
         $this->relationsFrom = new ObjectStorage();
+    }
+
+    public function isTop(): bool
+    {
+        return $this->top;
+    }
+
+    public function setTop(bool $value): self
+    {
+        $this->top = $value;
+
+        return $this;
     }
 
     public function getParentObject(): ?AbstractPage
