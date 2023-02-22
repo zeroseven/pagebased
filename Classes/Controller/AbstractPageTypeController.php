@@ -53,7 +53,8 @@ abstract class AbstractPageTypeController extends AbstractController implements 
 
         // Pass variables to the fluid template
         $this->view->assignMultiple([
-            'objects' => $objects
+            'objects' => $objects,
+            'demand' => $this->demand
         ]);
     }
 
