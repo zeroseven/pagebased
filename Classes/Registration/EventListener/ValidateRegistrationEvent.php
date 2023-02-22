@@ -12,6 +12,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use Zeroseven\Rampage\Controller\AbstractPageTypeController;
 use Zeroseven\Rampage\Controller\PageTypeControllerInterface;
+use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\AbstractPageCategory;
 use Zeroseven\Rampage\Domain\Model\AbstractPageType;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
@@ -46,7 +47,7 @@ class ValidateRegistrationEvent
         // Check the persistence configuration
         if ($objectClassName = $pageObjectRegistration->getObjectClassName()) {
             try {
-                if (($tableName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($objectClassName)->getTableName()) !== 'pages') {
+                if (($tableName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($objectClassName)->getTableName()) !== AbstractPage::TABLE_NAME) {
                     throw new RegistrationException(sprintf('The object "%s" must be stored in table "pages" instead of "%s". See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $pageObjectRegistration->getTitle(), $tableName), 1676066023);
                 }
             } catch (Exception $e) {

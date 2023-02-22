@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Registration\EventListener;
 
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Registration\PageObjectRegistration;
 use Zeroseven\Rampage\Registration\PluginRegistration;
@@ -38,9 +39,9 @@ class AddTCAEvent
         if (is_subclass_of($pageObjectRegistration->getObjectClassName(), PageTypeInterface::class) && $documentType = $pageObjectRegistration->getObjectClassName()::getType()) {
 
             // Add to type list
-            if (($tcaTypeField = $GLOBALS['TCA']['pages']['ctrl']['type'] ?? null)) {
+            if (($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null)) {
                 ExtensionManagementUtility::addTcaSelectItem(
-                    'pages',
+                    AbstractPage::TABLE_NAME,
                     $tcaTypeField,
                     [
                         $pageObjectRegistration->getTitle(),
@@ -53,11 +54,11 @@ class AddTCAEvent
             }
 
             // Add basic fields
-            $GLOBALS['TCA']['pages']['types'][$documentType]['showitem'] = $GLOBALS['TCA']['pages']['types'][1]['showitem'];
+            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$documentType]['showitem'] = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][1]['showitem'];
 
             // Add icon
-            $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$documentType] = $pageObjectRegistration->getIconIdentifier();
-            $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$documentType . '-hideinmenu'] = $pageObjectRegistration->getIconIdentifier(true);
+            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$documentType] = $pageObjectRegistration->getIconIdentifier();
+            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$documentType . '-hideinmenu'] = $pageObjectRegistration->getIconIdentifier(true);
         }
     }
 

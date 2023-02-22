@@ -15,6 +15,8 @@ use Zeroseven\Rampage\Domain\Model\Entity\ParentPage;
 
 abstract class AbstractPage extends AbstractEntity
 {
+    public const TABLE_NAME = 'pages';
+
     protected int $documentType;
     protected int $l10nParent;
     protected string $title;
