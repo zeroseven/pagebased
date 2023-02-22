@@ -30,11 +30,14 @@ return [
     \Zeroseven\Rampage\Domain\Model\AbstractPageObject::class => [
         'tableName' => 'pages',
         'properties' => [
-            'fileReferences' => [
-                'fieldName' => 'media'
+            'top' => [
+                'fieldName' => '_rampage_top'
             ],
-            'lastChange' => [
-                'fieldName' => 'SYS_LASTCHANGED'
+            'relationsTo' => [
+                'fieldName' => '_rampage_relations_to'
+            ],
+            'relationsFrom' => [
+                'fieldName' => '_rampage_relations_from'
             ]
         ]
     ]
