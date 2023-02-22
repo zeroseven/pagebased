@@ -67,6 +67,14 @@ class ValidateRegistrationEvent
             throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s" or "%s".', $objectClassName, PageTypeInterface::class, AbstractPageType::class, AbstractPageCategory::class), 1676063874);
         }
 
+        // Check the persistence configuration
+        try {
+            if (!GeneralUtility::makeInstance(DataMapper::class)->getDataMap($objectClassName)->getRecordType()) {
+                throw new RegistrationException(sprintf('The object "%s" requires a "recordType" configuration. See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $pageTypeRegistration->getTitle()), 1677107393);
+            }
+        } catch (Exception | LogicException $e) {
+        }
+
         // Check page icons
         if (($iconRegistry = GeneralUtility::makeInstance(IconRegistry::class)) && $iconIdentifier = $pageTypeRegistration->getIconIdentifier()) {
             if (!$iconRegistry->isRegistered($iconIdentifier)) {
