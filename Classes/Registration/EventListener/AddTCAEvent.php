@@ -15,6 +15,15 @@ use Zeroseven\Rampage\Registration\RegistrationService;
 
 class AddTCAEvent
 {
+    protected function getPageType(PageObjectRegistration $pageObjectRegistration): ?int
+    {
+        if (is_subclass_of($pageObjectRegistration->getObjectClassName(), PageTypeInterface::class) && $pageType = $pageObjectRegistration->getObjectClassName()::getType()) {
+            return $pageType;
+        }
+
+        return null;
+    }
+
     protected function createPlugin(Registration $registration, PluginRegistration $pluginRegistration): void
     {
         $CType = $pluginRegistration->getCType($registration);
@@ -36,7 +45,7 @@ class AddTCAEvent
 
     protected function createPageType(PageObjectRegistration $pageObjectRegistration): void
     {
-        if (is_subclass_of($pageObjectRegistration->getObjectClassName(), PageTypeInterface::class) && $documentType = $pageObjectRegistration->getObjectClassName()::getType()) {
+        if ($pageType = $this->getPageType($pageObjectRegistration)) {
 
             // Add to type list
             if (($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null)) {
@@ -45,7 +54,7 @@ class AddTCAEvent
                     $tcaTypeField,
                     [
                         $pageObjectRegistration->getTitle(),
-                        $documentType,
+                        $pageType,
                         $pageObjectRegistration->getIconIdentifier()
                     ],
                     '1',
@@ -54,11 +63,11 @@ class AddTCAEvent
             }
 
             // Add basic fields
-            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$documentType]['showitem'] = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][1]['showitem'];
+            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['showitem'] = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][1]['showitem'];
 
             // Add icon
-            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$documentType] = $pageObjectRegistration->getIconIdentifier();
-            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$documentType . '-hideinmenu'] = $pageObjectRegistration->getIconIdentifier(true);
+            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$pageType] = $pageObjectRegistration->getIconIdentifier();
+            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$pageType . '-hideinmenu'] = $pageObjectRegistration->getIconIdentifier(true);
         }
     }
 
@@ -66,6 +75,37 @@ class AddTCAEvent
     {
         if (($pageObject = $registration->getObject()) && $pageObject->isEnabled()) {
             $this->createPageType($pageObject);
+
+            if ($pageType = $this->getPageType($pageObject)) {
+                ExtensionManagementUtility::addToAllTCAtypes(AbstractPage::TABLE_NAME, sprintf('
+                    --div--;%s,
+                        _rampage_top,
+                        _rampage_relations_to,
+                        _rampage_relations_from
+                ', $pageObject->getTitle()), (string)$pageType);
+
+                // Configure relations
+                $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_relations_to']['config'] = [
+                    'filter' => [
+                        [
+                            // TODO: Create filter
+                            // 'userFunc' => GroupFilter::class . '->filterTypes',
+                            // 'parameters' => [
+                            //     'allowed' => $pageType
+                            // ]
+                        ]
+                    ],
+                    'suggestOptions' => [
+                        'default' => [
+                            'searchWholePhrase' => 1,
+                            'addWhere' => ' AND ' . AbstractPage::TABLE_NAME . '.uid != ###THIS_UID###'
+                        ],
+                        AbstractPage::TABLE_NAME => [
+                            'searchCondition' => 'doktype = ' . $pageType
+                        ]
+                    ],
+                ];
+            }
         }
     }
 
