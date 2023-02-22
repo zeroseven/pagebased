@@ -156,6 +156,12 @@ abstract class AbstractDemand implements DemandInterface
         return null;
     }
 
+    /** @return DemandProperty[] */
+    public function getProperties(): array
+    {
+        return $this->properties;
+    }
+
     public function hasProperty(string $propertyName): bool
     {
         return in_array($propertyName, $this->properties, true);
