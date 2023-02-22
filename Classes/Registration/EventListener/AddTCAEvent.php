@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Registration\EventListener;
 
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use Zeroseven\Rampage\Backend\TCA\GroupFilter;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Registration\PageObjectRegistration;
@@ -88,11 +89,10 @@ class AddTCAEvent
                 $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_relations_to']['config'] = [
                     'filter' => [
                         [
-                            // TODO: Create filter
-                            // 'userFunc' => GroupFilter::class . '->filterTypes',
-                            // 'parameters' => [
-                            //     'allowed' => $pageType
-                            // ]
+                             'userFunc' => GroupFilter::class . '->filterTypes',
+                             'parameters' => [
+                                 'allowed' => $pageType
+                             ]
                         ]
                     ],
                     'suggestOptions' => [
