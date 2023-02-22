@@ -1,6 +1,12 @@
 <?php
 
 return [
+    \Zeroseven\Rampage\Domain\Model\Entity\ParentPage::class => [
+        'tableName' => 'pages',
+    ],
+    \Zeroseven\Rampage\Domain\Model\Entity\PageObject::class => [
+        'tableName' => 'pages',
+    ],
     \Zeroseven\Rampage\Domain\Model\AbstractPage::class => [
         'tableName' => 'pages',
         'properties' => [
