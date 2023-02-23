@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 
 class RegistrationService
 {
-    public static function createRegistration(string $extensionName, string $objectClassName, string $repositoryClassName,  string $controllerClassName): Registration
+    public static function createRegistration(string $extensionName, string $objectClassName, string $repositoryClassName, string $controllerClassName): Registration
     {
         return GeneralUtility::makeInstance(Registration::class, $extensionName, $objectClassName, $repositoryClassName, $controllerClassName);
     }
@@ -33,5 +35,24 @@ class RegistrationService
         }
 
         return null;
+    }
+
+    public static function extbasePersistenceConfiguration(array $classConfiguration): array
+    {
+        foreach ($classConfiguration as $className => $configuration) {
+            if (!is_array($configuration)) {
+                $classConfiguration[$className] = [];
+            }
+
+            if (!isset($configuration['tableName']) && is_subclass_of($className, AbstractPage::class)) {
+                $classConfiguration[$className]['tableName'] = AbstractPage::TABLE_NAME;
+            }
+
+            if (!isset($configuration['recordType']) && is_subclass_of($className, PageTypeInterface::class)) {
+                $classConfiguration[$className]['recordType'] = $className::getType();
+            }
+        }
+
+        return $classConfiguration;
     }
 }
