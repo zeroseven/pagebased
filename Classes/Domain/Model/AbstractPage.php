@@ -24,10 +24,10 @@ abstract class AbstractPage extends AbstractEntity
     protected string $navigationTitle;
     protected string $description;
     protected string $abstract;
-    protected ParentPage $parentPage;
+    protected ?ParentPage $parentPage = null;
     protected DateTime $lastChange;
-    protected ?FileReference $firstMedia;
-    protected ?FileReference $firstImage;
+    protected ?FileReference $firstMedia = null;
+    protected ?FileReference $firstImage = null;
     protected ?ObjectStorage $media;
 
     /**
@@ -127,7 +127,7 @@ abstract class AbstractPage extends AbstractEntity
         return $this->lastChange;
     }
 
-    public function getParentPage(): ParentPage
+    public function getParentPage(): ?ParentPage
     {
         return $this->parentPage;
     }

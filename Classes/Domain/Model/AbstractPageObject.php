@@ -13,20 +13,20 @@ use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
 abstract class AbstractPageObject extends AbstractPage implements PageObjectInterface
 {
     protected bool $top;
-    protected ?PageObject $parentObject;
-    protected ?QueryResultInterface $childObjects;
-    protected ?AbstractPageCategory $category;
-    protected ?ObjectStorage $relations;
+    protected ?PageObject $parentObject = null;
+    protected ?QueryResultInterface $childObjects = null;
+    protected ?AbstractPageCategory $category = null;
+    protected ?ObjectStorage $relations = null;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Zeroseven\Rampage\Domain\Model\AbstractPage>
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Zeroseven\Rampage\Domain\Model\Entity\PageObject>
      * Annotation\Cascade("remove")
      * Annotation\Lazy
      */
     protected ObjectStorage $relationsTo;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Zeroseven\Rampage\Domain\Model\AbstractPage>
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Zeroseven\Rampage\Domain\Model\Entity\PageObject>
      * Annotation\Cascade("remove")
      * Annotation\Lazy
      */
