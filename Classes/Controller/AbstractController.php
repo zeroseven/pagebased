@@ -6,7 +6,6 @@ namespace Zeroseven\Rampage\Controller;
 
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
-use Zeroseven\Z7Blog\Service\RequestService;
 
 abstract class AbstractController extends ActionController
 {
@@ -19,7 +18,7 @@ abstract class AbstractController extends ActionController
 
         /** @extensionScannerIgnoreLine */
         $this->contentData = $this->configurationManager->getContentObject()->data;
-        $this->requestArguments = RequestService::getArguments();
+        $this->requestArguments = $this->request->getArguments();
     }
 
     protected function resolveView(): ViewInterface
