@@ -6,10 +6,10 @@ namespace Zeroseven\Rampage\ViewHelpers\Pagination\Link;
 
 use Zeroseven\Rampage\Pagination\Pagination;
 
-class NextViewHelper extends AbstractLinkViewHelper
+class PrevViewHelper extends AbstractLinkViewHelper
 {
     protected function getTargetStage(Pagination $pagination): ?int
     {
-        return $pagination->getNextStage();
+        return $pagination->getPreviousStage();
     }
 }
