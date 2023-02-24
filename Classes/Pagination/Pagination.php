@@ -6,13 +6,12 @@ namespace Zeroseven\Rampage\Pagination;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Utility\CastUtility;
 
 class Pagination
 {
-    protected QueryResultInterface $items;
+    protected array $items;
     protected Stages $stages;
     protected int $selectedStage;
     protected string $itemsPerStage;
@@ -20,14 +19,14 @@ class Pagination
     protected array $stageLengths;
 
     /** @throws TypeException */
-    public function __construct($items, $selectedStage = null, $itemsPerStage = null, $maxStages = null)
+    public function __construct($items, $selectedStage, $itemsPerStage = null, $maxStages = null)
     {
         $this->stages = GeneralUtility::makeInstance(Stages::class, $this);
 
         $this->setItems($items, false)
             ->setSelectedStage($selectedStage, false)
-            ->setItemsPerStage($itemsPerStage, false)
-            ->setMaxStages($maxStages, false)
+            ->setItemsPerStage($itemsPerStage ?? 6, false)
+            ->setMaxStages($maxStages ?? 100, false)
             ->initialize();
     }
 

@@ -18,7 +18,6 @@ class Stages extends ObjectStorage
 
     public function initialize(): void
     {
-
         // Remove all existing objects
         $this->removeAll($this);
 
@@ -29,16 +28,17 @@ class Stages extends ObjectStorage
         foreach ($this->pagination->getStageLengths() as $index => $stageLength) {
             if (count($items)) {
 
+                // Calculate states
+                $active = $index <= $this->pagination->getSelectedStage();
+                $selected = $index === $this->pagination->getSelectedStage();
+
+                // Create stage object
+                $stage = GeneralUtility::makeInstance(Stage::class, $this->pagination, $index, $active, $selected);
+
                 // Add items to stage
-                $stage = GeneralUtility::makeInstance(Stage::class, $this->pagination);
                 foreach (array_splice($items, 0, $stageLength ?: null) as $item) {
                     $stage->attach($item);
                 }
-
-                // Set attributes on stage object
-                $stage->setIndex($index)
-                    ->setActive($index <= $this->pagination->getSelectedStage())
-                    ->setSelected($index === $this->pagination->getSelectedStage());
 
                 // Add stage to the stages
                 $this->attach($stage);
