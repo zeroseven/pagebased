@@ -18,8 +18,9 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
         parent::initializeArguments();
 
         // Register demand argument
-        $this->registerArgument('demand', 'object', 'The demand object', true);
+        $this->registerArgument('demand', 'object', 'The demand object', false);
         $this->registerArgument('required', 'bool', 'Hide link-tag if target page is not available.', false, true);
+
     }
 
     abstract protected function getTargetStage(Pagination $pagination): ?int;
@@ -32,14 +33,15 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
         }
 
         if (($targetStage = $this->getTargetStage($this->templateVariableContainer->get(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER))) !== null) {
-            $overrides = $this->arguments['demand']->getDiff($this->templateVariableContainer->get('settings'), [AbstractDemand::PARAMETER_UID_LIST]);
+            if ($demand = $this->arguments['demand'] ?? null) {
+                $overrides = $demand->getDiff($this->templateVariableContainer->get('settings'), [AbstractDemand::PARAMETER_UID_LIST]);
 
-            foreach ($overrides as $key => $value) {
-                $this->arguments['arguments'][$key] = $value;
+                foreach ($overrides as $key => $value) {
+                    $this->arguments['arguments'][$key] = $value;
+                }
             }
 
             $this->arguments['arguments'][PaginationViewHelper::REQUEST_PARAMETER] = $targetStage;
-
         } else {
             if ($this->arguments['required'] ?? false) {
                 return '<!-- ' . (new ReflectionClass($this))->getShortName() . ': No target stage -->';
