@@ -17,6 +17,8 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use Zeroseven\Rampage\Exception\PropertyException;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Exception\ValueException;
+use Zeroseven\Rampage\Utility\CastUtility;
+use Zeroseven\Z7Blog\Service\TypeCastService;
 
 abstract class AbstractDemand implements DemandInterface
 {
@@ -161,6 +163,32 @@ abstract class AbstractDemand implements DemandInterface
     {
         return $this->properties;
     }
+
+    public function getDiff(array $base, array $protectedParameters = null): array
+    {
+        $result = [];
+
+        foreach ($this->properties as $property) {
+            $parameter = $property->getParameter();
+
+            if (
+                ($protectedParameters && in_array($parameter, $protectedParameters, true))
+                || (
+                    (!$property->isArray() && ($base[$parameter] ?? null) !== $property->getValue())
+                    || ($property->isArray() && (count(array_diff(CastUtility::array($base[$parameter] ?? null), $property->getValue())) || count(array_diff($property->getValue(), CastUtility::array($base[$parameter] ?? null)))))
+                )
+            ) {
+                if (!empty($property->getValue())) {
+                    $result[$parameter] = $property->getValue();
+                } elseif (!empty($base[$parameter])) {
+                    $result[$parameter] = '';
+                }
+            }
+        }
+
+        return $result;
+    }
+
 
     public function hasProperty(string $propertyName): bool
     {

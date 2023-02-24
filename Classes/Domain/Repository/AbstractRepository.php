@@ -12,7 +12,6 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandProperty;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Utility\CastUtility;
 
@@ -72,7 +71,7 @@ abstract class AbstractRepository extends Repository
 
         foreach ($demand->getProperties() as $property) {
             if (($value = $property->getValue()) && ($propertyName = $property->getName()) && $columnMap = $dataMapper->getDataMap($this->objectType)->getColumnMap($propertyName)) {
-                if ($property->getType() === DemandProperty::TYPE_ARRAY) {
+                if ($property->isArray()) {
                     if (in_array($columnMap->getTypeOfRelation(), [ColumnMap::RELATION_HAS_MANY, ColumnMap::RELATION_HAS_AND_BELONGS_TO_MANY], true)) {
                         $constraints[] = $query->logicalOr(array_map(static function ($v) use ($query, $propertyName) {
                             return $query->contains($propertyName, $v);
@@ -84,7 +83,7 @@ abstract class AbstractRepository extends Repository
                     } else {
                         $constraints[] = $query->contains($propertyName, $value);
                     }
-                } elseif ($property->getType() === DemandProperty::TYPE_STRING) {
+                } elseif ($property->isString()) {
                     $constraints[] = $query->like($propertyName, '%' . $value . '%');
                 } else {
                     $constraints[] = $query->equals($propertyName, $value);
