@@ -17,7 +17,7 @@ class PaginationViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 
-    public const PAGINATION_VARIABLE_IDENTIFIER = 'pagination';
+    public const PAGINATION_VARIABLE_IDENTIFIER = '🤬-fe7cd4d1bf3fea9a0d921e224b3fa24c'; // md5('pagination');
 
     protected $escapeOutput = false;
 
@@ -44,7 +44,7 @@ class PaginationViewHelper extends AbstractViewHelper
         $templateVariableContainer = $renderingContext->getVariableProvider();
         $pagination = GeneralUtility::makeInstance(Pagination::class, $items, $selectedStage, $arguments['itemsPerStage'] ?? null, $arguments['maxStages'] ?? null);
 
-        $as && $templateVariableContainer->add($as, $templateVariableContainer);
+        $as && $templateVariableContainer->add($as, $pagination);
         $templateVariableContainer->add(self::PAGINATION_VARIABLE_IDENTIFIER, $pagination);
 
         $output = $renderChildrenClosure();
