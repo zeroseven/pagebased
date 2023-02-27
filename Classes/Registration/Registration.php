@@ -71,6 +71,13 @@ class Registration
         return $this;
     }
 
+    public function setObjectDemand(string $className): self
+    {
+        $this->object->setDemandClassName($className);
+
+        return $this;
+    }
+
     public function setObjectTitle(string $title): self
     {
         $this->object->setTitle($title);

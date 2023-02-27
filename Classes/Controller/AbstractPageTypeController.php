@@ -34,7 +34,7 @@ abstract class AbstractPageTypeController extends AbstractController implements 
         $demandClass = $this->registration->getObject()->getDemandClassName();
         $parameterArray = array_merge($this->settings, (array)$this->requestArguments);
 
-        $this->demand = GeneralUtility::makeInstance($demandClass, $objectClass, $parameterArray);
+        $this->demand = $demandClass::makeInstance($objectClass, $parameterArray);
     }
 
     public function getDemand(): DemandInterface
@@ -60,6 +60,6 @@ abstract class AbstractPageTypeController extends AbstractController implements 
 
     public function filterAction(): void
     {
-
+        
     }
 }
