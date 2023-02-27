@@ -1,0 +1,18 @@
+#####################################################
+# Default views and plugin settings
+#####################################################
+plugin.tx_rampage {
+  features {
+    skipDefaultArguments = 1
+  }
+
+  mvc {
+    callDefaultActionIfActionCantBeResolved = 1
+  }
+
+  settings {
+    list {
+      ajaxTypeNum = {$plugin.tx_rampage.settings.list.ajaxTypeNum}
+    }
+  }
+}

@@ -1,0 +1,8 @@
+plugin.tx_rampage {
+  settings {
+    # customsubcategory=list=Object list settings
+    list {
+      ajaxTypeNum = 1677526705
+    }
+  }
+}

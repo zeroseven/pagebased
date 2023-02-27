@@ -64,10 +64,10 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
         if (count($replaceSelectors) + count($appendSelectors) > 0) {
             $variableProvider = $this->renderingContext->getVariableProvider();
 
-            if ($demand && $demand->getContentId() && $variableProvider->exists('list') && ($listSettings = $variableProvider->get('list')) && (int)($ajaxPageType = $listSettings['ajaxPageType'] ?? 0)) {
+            if ($demand && $demand->getContentId() && ($ajaxTypeNum = (int)($variableProvider->get('settings.list.ajaxTypeNum') ?? 0))) {
                 $ajaxUrl = $this->renderingContext->getControllerContext()->getUriBuilder()->reset()
                     ->setCreateAbsoluteUri(true)
-                    ->setTargetPageType($ajaxPageType)
+                    ->setTargetPageType($ajaxTypeNum)
                     ->setArguments((array)($this->arguments['arguments'] ?? []))
                     ->setAddQueryString((bool)($this->arguments['addQueryString'] ?? false))
                     ->setArguments((array)($this->arguments['additionalParams'] ?? []))
@@ -77,7 +77,7 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
 
                 $ajaxUrl && $this->tag->addAttribute('onclick', sprintf('Zeroseven.Rampage.load(%s,%s,%s)', GeneralUtility::quoteJSvalue($ajaxUrl), json_encode($replaceSelectors, JSON_THROW_ON_ERROR), json_encode($appendSelectors, JSON_THROW_ON_ERROR)));
             } else {
-                throw new Exception('Ajax-Loading failed: Either the content ID of the demand class or the key "list.ajaxPageType" is not configured in your plugin settings.', 1677489279);
+                throw new Exception('Ajax-Loading failed: Either the content ID of the demand class or the key "list.ajaxTypeNum" is not configured in your plugin settings.', 1677489279);
             }
         }
 
