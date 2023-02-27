@@ -20,7 +20,7 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
         // Register demand argument
         $this->registerArgument('demand', 'object', 'The demand object', false);
         $this->registerArgument('required', 'bool', 'Hide link-tag if target page is not available.', false, true);
-
+        $this->registerArgument('ajaxPageType', 'int', 'Additional url for a "data-href" attribute.');
     }
 
     abstract protected function getTargetStage(Pagination $pagination): ?int;
@@ -32,8 +32,10 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
             throw new Exception(sprintf('The ViewHelper "%s" may only be used inside "%s".', self::class, PaginationViewHelper::class), 1677243233);
         }
 
+        $demand = $this->arguments['demand'] ?? null;
+
         if (($targetStage = $this->getTargetStage($this->templateVariableContainer->get(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER))) !== null) {
-            if ($demand = $this->arguments['demand'] ?? null) {
+            if ($demand) {
                 $overrides = $demand->getDiff($this->templateVariableContainer->get('settings'), [AbstractDemand::PARAMETER_UID_LIST]);
 
                 foreach ($overrides as $key => $value) {
@@ -48,6 +50,19 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
             }
 
             return $this->renderChildren();
+        }
+
+        // Add a "data-href" link attribute
+        if ($demand && $demand->getContentId() && $pageType = (int)($this->arguments['ajaxPageType'] ?? 0)) {
+            $this->tag->addAttribute('data-href', $this->renderingContext->getControllerContext()->getUriBuilder()->reset()
+                ->setCreateAbsoluteUri(true)
+                ->setTargetPageType($pageType)
+                ->setArguments((array)($this->arguments['arguments'] ?? []))
+                ->setAddQueryString((bool)($this->arguments['addQueryString'] ?? false))
+                ->setArguments((array)($this->arguments['additionalParams'] ?? []))
+                ->uriFor($this->arguments['action'] ?? '', array_merge(($this->arguments['arguments'] ?? []), [
+                    'ajax' => 1
+                ]), $this->arguments['controller'] ?? null, $this->arguments['extensionName'] ?? null, $this->arguments['pluginName'] ?? null));
         }
 
         return parent::render();
