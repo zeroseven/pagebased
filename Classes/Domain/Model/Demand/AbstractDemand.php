@@ -17,6 +17,8 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use Zeroseven\Rampage\Exception\PropertyException;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Exception\ValueException;
+use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\CastUtility;
 
 abstract class AbstractDemand implements DemandInterface
 {
@@ -142,9 +144,13 @@ abstract class AbstractDemand implements DemandInterface
         return null;
     }
 
-    public static function makeInstance(string $className): self
+    public static function makeInstance(string $className, array $parameterArray = null): self
     {
-        return GeneralUtility::makeInstance(static::class, $className);
+        if (($registration = RegistrationService::getRegistrationByClassName($className)) && $demandClassName = $registration->getObject()->getDemandClassName()) {
+            return GeneralUtility::makeInstance($demandClassName, $className, $parameterArray);
+        }
+
+        return GeneralUtility::makeInstance(static::class, $className, $parameterArray);
     }
 
     public function getProperty(string $propertyName): mixed
@@ -161,6 +167,32 @@ abstract class AbstractDemand implements DemandInterface
     {
         return $this->properties;
     }
+
+    public function getDiff(array $base, array $protectedParameters = null): array
+    {
+        $result = [];
+
+        foreach ($this->properties as $property) {
+            $parameter = $property->getParameter();
+
+            if (
+                ($protectedParameters && in_array($parameter, $protectedParameters, true))
+                || (
+                    (!$property->isArray() && ($base[$parameter] ?? null) !== $property->getValue())
+                    || ($property->isArray() && (count(array_diff(CastUtility::array($base[$parameter] ?? null), $property->getValue())) || count(array_diff($property->getValue(), CastUtility::array($base[$parameter] ?? null)))))
+                )
+            ) {
+                if (!empty($property->getValue())) {
+                    $result[$parameter] = $property->getValue();
+                } elseif (!empty($base[$parameter])) {
+                    $result[$parameter] = '';
+                }
+            }
+        }
+
+        return $result;
+    }
+
 
     public function hasProperty(string $propertyName): bool
     {

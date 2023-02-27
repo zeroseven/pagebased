@@ -48,6 +48,26 @@ class DemandProperty
         return $this->value;
     }
 
+    public function isArray(): bool
+    {
+        return $this->type === self::TYPE_ARRAY;
+    }
+
+    public function isInteger(): bool
+    {
+        return $this->type === self::TYPE_INTEGER;
+    }
+
+    public function isString(): bool
+    {
+        return $this->type === self::TYPE_STRING;
+    }
+
+    public function isBoolean(): bool
+    {
+        return $this->type === self::TYPE_BOOLEAN;
+    }
+
     /** @throws TypeException */
     public function setValue(mixed $value): self
     {
