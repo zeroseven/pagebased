@@ -16,7 +16,8 @@
     }
   ],
   "require": {
-    "typo3/cms-core": "^11.5.0"
+    "typo3/cms-core": "^11.5.0",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {
