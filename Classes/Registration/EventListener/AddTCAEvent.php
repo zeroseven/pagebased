@@ -7,9 +7,9 @@ namespace Zeroseven\Rampage\Registration\EventListener;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Type\Exception as TypeException;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use Zeroseven\Rampage\Backend\TCA\GroupFilter;
+use Zeroseven\Rampage\Backend\TCA\ItemsProcFunc;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
@@ -57,7 +57,7 @@ class AddTCAEvent
         if ($pageType = $this->getPageType($pageObjectRegistration)) {
 
             // Add to type list
-            if (($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null)) {
+            if ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
                 ExtensionManagementUtility::addTcaSelectItem(
                     AbstractPage::TABLE_NAME,
                     $tcaTypeField,
@@ -144,6 +144,23 @@ class AddTCAEvent
                             ['Title (DESC)', 'title_desc'],
                         ]
                     ], 'SORTING');
+
+                if ($registration->getCategory()->isEnabled() && $tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
+                    $optionsSheet->addField('settings.category', [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 0,
+                        'maxitems' => 1,
+                        'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
+                        'foreign_table' => 'pages',
+                        'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $tcaTypeField, $registration->getCategory()->getObjectClassName()::getType()),
+                        'items' => [
+                            ['NO RESTRICTION', '--div--'],
+                            ['SHOW ALL', 0],
+                            ['AVAILABLE CATEGORIES', '--div--'],
+                        ]
+                    ], 'CATEGORY');
+                }
 
                 $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout')
                     ->addField('settings.itemsPerStage', [

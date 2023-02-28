@@ -6,12 +6,16 @@ namespace Zeroseven\Rampage\Utility;
 
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Database\QueryGenerator;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use function Zeroseven\Rampage\Backend\TCA\getPageData;
 
 class RootLineUtility
 {
@@ -49,7 +53,7 @@ class RootLineUtility
             return $rootLine;
         }
 
-        return GeneralUtility::makeInstance(\TYPO3\CMS\Core\Utility\RootlineUtility::class, $startingPoint ?: self::getCurrentPage())->get();
+        return self::collectPagesBelow($startingPoint);
     }
 
     public static function findDocumentType(int $documentType, int $startingPoint = null, array $rootLine = null): ?int
@@ -79,6 +83,10 @@ class RootLineUtility
             try {
                 $site = $startingPoint === null && ($request = self::getRequest()) ? $request->getAttribute('site') : GeneralUtility::makeInstance(SiteFinder::class)->getSiteByPageId($startingPoint);
             } catch (SiteNotFoundException $e) {
+                if (!empty($pagesAbove = self::collectPagesAbove($startingPoint))) {
+                    return end($pagesAbove)['uid'] ?? 0;
+                }
+
                 return 0;
             }
 
@@ -88,8 +96,76 @@ class RootLineUtility
         return 0;
     }
 
-    public static function findPagesBelow(int $startingPoint = null): array
+    protected static function getTreeCollectQueryBuilder(): QueryBuilder
     {
-        return GeneralUtility::intExplode(',', GeneralUtility::makeInstance(QueryGenerator::class)->getTreeList($startingPoint ?: self::getCurrentPage(), 99));
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+        $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+        $queryBuilder->select('*')->from('pages')
+            ->andWhere($queryBuilder->expr()->eq('sys_language_uid', 0))
+            ->orderBy($GLOBALS['TCA']['pages']['ctrl']['sortby'] ?? 'uid');
+
+        return $queryBuilder;
+    }
+
+    public static function collectPagesAbove(int $startingPoint): array
+    {
+        function lookUp(array &$list, int $pid, int $looped, QueryBuilder $queryBuilder): void
+        {
+            if ($pid > 0) {
+                $queryBuilder->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
+
+                if ($looped === 0) {
+                    $queryBuilder->orWhere($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)))
+                        ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
+                }
+
+                $statement = $queryBuilder->execute();
+                while ($row = $statement->fetchAssociative()) {
+                    if ($uid = (int)($row['uid'] ?? 0)) {
+                        $list[$uid] = $row;
+
+                        if ($pid = (int)($row['pid'] ?? 0)) {
+                            lookUp($list, $pid, $looped + 1, $queryBuilder);
+                        }
+                    }
+                }
+            }
+        }
+
+        $list = [];
+        $queryBuilder = self::getTreeCollectQueryBuilder();
+        lookUp($list, $startingPoint, 0, $queryBuilder);
+
+        return $list;
+    }
+
+    public static function collectPagesBelow(int $startingPoint, ?int $depth = null): array
+    {
+        function lookDown(array &$list, int $uid, int $looped, int $depth, QueryBuilder $queryBuilder): void
+        {
+            if ($looped < $depth) {
+                $queryBuilder->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
+
+                if ($looped === 0) {
+                    $queryBuilder->orWhere($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
+                        ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
+                }
+
+                $statement = $queryBuilder->execute();
+                while ($row = $statement->fetchAssociative()) {
+                    if ($uid = (int)($row['uid'] ?? 0)) {
+                        $list[$uid] = $row;
+
+                        lookDown($list, $uid, $looped + 1, $depth, $queryBuilder);
+                    }
+                }
+            }
+        }
+
+        $list = [];
+        $queryBuilder = self::getTreeCollectQueryBuilder();
+        lookDown($list, $startingPoint, 0, $depth ?? 100, $queryBuilder);
+
+        return $list;
     }
 }
