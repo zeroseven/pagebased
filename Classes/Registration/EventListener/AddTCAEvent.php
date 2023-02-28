@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration\EventListener;
 
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use Zeroseven\Rampage\Backend\TCA\GroupFilter;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Registration\PageObjectRegistration;
 use Zeroseven\Rampage\Registration\PluginRegistration;
@@ -25,15 +29,15 @@ class AddTCAEvent
         return null;
     }
 
-    protected function createPlugin(Registration $registration, PluginRegistration $pluginRegistration): void
+    protected function createPlugin(Registration $registration, PluginRegistration $pluginRegistration): string
     {
         $CType = $pluginRegistration->getCType($registration);
 
         // Add some default fields to the content elements by copy configuration of "header"
         $GLOBALS['TCA']['tt_content']['types'][$CType]['showitem'] = $GLOBALS['TCA']['tt_content']['types']['header']['showitem'];
 
-        // Register plugins
-        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
+        // Register plugin
+        ExtensionUtility::registerPlugin(
             $registration->getExtensionName(),
             ucfirst($pluginRegistration->getType()),
             $pluginRegistration->getTitle(),
@@ -42,6 +46,8 @@ class AddTCAEvent
 
         // Register icon
         $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$CType] = $pluginRegistration->getIconIdentifier();
+
+        return $CType;
     }
 
     protected function createPageType(PageObjectRegistration $pageObjectRegistration): void
@@ -89,10 +95,10 @@ class AddTCAEvent
                 $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_relations_to']['config'] = [
                     'filter' => [
                         [
-                             'userFunc' => GroupFilter::class . '->filterTypes',
-                             'parameters' => [
-                                 'allowed' => $pageType
-                             ]
+                            'userFunc' => GroupFilter::class . '->filterTypes',
+                            'parameters' => [
+                                'allowed' => $pageType
+                            ]
                         ]
                     ],
                     'suggestOptions' => [
@@ -126,7 +132,53 @@ class AddTCAEvent
     protected function addFilterPlugin(Registration $registration): void
     {
         if ($registration->getFilterPlugin()->isEnabled()) {
-            $this->createPlugin($registration, $registration->getFilterPlugin());
+            $cType = $this->createPlugin($registration, $registration->getFilterPlugin());
+            $listCType = $registration->getListPlugin()->getCType($registration);
+
+            if ($cType && $listCType) {
+                $GLOBALS['TCA']['tt_content']['columns']['pi_flexform']['config']['ds']['*,' . $cType] = GeneralUtility::makeInstance(FlexFormTools::class)->flexArray2Xml([
+                    'sheets' => [
+                        'general' => [
+                            'ROOT' => [
+                                'TCEforms' => [
+                                    'sheetTitle' => 'General'
+                                ],
+                                'type' => 'array',
+                                'el' => [
+                                    'settings.' . AbstractDemand::PARAMETER_CONTENT_ID => [
+                                        'label' => 'Content ID',
+                                        'config' => [
+                                            'type' => 'group',
+                                            'internal_type' => 'db',
+                                            'foreign_table' => 'tt_content',
+                                            'allowed' => 'tt_content',
+                                            'size' => '1',
+                                            'maxitems' => '1',
+                                            'suggestOptions' => [
+                                                'default' => [
+                                                    'searchWholePhrase' => true
+                                                ],
+                                                'tt_content' => [
+                                                    'searchCondition' => 'CType = "' . $listCType . '"'
+                                                ]
+                                            ],
+                                            'filter' => [
+                                                'userFunc' => GroupFilter::class . '->filterTypes',
+                                                'parameters' => [
+                                                    'allowed' => $listCType
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]);
+
+                // Add the flexForm TCA field to the content element
+                ExtensionManagementUtility::addToAllTCAtypes('tt_content', 'pi_flexform', $cType, 'after:header');
+            }
         }
     }
 
