@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration\EventListener;
 
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
-use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
+use TYPO3\CMS\Core\Type\Exception as TypeException;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
@@ -13,6 +13,8 @@ use Zeroseven\Rampage\Backend\TCA\GroupFilter;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
+use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
+use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\PageObjectRegistration;
 use Zeroseven\Rampage\Registration\PluginRegistration;
 use Zeroseven\Rampage\Registration\Registration;
@@ -129,55 +131,42 @@ class AddTCAEvent
         }
     }
 
+    /** @throws TypeException */
     protected function addFilterPlugin(Registration $registration): void
     {
         if ($registration->getFilterPlugin()->isEnabled()) {
+            $table = 'tt_content';
             $cType = $this->createPlugin($registration, $registration->getFilterPlugin());
             $listCType = $registration->getListPlugin()->getCType($registration);
 
             if ($cType && $listCType) {
-                $GLOBALS['TCA']['tt_content']['columns']['pi_flexform']['config']['ds']['*,' . $cType] = GeneralUtility::makeInstance(FlexFormTools::class)->flexArray2Xml([
-                    'sheets' => [
-                        'general' => [
-                            'ROOT' => [
-                                'TCEforms' => [
-                                    'sheetTitle' => 'General'
-                                ],
-                                'type' => 'array',
-                                'el' => [
-                                    'settings.' . AbstractDemand::PARAMETER_CONTENT_ID => [
-                                        'label' => 'Content ID',
-                                        'config' => [
-                                            'type' => 'group',
-                                            'internal_type' => 'db',
-                                            'foreign_table' => 'tt_content',
-                                            'allowed' => 'tt_content',
-                                            'size' => '1',
-                                            'maxitems' => '1',
-                                            'suggestOptions' => [
-                                                'default' => [
-                                                    'searchWholePhrase' => true
-                                                ],
-                                                'tt_content' => [
-                                                    'searchCondition' => 'CType = "' . $listCType . '"'
-                                                ]
-                                            ],
-                                            'filter' => [
-                                                'userFunc' => GroupFilter::class . '->filterTypes',
-                                                'parameters' => [
-                                                    'allowed' => $listCType
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
+                $generalSheet = GeneralUtility::makeInstance(FlexFormSheetConfiguration::class, 'general', 'General setttings')
+                    ->addField('settings.' . AbstractDemand::PARAMETER_CONTENT_ID, [
+                        'type' => 'group',
+                        'internal_type' => 'db',
+                        'foreign_table' => $table,
+                        'allowed' => $table,
+                        'size' => '1',
+                        'maxitems' => '1',
+                        'suggestOptions' => [
+                            'default' => [
+                                'searchWholePhrase' => true
+                            ],
+                            $table => [
+                                'searchCondition' => 'CType = "' . $listCType . '"'
+                            ]
+                        ],
+                        'filter' => [
+                            'userFunc' => GroupFilter::class . '->filterTypes',
+                            'parameters' => [
+                                'allowed' => $listCType
                             ]
                         ]
-                    ]
-                ]);
+                    ], 'CONTENT id');
 
-                // Add the flexForm TCA field to the content element
-                ExtensionManagementUtility::addToAllTCAtypes('tt_content', 'pi_flexform', $cType, 'after:header');
+                FlexFormConfiguration::makeInstance($table, $cType, 'pi_flexform', 'after:header')
+                    ->addSheet($generalSheet)
+                    ->addToTCA();
             }
         }
     }
