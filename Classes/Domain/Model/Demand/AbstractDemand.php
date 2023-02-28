@@ -77,7 +77,10 @@ abstract class AbstractDemand implements DemandInterface
     {
         if ($this->tableDefinition === null && $this->dataMap) {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->dataMap->getTableName());
-            $this->tableDefinition = $queryBuilder->getSchemaManager()->listTableColumns($this->dataMap->getTableName());
+
+            if ($schemaManager = $queryBuilder->getSchemaManager()) {
+                $this->tableDefinition = $schemaManager->listTableColumns($this->dataMap->getTableName());
+            }
         }
 
         return $this->tableDefinition;
@@ -212,18 +215,26 @@ abstract class AbstractDemand implements DemandInterface
     }
 
     /** @throws TypeException | ValueException */
-    public function setProperties(bool $ignoreEmptyValues = false, ...$arguments): self
+    public function setProperties(bool $ignoreEmptyValues = false, ...$parameterArrays): self
     {
         // Check the types of arguments
-        foreach ($arguments as $argument) {
-            if (!is_array($arguments)) {
-                throw new ValueException('Disallowed argument ' . gettype($argument), 1676061794);
+        foreach ($parameterArrays as $parameterArray) {
+            if (!is_array($parameterArray)) {
+                throw new ValueException('Argument must be type array, ' . gettype($parameterArray) . 'given', 1676061794);
             }
+
+            debug($parameterArray);
 
             // Set properties
             foreach ($this->properties as $property) {
-                if ($ignoreEmptyValues || ($value = $argument[$property->getParameter()] ?? null)) {
-                    $property->setValue($value ?? null);
+                if (isset($parameterArray[$property->getParameter()])) {
+                    if($value = $parameterArray[$property->getParameter()] ?? null) {
+                        $property->setValue($value);
+                    } elseif ($ignoreEmptyValues === false) {
+                        $property->setValue(null);
+                    }
+
+                    debug($property, $parameterArray[$property->getParameter()] ?? null);
                 }
             }
         }
@@ -261,6 +272,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->getProperty(self::PARAMETER_UID_LIST);
     }
 
+    /** @throws TypeException | PropertyException */
     public function setUidList(mixed $value): self
     {
         $this->setProperty(self::PARAMETER_UID_LIST, $value);
@@ -273,6 +285,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->getProperty(self::PARAMETER_ORDER_BY);
     }
 
+    /** @throws TypeException | PropertyException */
     public function setOrderBy(mixed $value): self
     {
         $this->setProperty(self::PARAMETER_ORDER_BY, $value);
@@ -285,6 +298,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->getProperty(self::PARAMETER_CONTENT_ID);
     }
 
+    /** @throws TypeException | PropertyException */
     public function setContentId(mixed $value): self
     {
         $this->setProperty(self::PARAMETER_CONTENT_ID, $value);

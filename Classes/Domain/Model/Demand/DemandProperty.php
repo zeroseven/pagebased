@@ -20,12 +20,14 @@ class DemandProperty
     protected string $parameter;
     protected mixed $value;
 
+    /** @throws TypeException */
     public function __construct(string $name, string $type, mixed $value = null)
     {
         $this->name = $name;
         $this->type = $type;
         $this->parameter = GeneralUtility::camelCaseToLowerCaseUnderscored($name);
-        $this->value = $value ?? null;
+
+        $this->setValue($value);
     }
 
     public function getName(): string
