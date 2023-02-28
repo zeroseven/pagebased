@@ -124,10 +124,54 @@ class AddTCAEvent
         }
     }
 
+    /** @throws TypeException */
     protected function addListPlugin(Registration $registration): void
     {
         if ($registration->getListPlugin()->isEnabled()) {
-            $this->createPlugin($registration, $registration->getListPlugin());
+            $cType = $this->createPlugin($registration, $registration->getListPlugin());
+
+            // FlexForm configuration
+            if ($cType) {
+                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options')
+                    ->addField('settings.sorting', [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 1,
+                        'maxitems' => 1,
+                        'items' => [
+                            ['default', 0],
+                            ['Title (ASC)', 'title_asc'],
+                            ['Title (DESC)', 'title_desc'],
+                        ]
+                    ], 'SORTING');
+
+                $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout')
+                    ->addField('settings.itemsPerStage', [
+                        'placeholder' => '6',
+                        'type' => 'input',
+                        'eval' => 'trim,is_in',
+                        'is_in' => ',0123456789'
+                    ], 'ITEMS_PER_PAGE')
+                    ->addField('settings.maxStages', [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 1,
+                        'maxitems' => 1,
+                        'items' => [
+                            ['unlimited', 0],
+                            [1, 1],
+                            [2, 2],
+                            [3, 3],
+                            [4, 4],
+                            [5, 5],
+                        ]
+                    ], 'MAX_STAGES');
+
+                FlexFormConfiguration::makeInstance('tt_content', $cType, 'pi_flexform', 'after:header')
+                    ->addSheet($optionsSheet)
+                    ->addSheet($layoutSheet)
+                    ->addToTCA();
+            }
         }
     }
 
@@ -135,12 +179,14 @@ class AddTCAEvent
     protected function addFilterPlugin(Registration $registration): void
     {
         if ($registration->getFilterPlugin()->isEnabled()) {
-            $table = 'tt_content';
             $cType = $this->createPlugin($registration, $registration->getFilterPlugin());
             $listCType = $registration->getListPlugin()->getCType($registration);
 
+            // FlexForm configuration
             if ($cType && $listCType) {
-                $generalSheet = GeneralUtility::makeInstance(FlexFormSheetConfiguration::class, 'general', 'General setttings')
+                $table = 'tt_content';
+
+                $generalSheet = FlexFormSheetConfiguration::makeInstance('general', 'General setttings')
                     ->addField('settings.' . AbstractDemand::PARAMETER_CONTENT_ID, [
                         'type' => 'group',
                         'internal_type' => 'db',
