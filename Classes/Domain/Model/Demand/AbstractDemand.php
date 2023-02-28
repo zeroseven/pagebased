@@ -171,6 +171,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->properties;
     }
 
+    /** @throws TypeException */
     public function getDiff(array $base, array $protectedParameters = null): array
     {
         $result = [];
@@ -181,7 +182,9 @@ abstract class AbstractDemand implements DemandInterface
             if (
                 ($protectedParameters && in_array($parameter, $protectedParameters, true))
                 || (
-                    (!$property->isArray() && ($base[$parameter] ?? null) !== $property->getValue())
+                    ($property->isInteger() && CastUtility::int($base[$parameter] ?? 0) !== $property->getValue())
+                    || ($property->isString() && CastUtility::string($base[$parameter] ?? 0) !== $property->getValue())
+                    || ($property->isBoolean() && CastUtility::bool($base[$parameter] ?? 0) !== $property->getValue())
                     || ($property->isArray() && (count(array_diff(CastUtility::array($base[$parameter] ?? null), $property->getValue())) || count(array_diff($property->getValue(), CastUtility::array($base[$parameter] ?? null)))))
                 )
             ) {
@@ -223,18 +226,14 @@ abstract class AbstractDemand implements DemandInterface
                 throw new ValueException('Argument must be type array, ' . gettype($parameterArray) . 'given', 1676061794);
             }
 
-            debug($parameterArray);
-
             // Set properties
             foreach ($this->properties as $property) {
                 if (isset($parameterArray[$property->getParameter()])) {
-                    if($value = $parameterArray[$property->getParameter()] ?? null) {
+                    if ($value = $parameterArray[$property->getParameter()] ?? null) {
                         $property->setValue($value);
                     } elseif ($ignoreEmptyValues === false) {
                         $property->setValue(null);
                     }
-
-                    debug($property, $parameterArray[$property->getParameter()] ?? null);
                 }
             }
         }

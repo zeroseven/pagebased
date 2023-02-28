@@ -59,6 +59,5 @@ abstract class AbstractPageTypeController extends AbstractController implements 
 
     public function filterAction(): void
     {
-        
     }
 }
