@@ -6,5 +6,10 @@ namespace Zeroseven\Rampage\Domain\Model\Demand;
 
 class ObjectDemand extends AbstractDemand
 {
+    protected function initProperties(): void
+    {
+        $this->addProperty('category', DemandProperty::TYPE_INTEGER);
 
+        parent::initProperties();
+    }
 }
