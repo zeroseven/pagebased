@@ -6,6 +6,12 @@
 	  <trans-unit id="pages._rampage_top">
 	    <source>Top</source>
 	  </trans-unit>
+	  <trans-unit id="pages._rampage_tags">
+	    <source>Tags</source>
+	  </trans-unit>
+	  <trans-unit id="pages._rampage_tags.placeholder">
+	    <source>Add new tags</source>
+	  </trans-unit>
 	  <trans-unit id="pages._rampage_relations_to">
 	    <source>Relations to</source>
 	  </trans-unit>
