@@ -6,7 +6,13 @@ namespace Zeroseven\Rampage\Registration;
 
 use ReflectionClass;
 use ReflectionException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
+use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
+use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
+use Zeroseven\Rampage\Exception\RegistrationException;
 
 class PageObjectRegistration
 {
@@ -42,6 +48,11 @@ class PageObjectRegistration
         return $this->repositoryClassName;
     }
 
+    public function getRepositoryClass(): RepositoryInterface
+    {
+        return GeneralUtility::makeInstance(ObjectManager::class)->get($this->repositoryClassName);
+    }
+
     public function setRepositoryClassName(string $repositoryClassName): self
     {
         $this->repositoryClassName = $repositoryClassName;
@@ -59,9 +70,18 @@ class PageObjectRegistration
         return $this;
     }
 
-    public function getDemandClassName(): string
+    public function getDemandClassName(): ?string
     {
-        return $this->demandClassName ?? ObjectDemand::class;
+        return $this->demandClassName;
+    }
+
+    public function getDemandClass(...$arguments): DemandInterface
+    {
+        if ($this->demandClassName) {
+            return GeneralUtility::makeInstance($this->demandClassName, $this->objectClassName, $arguments);
+        }
+
+        return GeneralUtility::makeInstance(ObjectDemand::class, $this->objectClassName, $arguments);
     }
 
     public function setDemandClassName(string $demandClassName): self
@@ -113,5 +133,19 @@ class PageObjectRegistration
     public function isEnabled(): bool
     {
         return $this->enabled && $this->objectClassName;
+    }
+
+    /** @throws RegistrationException */
+    public function getObjectType(): int
+    {
+        if (!$this->isEnabled()) {
+            return 0;
+        }
+
+        if (!is_subclass_of($this->objectClassName, PageTypeInterface::class)) {
+            throw new RegistrationException(sprintf('Object "%s" is not a subclass of %s', $this->objectClassName, PageTypeInterface::class), 1677876156);
+        }
+
+        return $this->objectClassName::getType();
     }
 }

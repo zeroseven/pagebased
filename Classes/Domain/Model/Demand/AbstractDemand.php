@@ -147,15 +147,6 @@ abstract class AbstractDemand implements DemandInterface
         return null;
     }
 
-    public static function makeInstance(string $className, array $parameterArray = null): self
-    {
-        if (($registration = RegistrationService::getRegistrationByClassName($className)) && $demandClassName = $registration->getObject()->getDemandClassName()) {
-            return GeneralUtility::makeInstance($demandClassName, $className, $parameterArray);
-        }
-
-        return GeneralUtility::makeInstance(static::class, $className, $parameterArray);
-    }
-
     public function getProperty(string $propertyName): mixed
     {
         if ($property = $this->properties[$propertyName] ?? null) {

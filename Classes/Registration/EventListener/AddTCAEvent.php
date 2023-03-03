@@ -12,7 +12,7 @@ use Zeroseven\Rampage\Backend\TCA\GroupFilter;
 use Zeroseven\Rampage\Backend\TCA\ItemsProcFunc;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
-use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
+use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\PageObjectRegistration;
@@ -22,15 +22,6 @@ use Zeroseven\Rampage\Registration\RegistrationService;
 
 class AddTCAEvent
 {
-    protected function getPageType(PageObjectRegistration $pageObjectRegistration): ?int
-    {
-        if (is_subclass_of($pageObjectRegistration->getObjectClassName(), PageTypeInterface::class) && $pageType = $pageObjectRegistration->getObjectClassName()::getType()) {
-            return $pageType;
-        }
-
-        return null;
-    }
-
     protected function createPlugin(Registration $registration, PluginRegistration $pluginRegistration): string
     {
         $CType = $pluginRegistration->getCType($registration);
@@ -52,9 +43,10 @@ class AddTCAEvent
         return $CType;
     }
 
+    /** @throws RegistrationException */
     protected function createPageType(PageObjectRegistration $pageObjectRegistration): void
     {
-        if ($pageType = $this->getPageType($pageObjectRegistration)) {
+        if ($pageType = $pageObjectRegistration->getObjectType()) {
 
             // Add to type list
             if ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
@@ -80,15 +72,17 @@ class AddTCAEvent
         }
     }
 
+    /** @throws RegistrationException */
     protected function addPageType(Registration $registration): void
     {
         if (($pageObject = $registration->getObject()) && $pageObject->isEnabled()) {
             $this->createPageType($pageObject);
 
-            if ($pageType = $this->getPageType($pageObject)) {
+            if ($pageType = $pageObject->getObjectType()) {
                 ExtensionManagementUtility::addToAllTCAtypes(AbstractPage::TABLE_NAME, sprintf('
                     --div--;%s,
                         _rampage_top,
+                        _rampage_tags,
                         _rampage_relations_to,
                         _rampage_relations_from
                 ', $pageObject->getTitle()), (string)$pageType);
@@ -132,18 +126,17 @@ class AddTCAEvent
 
             // FlexForm configuration
             if ($cType) {
-                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options')
-                    ->addField('settings.sorting', [
-                        'type' => 'select',
-                        'renderType' => 'selectSingle',
-                        'minitems' => 1,
-                        'maxitems' => 1,
-                        'items' => [
-                            ['default', 0],
-                            ['Title (ASC)', 'title_asc'],
-                            ['Title (DESC)', 'title_desc'],
-                        ]
-                    ], 'SORTING');
+                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options');
+
+                try {
+                    $optionsSheet->addField('settings.tags', [
+                            'type' => 'user',
+                            'renderType' => 'rampageTags',
+                            'placeholder' => 'ADD TAGS …',
+                            'object' => $registration->getObject()->getObjectClassName()
+                        ], 'PLACEHOLDER');
+                } catch (RegistrationException $e) {
+                }
 
                 if ($registration->getCategory()->isEnabled() && $tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
                     $optionsSheet->addField('settings.category', [
@@ -163,6 +156,17 @@ class AddTCAEvent
                 }
 
                 $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout')
+                    ->addField('settings.sorting', [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 1,
+                        'maxitems' => 1,
+                        'items' => [
+                            ['default', 0],
+                            ['Title (ASC)', 'title_asc'],
+                            ['Title (DESC)', 'title_desc'],
+                        ]
+                    ], 'SORTING')
                     ->addField('settings.itemsPerStage', [
                         'placeholder' => '6',
                         'type' => 'input',
