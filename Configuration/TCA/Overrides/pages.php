@@ -1,6 +1,6 @@
 <?php
 
-defined('TYPO3') || die('🤬 fuck off!');
+defined('TYPO3') || die('🤬 F**k off!');
 
 call_user_func(static function (string $table) {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [
