@@ -132,7 +132,7 @@ class AddTCAEvent
 
             // FlexForm configuration
             if ($cType) {
-                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options')
+                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS')
                     ->addField('settings.sorting', [
                         'type' => 'select',
                         'renderType' => 'selectSingle',
@@ -141,7 +141,7 @@ class AddTCAEvent
                         'items' => [
                             ['default', 0],
                             ['Title (ASC)', 'title_asc'],
-                            ['Title (DESC)', 'title_desc'],
+                            ['Title (DESC)', 'title_desc']
                         ]
                     ], 'SORTING');
 
@@ -162,7 +162,7 @@ class AddTCAEvent
                     ], 'CATEGORY');
                 }
 
-                $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout')
+                $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LAYOUT')
                     ->addField('settings.itemsPerStage', [
                         'placeholder' => '6',
                         'type' => 'input',

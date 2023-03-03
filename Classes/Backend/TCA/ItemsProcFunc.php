@@ -28,12 +28,12 @@ class ItemsProcFunc
     public function filterCategories(array &$PA): void
     {
         if ($rootPages = $this->getRootPageUid($PA)) {
-            $queryConstraints = $PA['config']['foreign_table_where'] ?? null;
+            $queryConstraints = $PA['config']['foreign_table_where'] ?? '';
             $localPages = RootLineUtility::collectPagesBelow($rootPages);
             $parentPages = RootLineUtility::collectPagesAbove($this->getPageUid($PA));
             $closestCategoryUid = 0;
 
-            // Search for the closes category
+            // Search for the closest category in rootline
             foreach (array_keys($parentPages) as $key) {
                 if ($closestCategoryUid === 0 && BackendUtility::getRecord(AbstractPage::TABLE_NAME, $key, 'uid', $queryConstraints)) {
                     $closestCategoryUid = $key;
