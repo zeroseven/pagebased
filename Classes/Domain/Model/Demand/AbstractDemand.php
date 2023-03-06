@@ -17,7 +17,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use Zeroseven\Rampage\Exception\PropertyException;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Registration\PageObjectRegistration;
 use Zeroseven\Rampage\Utility\CastUtility;
 
 abstract class AbstractDemand implements DemandInterface
@@ -44,6 +44,14 @@ abstract class AbstractDemand implements DemandInterface
         if ($parameterArray !== null) {
             $this->setProperties(true, $parameterArray);
         }
+    }
+
+    public static function makeInstance(PageObjectRegistration $objectRegistration, array $arguments = null): DemandInterface
+    {
+        $objectClass = $objectRegistration->getObjectClassName();
+        $demandClass = $objectRegistration->getDemandClassName() ?? ObjectDemand::class;
+
+        return GeneralUtility::makeInstance($demandClass, $objectClass, $arguments);
     }
 
     public function addProperty(string $name, string $type, mixed $value = null): self
@@ -147,19 +155,10 @@ abstract class AbstractDemand implements DemandInterface
         return null;
     }
 
-    public static function makeInstance(string $className, array $parameterArray = null): self
-    {
-        if (($registration = RegistrationService::getRegistrationByClassName($className)) && $demandClassName = $registration->getObject()->getDemandClassName()) {
-            return GeneralUtility::makeInstance($demandClassName, $className, $parameterArray);
-        }
-
-        return GeneralUtility::makeInstance(static::class, $className, $parameterArray);
-    }
-
-    public function getProperty(string $propertyName): mixed
+    public function getProperty(string $propertyName): ?DemandProperty
     {
         if ($property = $this->properties[$propertyName] ?? null) {
-            return $property->getValue();
+            return $property;
         }
 
         return null;
@@ -171,38 +170,9 @@ abstract class AbstractDemand implements DemandInterface
         return $this->properties;
     }
 
-    /** @throws TypeException */
-    public function getDiff(array $base, array $protectedParameters = null): array
-    {
-        $result = [];
-
-        foreach ($this->properties as $property) {
-            $parameter = $property->getParameter();
-
-            if (
-                ($protectedParameters && in_array($parameter, $protectedParameters, true))
-                || (
-                    ($property->isInteger() && CastUtility::int($base[$parameter] ?? 0) !== $property->getValue())
-                    || ($property->isString() && CastUtility::string($base[$parameter] ?? 0) !== $property->getValue())
-                    || ($property->isBoolean() && CastUtility::bool($base[$parameter] ?? 0) !== $property->getValue())
-                    || ($property->isArray() && (count(array_diff(CastUtility::array($base[$parameter] ?? null), $property->getValue())) || count(array_diff($property->getValue(), CastUtility::array($base[$parameter] ?? null)))))
-                )
-            ) {
-                if (!empty($property->getValue())) {
-                    $result[$parameter] = $property->getValue();
-                } elseif (!empty($base[$parameter])) {
-                    $result[$parameter] = '';
-                }
-            }
-        }
-
-        return $result;
-    }
-
-
     public function hasProperty(string $propertyName): bool
     {
-        return in_array($propertyName, $this->properties, true);
+        return isset($this->properties[$propertyName]);
     }
 
     /** @throws TypeException | PropertyException */
@@ -230,9 +200,9 @@ abstract class AbstractDemand implements DemandInterface
             foreach ($this->properties as $property) {
                 if (isset($parameterArray[$property->getParameter()])) {
                     if ($value = $parameterArray[$property->getParameter()] ?? null) {
-                        $property->setValue($value);
+                        $this->properties[$property->getName()]->setValue($value);
                     } elseif ($ignoreEmptyValues === false) {
-                        $property->setValue(null);
+                        $this->properties[$property->getName()]->clear();
                     }
                 }
             }
@@ -266,9 +236,46 @@ abstract class AbstractDemand implements DemandInterface
         return !$ignoreEmptyValues ? $params : array_filter($params);
     }
 
+    /** @throws TypeException */
+    public function getParameterDiff(array $base, array $protectedParameters = null): array
+    {
+        $result = [];
+
+        foreach ($this->properties as $property) {
+            $parameter = $property->getParameter();
+
+            if (
+                ($protectedParameters && in_array($parameter, $protectedParameters, true))
+                || (
+                    ($property->isInteger() && CastUtility::int($base[$parameter] ?? 0) !== $property->getValue())
+                    || ($property->isString() && CastUtility::string($base[$parameter] ?? 0) !== $property->getValue())
+                    || ($property->isBoolean() && CastUtility::bool($base[$parameter] ?? 0) !== $property->getValue())
+                    || ($property->isArray() && (count(array_diff(CastUtility::array($base[$parameter] ?? null), $property->getValue())) || count(array_diff($property->getValue(), CastUtility::array($base[$parameter] ?? null)))))
+                )
+            ) {
+                if (!empty($property->getValue())) {
+                    $result[$parameter] = (string)$property->getValue();
+                } elseif (!empty($base[$parameter])) {
+                    $result[$parameter] = '';
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    public function clear(): self
+    {
+        foreach ($this->properties as $property) {
+            $this->properties[$property->getName()]->clear();
+        }
+
+        return $this;
+    }
+
     public function getUidList(): array
     {
-        return $this->getProperty(self::PARAMETER_UID_LIST);
+        return $this->getProperty(self::PARAMETER_UID_LIST)->getValue();
     }
 
     /** @throws TypeException | PropertyException */
@@ -281,7 +288,7 @@ abstract class AbstractDemand implements DemandInterface
 
     public function getOrderBy(): string
     {
-        return $this->getProperty(self::PARAMETER_ORDER_BY);
+        return $this->getProperty(self::PARAMETER_ORDER_BY)->getValue();
     }
 
     /** @throws TypeException | PropertyException */
@@ -294,7 +301,7 @@ abstract class AbstractDemand implements DemandInterface
 
     public function getContentId(): int
     {
-        return $this->getProperty(self::PARAMETER_CONTENT_ID);
+        return $this->getProperty(self::PARAMETER_CONTENT_ID)->getValue();
     }
 
     /** @throws TypeException | PropertyException */
@@ -317,11 +324,11 @@ abstract class AbstractDemand implements DemandInterface
             }
 
             if ($action === 'get') {
-                return $this->getProperty($propertyName);
+                return $this->getProperty($propertyName)->getValue();
             }
 
             if ($action === 'is') {
-                return $this->hasProperty($propertyName);
+                return $this->hasProperty($propertyName) && !empty($this->getProperty($propertyName)->getValue());
             }
 
             if ($action === 'has') {

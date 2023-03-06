@@ -1,6 +1,7 @@
 CREATE TABLE pages
 (
 	_rampage_top               tinyint(1) unsigned DEFAULT '0' NOT NULL,
+	_rampage_tags              text,
 	_rampage_relations_to      int(11) unsigned DEFAULT '0' NOT NULL,
 	_rampage_relations_from    int(11) unsigned DEFAULT '0' NOT NULL,
 	_rampage_redirect_category tinyint(1) unsigned DEFAULT '0' NOT NULL

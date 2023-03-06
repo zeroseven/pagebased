@@ -8,6 +8,7 @@ use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -20,6 +21,11 @@ abstract class AbstractRepository extends Repository
     protected function initializeDemand(): ?DemandInterface
     {
         return null;
+    }
+
+    public function getDefaultQuerySettings(): QuerySettingsInterface
+    {
+        return $this->defaultQuerySettings;
     }
 
     protected function setOrdering(DemandInterface $demand = null): void

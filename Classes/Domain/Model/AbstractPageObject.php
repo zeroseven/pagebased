@@ -12,7 +12,10 @@ use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
 
 abstract class AbstractPageObject extends AbstractPage implements PageObjectInterface
 {
+    protected const TAG_DELIMITER = ',';
+
     protected bool $top;
+    protected ?string $tags;
     protected ?PageObject $parentObject = null;
     protected ?QueryResultInterface $childObjects = null;
     protected ?AbstractPageCategory $category = null;
@@ -49,6 +52,22 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     public function setTop(bool $value): self
     {
         $this->top = $value;
+
+        return $this;
+    }
+
+    public function getTags(): array
+    {
+        if ($tagList = $this->tags ?? null) {
+            return GeneralUtility::trimExplode(self::TAG_DELIMITER, $tagList, true);
+        }
+
+        return [];
+    }
+
+    public function setTags(mixed $value): self
+    {
+        $this->tags = is_array($value) ? implode(self::TAG_DELIMITER, $value) : (string)$value;
 
         return $this;
     }
