@@ -126,33 +126,36 @@ class AddTCAEvent
 
             // FlexForm configuration
             if ($cType) {
-                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options');
+                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS');
 
                 try {
                     $optionsSheet->addField('settings.tags', [
-                            'type' => 'user',
-                            'renderType' => 'rampageTags',
-                            'placeholder' => 'ADD TAGS …',
-                            'object' => $registration->getObject()->getObjectClassName()
-                        ], 'PLACEHOLDER');
+                        'type' => 'user',
+                        'renderType' => 'rampageTags',
+                        'placeholder' => 'ADD TAGS …',
+                        'object' => $registration->getObject()->getObjectClassName()
+                    ], 'PLACEHOLDER');
                 } catch (RegistrationException $e) {
                 }
 
                 if ($registration->getCategory()->isEnabled() && $tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
-                    $optionsSheet->addField('settings.category', [
-                        'type' => 'select',
-                        'renderType' => 'selectSingle',
-                        'minitems' => 0,
-                        'maxitems' => 1,
-                        'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
-                        'foreign_table' => 'pages',
-                        'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $tcaTypeField, $registration->getCategory()->getObjectClassName()::getType()),
-                        'items' => [
-                            ['NO RESTRICTION', '--div--'],
-                            ['SHOW ALL', 0],
-                            ['AVAILABLE CATEGORIES', '--div--'],
-                        ]
-                    ], 'CATEGORY');
+                    try {
+                        $optionsSheet->addField('settings.category', [
+                            'type' => 'select',
+                            'renderType' => 'selectSingle',
+                            'minitems' => 0,
+                            'maxitems' => 1,
+                            'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
+                            'foreign_table' => 'pages',
+                            'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $tcaTypeField, $registration->getCategory()->getObjectType()),
+                            'items' => [
+                                ['NO RESTRICTION', '--div--'],
+                                ['SHOW ALL', 0],
+                                ['AVAILABLE CATEGORIES', '--div--'],
+                            ]
+                        ], 'CATEGORY');
+                    } catch (RegistrationException $e) {
+                    }
                 }
 
                 $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LAYOUT')
@@ -162,7 +165,7 @@ class AddTCAEvent
                         'minitems' => 1,
                         'maxitems' => 1,
                         'items' => [
-                            ['default', 0],
+                            ['DEFAULT', ''],
                             ['Title (ASC)', 'title_asc'],
                             ['Title (DESC)', 'title_desc'],
                         ]
@@ -238,6 +241,7 @@ class AddTCAEvent
         }
     }
 
+    /** @throws RegistrationException | TypeException */
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
         foreach (RegistrationService::getRegistrations() as $registration) {
