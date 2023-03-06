@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -15,13 +16,32 @@ abstract class AbstractPageTypeController extends AbstractController implements 
 {
     protected ?Registration $registration = null;
     protected ?DemandInterface $demand = null;
+    protected array $requestArguments = [];
 
     public function initializeAction(): void
     {
         parent::initializeAction();
 
+        if($extbaseSetup = $this->request->getAttribute('extbase')) {
+            $requestKey = strtolower('tx_' . $extbaseSetup->getControllerExtensionName() . '_list');
+
+            $listArguments = GeneralUtility::_GP($requestKey) ?: [];
+        } else {
+            $listArguments = [];
+        }
+
+        $this->requestArguments = array_merge($this->request->getArguments(), $listArguments);
+
         $this->initializeRegistration();
         $this->initializeDemand();
+    }
+
+    protected function resolveView(): ViewInterface
+    {
+        $view = parent::resolveView();
+        $view->assign('requestArguments', $this->requestArguments);
+
+        return $view;
     }
 
     public function initializeRegistration(): void
