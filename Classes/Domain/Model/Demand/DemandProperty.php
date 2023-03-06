@@ -84,10 +84,12 @@ class DemandProperty
         }
     }
 
-    /** @throws TypeException */
     public function clear(): void
     {
-        $this->setValue(null);
+        try {
+            $this->setValue(null);
+        } catch (TypeException $e) {
+        }
     }
 
     public function __toString(): string

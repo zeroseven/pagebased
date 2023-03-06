@@ -264,6 +264,15 @@ abstract class AbstractDemand implements DemandInterface
         return $result;
     }
 
+    public function clear(): self
+    {
+        foreach ($this->properties as $property) {
+            $this->properties[$property->getName()]->clear();
+        }
+
+        return $this;
+    }
+
     public function getUidList(): array
     {
         return $this->getProperty(self::PARAMETER_UID_LIST)->getValue();

@@ -26,9 +26,17 @@ interface DemandInterface
 
     public function getParameterDiff(array $base, array $protectedParameters = null): array;
 
+    public function clear(): self;
+
     public function getUidList(): array;
+
+    public function setUidList(mixed $value): self;
 
     public function getOrderBy(): string;
 
+    public function setOrderBy(mixed $value): self;
+
     public function getContentId(): int;
+
+    public function setContentId(mixed $value): self;
 }
