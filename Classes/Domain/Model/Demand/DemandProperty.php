@@ -71,28 +71,36 @@ class DemandProperty
     }
 
     /** @throws TypeException */
-    public function setValue(mixed $value): self
+    public function setValue(mixed $value): void
     {
-        if ($this->type === self::TYPE_ARRAY) {
+        if ($this->isArray()) {
             $this->value = CastUtility::array($value);
-        } elseif ($this->type === self::TYPE_INTEGER) {
+        } elseif ($this->isInteger()) {
             $this->value = CastUtility::int($value);
-        } elseif ($this->type === self::TYPE_BOOLEAN) {
+        } elseif ($this->isBoolean()) {
             $this->value = CastUtility::bool($value);
-        } elseif ($this->type === self::TYPE_STRING) {
+        } elseif ($this->isString()) {
             $this->value = CastUtility::string($value);
         }
+    }
 
-        return $this;
+    /** @throws TypeException */
+    public function clear(): void
+    {
+        $this->setValue(null);
     }
 
     public function __toString(): string
     {
-        if ($this->type === self::TYPE_ARRAY) {
-            $values = $this->value;
+        if ($this->isArray()) {
+            $values = $this->getValue();
             sort($values);
 
             return implode(',', $values);
+        }
+
+        if ($this->isBoolean()) {
+            return (string)(bool)$this->getValue();
         }
 
         try {

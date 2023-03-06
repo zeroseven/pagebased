@@ -24,6 +24,8 @@ interface DemandInterface
 
     public function getParameterArray(bool $ignoreEmptyValues = null): array;
 
+    public function getParameterDiff(array $base, array $protectedParameters = null): array;
+
     public function getUidList(): array;
 
     public function getOrderBy(): string;
