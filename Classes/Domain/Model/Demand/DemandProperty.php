@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Domain\Model\Demand;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Exception\TypeException;
+use Zeroseven\Rampage\Exception\ValueException;
 use Zeroseven\Rampage\Utility\CastUtility;
 
 class DemandProperty
@@ -74,13 +75,49 @@ class DemandProperty
     public function setValue(mixed $value): void
     {
         if ($this->isArray()) {
-            $this->value = CastUtility::array($value);
+            $this->value = array_map(static fn($v) => CastUtility::string($v), CastUtility::array($value));
         } elseif ($this->isInteger()) {
             $this->value = CastUtility::int($value);
         } elseif ($this->isBoolean()) {
             $this->value = CastUtility::bool($value);
         } elseif ($this->isString()) {
             $this->value = CastUtility::string($value);
+        }
+    }
+
+    /** @throws TypeException | ValueException */
+    public function addToList(mixed $newValues): void
+    {
+        if ($this->isArray()) {
+            $values = $this->getValue();
+
+            foreach (CastUtility::array($newValues) as $newValue) {
+                if (!in_array((string)$newValue, $values, true)) {
+                    $values[] = $newValue;
+                }
+            }
+
+            $this->value = $values;
+        } else {
+            throw new ValueException(sprintf('Method "addToList" is only available for type "%s".', self::TYPE_ARRAY), 1678136702);
+        }
+    }
+
+    /** @throws TypeException | ValueException */
+    public function removeFromList(mixed $removeValues): void
+    {
+        if ($this->isArray()) {
+            $values = $this->getValue();
+
+            foreach (CastUtility::array($removeValues) as $removeValue) {
+                if (($key = array_search((string)$removeValue, $values, true)) !== false) {
+                    unset($values[$key]);
+                }
+            }
+
+            $this->value = $values;
+        } else {
+            throw new ValueException(sprintf('Method "removeFromList" is only available for type "%s".', self::TYPE_ARRAY), 1678136702);
         }
     }
 

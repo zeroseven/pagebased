@@ -175,10 +175,20 @@ abstract class AbstractDemand implements DemandInterface
         return isset($this->properties[$propertyName]);
     }
 
-    /** @throws TypeException | PropertyException */
+    /** @throws TypeException | PropertyException | ValueException */
     public function setProperty(string $propertyName, mixed $value): self
     {
         if ($property = $this->properties[$propertyName] ?? null) {
+            if (is_string($value)
+                && $property->isArray()
+                && preg_match('/^(?:\:=\s*)?(addTo|removeFrom)List\((.*)\)$/', trim($value), $matches)
+                && !empty($changes = CastUtility::array($matches[2]))
+            ) {
+                $matches[1] === 'addTo' ? $property->addToList($changes) : $property->removeFromList($changes);
+
+                return $this;
+            }
+
             $property->setValue($value);
         } else {
             throw new PropertyException(sprintf('Property "%s" does not exists in %s', $propertyName, __CLASS__), 1676061710);
@@ -211,15 +221,27 @@ abstract class AbstractDemand implements DemandInterface
         return $this;
     }
 
+    /** @throws PropertyException | TypeException | ValueException */
     public function addToProperty(string $propertyName, mixed $value): self
     {
-        // TODO
+        if ($property = $this->properties[$propertyName] ?? null) {
+            $property->addToList($value);
+        } else {
+            throw new PropertyException(sprintf('Property "%s" does not exists in %s', $propertyName, __CLASS__), 1678136491);
+        }
+
         return $this;
     }
 
+    /** @throws PropertyException | TypeException | ValueException */
     public function removeFromProperty(string $propertyName, mixed $value): self
     {
-        // TODO
+        if ($property = $this->properties[$propertyName] ?? null) {
+            $property->removeFromList($value);
+        } else {
+            throw new PropertyException(sprintf('Property "%s" does not exists in %s', $propertyName, __CLASS__), 1678136454);
+        }
+
         return $this;
     }
 
@@ -324,7 +346,7 @@ abstract class AbstractDemand implements DemandInterface
             }
 
             if ($action === 'get') {
-                return $this->getProperty($propertyName)->getValue();
+                return $this->hasProperty($propertyName) ? $this->getProperty($propertyName)->getValue() : null;
             }
 
             if ($action === 'is') {

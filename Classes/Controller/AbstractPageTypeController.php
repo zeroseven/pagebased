@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Controller;
 
-use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -59,5 +57,9 @@ abstract class AbstractPageTypeController extends AbstractController implements 
 
     public function filterAction(): void
     {
+        // Pass variables to the fluid template
+        $this->view->assignMultiple([
+            'demand' => $this->demand
+        ]);
     }
 }
