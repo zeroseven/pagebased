@@ -18,10 +18,6 @@ interface DemandInterface
 
     public function setProperties(bool $ignoreEmptyValues = false, ...$arguments): self;
 
-    public function addToProperty(string $propertyName, mixed $value): self;
-
-    public function removeFromProperty(string $propertyName, mixed $value): self;
-
     public function getParameterArray(bool $ignoreEmptyValues = null): array;
 
     public function getParameterDiff(array $base, array $protectedParameters = null): array;

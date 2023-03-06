@@ -71,11 +71,16 @@ class DemandProperty
         return $this->type === self::TYPE_BOOLEAN;
     }
 
-    /** @throws TypeException */
+    /** @throws TypeException | ValueException */
     public function setValue(mixed $value): void
     {
         if ($this->isArray()) {
-            $this->value = array_map(static fn($v) => CastUtility::string($v), CastUtility::array($value));
+            if (is_string($value) && preg_match('/^(?:\:=\s*)?(addTo|removeFrom)List\((.*)\)$/', trim($value), $matches)) {
+                $value = $matches[2];
+                $matches[1] === 'addTo' ? $this->addToList($value) : $this->removeFromList($value);
+            } else {
+                $this->value = array_map(static fn($v) => CastUtility::string($v), CastUtility::array($value));
+            }
         } elseif ($this->isInteger()) {
             $this->value = CastUtility::int($value);
         } elseif ($this->isBoolean()) {
@@ -90,7 +95,6 @@ class DemandProperty
     {
         if ($this->isArray()) {
             $values = $this->getValue();
-
             foreach (CastUtility::array($newValues) as $newValue) {
                 if (!in_array((string)$newValue, $values, true)) {
                     $values[] = $newValue;
@@ -129,7 +133,7 @@ class DemandProperty
         }
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         if ($this->isArray()) {
             $values = $this->getValue();
@@ -147,5 +151,10 @@ class DemandProperty
         } catch (TypeException $e) {
             return '';
         }
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 }

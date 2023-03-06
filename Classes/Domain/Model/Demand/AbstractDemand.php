@@ -175,20 +175,10 @@ abstract class AbstractDemand implements DemandInterface
         return isset($this->properties[$propertyName]);
     }
 
-    /** @throws TypeException | PropertyException | ValueException */
+    /** @throws TypeException | PropertyException */
     public function setProperty(string $propertyName, mixed $value): self
     {
         if ($property = $this->properties[$propertyName] ?? null) {
-            if (is_string($value)
-                && $property->isArray()
-                && preg_match('/^(?:\:=\s*)?(addTo|removeFrom)List\((.*)\)$/', trim($value), $matches)
-                && !empty($changes = CastUtility::array($matches[2]))
-            ) {
-                $matches[1] === 'addTo' ? $property->addToList($changes) : $property->removeFromList($changes);
-
-                return $this;
-            }
-
             $property->setValue($value);
         } else {
             throw new PropertyException(sprintf('Property "%s" does not exists in %s', $propertyName, __CLASS__), 1676061710);
@@ -221,30 +211,6 @@ abstract class AbstractDemand implements DemandInterface
         return $this;
     }
 
-    /** @throws PropertyException | TypeException | ValueException */
-    public function addToProperty(string $propertyName, mixed $value): self
-    {
-        if ($property = $this->properties[$propertyName] ?? null) {
-            $property->addToList($value);
-        } else {
-            throw new PropertyException(sprintf('Property "%s" does not exists in %s', $propertyName, __CLASS__), 1678136491);
-        }
-
-        return $this;
-    }
-
-    /** @throws PropertyException | TypeException | ValueException */
-    public function removeFromProperty(string $propertyName, mixed $value): self
-    {
-        if ($property = $this->properties[$propertyName] ?? null) {
-            $property->removeFromList($value);
-        } else {
-            throw new PropertyException(sprintf('Property "%s" does not exists in %s', $propertyName, __CLASS__), 1678136454);
-        }
-
-        return $this;
-    }
-
     public function getParameterArray(bool $ignoreEmptyValues = null): array
     {
         $params = [];
@@ -270,13 +236,13 @@ abstract class AbstractDemand implements DemandInterface
                 ($protectedParameters && in_array($parameter, $protectedParameters, true))
                 || (
                     ($property->isInteger() && CastUtility::int($base[$parameter] ?? 0) !== $property->getValue())
-                    || ($property->isString() && CastUtility::string($base[$parameter] ?? 0) !== $property->getValue())
-                    || ($property->isBoolean() && CastUtility::bool($base[$parameter] ?? 0) !== $property->getValue())
-                    || ($property->isArray() && (count(array_diff(CastUtility::array($base[$parameter] ?? null), $property->getValue())) || count(array_diff($property->getValue(), CastUtility::array($base[$parameter] ?? null)))))
+                    || ($property->isString() && CastUtility::string($base[$parameter] ?? '') !== $property->getValue())
+                    || ($property->isBoolean() && CastUtility::bool($base[$parameter] ?? false) !== $property->getValue())
+                    || ($property->isArray() && (count(array_diff(CastUtility::array($base[$parameter] ?? []), $property->getValue())) || count(array_diff($property->getValue(), CastUtility::array($base[$parameter] ?? [])))))
                 )
             ) {
                 if (!empty($property->getValue())) {
-                    $result[$parameter] = (string)$property->getValue();
+                    $result[$parameter] = $property->toString();
                 } elseif (!empty($base[$parameter])) {
                     $result[$parameter] = '';
                 }
@@ -355,14 +321,6 @@ abstract class AbstractDemand implements DemandInterface
 
             if ($action === 'has') {
                 return $this->hasProperty($propertyName);
-            }
-
-            if ($action === 'addTo') {
-                return $this->addToProperty($propertyName, ...$arguments);
-            }
-
-            if ($action === 'removeFrom') {
-                return $this->removeFromProperty($propertyName, ...$arguments);
             }
         }
 

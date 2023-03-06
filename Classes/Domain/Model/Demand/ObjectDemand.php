@@ -14,9 +14,9 @@ class ObjectDemand extends AbstractDemand
 {
     protected function initProperties(): void
     {
+        parent::initProperties();
+
         $this->addProperty('category', DemandProperty::TYPE_INTEGER);
         $this->addProperty('tags', DemandProperty::TYPE_ARRAY);
-
-        parent::initProperties();
     }
 }
