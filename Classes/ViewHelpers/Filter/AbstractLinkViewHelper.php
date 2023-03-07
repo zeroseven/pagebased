@@ -34,9 +34,9 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
 
     protected function initializeDemand(): void
     {
-        $this->demand = ($value = $this->arguments['demand'] ?? ($this->templateVariableContainer->get('demand'))) instanceof DemandInterface
-            ? $value
-            : null;
+        if (($demand = $this->arguments['demand'] ?? ($this->templateVariableContainer->get('demand'))) instanceof DemandInterface) {
+            $this->demand = $demand->getCopy();
+        }
     }
 
     abstract protected function overrideDemandProperties(): void;

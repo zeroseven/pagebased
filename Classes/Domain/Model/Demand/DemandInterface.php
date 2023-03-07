@@ -35,4 +35,6 @@ interface DemandInterface
     public function getContentId(): int;
 
     public function setContentId(mixed $value): self;
+
+    public function getCopy(): self;
 }

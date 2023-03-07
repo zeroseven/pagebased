@@ -304,6 +304,11 @@ abstract class AbstractDemand implements DemandInterface
         return $this;
     }
 
+    public function getCopy(): self
+    {
+        return GeneralUtility::makeInstance(get_class($this), $this->dataMap->getClassName(), $this->getParameterArray());
+    }
+
     /** @throws TypeException | PropertyException | ValueException */
     public function __call($name, $arguments)
     {
