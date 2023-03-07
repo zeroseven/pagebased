@@ -71,58 +71,112 @@ class DemandProperty
         return $this->type === self::TYPE_BOOLEAN;
     }
 
-    /** @throws TypeException | ValueException */
+    /** @throws TypeException */
+    public function parseValue(mixed $value): mixed
+    {
+        if ($this->isArray()) {
+            return array_map(static fn($v) => CastUtility::string($v), CastUtility::array($this->handleArrayModifier($value)));
+        } elseif ($this->isInteger()) {
+            return CastUtility::int($value);
+        } elseif ($this->isBoolean()) {
+            return CastUtility::bool($value);
+        } elseif ($this->isString()) {
+            return CastUtility::string($value);
+        }
+
+        return null;
+    }
+
+    /** @throws TypeException */
     public function setValue(mixed $value): void
     {
-        if ($this->isArray()) {
-            if (is_string($value) && preg_match('/^(?:\:=\s*)?(addTo|removeFrom)List\((.*)\)$/', trim($value), $matches)) {
-                $value = $matches[2];
-                $matches[1] === 'addTo' ? $this->addToList($value) : $this->removeFromList($value);
+        $this->value = $this->parseValue($value);
+    }
+
+    /** @throws TypeException */
+    protected function parseArrayModifier(mixed $value): ?array
+    {
+        if (is_string($value) && $this->isArray() && preg_match('/^(?:\:=\s*)?((?:addTo|removeFrom|toggleIn)List)\((.*)\)$/', trim($value), $matches)) {
+            return [$matches[1], CastUtility::array($matches[2])];
+        }
+
+        return null;
+    }
+
+    /** @throws TypeException */
+    protected function handleArrayModifier(mixed $value): mixed
+    {
+        if ($parts = $this->parseArrayModifier($value)) {
+            return $this->{$parts[0]}($parts[1]);
+        }
+
+        return $value;
+    }
+
+    /** @throws TypeException */
+    protected function toggleInList(array $toggleValues): array
+    {
+        $values = $this->getValue();
+
+        foreach ($toggleValues as $toggleValue) {
+            if (($key = array_search((string)$toggleValue, $values, true)) !== false) {
+                unset($values[$key]);
             } else {
-                $this->value = array_map(static fn($v) => CastUtility::string($v), CastUtility::array($value));
+                $values[] = $toggleValue;
             }
-        } elseif ($this->isInteger()) {
-            $this->value = CastUtility::int($value);
-        } elseif ($this->isBoolean()) {
-            $this->value = CastUtility::bool($value);
-        } elseif ($this->isString()) {
-            $this->value = CastUtility::string($value);
         }
+
+        return $values;
+    }
+
+    /** @throws TypeException */
+    protected function addToList(array $newValues): array
+    {
+        $values = $this->getValue();
+
+        foreach ($newValues as $newValue) {
+            if (!in_array((string)$newValue, $values, true)) {
+                $values[] = $newValue;
+            }
+        }
+
+        return $values;
+    }
+
+    /** @throws TypeException */
+    protected function removeFromList(array $removeValues): array
+    {
+        $values = $this->getValue();
+
+        foreach ($removeValues as $removeValue) {
+            if (($key = array_search((string)$removeValue, $values, true)) !== false) {
+                unset($values[$key]);
+            }
+        }
+
+        return $values;
     }
 
     /** @throws TypeException | ValueException */
-    public function addToList(mixed $newValues): void
+    public function isActive(mixed $value): bool
     {
         if ($this->isArray()) {
-            $values = $this->getValue();
-            foreach (CastUtility::array($newValues) as $newValue) {
-                if (!in_array((string)$newValue, $values, true)) {
-                    $values[] = $newValue;
+            if (($parts = $this->parseArrayModifier($value))) {
+                foreach ($parts[1] as $needle) {
+                    $inArray = in_array($needle, $this->getValue(), true);
+
+                    if (($inArray && ($parts[0] === 'toggleInList' || $parts[0] === 'addToList')) || (!$inArray && $parts[0] === 'removeFromList')) {
+                        return true;
+                    }
                 }
+            } else if (count(array_diff($this->parseValue($value), $this->getValue())) === 0) {
+                return true;
             }
-
-            $this->value = $values;
-        } else {
-            throw new ValueException(sprintf('Method "addToList" is only available for type "%s".', self::TYPE_ARRAY), 1678136702);
+        } else if ($this->parseValue($value) === $this->getValue()) {
+            return true;
         }
-    }
 
-    /** @throws TypeException | ValueException */
-    public function removeFromList(mixed $removeValues): void
-    {
-        if ($this->isArray()) {
-            $values = $this->getValue();
-
-            foreach (CastUtility::array($removeValues) as $removeValue) {
-                if (($key = array_search((string)$removeValue, $values, true)) !== false) {
-                    unset($values[$key]);
-                }
-            }
-
-            $this->value = $values;
-        } else {
-            throw new ValueException(sprintf('Method "removeFromList" is only available for type "%s".', self::TYPE_ARRAY), 1678136702);
-        }
+        return false;
     }
 
     public function clear(): void

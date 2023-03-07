@@ -236,6 +236,7 @@ abstract class AbstractDemand implements DemandInterface
             if (
                 ($protectedParameters && in_array($parameter, $protectedParameters, true))
                 || (
+                    // TODO: use $proerty->parseValue() to compare values
                     ($property->isInteger() && CastUtility::int($base[$parameter] ?? 0) !== $property->getValue())
                     || ($property->isString() && CastUtility::string($base[$parameter] ?? '') !== $property->getValue())
                     || ($property->isBoolean() && CastUtility::bool($base[$parameter] ?? false) !== $property->getValue())

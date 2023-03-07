@@ -8,7 +8,7 @@ interface DemandInterface
 {
     public function addProperty(string $name, string $type, mixed $value = null): self;
 
-    public function getProperty(string $propertyName): mixed;
+    public function getProperty(string $propertyName): DemandProperty;
 
     public function getProperties(): array;
 
