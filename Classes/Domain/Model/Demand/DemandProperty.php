@@ -129,7 +129,7 @@ class DemandProperty
     {
         try {
             $this->setValue(null);
-        } catch (TypeException $e) {
+        } catch (TypeException | ValueException $e) {
         }
     }
 
