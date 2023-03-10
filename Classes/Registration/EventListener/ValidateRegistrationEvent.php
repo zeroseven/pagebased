@@ -19,7 +19,6 @@ use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Domain\Repository\AbstractObjectRepository;
-use Zeroseven\Rampage\Domain\Repository\AbstractPageRepository;
 use Zeroseven\Rampage\Domain\Repository\ObjectRepositoryInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\PageObjectRegistration;

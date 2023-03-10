@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
-use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
+use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
@@ -29,27 +29,24 @@ abstract class AbstractRepository extends Repository
         return $this->defaultQuerySettings;
     }
 
+    /** @throws PersistenceException */
     protected function setOrdering(DemandInterface $demand = null): void
     {
-        try {
-            if (
-                $demand
-                && $demand->getOrderBy()
-                && preg_match('/([a-zA-Z]+)(?:_(asc|desc))?/', $demand->getOrderBy(), $matches) // Examples: "date_desc", "title_asc", "title",
-                && ($property = $matches[1] ?? null)
-                && ($dataMapper = $this->objectManager->get(DataMapper::class))
-                && ($columnMap = $dataMapper->getDataMap($this->objectType)->getColumnMap($property))
-                && ($columnName = $columnMap->getColumnName())
-            ) {
-                $this->setDefaultOrderings([
-                    $columnName => ($direction = $matches[2] ?? null) && $direction === 'desc' ? QueryInterface::ORDER_DESCENDING : QueryInterface::ORDER_ASCENDING
-                ]);
-            }
-        } catch (Exception $e) {
+        if (
+            $demand
+            && $demand->getOrderBy()
+            && preg_match('/([a-zA-Z]+)(?:_(asc|desc))?/', $demand->getOrderBy(), $matches) // Examples: "date_desc", "title_asc", "title",
+            && ($property = $matches[1] ?? null)
+            && ($columnMap = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($this->objectType)->getColumnMap($property))
+            && ($columnName = $columnMap->getColumnName())
+        ) {
+            $this->setDefaultOrderings([
+                $columnName => ($direction = $matches[2] ?? null) && $direction === 'desc' ? QueryInterface::ORDER_DESCENDING : QueryInterface::ORDER_ASCENDING
+            ]);
         }
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | Exception */
+    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
     protected function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = [];
@@ -121,7 +118,7 @@ abstract class AbstractRepository extends Repository
         return $objects;
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | Exception */
+    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
     public function findByDemand(DemandInterface $demand): ?QueryResultInterface
     {
         // Override sorting
@@ -145,13 +142,13 @@ abstract class AbstractRepository extends Repository
         return $query->execute();
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | Exception */
+    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
     public function findByUidList(mixed $uidList, DemandInterface $demand = null): ?QueryResultInterface
     {
         return $this->findByDemand(($demand ?? $this->initializeDemand())->setUidList($uidList));
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | Exception */
+    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
     public function findAll(DemandInterface $demand = null): ?QueryResultInterface
     {
         return $this->findByDemand($demand ?? $this->initializeDemand());

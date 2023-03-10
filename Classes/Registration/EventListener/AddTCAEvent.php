@@ -126,21 +126,10 @@ class AddTCAEvent
 
             // FlexForm configuration
             if ($cType) {
-                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS')
-                    ->addField('settings.' . AbstractDemand::PARAMETER_TOP_MODE, [
-                        'type' => 'select',
-                        'renderType' => 'selectSingle',
-                        'minitems' => 1,
-                        'maxitems' => 1,
-                        'items' => [
-                            ['DEFAULT', 0],
-                            ['TOP OBJECTS FIRST', AbstractDemand::TOP_MODE_FIRST],
-                            ['ONLY TOP OBJECTS', AbstractDemand::TOP_MODE_ONLY]
-                        ]
-                    ], 'TOP MODE');
+                $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'FILTER');
 
                 try {
-                    $optionsSheet->addField('settings.tags', [
+                    $filterSheet->addField('settings.tags', [
                         'type' => 'user',
                         'renderType' => 'rampageTags',
                         'placeholder' => 'ADD TAGS …',
@@ -151,7 +140,7 @@ class AddTCAEvent
 
                 if ($registration->getCategory()->isEnabled() && $tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
                     try {
-                        $optionsSheet->addField('settings.category', [
+                        $filterSheet->addField('settings.category', [
                             'type' => 'select',
                             'renderType' => 'selectSingle',
                             'minitems' => 0,
@@ -169,8 +158,19 @@ class AddTCAEvent
                     }
                 }
 
-                $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LAYOUT')
-                    ->addField('settings.sorting', [
+                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS')
+                    ->addField('settings.' . AbstractDemand::PARAMETER_TOP_MODE, [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 1,
+                        'maxitems' => 1,
+                        'items' => [
+                            ['DEFAULT', 0],
+                            ['TOP OBJECTS FIRST', AbstractDemand::TOP_MODE_FIRST],
+                            ['ONLY TOP OBJECTS', AbstractDemand::TOP_MODE_ONLY]
+                        ]
+                    ], 'TOP MODE')
+                    ->addField('settings.' . AbstractDemand::PARAMETER_ORDER_BY, [
                         'type' => 'select',
                         'renderType' => 'selectSingle',
                         'minitems' => 1,
@@ -180,7 +180,9 @@ class AddTCAEvent
                             ['Title (ASC)', 'title_asc'],
                             ['Title (DESC)', 'title_desc'],
                         ]
-                    ], 'SORTING')
+                    ], 'SORTING');
+
+                $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LAYOUT')
                     ->addField('settings.itemsPerStage', [
                         'placeholder' => '6',
                         'type' => 'input',
@@ -203,6 +205,7 @@ class AddTCAEvent
                     ], 'MAX_STAGES');
 
                 FlexFormConfiguration::makeInstance('tt_content', $cType, 'pi_flexform', 'after:header')
+                    ->addSheet($filterSheet)
                     ->addSheet($optionsSheet)
                     ->addSheet($layoutSheet)
                     ->addToTCA();
