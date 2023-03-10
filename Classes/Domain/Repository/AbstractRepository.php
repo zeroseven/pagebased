@@ -3,6 +3,7 @@
 namespace Zeroseven\Rampage\Domain\Repository;
 
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
@@ -48,6 +49,7 @@ abstract class AbstractRepository extends Repository
         }
     }
 
+    /** @throws AspectNotFoundException | InvalidQueryException | Exception */
     protected function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = [];
@@ -55,23 +57,15 @@ abstract class AbstractRepository extends Repository
 
         // Search for specific uids
         if ($uidList = $demand->getUidList()) {
-            if (($langaugeUid = (int)GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', 0)) > 0) {
-                try {
-                    $dataMap = $dataMapper->getDataMap($this->objectType);
-                } catch (Exception $e) {
-                    return [];
-                }
+            if (($languageUid = (int)GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', 0)) > 0) {
+                $dataMap = $dataMapper->getDataMap($this->objectType);
 
                 $constraints[] = $query->logicalAnd(
                     $query->in($dataMap->getTranslationOriginColumnName(), $uidList),
-                    $query->equals($dataMap->getLanguageIdColumnName(), $langaugeUid)
+                    $query->equals($dataMap->getLanguageIdColumnName(), $languageUid)
                 );
             } else {
-                try {
-                    $constraints[] = $query->in('uid', $uidList);
-                } catch (InvalidQueryException $e) {
-                    return [];
-                }
+                $constraints[] = $query->in('uid', $uidList);
             }
         }
 
@@ -79,9 +73,7 @@ abstract class AbstractRepository extends Repository
             if (($value = $property->getValue()) && ($propertyName = $property->getName()) && $columnMap = $dataMapper->getDataMap($this->objectType)->getColumnMap($propertyName)) {
                 if ($property->isArray()) {
                     if (in_array($columnMap->getTypeOfRelation(), [ColumnMap::RELATION_HAS_MANY, ColumnMap::RELATION_HAS_AND_BELONGS_TO_MANY], true)) {
-                        $constraints[] = $query->logicalOr(array_map(static function ($v) use ($query, $propertyName) {
-                            return $query->contains($propertyName, $v);
-                        }, $value));
+                        $constraints[] = $query->logicalOr(array_map(static fn($v) => $query->contains($propertyName, $v), $value));
                     } elseif ($columnMap->getTypeOfRelation() === ColumnMap::RELATION_NONE) {
                         $constraints[] = $query->logicalOr(array_map(static function ($v) use ($query, $propertyName) {
                             return $query->like($propertyName, '%' . $v . '%');
@@ -129,6 +121,7 @@ abstract class AbstractRepository extends Repository
         return $objects;
     }
 
+    /** @throws AspectNotFoundException | InvalidQueryException | Exception */
     public function findByDemand(DemandInterface $demand): ?QueryResultInterface
     {
         // Override sorting
@@ -152,13 +145,44 @@ abstract class AbstractRepository extends Repository
         return $query->execute();
     }
 
+    /** @throws AspectNotFoundException | InvalidQueryException | Exception */
+    public function findByUidList(mixed $uidList, DemandInterface $demand = null): ?QueryResultInterface
+    {
+        return $this->findByDemand(($demand ?? $this->initializeDemand())->setUidList($uidList));
+    }
+
+    /** @throws AspectNotFoundException | InvalidQueryException | Exception */
     public function findAll(DemandInterface $demand = null): ?QueryResultInterface
     {
         return $this->findByDemand($demand ?? $this->initializeDemand());
     }
 
-    public function findByUidList(mixed $uidList, DemandInterface $demand = null): ?QueryResultInterface
+    /** @throws AspectNotFoundException | TypeException */
+    public function findByUid(mixed $pageUid, bool $ignoreRestrictions = null): ?object
     {
-        return $this->findByDemand(($demand ?? $this->initializeDemand())->setUidList($uidList));
+        // Convert the uid to an integer
+        $uid = CastUtility::int($pageUid);
+
+        // Load page without restrictions
+        if ($ignoreRestrictions) {
+            $query = $this->createQuery();
+
+            if ((int)GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', 0) > 0) {
+                $constraint = $query->equals('l10n_parent', $uid);
+            } else {
+                $constraint = $query->equals('uid', $uid);
+            }
+
+            $query->setLimit(1);
+            $query->matching($constraint);
+
+            // Allow hidden pages
+            $query->getQuerySettings()->setIgnoreEnableFields(true)->setIncludeDeleted(true)->setRespectStoragePage(false);
+
+            // Get pages and return the first one …
+            return ($pages = $query->execute()) ? $pages->getFirst() : null;
+        }
+
+        return parent::findByUid($uid);
     }
 }

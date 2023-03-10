@@ -126,7 +126,18 @@ class AddTCAEvent
 
             // FlexForm configuration
             if ($cType) {
-                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS');
+                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS')
+                    ->addField('settings.' . AbstractDemand::PARAMETER_TOP_MODE, [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 1,
+                        'maxitems' => 1,
+                        'items' => [
+                            ['DEFAULT', 0],
+                            ['TOP OBJECTS FIRST', AbstractDemand::TOP_MODE_FIRST],
+                            ['ONLY TOP OBJECTS', AbstractDemand::TOP_MODE_ONLY]
+                        ]
+                    ], 'TOP MODE');
 
                 try {
                     $optionsSheet->addField('settings.tags', [
@@ -134,7 +145,7 @@ class AddTCAEvent
                         'renderType' => 'rampageTags',
                         'placeholder' => 'ADD TAGS …',
                         'object' => $registration->getObject()->getObjectClassName()
-                    ], 'PLACEHOLDER');
+                    ], 'TAGS');
                 } catch (RegistrationException $e) {
                 }
 
