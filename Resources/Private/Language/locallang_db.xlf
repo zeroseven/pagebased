@@ -9,6 +9,9 @@
 	  <trans-unit id="pages._rampage_tags">
 	    <source>Tags</source>
 	  </trans-unit>
+	  <trans-unit id="pages._rampage_topics">
+	    <source>Topics</source>
+	  </trans-unit>
 	  <trans-unit id="pages._rampage_tags.placeholder">
 	    <source>Add new tags</source>
 	  </trans-unit>
