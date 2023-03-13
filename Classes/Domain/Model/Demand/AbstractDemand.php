@@ -17,7 +17,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use Zeroseven\Rampage\Exception\PropertyException;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Registration\PageObjectRegistration;
+use Zeroseven\Rampage\Registration\AbstractObjectRegistration;
 use Zeroseven\Rampage\Utility\CastUtility;
 
 abstract class AbstractDemand implements DemandInterface
@@ -50,9 +50,9 @@ abstract class AbstractDemand implements DemandInterface
         }
     }
 
-    public static function makeInstance(PageObjectRegistration $objectRegistration, array $arguments = null): DemandInterface
+    public static function makeInstance(AbstractObjectRegistration $objectRegistration, array $arguments = null): DemandInterface
     {
-        $objectClass = $objectRegistration->getObjectClassName();
+        $objectClass = $objectRegistration->getClassName();
         $demandClass = $objectRegistration->getDemandClassName() ?? ObjectDemand::class;
 
         return GeneralUtility::makeInstance($demandClass, $objectClass, $arguments);
