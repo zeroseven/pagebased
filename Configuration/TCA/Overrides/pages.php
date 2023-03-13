@@ -24,6 +24,18 @@ call_user_func(static function (string $table) {
                 'default' => ''
             ]
         ],
+        '_rampage_topics' => [
+            'exclude' => true,
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_topics',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectCheckBox',
+                'foreign_table' => 'tx_rampage_domain_model_topic',
+                'MM' => 'tx_rampage_object_topic_mm',
+                'default' => 0
+            ]
+        ],
         '_rampage_relations_to' => [
             'exclude' => true,
             'displayCond' => 'FIELD:l10n_parent:=:0',

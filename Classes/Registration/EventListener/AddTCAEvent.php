@@ -83,6 +83,7 @@ class AddTCAEvent
 
                 $pageObject->topEnabled() && $fields[] = '_rampage_top';
                 $pageObject->tagsEnabled() && $fields[] = '_rampage_tags';
+                $pageObject->topicsEnabled() && $fields[] = '_rampage_topics';
 
                 $fields[] = '_rampage_relations_to';
                 $fields[] = '_rampage_relations_from';
@@ -90,6 +91,11 @@ class AddTCAEvent
                 ExtensionManagementUtility::addToAllTCAtypes(AbstractPage::TABLE_NAME, sprintf('
                     --div--;%s,%s
                 ', $pageObject->getTitle(), implode(',', $fields)), (string)$pageType);
+
+                // Configure topics
+                if ($pageObject->topicsEnabled()) {
+                    $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_topics']['config']['foreign_table_where'] = sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s)', implode(',', $pageObject->getTopicPageIds()));
+                }
 
                 // Configure relations
                 $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_relations_to']['config'] = [

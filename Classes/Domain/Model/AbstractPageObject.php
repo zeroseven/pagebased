@@ -16,6 +16,7 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
 
     protected bool $top;
     protected ?string $tags;
+    protected ?ObjectStorage $topics = null;
     protected ?PageObject $parentObject = null;
     protected ?QueryResultInterface $childObjects = null;
     protected ?AbstractPageCategory $category = null;
@@ -39,6 +40,7 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     {
         parent::initStorageObjects();
 
+        $this->topics = new ObjectStorage();
         $this->relations = new ObjectStorage();
         $this->relationsTo = new ObjectStorage();
         $this->relationsFrom = new ObjectStorage();
@@ -69,6 +71,27 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     {
         $this->tags = is_array($value) ? implode(self::TAG_DELIMITER, $value) : (string)$value;
 
+        return $this;
+    }
+
+    public function addTopic(Topic $topic): void
+    {
+        $this->topics->attach($topic);
+    }
+
+    public function removeTopic(Topic $topicToRemove): void
+    {
+        $this->topics->detach($topicToRemove);
+    }
+
+    public function getTopics(): ObjectStorage
+    {
+        return $this->topics;
+    }
+
+    public function setTopics(ObjectStorage $topics): self
+    {
+        $this->topics = $topics;
         return $this;
     }
 

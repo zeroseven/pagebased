@@ -40,7 +40,7 @@ class CastUtility
             return (string)$value;
         }
 
-        if(is_array($value)) {
+        if (is_array($value)) {
             return implode(',', $value);
         }
 
@@ -62,6 +62,10 @@ class CastUtility
 
         if (is_string($value)) {
             return GeneralUtility::trimExplode($divider ?? ',', $value);
+        }
+
+        if (is_int($value)) {
+            return [$value];
         }
 
         if (is_object($value) && method_exists($value, 'toArray')) {

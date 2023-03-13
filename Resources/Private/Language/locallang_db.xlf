@@ -9,6 +9,9 @@
 	  <trans-unit id="pages._rampage_tags">
 	    <source>Tags</source>
 	  </trans-unit>
+	  <trans-unit id="pages._rampage_topics">
+	    <source>Topics</source>
+	  </trans-unit>
 	  <trans-unit id="pages._rampage_tags.placeholder">
 	    <source>Add new tags</source>
 	  </trans-unit>
@@ -21,6 +24,13 @@
 	  <trans-unit id="pages._rampage_redirect_category">
 	    <source>Redirect category</source>
 	  </trans-unit>
+
+	  <trans-unit id="tx_rampage_domain_model_topic">
+	  	<source>Topic</source>
+	  </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_topic.title">
+      	<source>Title</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

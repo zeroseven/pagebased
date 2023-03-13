@@ -34,7 +34,7 @@ class LinkViewHelper extends AbstractLinkViewHelper
         if ($this->demand) {
             foreach (array_keys($this->arguments['properties'] ?? []) as $key) {
                 if (!$this->demand->hasProperty($key)) {
-                    throw new Exception(sprintf('Undefined property "%s" in demand class "%s"', $key, (new ReflectionClass($this->demand))->getName()), 1678130803);
+                    throw new Exception(sprintf('Undefined property "%s" in demand class "%s". Allowed properties are %s', $key, (new ReflectionClass($this->demand))->getName(), implode(', ', array_keys($this->demand->getParameterArray(false)))), 1678130803);
                 }
             }
         }

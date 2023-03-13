@@ -36,6 +36,9 @@ return [
             'tags' => [
                 'fieldName' => '_rampage_tags'
             ],
+            'topics' => [
+                'fieldName' => '_rampage_topics'
+            ],
             'relationsTo' => [
                 'fieldName' => '_rampage_relations_to'
             ],
