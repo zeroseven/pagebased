@@ -7,17 +7,19 @@ namespace Zeroseven\Rampage\Registration\EventListener;
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use Zeroseven\Rampage\Exception\RegistrationException;
+use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
 use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
-use Zeroseven\Rampage\Registration\PluginRegistration;
 use Zeroseven\Rampage\Registration\Registration;
 
 class RegisterPluginEvent
 {
     protected ?Registration $registration;
 
-    protected function registerPlugin(PluginRegistration $plugin): void
+    /** @throws RegistrationException */
+    protected function registerPlugin(?AbstractPluginRegistration $plugin): void
     {
-        if ($plugin->isEnabled()) {
+        if ($plugin) {
             $controllerClassName = $this->registration->getObject()->getControllerClassName();
             $uncachedAction = $plugin->getType() . 'Uncached';
 
@@ -33,11 +35,12 @@ class RegisterPluginEvent
         }
     }
 
+    /** @throws RegistrationException */
     public function __invoke(StoreRegistrationEvent $event)
     {
-        $this->registration = $event->getRegistration();
-
-        $this->registerPlugin($this->registration->getListPlugin());
-        $this->registerPlugin($this->registration->getFilterPlugin());
+        if ($this->registration = $event->getRegistration()) {
+            $this->registerPlugin($this->registration->getListPlugin());
+            $this->registerPlugin($this->registration->getFilterPlugin());
+        }
     }
 }

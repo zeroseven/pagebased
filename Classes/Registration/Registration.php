@@ -6,23 +6,20 @@ namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
 
 class Registration
 {
     protected string $extensionName;
-    protected PageObjectRegistration $object;
-    protected PageObjectRegistration $category;
-    protected PluginRegistration $listPlugin;
-    protected PluginRegistration $filterPlugin;
+    protected ?ObjectRegistration $object;
+    protected ?CategoryRegistration $category;
+    protected ?ListPluginRegistration $listPlugin;
+    protected ?FilterPluginRegistration $filterPlugin;
 
-    public function __construct(string $extensionName, string $objectClassName, string $repositoryClassName, string $controllerClassName)
+    public function __construct(string $extensionName)
     {
         $this->extensionName = $extensionName;
-        $this->object = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $repositoryClassName, $controllerClassName)->enable();
-        $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class)->disable();
-        $this->listPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_LIST, $this->object->getTitle())->enable();
-        $this->filterPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_FILTER)->disable();
     }
 
     public function getExtensionName(): string
@@ -30,143 +27,77 @@ class Registration
         return $this->extensionName;
     }
 
-    public function getObject(): PageObjectRegistration
+    /** @throws RegistrationException */
+    public function getObject(): ObjectRegistration
     {
+        if ($this->object === null) {
+            throw new RegistrationException('The object can not be empty', 1678709111);
+        }
+
         return $this->object;
     }
 
-    public function getCategory(): PageObjectRegistration
+    public function setObject(ObjectRegistration $objectRegistration): self
+    {
+        $this->object = $objectRegistration;
+
+        return $this;
+    }
+
+    public function hasObject(): bool
+    {
+        return $this->object !== null;
+    }
+
+    public function getCategory(): CategoryRegistration
     {
         return $this->category;
     }
 
-    public function getListPlugin(): PluginRegistration
+    public function enableCategory(CategoryRegistration $categoryRegistration): self
+    {
+        $this->category = $categoryRegistration;
+
+        return $this;
+    }
+
+    public function hasCategory(): bool
+    {
+        return $this->category !== null;
+    }
+
+    public function getListPlugin(): ListPluginRegistration
     {
         return $this->listPlugin;
     }
 
-    public function getFilterPlugin(): PluginRegistration
+    public function enableListPlugin(ListPluginRegistration $listPluginRegistration): self
+    {
+        $this->listPlugin = $listPluginRegistration;
+
+        return $this;
+    }
+
+    public function hasListPlugin(): bool
+    {
+        return $this->listPlugin !== null;
+    }
+
+    public function getFilterPlugin(): FilterPluginRegistration
     {
         return $this->filterPlugin;
     }
 
-    public function addCategory(string $objectClassName, string $repositoryClassName, string $controllerClassName = null): self
+    public function enableFilterPlugin(FilterPluginRegistration $filterPluginRegistration): self
     {
-        $this->category = GeneralUtility::makeInstance(PageObjectRegistration::class, $objectClassName, $repositoryClassName, $controllerClassName)->enable();
+        $this->filterPlugin = $filterPluginRegistration;
 
         return $this;
     }
 
-    public function addListPlugin(string $title, string $description = null, string $iconIdentifier = null): self
+    public function hasFilterPlugin(): bool
     {
-        $this->listPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_LIST, $title, $description, $iconIdentifier)->enable();
-
-        return $this;
-    }
-
-    public function addFilterPlugin(string $title, string $description = null, string $iconIdentifier = null): self
-    {
-        $this->filterPlugin = GeneralUtility::makeInstance(PluginRegistration::class, PluginRegistration::TYPE_FILTER, $title, $description, $iconIdentifier)->enable();
-
-        return $this;
-    }
-
-    public function setObjectDemand(string $className): self
-    {
-        $this->object->setDemandClassName($className);
-
-        return $this;
-    }
-
-    public function setObjectTitle(string $title): self
-    {
-        $this->object->setTitle($title);
-
-        return $this;
-    }
-
-    public function setObjectIconIdentifier(string $iconIdentifier): self
-    {
-        $this->object->setIconIdentifier($iconIdentifier);
-
-        return $this;
-    }
-
-    public function setCategoryTitle(string $title): self
-    {
-        $this->category->setTitle($title);
-
-        return $this;
-    }
-
-    public function setCategoryIconIdentifier(string $iconIdentifier): self
-    {
-        $this->category->setIconIdentifier($iconIdentifier);
-
-        return $this;
-    }
-
-    public function setCategoryEnabled(bool $enable): self
-    {
-        $enable ? $this->category->enable() : $this->category->disable();
-
-        return $this;
-    }
-
-    public function setListPluginTitle(string $title): self
-    {
-        $this->listPlugin->setTitle($title);
-
-        return $this;
-    }
-
-    public function setListPluginDescription(string $description): self
-    {
-        $this->listPlugin->setDescription($description);
-
-        return $this;
-    }
-
-    public function setListPluginIconIdentifier(string $iconIdentifier): self
-    {
-        $this->listPlugin->setIconIdentifier($iconIdentifier);
-
-        return $this;
-    }
-
-    public function setListPluginEnabled(bool $enable): self
-    {
-        $enable ? $this->listPlugin->enable() : $this->listPlugin->disable();
-
-        return $this;
-    }
-
-    public function setFilterPluginTitle(string $title): self
-    {
-        $this->filterPlugin->setTitle($title);
-
-        return $this;
-    }
-
-    public function setFilterPluginDescription(string $description): self
-    {
-        $this->filterPlugin->setDescription($description);
-
-        return $this;
-    }
-
-    public function setFilterPluginIconIdentifier(string $iconIdentifier): self
-    {
-        $this->filterPlugin->setIconIdentifier($iconIdentifier);
-
-        return $this;
-    }
-
-    public function setFilterPluginEnabled(bool $enable): self
-    {
-        $enable ? $this->filterPlugin->enable() : $this->filterPlugin->disable();
-
-        return $this;
+        return $this->filterPlugin !== null;
     }
 
     public function store(): void
