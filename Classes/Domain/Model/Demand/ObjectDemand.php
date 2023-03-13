@@ -10,7 +10,7 @@ namespace Zeroseven\Rampage\Domain\Model\Demand;
  * @method setTags(mixed $value): self
  * @method getTags(): array
  */
-class ObjectDemand extends AbstractDemand
+class ObjectDemand extends AbstractDemand implements ObjectDemandInterface
 {
     protected function initProperties(): void
     {

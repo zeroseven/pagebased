@@ -7,7 +7,7 @@ namespace Zeroseven\Rampage\Backend\Form\Element;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
+use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 use Zeroseven\Rampage\Utility\TagUtility;
@@ -46,7 +46,7 @@ class TagsElement extends AbstractFormElement
         $tags = ($registration = RegistrationService::getRegistrationByClassName($this->objectClass))
         && ($rootPageUid = RootLineUtility::getRootPage((int)($table === 'pages' ? $uid : $pid)))
         && ($demand = $registration->getObject()->getDemandClass())
-        && ($demand instanceof ObjectDemand)
+        && ($demand instanceof DemandInterface)
             ? TagUtility::getTags($demand->setCategory($rootPageUid), $registration->getObject()->getRepositoryClass(), true, $this->languageUid)
             : [];
 
