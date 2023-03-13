@@ -19,7 +19,8 @@ call_user_func(static function () {
         ->setRepositoryClass(\Vendor\NewExtension\Domain\Repository\JobRepository::class)
         ->setIconIdentifier('custom-object-icon')
         ->enableTop()
-        ->enableTags();
+        ->enableTags()
+        ->enableTopics(27);
 
     $category = \Zeroseven\Rampage\Registration\CategoryRegistration::create('Object-Category')
         ->setClassName(\Vendor\NewExtension\Domain\Model\Category::class);
