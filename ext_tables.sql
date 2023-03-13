@@ -30,7 +30,6 @@ CREATE TABLE tx_rampage_object_topic_mm
 	KEY             uid_foreign (uid_foreign)
 );
 
-
 CREATE TABLE tx_rampage_relation_mm
 (
 	uid_local       int(11) unsigned DEFAULT '0' NOT NULL,

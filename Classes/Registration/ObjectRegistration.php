@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Registration;
 
-use phpDocumentor\Reflection\Types\This;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -80,7 +79,7 @@ class ObjectRegistration extends AbstractObjectRegistration
     public function enableTopics(mixed $pageIds): self
     {
         try {
-           $this->topicPageIds = array_map(static fn($pageId) => (int)$pageId, array_filter(CastUtility::array($pageIds), static fn($pageId) => MathUtility::canBeInterpretedAsInteger($pageId)));
+            $this->topicPageIds = array_map(static fn($pageId) => (int)$pageId, array_filter(CastUtility::array($pageIds), static fn($pageId) => MathUtility::canBeInterpretedAsInteger($pageId)));
         } catch (TypeException $e) {
         }
 

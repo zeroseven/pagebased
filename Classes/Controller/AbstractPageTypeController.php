@@ -79,15 +79,9 @@ abstract class AbstractPageTypeController extends AbstractController implements 
 
     public function filterAction(): void
     {
-        try {
-            $topics = GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($this->registration);
-        } catch (RegistrationException $e) {
-            $topics = [];
-        }
-
         // Pass variables to the fluid template
         $this->view->assignMultiple([
-            'topics' => $topics,
+            'topics' => GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($this->registration),
             'demand' => $this->demand
         ]);
     }

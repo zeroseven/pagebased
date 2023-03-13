@@ -7,7 +7,6 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use Zeroseven\KeimProducts\Domain\Model\Reference;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Registration;
 
@@ -25,14 +24,16 @@ class TopicRepository extends Repository
         $this->setDefaultQuerySettings($querySettings);
     }
 
-    /** @throws RegistrationException */
     public function findByRegistration(Registration $registration): ?QueryResultInterface
     {
-        if ($registration->getObject()->topicsEnabled()) {
-            $query = $this->createQuery();
-            $query->getQuerySettings()->setStoragePageIds($registration->getObject()->getTopicPageIds())->setRespectStoragePage(true);
+        try {
+            if ($registration->getObject()->topicsEnabled()) {
+                $query = $this->createQuery();
+                $query->getQuerySettings()->setStoragePageIds($registration->getObject()->getTopicPageIds())->setRespectStoragePage(true);
 
-            return $query->execute();
+                return $query->execute();
+            }
+        } catch (RegistrationException $e) {
         }
 
         return null;
