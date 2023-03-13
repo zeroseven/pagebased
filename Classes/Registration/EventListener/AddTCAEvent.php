@@ -15,14 +15,14 @@ use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
-use Zeroseven\Rampage\Registration\PageObjectRegistration;
-use Zeroseven\Rampage\Registration\PluginRegistration;
+use Zeroseven\Rampage\Registration\AbstractObjectRegistration;
+use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 
 class AddTCAEvent
 {
-    protected function createPlugin(Registration $registration, PluginRegistration $pluginRegistration): string
+    protected function createPlugin(Registration $registration, AbstractPluginRegistration $pluginRegistration): string
     {
         $CType = $pluginRegistration->getCType($registration);
 
@@ -44,7 +44,7 @@ class AddTCAEvent
     }
 
     /** @throws RegistrationException */
-    protected function createPageType(PageObjectRegistration $pageObjectRegistration): void
+    protected function createPageType(AbstractObjectRegistration $pageObjectRegistration): void
     {
         if ($pageType = $pageObjectRegistration->getObjectType()) {
 
@@ -75,7 +75,7 @@ class AddTCAEvent
     /** @throws RegistrationException */
     protected function addPageType(Registration $registration): void
     {
-        if (($pageObject = $registration->getObject()) && $pageObject->isEnabled()) {
+        if ($pageObject = $registration->getObject()) {
             $this->createPageType($pageObject);
 
             if ($pageType = $pageObject->getObjectType()) {
@@ -113,7 +113,7 @@ class AddTCAEvent
 
     protected function addPageCategory(Registration $registration): void
     {
-        if (($pageCategory = $registration->getCategory()) && $pageCategory->isEnabled()) {
+        if ($pageCategory = $registration->getCategory()) {
             $this->createPageType($pageCategory);
         }
     }
@@ -121,7 +121,7 @@ class AddTCAEvent
     /** @throws TypeException */
     protected function addListPlugin(Registration $registration): void
     {
-        if ($registration->getListPlugin()->isEnabled()) {
+        if ($registration->getListPlugin()) {
             $cType = $this->createPlugin($registration, $registration->getListPlugin());
 
             // FlexForm configuration
@@ -133,12 +133,12 @@ class AddTCAEvent
                         'type' => 'user',
                         'renderType' => 'rampageTags',
                         'placeholder' => 'ADD TAGS …',
-                        'object' => $registration->getObject()->getObjectClassName()
+                        'object' => $registration->getObject()->getClassName()
                     ], 'TAGS');
                 } catch (RegistrationException $e) {
                 }
 
-                if ($registration->getCategory()->isEnabled() && $tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
+                if ($registration->getCategory() && ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null)) {
                     try {
                         $filterSheet->addField('settings.category', [
                             'type' => 'select',
@@ -216,7 +216,7 @@ class AddTCAEvent
     /** @throws TypeException */
     protected function addFilterPlugin(Registration $registration): void
     {
-        if ($registration->getFilterPlugin()->isEnabled()) {
+        if ($registration->getFilterPlugin()) {
             $cType = $this->createPlugin($registration, $registration->getFilterPlugin());
             $listCType = $registration->getListPlugin()->getCType($registration);
 
