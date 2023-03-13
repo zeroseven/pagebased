@@ -9,6 +9,8 @@ use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Rampage\Domain\Repository\TopicRepository;
+use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 
@@ -22,7 +24,7 @@ abstract class AbstractPageTypeController extends AbstractController implements 
     {
         parent::initializeAction();
 
-        if($extbaseSetup = $this->request->getAttribute('extbase')) {
+        if ($extbaseSetup = $this->request->getAttribute('extbase')) {
             $requestKey = strtolower('tx_' . $extbaseSetup->getControllerExtensionName() . '_list');
 
             $listArguments = GeneralUtility::_GP($requestKey) ?: [];
@@ -77,8 +79,15 @@ abstract class AbstractPageTypeController extends AbstractController implements 
 
     public function filterAction(): void
     {
+        try {
+            $topics = GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($this->registration);
+        } catch (RegistrationException $e) {
+            $topics = [];
+        }
+
         // Pass variables to the fluid template
         $this->view->assignMultiple([
+            'topics' => $topics,
             'demand' => $this->demand
         ]);
     }

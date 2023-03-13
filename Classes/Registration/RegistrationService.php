@@ -29,6 +29,18 @@ class RegistrationService
     }
 
     /** @throws RegistrationException */
+    public static function getRegistrationByClassName($className): ?Registration
+    {
+        foreach (self::getRegistrations() as $registration) {
+            if ($registration->getObject()->getClassName() === $className) {
+                return $registration;
+            }
+        }
+
+        return null;
+    }
+
+    /** @throws RegistrationException */
     public static function getRegistrationByController($className): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {
@@ -41,10 +53,10 @@ class RegistrationService
     }
 
     /** @throws RegistrationException */
-    public static function getRegistrationByClassName($className): ?Registration
+    public static function getRegistrationByRepository($className): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {
-            if ($registration->getObject()->getClassName() === $className) {
+            if ($registration->getObject()->getRepositoryClassName() === $className) {
                 return $registration;
             }
         }
