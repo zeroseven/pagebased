@@ -15,6 +15,15 @@ call_user_func(static function (string $table) {
                 'default' => 0
             ]
         ],
+        '_rampage_tags' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_tags',
+            'config' => [
+                'type' => 'user',
+                'renderType' => 'rampageTags',
+                'default' => ''
+            ]
+        ],
         '_rampage_relations_to' => [
             'exclude' => true,
             'displayCond' => 'FIELD:l10n_parent:=:0',

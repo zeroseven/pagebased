@@ -40,6 +40,10 @@ class CastUtility
             return (string)$value;
         }
 
+        if(is_array($value)) {
+            return implode(',', $value);
+        }
+
         self::throwException($value);
 
         return '';

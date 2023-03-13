@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration\EventListener;
 
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+use TYPO3\CMS\Core\Type\Exception as TypeException;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use Zeroseven\Rampage\Backend\TCA\GroupFilter;
+use Zeroseven\Rampage\Backend\TCA\ItemsProcFunc;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
+use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
+use Zeroseven\Rampage\Exception\RegistrationException;
+use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
+use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\PageObjectRegistration;
 use Zeroseven\Rampage\Registration\PluginRegistration;
 use Zeroseven\Rampage\Registration\Registration;
@@ -16,24 +22,15 @@ use Zeroseven\Rampage\Registration\RegistrationService;
 
 class AddTCAEvent
 {
-    protected function getPageType(PageObjectRegistration $pageObjectRegistration): ?int
-    {
-        if (is_subclass_of($pageObjectRegistration->getObjectClassName(), PageTypeInterface::class) && $pageType = $pageObjectRegistration->getObjectClassName()::getType()) {
-            return $pageType;
-        }
-
-        return null;
-    }
-
-    protected function createPlugin(Registration $registration, PluginRegistration $pluginRegistration): void
+    protected function createPlugin(Registration $registration, PluginRegistration $pluginRegistration): string
     {
         $CType = $pluginRegistration->getCType($registration);
 
         // Add some default fields to the content elements by copy configuration of "header"
         $GLOBALS['TCA']['tt_content']['types'][$CType]['showitem'] = $GLOBALS['TCA']['tt_content']['types']['header']['showitem'];
 
-        // Register plugins
-        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
+        // Register plugin
+        ExtensionUtility::registerPlugin(
             $registration->getExtensionName(),
             ucfirst($pluginRegistration->getType()),
             $pluginRegistration->getTitle(),
@@ -42,14 +39,17 @@ class AddTCAEvent
 
         // Register icon
         $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$CType] = $pluginRegistration->getIconIdentifier();
+
+        return $CType;
     }
 
+    /** @throws RegistrationException */
     protected function createPageType(PageObjectRegistration $pageObjectRegistration): void
     {
-        if ($pageType = $this->getPageType($pageObjectRegistration)) {
+        if ($pageType = $pageObjectRegistration->getObjectType()) {
 
             // Add to type list
-            if (($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null)) {
+            if ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
                 ExtensionManagementUtility::addTcaSelectItem(
                     AbstractPage::TABLE_NAME,
                     $tcaTypeField,
@@ -72,15 +72,17 @@ class AddTCAEvent
         }
     }
 
+    /** @throws RegistrationException */
     protected function addPageType(Registration $registration): void
     {
         if (($pageObject = $registration->getObject()) && $pageObject->isEnabled()) {
             $this->createPageType($pageObject);
 
-            if ($pageType = $this->getPageType($pageObject)) {
+            if ($pageType = $pageObject->getObjectType()) {
                 ExtensionManagementUtility::addToAllTCAtypes(AbstractPage::TABLE_NAME, sprintf('
                     --div--;%s,
                         _rampage_top,
+                        _rampage_tags,
                         _rampage_relations_to,
                         _rampage_relations_from
                 ', $pageObject->getTitle()), (string)$pageType);
@@ -89,10 +91,10 @@ class AddTCAEvent
                 $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_relations_to']['config'] = [
                     'filter' => [
                         [
-                             'userFunc' => GroupFilter::class . '->filterTypes',
-                             'parameters' => [
-                                 'allowed' => $pageType
-                             ]
+                            'userFunc' => GroupFilter::class . '->filterTypes',
+                            'parameters' => [
+                                'allowed' => $pageType
+                            ]
                         ]
                     ],
                     'suggestOptions' => [
@@ -116,20 +118,144 @@ class AddTCAEvent
         }
     }
 
+    /** @throws TypeException */
     protected function addListPlugin(Registration $registration): void
     {
         if ($registration->getListPlugin()->isEnabled()) {
-            $this->createPlugin($registration, $registration->getListPlugin());
+            $cType = $this->createPlugin($registration, $registration->getListPlugin());
+
+            // FlexForm configuration
+            if ($cType) {
+                $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'FILTER');
+
+                try {
+                    $filterSheet->addField('settings.tags', [
+                        'type' => 'user',
+                        'renderType' => 'rampageTags',
+                        'placeholder' => 'ADD TAGS …',
+                        'object' => $registration->getObject()->getObjectClassName()
+                    ], 'TAGS');
+                } catch (RegistrationException $e) {
+                }
+
+                if ($registration->getCategory()->isEnabled() && $tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
+                    try {
+                        $filterSheet->addField('settings.category', [
+                            'type' => 'select',
+                            'renderType' => 'selectSingle',
+                            'minitems' => 0,
+                            'maxitems' => 1,
+                            'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
+                            'foreign_table' => 'pages',
+                            'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $tcaTypeField, $registration->getCategory()->getObjectType()),
+                            'items' => [
+                                ['NO RESTRICTION', '--div--'],
+                                ['SHOW ALL', 0],
+                                ['AVAILABLE CATEGORIES', '--div--'],
+                            ]
+                        ], 'CATEGORY');
+                    } catch (RegistrationException $e) {
+                    }
+                }
+
+                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS')
+                    ->addField('settings.' . AbstractDemand::PARAMETER_TOP_MODE, [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 1,
+                        'maxitems' => 1,
+                        'items' => [
+                            ['DEFAULT', 0],
+                            ['TOP OBJECTS FIRST', AbstractDemand::TOP_MODE_FIRST],
+                            ['ONLY TOP OBJECTS', AbstractDemand::TOP_MODE_ONLY]
+                        ]
+                    ], 'TOP MODE')
+                    ->addField('settings.' . AbstractDemand::PARAMETER_ORDER_BY, [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 1,
+                        'maxitems' => 1,
+                        'items' => [
+                            ['DEFAULT', ''],
+                            ['Title (ASC)', 'title_asc'],
+                            ['Title (DESC)', 'title_desc'],
+                        ]
+                    ], 'SORTING');
+
+                $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LAYOUT')
+                    ->addField('settings.itemsPerStage', [
+                        'placeholder' => '6',
+                        'type' => 'input',
+                        'eval' => 'trim,is_in',
+                        'is_in' => ',0123456789'
+                    ], 'ITEMS_PER_PAGE')
+                    ->addField('settings.maxStages', [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 1,
+                        'maxitems' => 1,
+                        'items' => [
+                            ['UNLIMITED', 0],
+                            [1, 1],
+                            [2, 2],
+                            [3, 3],
+                            [4, 4],
+                            [5, 5],
+                        ]
+                    ], 'MAX_STAGES');
+
+                FlexFormConfiguration::makeInstance('tt_content', $cType, 'pi_flexform', 'after:header')
+                    ->addSheet($filterSheet)
+                    ->addSheet($optionsSheet)
+                    ->addSheet($layoutSheet)
+                    ->addToTCA();
+            }
         }
     }
 
+    /** @throws TypeException */
     protected function addFilterPlugin(Registration $registration): void
     {
         if ($registration->getFilterPlugin()->isEnabled()) {
-            $this->createPlugin($registration, $registration->getFilterPlugin());
+            $cType = $this->createPlugin($registration, $registration->getFilterPlugin());
+            $listCType = $registration->getListPlugin()->getCType($registration);
+
+            // FlexForm configuration
+            if ($cType && $listCType) {
+                $table = 'tt_content';
+
+                $generalSheet = FlexFormSheetConfiguration::makeInstance('general', 'General setttings')
+                    ->addField('settings.' . AbstractDemand::PARAMETER_CONTENT_ID, [
+                        'type' => 'group',
+                        'internal_type' => 'db',
+                        'foreign_table' => $table,
+                        'allowed' => $table,
+                        'size' => '1',
+                        'maxitems' => '1',
+                        'suggestOptions' => [
+                            'default' => [
+                                'searchWholePhrase' => true
+                            ],
+                            $table => [
+                                'searchCondition' => 'CType = "' . $listCType . '"'
+                            ]
+                        ],
+                        'filter' => [
+                            'userFunc' => GroupFilter::class . '->filterTypes',
+                            'parameters' => [
+                                'allowed' => $listCType
+                            ]
+                        ]
+                    ], 'CONTENT id');
+
+                FlexFormConfiguration::makeInstance($table, $cType, 'pi_flexform', 'after:header')
+                    ->addSheet($generalSheet)
+                    ->addToTCA();
+            }
         }
     }
 
+    /** @throws RegistrationException | TypeException */
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
         foreach (RegistrationService::getRegistrations() as $registration) {
