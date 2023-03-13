@@ -48,6 +48,11 @@ class ObjectRegistration extends AbstractObjectRegistration
         return $this;
     }
 
+    public function tagsEnabled(): bool
+    {
+        return $this->tagField;
+    }
+
     public function enableTop(): self
     {
         $this->topField = true;
@@ -61,6 +66,12 @@ class ObjectRegistration extends AbstractObjectRegistration
 
         return $this;
     }
+
+    public function topEnabled(): bool
+    {
+        return $this->topField;
+    }
+
 
     public static function create(...$arguments): self
     {

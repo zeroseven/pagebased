@@ -13,10 +13,10 @@ use Zeroseven\Rampage\Backend\TCA\ItemsProcFunc;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
-use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\AbstractObjectRegistration;
 use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
+use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
+use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 
@@ -79,13 +79,17 @@ class AddTCAEvent
             $this->createPageType($pageObject);
 
             if ($pageType = $pageObject->getObjectType()) {
+                $fields = [];
+
+                $pageObject->topEnabled() && $fields[] = '_rampage_top';
+                $pageObject->tagsEnabled() && $fields[] = '_rampage_tags';
+
+                $fields[] = '_rampage_relations_to';
+                $fields[] = '_rampage_relations_from';
+
                 ExtensionManagementUtility::addToAllTCAtypes(AbstractPage::TABLE_NAME, sprintf('
-                    --div--;%s,
-                        _rampage_top,
-                        _rampage_tags,
-                        _rampage_relations_to,
-                        _rampage_relations_from
-                ', $pageObject->getTitle()), (string)$pageType);
+                    --div--;%s,%s
+                ', $pageObject->getTitle(), implode(',', $fields)), (string)$pageType);
 
                 // Configure relations
                 $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_relations_to']['config'] = [
@@ -118,7 +122,7 @@ class AddTCAEvent
         }
     }
 
-    /** @throws TypeException */
+    /** @throws TypeException | RegistrationException */
     protected function addListPlugin(Registration $registration): void
     {
         if ($registration->getListPlugin()) {
@@ -128,38 +132,36 @@ class AddTCAEvent
             if ($cType) {
                 $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'FILTER');
 
-                try {
+                if ($registration->getObject()->tagsEnabled()) {
                     $filterSheet->addField('settings.tags', [
                         'type' => 'user',
                         'renderType' => 'rampageTags',
                         'placeholder' => 'ADD TAGS …',
                         'object' => $registration->getObject()->getClassName()
                     ], 'TAGS');
-                } catch (RegistrationException $e) {
                 }
 
-                if ($registration->getCategory() && ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null)) {
-                    try {
-                        $filterSheet->addField('settings.category', [
-                            'type' => 'select',
-                            'renderType' => 'selectSingle',
-                            'minitems' => 0,
-                            'maxitems' => 1,
-                            'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
-                            'foreign_table' => 'pages',
-                            'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $tcaTypeField, $registration->getCategory()->getObjectType()),
-                            'items' => [
-                                ['NO RESTRICTION', '--div--'],
-                                ['SHOW ALL', 0],
-                                ['AVAILABLE CATEGORIES', '--div--'],
-                            ]
-                        ], 'CATEGORY');
-                    } catch (RegistrationException $e) {
-                    }
+                if ($registration->hasCategory() && ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null)) {
+                    $filterSheet->addField('settings.category', [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 0,
+                        'maxitems' => 1,
+                        'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
+                        'foreign_table' => 'pages',
+                        'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $tcaTypeField, $registration->getCategory()->getObjectType()),
+                        'items' => [
+                            ['NO RESTRICTION', '--div--'],
+                            ['SHOW ALL', 0],
+                            ['AVAILABLE CATEGORIES', '--div--'],
+                        ]
+                    ], 'CATEGORY');
                 }
 
-                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS')
-                    ->addField('settings.' . AbstractDemand::PARAMETER_TOP_MODE, [
+                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS');
+
+                if ($registration->getObject()->topEnabled()) {
+                    $optionsSheet->addField('settings.' . AbstractDemand::PARAMETER_TOP_MODE, [
                         'type' => 'select',
                         'renderType' => 'selectSingle',
                         'minitems' => 1,
@@ -169,18 +171,20 @@ class AddTCAEvent
                             ['TOP OBJECTS FIRST', AbstractDemand::TOP_MODE_FIRST],
                             ['ONLY TOP OBJECTS', AbstractDemand::TOP_MODE_ONLY]
                         ]
-                    ], 'TOP MODE')
-                    ->addField('settings.' . AbstractDemand::PARAMETER_ORDER_BY, [
-                        'type' => 'select',
-                        'renderType' => 'selectSingle',
-                        'minitems' => 1,
-                        'maxitems' => 1,
-                        'items' => [
-                            ['DEFAULT', ''],
-                            ['Title (ASC)', 'title_asc'],
-                            ['Title (DESC)', 'title_desc'],
-                        ]
-                    ], 'SORTING');
+                    ], 'TOP MODE');
+                }
+
+                $optionsSheet->addField('settings.' . AbstractDemand::PARAMETER_ORDER_BY, [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'minitems' => 1,
+                    'maxitems' => 1,
+                    'items' => [
+                        ['DEFAULT', ''],
+                        ['Title (ASC)', 'title_asc'],
+                        ['Title (DESC)', 'title_desc'],
+                    ]
+                ], 'SORTING');
 
                 $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LAYOUT')
                     ->addField('settings.itemsPerStage', [

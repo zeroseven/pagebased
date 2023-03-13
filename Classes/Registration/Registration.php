@@ -12,10 +12,10 @@ use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
 class Registration
 {
     protected string $extensionName;
-    protected ?ObjectRegistration $object;
-    protected ?CategoryRegistration $category;
-    protected ?ListPluginRegistration $listPlugin;
-    protected ?FilterPluginRegistration $filterPlugin;
+    protected ?ObjectRegistration $object = null;
+    protected ?CategoryRegistration $category = null;
+    protected ?ListPluginRegistration $listPlugin = null;
+    protected ?FilterPluginRegistration $filterPlugin = null;
 
     public function __construct(string $extensionName)
     {
@@ -49,7 +49,7 @@ class Registration
         return $this->object !== null;
     }
 
-    public function getCategory(): CategoryRegistration
+    public function getCategory(): ?CategoryRegistration
     {
         return $this->category;
     }
@@ -66,7 +66,7 @@ class Registration
         return $this->category !== null;
     }
 
-    public function getListPlugin(): ListPluginRegistration
+    public function getListPlugin(): ?ListPluginRegistration
     {
         return $this->listPlugin;
     }
@@ -83,7 +83,7 @@ class Registration
         return $this->listPlugin !== null;
     }
 
-    public function getFilterPlugin(): FilterPluginRegistration
+    public function getFilterPlugin(): ?FilterPluginRegistration
     {
         return $this->filterPlugin;
     }
