@@ -13,26 +13,27 @@ Create new registration in your `ext_localconf.php`. Example:
 
 ```php
 call_user_func(static function () {
-    $object = \Zeroseven\Rampage\Registration\ObjectRegistration::create('Page-Object')
+    $object = \Zeroseven\Rampage\Registration\ObjectRegistration::create('Job')
         ->setClassName(\Vendor\NewExtension\Domain\Model\Job::class)
         ->setControllerClass(\Vendor\NewExtension\Controller\JobController::class)
         ->setRepositoryClass(\Vendor\NewExtension\Domain\Repository\JobRepository::class)
-        ->setIconIdentifier('custom-object-icon')
-        ->enableTop()
-        ->enableTags()
-        ->enableTopics(27);
+        ->setIconIdentifier('custom-job-icon')
+        ->enableTop()       // Enable top job feature for job objects
+        ->enableTags()      // Enable tag feature for job objects, so tagging and filtering tags is possible
+        ->enableTopics(27); // Enable topics for jobs and give it a pid where to store these
 
-    $category = \Zeroseven\Rampage\Registration\CategoryRegistration::create('Object-Category')
+    $category = \Zeroseven\Rampage\Registration\CategoryRegistration::create('Job-Category')
         ->setClassName(\Vendor\NewExtension\Domain\Model\Category::class);
 
-    $listPlugin = \Zeroseven\Rampage\Registration\ListPluginRegistration::create('Object-List')
-        ->setDescription('Display objects in a super nice list')
-        ->setIconIdentifier('content-bullets');
+    $listPlugin = \Zeroseven\Rampage\Registration\ListPluginRegistration::create('Job list')
+        ->setDescription('Display jobs in a super nice list')
+        ->setIconIdentifier('custom-joblist-icon');
 
-    $filterPlugin = \Zeroseven\Rampage\Registration\FilterPluginRegistration::create('Object-Filter')
-        ->setDescription('Filter objects');
+    $filterPlugin = \Zeroseven\Rampage\Registration\FilterPluginRegistration::create('Job filter')
+        ->setDescription('Filter jobs');
+        ->setIconIdentifier('custom-joblist-icon');
 
-    \Zeroseven\Rampage\Registration\RegistrationService::createRegistration('new_extension')
+    \Zeroseven\Rampage\Registration\RegistrationService::createRegistration('jobs')
         ->setObject($object)
         ->enableCategory($category)
         ->enableListPlugin($listPlugin)
