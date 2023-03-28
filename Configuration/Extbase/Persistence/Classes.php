@@ -2,13 +2,13 @@
 
 return [
     \Zeroseven\Rampage\Domain\Model\Entity\ParentPage::class => [
-        'tableName' => 'pages',
+        'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
     ],
     \Zeroseven\Rampage\Domain\Model\Entity\PageObject::class => [
-        'tableName' => 'pages',
+        'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
     ],
     \Zeroseven\Rampage\Domain\Model\AbstractPage::class => [
-        'tableName' => 'pages',
+        'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
         'properties' => [
             'fileReferences' => [
                 'fieldName' => 'media'
@@ -28,13 +28,16 @@ return [
         ]
     ],
     \Zeroseven\Rampage\Domain\Model\AbstractPageObject::class => [
-        'tableName' => 'pages',
+        'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
         'properties' => [
             'top' => [
                 'fieldName' => '_rampage_top'
             ],
             'tags' => [
                 'fieldName' => '_rampage_tags'
+            ],
+            'topics' => [
+                'fieldName' => '_rampage_topics'
             ],
             'relationsTo' => [
                 'fieldName' => '_rampage_relations_to'

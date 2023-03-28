@@ -40,7 +40,7 @@ class CastUtility
             return (string)$value;
         }
 
-        if(is_array($value)) {
+        if (is_array($value)) {
             return implode(',', $value);
         }
 
@@ -50,7 +50,7 @@ class CastUtility
     }
 
     /** @throws TypeException */
-    public static function array(mixed $value): array
+    public static function array(mixed $value, string $divider = null): array
     {
         if (is_array($value)) {
             return $value;
@@ -61,7 +61,11 @@ class CastUtility
         }
 
         if (is_string($value)) {
-            return GeneralUtility::trimExplode(',', $value);
+            return GeneralUtility::trimExplode($divider ?? ',', $value);
+        }
+
+        if (is_int($value)) {
+            return [$value];
         }
 
         if (is_object($value) && method_exists($value, 'toArray')) {

@@ -7,12 +7,13 @@ namespace Zeroseven\Rampage\Registration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
+use Zeroseven\Rampage\Exception\RegistrationException;
 
 class RegistrationService
 {
-    public static function createRegistration(string $extensionName, string $objectClassName, string $repositoryClassName, string $controllerClassName): Registration
+    public static function createRegistration(string $extensionName): Registration
     {
-        return GeneralUtility::makeInstance(Registration::class, $extensionName, $objectClassName, $repositoryClassName, $controllerClassName);
+        return GeneralUtility::makeInstance(Registration::class, $extensionName);
     }
 
     /** @return Registration[] */
@@ -21,11 +22,25 @@ class RegistrationService
         return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven-rampage']['registrations'] ?? [];
     }
 
+    /** @throws RegistrationException */
     public static function addRegistration(Registration $registration): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven-rampage']['registrations'][$registration->getExtensionName() . '-' . md5($registration->getObject()->getObjectClassName())] = $registration;
+        $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven-rampage']['registrations'][$registration->getExtensionName() . '-' . md5($registration->getObject()->getClassName())] = $registration;
     }
 
+    /** @throws RegistrationException */
+    public static function getRegistrationByClassName($className): ?Registration
+    {
+        foreach (self::getRegistrations() as $registration) {
+            if ($registration->getObject()->getClassName() === $className) {
+                return $registration;
+            }
+        }
+
+        return null;
+    }
+
+    /** @throws RegistrationException */
     public static function getRegistrationByController($className): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {
@@ -37,10 +52,11 @@ class RegistrationService
         return null;
     }
 
-    public static function getRegistrationByClassName($className): ?Registration
+    /** @throws RegistrationException */
+    public static function getRegistrationByRepository($className): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {
-            if ($registration->getObject()->getObjectClassName() === $className) {
+            if ($registration->getObject()->getRepositoryClassName() === $className) {
                 return $registration;
             }
         }

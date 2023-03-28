@@ -1,6 +1,6 @@
 <?php
 
-defined('TYPO3') || die('🤬 fuck off!');
+defined('TYPO3') || die('🤬 F**k off!');
 
 call_user_func(static function (string $table) {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [
@@ -22,6 +22,18 @@ call_user_func(static function (string $table) {
                 'type' => 'user',
                 'renderType' => 'rampageTags',
                 'default' => ''
+            ]
+        ],
+        '_rampage_topics' => [
+            'exclude' => true,
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_topics',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectCheckBox',
+                'foreign_table' => 'tx_rampage_domain_model_topic',
+                'MM' => 'tx_rampage_object_topic_mm',
+                'default' => 0
             ]
         ],
         '_rampage_relations_to' => [
