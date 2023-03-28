@@ -138,15 +138,6 @@ class AddTCAEvent
             if ($cType) {
                 $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'FILTER');
 
-                if ($registration->getObject()->tagsEnabled()) {
-                    $filterSheet->addField('settings.tags', [
-                        'type' => 'user',
-                        'renderType' => 'rampageTags',
-                        'placeholder' => 'ADD TAGS …',
-                        'object' => $registration->getObject()->getClassName()
-                    ], 'TAGS');
-                }
-
                 if ($registration->hasCategory() && ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null)) {
                     $filterSheet->addField('settings.category', [
                         'type' => 'select',
@@ -162,6 +153,26 @@ class AddTCAEvent
                             ['AVAILABLE CATEGORIES', '--div--'],
                         ]
                     ], 'CATEGORY');
+                }
+
+                if ($registration->getObject()->tagsEnabled()) {
+                    $filterSheet->addField('settings.tags', [
+                        'type' => 'user',
+                        'renderType' => 'rampageTags',
+                        'placeholder' => 'ADD TAGS …',
+                        'object' => $registration->getObject()->getClassName()
+                    ], 'TAGS');
+                }
+
+                if ($registration->getObject()->topicsEnabled() && $topicPageIds = $registration->getObject()->getTopicPageIds()) {
+                    $filterSheet->addField('settings.topics', [
+                        'type' => 'select',
+                        'renderType' => 'selectCheckBox',
+                        'foreign_table' => 'tx_rampage_domain_model_topic',
+                        'MM' => 'tx_rampage_object_topic_mm',
+                        'default' => 0,
+                        'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s)', implode(',', $topicPageIds))
+                    ], 'TOPICS');
                 }
 
                 $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS');
