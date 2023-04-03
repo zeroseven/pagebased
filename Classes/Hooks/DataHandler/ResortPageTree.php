@@ -19,18 +19,6 @@ use Zeroseven\Rampage\Registration\RegistrationService;
 
 class ResortPageTree
 {
-    /** @throws RegistrationException */
-    protected function getObjectDocumentTypes(): array
-    {
-        $objectDocumentTypes = [];
-
-        foreach (RegistrationService::getRegistrations() as $registration) {
-            $objectDocumentTypes[$registration->getObject()->getObjectType()] = $registration;
-        }
-
-        return $objectDocumentTypes;
-    }
-
     protected function getUidList(QueryResultInterface $result): array
     {
         return array_map(static fn($object) => $object->getUid(), $result->toArray());
@@ -67,15 +55,15 @@ class ResortPageTree
         return false;
     }
 
+    /** @throws RegistrationException */
     public function processDatamap_afterAllOperations(DataHandler $dataHandler): void
     {
         foreach ($dataHandler->datamap as $table => $uids) {
             if ($table === AbstractPage::TABLE_NAME) {
-                $objectDocumentTypes = $this->getObjectDocumentTypes();
 
                 // Slice the first three …
                 foreach (array_slice($uids, 0, 3, true) as $uid => $data) {
-                    if (($documentType = (int)($data['doktype'] ?? 0)) && $registration = $objectDocumentTypes[$documentType] ?? null) {
+                    if (($documentType = (int)($data['doktype'] ?? 0)) && $registration = RegistrationService::getRegistrationByObjectDocumentType($documentType)) {
 
                         // Get the parent page id
                         $pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']);
