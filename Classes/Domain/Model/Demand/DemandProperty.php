@@ -19,14 +19,16 @@ class DemandProperty
     protected string $name;
     protected string $type;
     protected string $parameter;
+    protected string $extbasePropertyName;
     protected mixed $value;
 
     /** @throws TypeException */
-    public function __construct(string $name, string $type, mixed $value = null)
+    public function __construct(string $name, string $type, mixed $value = null, string $extbasePropertyName = null)
     {
         $this->name = $name;
         $this->type = $type;
         $this->parameter = GeneralUtility::camelCaseToLowerCaseUnderscored($name);
+        $this->extbasePropertyName = $extbasePropertyName ?? $name;
 
         $this->setValue($value);
     }
@@ -44,6 +46,11 @@ class DemandProperty
     public function getParameter(): string
     {
         return $this->parameter;
+    }
+
+    public function getExtbasePropertyName(): ?string
+    {
+        return $this->extbasePropertyName;
     }
 
     public function getValue(): mixed

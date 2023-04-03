@@ -6,7 +6,7 @@ namespace Zeroseven\Rampage\Domain\Model\Demand;
 
 interface DemandInterface
 {
-    public function addProperty(string $name, string $type, mixed $value = null): self;
+    public function addProperty(string $name, string $type, string $extbasePropertyName = null): self;
 
     public function getProperty(string $propertyName): DemandProperty;
 

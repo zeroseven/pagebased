@@ -58,9 +58,9 @@ abstract class AbstractDemand implements DemandInterface
         return GeneralUtility::makeInstance($demandClass, $objectClass, $arguments);
     }
 
-    public function addProperty(string $name, string $type, mixed $value = null): self
+    public function addProperty(string $name, string $type, string $extbasePropertyName = null): self
     {
-        $this->properties[$name] = GeneralUtility::makeInstance(DemandProperty::class, $name, $type, $value);
+        $this->properties[$name] = GeneralUtility::makeInstance(DemandProperty::class, $name, $type, null, $extbasePropertyName);
 
         return $this;
     }
