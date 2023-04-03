@@ -82,6 +82,9 @@ class AddTCAEvent
                 $fields = [];
 
                 $pageObject->topEnabled() && $fields[] = '_rampage_top';
+
+                $fields[] = '_rampage_date';
+
                 $pageObject->tagsEnabled() && $fields[] = '_rampage_tags';
                 $pageObject->topicsEnabled() && $fields[] = '_rampage_topics';
 

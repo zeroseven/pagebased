@@ -6,6 +6,9 @@
 	  <trans-unit id="pages._rampage_top">
 	    <source>Top</source>
 	  </trans-unit>
+	  <trans-unit id="pages._rampage_date">
+	    <source>Date</source>
+	  </trans-unit>
 	  <trans-unit id="pages._rampage_tags">
 	    <source>Tags</source>
 	  </trans-unit>
