@@ -23,14 +23,13 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
         $this->setDefaultQuerySettings($querySettings);
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException */
-    public function getRootlineAndLanguageConstraints(DemandInterface $demand, QueryInterface $query): array
+    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
+    protected function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
-        // Build array
-        $constraints = [];
+        $constraints = parent::createDemandConstraints($demand, $query);
 
         // Stay in the hood
-        if (empty($demand->getUidList()) && $startPageId = RootLineUtility::getRootPage()) {
+        if (empty($demand->getUidList()) && $startPageId = $demand->getCategory() ?: RootLineUtility::getRootPage()) {
             $treeTableField = GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', null) ? 'pid' : 'uid';
             $constraints[] = $query->in($treeTableField, array_keys(RootLineUtility::collectPagesBelow($startPageId)));
         }
@@ -48,13 +47,5 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
         ]);
 
         return $constraints;
-    }
-
-    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
-    protected function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
-    {
-        $constraints = parent::createDemandConstraints($demand, $query);
-
-        return array_merge($constraints, $this->getRootlineAndLanguageConstraints($demand, $query));
     }
 }

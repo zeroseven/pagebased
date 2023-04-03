@@ -21,7 +21,9 @@ call_user_func(static function (string $table) {
             'config' => [
                 'type' => 'user',
                 'renderType' => 'rampageTags',
-                'default' => ''
+                'placeholder' => 'ADD TAGS …',
+                'default' => '',
+                'object' => ''
             ]
         ],
         '_rampage_topics' => [

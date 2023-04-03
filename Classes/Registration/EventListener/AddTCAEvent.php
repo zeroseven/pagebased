@@ -92,6 +92,11 @@ class AddTCAEvent
                     --div--;%s,%s
                 ', $pageObject->getTitle(), implode(',', $fields)), (string)$pageType);
 
+                // Configure tags
+                if ($pageObject->topicsEnabled()) {
+                    $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_tags']['config']['object'] = $registration->getObject()->getClassName();
+                }
+
                 // Configure topics
                 if ($pageObject->topicsEnabled()) {
                     $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_topics']['config']['foreign_table_where'] = sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s)', implode(',', $pageObject->getTopicPageIds()));

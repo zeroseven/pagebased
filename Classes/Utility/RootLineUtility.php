@@ -15,6 +15,7 @@ use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use function Zeroseven\Rampage\Backend\TCA\getPageData;
 
 class RootLineUtility
@@ -42,6 +43,16 @@ class RootLineUtility
 
         if ($id = GeneralUtility::_GP('id')) {
             return (int)$id;
+        }
+
+        if (($edit = $_GET['edit'][AbstractPage::TABLE_NAME] ?? null) && $id = array_key_first($edit)) {
+            return (int)$id;
+        }
+
+        if (($edit = $_GET['edit'] ?? null) && ($table = array_key_first($edit)) && $uid = array_key_first($edit[$table])) {
+            $row = BackendUtility::getRecord($table, $uid, 'pid');
+
+            return $row['pid'] ?? 0;
         }
 
         return 0;
@@ -107,64 +118,64 @@ class RootLineUtility
         return $queryBuilder;
     }
 
-    public static function collectPagesAbove(int $startingPoint): array
+    protected static function lookUp(array &$list, int $pid, int $looped, QueryBuilder $queryBuilder): void
     {
-        function lookUp(array &$list, int $pid, int $looped, QueryBuilder $queryBuilder): void
-        {
-            if ($pid > 0) {
-                $queryBuilder->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
+        if ($pid > 0) {
+            $queryBuilder->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
 
-                if ($looped === 0) {
-                    $queryBuilder->orWhere($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)))
-                        ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
-                }
+            if ($looped === 0) {
+                $queryBuilder->orWhere($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)))
+                    ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
+            }
 
-                $statement = $queryBuilder->execute();
-                while ($row = $statement->fetchAssociative()) {
-                    if ($uid = (int)($row['uid'] ?? 0)) {
-                        $list[$uid] = $row;
+            $statement = $queryBuilder->execute();
+            while ($row = $statement->fetchAssociative()) {
+                if ($uid = (int)($row['uid'] ?? 0)) {
+                    $list[$uid] = $row;
 
-                        if ($pid = (int)($row['pid'] ?? 0)) {
-                            lookUp($list, $pid, $looped + 1, $queryBuilder);
-                        }
+                    if ($pid = (int)($row['pid'] ?? 0)) {
+                        self::lookUp($list, $pid, $looped + 1, $queryBuilder);
                     }
                 }
             }
         }
+    }
 
+    protected static function lookDown(array &$list, int $uid, int $looped, int $depth, QueryBuilder $queryBuilder): void
+    {
+        if ($looped < $depth) {
+            $queryBuilder->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
+
+            if ($looped === 0) {
+                $queryBuilder->orWhere($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
+                    ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
+            }
+
+            $statement = $queryBuilder->execute();
+            while ($row = $statement->fetchAssociative()) {
+                if ($uid = (int)($row['uid'] ?? 0)) {
+                    $list[$uid] = $row;
+
+                    self::lookDown($list, $uid, $looped + 1, $depth, $queryBuilder);
+                }
+            }
+        }
+    }
+
+    public static function collectPagesAbove(int $startingPoint): array
+    {
         $list = [];
-        $queryBuilder = self::getTreeCollectQueryBuilder();
-        lookUp($list, $startingPoint, 0, $queryBuilder);
+
+        self::lookUp($list, $startingPoint, 0, self::getTreeCollectQueryBuilder());
 
         return $list;
     }
 
     public static function collectPagesBelow(int $startingPoint, ?int $depth = null): array
     {
-        function lookDown(array &$list, int $uid, int $looped, int $depth, QueryBuilder $queryBuilder): void
-        {
-            if ($looped < $depth) {
-                $queryBuilder->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
-
-                if ($looped === 0) {
-                    $queryBuilder->orWhere($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
-                        ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
-                }
-
-                $statement = $queryBuilder->execute();
-                while ($row = $statement->fetchAssociative()) {
-                    if ($uid = (int)($row['uid'] ?? 0)) {
-                        $list[$uid] = $row;
-
-                        lookDown($list, $uid, $looped + 1, $depth, $queryBuilder);
-                    }
-                }
-            }
-        }
-
         $list = [];
-        $queryBuilder = self::getTreeCollectQueryBuilder();
-        lookDown($list, $startingPoint, 0, $depth ?? 100, $queryBuilder);
+
+        self::lookDown($list, $startingPoint, 0, $depth ?? 100, self::getTreeCollectQueryBuilder());
 
         return $list;
     }
