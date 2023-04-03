@@ -33,6 +33,9 @@ return [
             'top' => [
                 'fieldName' => '_rampage_top'
             ],
+            'date' => [
+                'fieldName' => '_rampage_date'
+            ],
             'tagsString' => [
                 'fieldName' => '_rampage_tags'
             ],
