@@ -206,8 +206,10 @@ class AddTCAEvent
                     'maxitems' => 1,
                     'items' => [
                         ['DEFAULT', ''],
+                        ['Date (newest first)', 'date_desc'],
+                        ['Date (oldest first)', 'date_asc'],
                         ['Title (ASC)', 'title_asc'],
-                        ['Title (DESC)', 'title_desc'],
+                        ['Title (DESC)', 'title_desc']
                     ]
                 ], 'SORTING');
 
