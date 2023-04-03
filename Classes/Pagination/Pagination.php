@@ -19,14 +19,14 @@ class Pagination
     protected array $stageLengths;
 
     /** @throws TypeException */
-    public function __construct($items, $selectedStage, $itemsPerStage = null, $maxStages = null)
+    public function __construct(mixed $items, mixed $selectedStage, mixed $itemsPerStage = null, mixed $maxStages = null)
     {
         $this->stages = GeneralUtility::makeInstance(Stages::class, $this);
 
         $this->setItems($items, false)
             ->setSelectedStage($selectedStage, false)
-            ->setItemsPerStage($itemsPerStage ?? 6, false)
-            ->setMaxStages($maxStages ?? 100, false)
+            ->setItemsPerStage(empty($itemsPerStage) ? 6 : $itemsPerStage, false)
+            ->setMaxStages(empty($maxStages) ? 100 : $maxStages, false)
             ->initialize();
     }
 
@@ -61,7 +61,7 @@ class Pagination
     }
 
     /** @throws TypeException */
-    public function setItems($items, bool $updatePagination = null): self
+    public function setItems(mixed $items, bool $updatePagination = null): self
     {
         $this->items = CastUtility::array($items);
 
@@ -72,9 +72,10 @@ class Pagination
         return $this;
     }
 
-    public function setSelectedStage($stage = null, bool $updatePagination = null): self
+    /** @throws TypeException */
+    public function setSelectedStage(mixed $stage = null, bool $updatePagination = null): self
     {
-        $this->selectedStage = MathUtility::canBeInterpretedAsInteger($stage) ? (int)$stage : 0;
+        $this->selectedStage = CastUtility::int($stage);
 
         if ($updatePagination !== false) {
             $this->update();
@@ -89,7 +90,7 @@ class Pagination
     }
 
     /** @throws TypeException */
-    public function setItemsPerStage($itemsPerStage, bool $updatePagination = null): self
+    public function setItemsPerStage(mixed $itemsPerStage, bool $updatePagination = null): self
     {
         $this->itemsPerStage = CastUtility::string($itemsPerStage);
 
@@ -105,9 +106,10 @@ class Pagination
         return $this->maxStages;
     }
 
-    public function setMaxStages($maxStages, bool $updatePagination = null): self
+    /** @throws TypeException */
+    public function setMaxStages(mixed $maxStages, bool $updatePagination = null): self
     {
-        $this->maxStages = min(99, max(1, MathUtility::canBeInterpretedAsInteger($maxStages) && (int)$maxStages > 0 ? (int)$maxStages : 99));
+        $this->maxStages = min(100, max(1, CastUtility::int($maxStages)));
 
         if ($updatePagination !== false) {
             $this->update();
