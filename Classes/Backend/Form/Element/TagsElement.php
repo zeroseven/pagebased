@@ -7,9 +7,8 @@ namespace Zeroseven\Rampage\Backend\Form\Element;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
+use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\RootLineUtility;
 use Zeroseven\Rampage\Utility\TagUtility;
 
 class TagsElement extends AbstractFormElement
@@ -37,17 +36,11 @@ class TagsElement extends AbstractFormElement
         $this->languageUid = (int)($sysLanguageUid[0] ?? $sysLanguageUid);
     }
 
+    /** @throws RegistrationException */
     protected function renderRequireJsModules(): array
     {
-        $table = $this->data['tableName'] ?? '';
-        $uid = $this->data['databaseRow']['uid'] ?? 0;
-        $pid = $this->data['databaseRow']['pid'] ?? 0;
-
         $tags = ($registration = RegistrationService::getRegistrationByClassName($this->objectClass))
-        && ($rootPageUid = RootLineUtility::getRootPage((int)($table === 'pages' ? $uid : $pid)))
-        && ($demand = $registration->getObject()->getDemandClass())
-        && ($demand instanceof ObjectDemand)
-            ? TagUtility::getTags($demand->setCategory($rootPageUid), $registration->getObject()->getRepositoryClass(), true, $this->languageUid)
+            ? TagUtility::getTagsByRegistration($registration, null, true, $this->languageUid)
             : [];
 
         return [['TYPO3/CMS/Rampage/Backend/Tagify' => 'function(Tagify){
@@ -88,6 +81,15 @@ class TagsElement extends AbstractFormElement
         return [
             'html' => $this->renderHtml(),
             'requireJsModules' => $this->renderRequireJsModules()
+        ];
+    }
+
+    public static function register(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1677874287] = [
+            'nodeName' => 'rampageTags',
+            'priority' => 100,
+            'class' => self::class,
         ];
     }
 }

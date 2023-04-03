@@ -1,0 +1,11 @@
+{
+  "name": "ranpage",
+  "private": true,
+  "scripts": {
+    "build": "gulp build",
+    "postinstall": "cp node_modules/@yaireo/tagify/dist/tagify.min.js Resources/Public/JavaScript/Backend/Tagify.js && cp node_modules/@yaireo/tagify/dist/tagify.css Resources/Public/Css/Backend/Tagify.css"
+  },
+  "devDependencies": {
+    "@yaireo/tagify": "4.17.7"
+  }
+}
