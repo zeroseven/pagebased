@@ -14,6 +14,11 @@ use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 
 abstract class AbstractObjectRepository extends AbstractPageRepository implements ObjectRepositoryInterface
 {
+    protected $defaultOrderings = [
+        '_rampage_date' => QueryInterface::ORDER_DESCENDING,
+        'uid' => QueryInterface::ORDER_ASCENDING
+    ];
+
     /** @throws PersistenceException */
     protected function setOrdering(DemandInterface $demand = null): void
     {

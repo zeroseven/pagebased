@@ -40,9 +40,13 @@ abstract class AbstractRepository extends Repository
             && $demand->getOrderBy()
             && preg_match('/([a-zA-Z]+)(?:_(asc|desc))?/', $demand->getOrderBy(), $matches) // Examples: "date_desc", "title_asc", "title",
             && ($property = $matches[1] ?? null)
-            && ($columnMap = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($this->objectType)->getColumnMap($property))
-            && ($columnName = $columnMap->getColumnName())
         ) {
+            if ($columnMap = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($this->objectType)->getColumnMap($property)) {
+                $columnName = $columnMap->getColumnName();
+            } else {
+                $columnName = $property;
+            }
+
             $this->setDefaultOrderings([
                 $columnName => ($direction = $matches[2] ?? null) && $direction === 'desc' ? QueryInterface::ORDER_DESCENDING : QueryInterface::ORDER_ASCENDING
             ]);

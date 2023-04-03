@@ -15,6 +15,18 @@ call_user_func(static function (string $table) {
                 'default' => 0
             ]
         ],
+        '_rampage_date' => [
+            'exclude' => false,
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_date',
+            'config' => [
+                'type' => 'input',
+                'renderType' => 'inputDateTime',
+                'size' => 10,
+                'eval' => 'date,required',
+                'default' => time()
+            ]
+        ],
         '_rampage_tags' => [
             'exclude' => false,
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_tags',

@@ -82,6 +82,9 @@ class AddTCAEvent
                 $fields = [];
 
                 $pageObject->topEnabled() && $fields[] = '_rampage_top';
+
+                $fields[] = '_rampage_date';
+
                 $pageObject->tagsEnabled() && $fields[] = '_rampage_tags';
                 $pageObject->topicsEnabled() && $fields[] = '_rampage_topics';
 
@@ -203,8 +206,10 @@ class AddTCAEvent
                     'maxitems' => 1,
                     'items' => [
                         ['DEFAULT', ''],
+                        ['Date (newest first)', 'date_desc'],
+                        ['Date (oldest first)', 'date_asc'],
                         ['Title (ASC)', 'title_asc'],
-                        ['Title (DESC)', 'title_desc'],
+                        ['Title (DESC)', 'title_desc']
                     ]
                 ], 'SORTING');
 

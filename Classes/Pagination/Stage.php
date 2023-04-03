@@ -14,7 +14,7 @@ class Stage extends ObjectStorage
     protected bool $active;
     protected bool $selected;
 
-    public function __construct(Pagination $pagination, $index = null, $active = null, $selected = null)
+    public function __construct(Pagination $pagination, int $index = null, bool $active = null, bool $selected = null)
     {
         $this->pagination = $pagination;
         $this->index = $index ?? 0;

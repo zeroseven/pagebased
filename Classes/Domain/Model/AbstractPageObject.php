@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Domain\Model;
 
+use DateTime;
 use TYPO3\CMS\Extbase\Annotation as Annotation;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -17,6 +18,7 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     protected const TAG_DELIMITER = ',';
 
     protected bool $top;
+    protected DateTime $date;
     protected string $tagsString;
     protected array $tags = [];
     protected ?ObjectStorage $topics = null;
@@ -57,6 +59,18 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     public function setTop(bool $value): self
     {
         $this->top = $value;
+
+        return $this;
+    }
+
+    public function getDate(): ?DateTime
+    {
+        return $this->date ?? null;
+    }
+
+    public function setDate(DateTime $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }
