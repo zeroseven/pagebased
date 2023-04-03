@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+	<file source-language="en" datatype="plaintext" original="messages">
+		<header />
+		<body>
+
+			<!-- Backend notifications -->
+			<trans-unit id="notification.resortPagetree.title">
+				<source>Sorting for "%s" has been adjusted</source>
+			</trans-unit>
+			<trans-unit id="notification.resortPagetree.description">
+				<source>The pages below "%s" in the page tree have been rearranged to reflect their sorting.</source>
+			</trans-unit>
+
+		</body>
+	</file>
+</xliff>
