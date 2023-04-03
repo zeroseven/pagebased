@@ -14,14 +14,17 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Exception\TypeException;
+use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\CastUtility;
 
 abstract class AbstractRepository extends Repository
 {
-    protected function initializeDemand(): ?DemandInterface
+    /** @throws RegistrationException */
+    protected function initializeDemand(): DemandInterface
     {
-        return null;
+        return RegistrationService::getRegistrationByRepository(get_class($this))->getObject()->getDemandClass();
     }
 
     public function getDefaultQuerySettings(): QuerySettingsInterface
@@ -148,7 +151,7 @@ abstract class AbstractRepository extends Repository
         return $this->findByDemand(($demand ?? $this->initializeDemand())->setUidList($uidList));
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
+    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException | RegistrationException */
     public function findAll(DemandInterface $demand = null): ?QueryResultInterface
     {
         return $this->findByDemand($demand ?? $this->initializeDemand());

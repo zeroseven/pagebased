@@ -33,7 +33,7 @@ return [
             'top' => [
                 'fieldName' => '_rampage_top'
             ],
-            'tags' => [
+            'tagsString' => [
                 'fieldName' => '_rampage_tags'
             ],
             'topics' => [

@@ -7,7 +7,8 @@ namespace Zeroseven\Rampage\Backend\Form\Element;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 use Zeroseven\Rampage\Utility\TagUtility;
@@ -37,17 +38,16 @@ class TagsElement extends AbstractFormElement
         $this->languageUid = (int)($sysLanguageUid[0] ?? $sysLanguageUid);
     }
 
+    /** @throws RegistrationException */
     protected function renderRequireJsModules(): array
     {
         $table = $this->data['tableName'] ?? '';
         $uid = $this->data['databaseRow']['uid'] ?? 0;
         $pid = $this->data['databaseRow']['pid'] ?? 0;
+        $rootPageUid = RootLineUtility::getRootPage((int)($table === AbstractPage::TABLE_NAME ? $uid : $pid));
 
         $tags = ($registration = RegistrationService::getRegistrationByClassName($this->objectClass))
-        && ($rootPageUid = RootLineUtility::getRootPage((int)($table === 'pages' ? $uid : $pid)))
-        && ($demand = $registration->getObject()->getDemandClass())
-        && ($demand instanceof DemandInterface)
-            ? TagUtility::getTags($demand->setCategory($rootPageUid), $registration->getObject()->getRepositoryClass(), true, $this->languageUid)
+            ? TagUtility::getTagsByRegistration($registration, $rootPageUid, true, $this->languageUid)
             : [];
 
         return [['TYPO3/CMS/Rampage/Backend/Tagify' => 'function(Tagify){

@@ -9,13 +9,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
+use Zeroseven\Rampage\Exception\TypeException;
+use Zeroseven\Rampage\Utility\CastUtility;
 
 abstract class AbstractPageObject extends AbstractPage implements PageObjectInterface
 {
     protected const TAG_DELIMITER = ',';
 
     protected bool $top;
-    protected ?string $tags;
+    protected string $tagsString;
+    protected array $tags = [];
     protected ?ObjectStorage $topics = null;
     protected ?PageObject $parentObject = null;
     protected ?QueryResultInterface $childObjects = null;
@@ -60,16 +63,18 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
 
     public function getTags(): array
     {
-        if ($tagList = $this->tags ?? null) {
-            return GeneralUtility::trimExplode(self::TAG_DELIMITER, $tagList, true);
+        if ($tagsString = $this->tagsString ?? null) {
+            return $this->tags = GeneralUtility::trimExplode(self::TAG_DELIMITER, $tagsString, true);
         }
 
-        return [];
+        return $this->tags;
     }
 
+    /** @throws TypeException */
     public function setTags(mixed $value): self
     {
-        $this->tags = is_array($value) ? implode(self::TAG_DELIMITER, $value) : (string)$value;
+        $this->tags = CastUtility::array($value, self::TAG_DELIMITER);
+        $this->tagsString = implode(self::TAG_DELIMITER, $this->tags);
 
         return $this;
     }

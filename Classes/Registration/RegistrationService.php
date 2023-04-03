@@ -64,6 +64,18 @@ class RegistrationService
         return null;
     }
 
+    /** @throws RegistrationException */
+    public static function getRegistrationByDemandClass($className): ?Registration
+    {
+        foreach (self::getRegistrations() as $registration) {
+            if ($registration->getObject()->getRepositoryClassName() === $className) {
+                return $registration;
+            }
+        }
+
+        return null;
+    }
+
     public static function extbasePersistenceConfiguration(array $classConfiguration): array
     {
         foreach ($classConfiguration as $className => $configuration) {

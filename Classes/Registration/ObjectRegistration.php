@@ -6,8 +6,8 @@ namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
+use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Utility\CastUtility;
 
@@ -23,7 +23,7 @@ class ObjectRegistration extends AbstractObjectRegistration
         return $this->demandClassName;
     }
 
-    public function getDemandClass(...$arguments): DemandInterface
+    public function getDemandClass(...$arguments): ObjectDemandInterface
     {
         if ($this->demandClassName) {
             return GeneralUtility::makeInstance($this->demandClassName, $this->className, $arguments);
