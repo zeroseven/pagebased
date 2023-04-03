@@ -14,9 +14,13 @@ interface DemandInterface
 
     public function hasProperty(string $propertyName): bool;
 
-    public function setProperty(string $propertyName, mixed $value): self;
+    public function setProperty(string $propertyName, mixed $value, bool $toggle = null): self;
 
-    public function setProperties(bool $ignoreEmptyValues = false, ...$arguments): self;
+    public function toggleProperty(string $propertyName, mixed $value): self;
+
+    public function setProperties(array $parameterArray, bool $ignoreEmptyValues = null, bool $toggle = null): self;
+
+    public function toggleProperties(array $parameterArray, bool $ignoreEmptyValues = null): self;
 
     public function getParameterArray(bool $ignoreEmptyValues = null): array;
 

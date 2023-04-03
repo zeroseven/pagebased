@@ -23,6 +23,7 @@ class LinkViewHelper extends AbstractLinkViewHelper
         parent::initializeArguments();
 
         $this->registerArgument('properties', 'array', 'Update demand properties');
+        $this->registerArgument('toggle', 'bool', 'If selected, deselect value', false, true);
         $this->registerArgument('dataAttributes', 'bool', 'Set data attributes, if the filter is enabled', false, true);
     }
 
@@ -42,7 +43,7 @@ class LinkViewHelper extends AbstractLinkViewHelper
 
     protected function overrideDemandProperties(): void
     {
-        $this->demand->setProperties(false, $this->arguments['properties'] ?? [], $this->arguments['arguments'] ?? []);
+        $this->demand->setProperties(array_merge($this->arguments['properties'] ?? [], $this->arguments['arguments'] ?? []), false, (bool)$this->arguments['toggle']);
     }
 
     protected function overrideArguments(): void
@@ -58,7 +59,7 @@ class LinkViewHelper extends AbstractLinkViewHelper
             $matches = 0;
 
             foreach ($this->arguments['properties'] ?? [] as $key => $value) {
-                if($this->demand->hasProperty($key) && $this->demand->getProperty($key)->isActive($value)) {
+                if ($this->demand->hasProperty($key) && $this->demand->getProperty($key)->isActive($value)) {
                     $matches += 1;
                 }
             }
