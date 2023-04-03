@@ -83,4 +83,13 @@ class TagsElement extends AbstractFormElement
             'requireJsModules' => $this->renderRequireJsModules()
         ];
     }
+
+    public static function register(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1677874287] = [
+            'nodeName' => 'rampageTags',
+            'priority' => 100,
+            'class' => self::class,
+        ];
+    }
 }
