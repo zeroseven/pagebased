@@ -19,9 +19,11 @@ use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Domain\Repository\AbstractObjectRepository;
+use Zeroseven\Rampage\Domain\Repository\CategoryRepositoryInterface;
 use Zeroseven\Rampage\Domain\Repository\ObjectRepositoryInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\AbstractObjectRegistration;
+use Zeroseven\Rampage\Registration\CategoryRegistration;
 use Zeroseven\Rampage\Registration\ObjectRegistration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
@@ -29,7 +31,7 @@ use Zeroseven\Rampage\Registration\RegistrationService;
 class ValidateRegistrationEvent
 {
     /** @throws RegistrationException */
-    protected function checkPageObjectRegistration(AbstractObjectRegistration $pageObjectRegistration): void
+    protected function checkPageObjectRegistration(ObjectRegistration $pageObjectRegistration): void
     {
         // Check class inheritance of the controller
         if (($controllerClassName = $pageObjectRegistration->getControllerClassName()) && !is_subclass_of($controllerClassName, PageTypeControllerInterface::class)) {
@@ -45,17 +47,14 @@ class ValidateRegistrationEvent
         if (($repositoryClassName = $pageObjectRegistration->getRepositoryClassName()) && !is_subclass_of($repositoryClassName, ObjectRepositoryInterface::class)) {
             throw new RegistrationException(sprintf('The repository "%s" is not an instance of "%s". You can simply extend the class "%s".', $repositoryClassName, ObjectRepositoryInterface::class, AbstractObjectRepository::class), 1676667419);
         }
+    }
 
-        // Check the persistence configuration
-        if ($objectClassName = $pageObjectRegistration->getClassName()) {
-            try {
-                if (($tableName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($objectClassName)->getTableName()) !== AbstractPage::TABLE_NAME) {
-                    throw new RegistrationException(sprintf('The object "%s" must be stored in table "pages" instead of "%s". See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $pageObjectRegistration->getTitle(), $tableName), 1676066023);
-                }
-            } catch (Exception $e) {
-                throw new RegistrationException(sprintf('The class "%s" does not exists. %s', $objectClassName, $e->getMessage()), 1676065930);
-            } catch (LogicException $e) {
-            }
+    /** @throws RegistrationException */
+    protected function checkPageCategoryRegistration(CategoryRegistration $pageObjectRegistration): void
+    {
+        // Check repository
+        if (($repositoryClassName = $pageObjectRegistration->getRepositoryClassName()) && !is_subclass_of($repositoryClassName, CategoryRepositoryInterface::class)) {
+            throw new RegistrationException(sprintf('The repository "%s" is not an instance of "%s". You can simply extend the class "%s".', $repositoryClassName, CategoryRepositoryInterface::class, AbstractObjectRepository::class), 1676667419);
         }
     }
 
@@ -92,7 +91,17 @@ class ValidateRegistrationEvent
             }
         }
 
-        $this->checkPageObjectRegistration($pageTypeRegistration);
+        // Check the persistence configuration
+        if ($objectClassName = $pageTypeRegistration->getClassName()) {
+            try {
+                if (($tableName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($objectClassName)->getTableName()) !== AbstractPage::TABLE_NAME) {
+                    throw new RegistrationException(sprintf('The object "%s" must be stored in table "pages" instead of "%s". See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $pageObjectRegistration->getTitle(), $tableName), 1676066023);
+                }
+            } catch (Exception $e) {
+                throw new RegistrationException(sprintf('The class "%s" does not exists. %s', $objectClassName, $e->getMessage()), 1676065930);
+            } catch (LogicException $e) {
+            }
+        }
     }
 
     /** @throws RegistrationException | Exception */
@@ -103,6 +112,7 @@ class ValidateRegistrationEvent
         }
 
         $this->checkPageTypeRegistration($registration->getObject());
+        $this->checkPageObjectRegistration($registration->getObject());
 
         if ($registration->hasCategory()) {
             $this->checkPageTypeRegistration($registration->getCategory());

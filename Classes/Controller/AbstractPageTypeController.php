@@ -72,8 +72,8 @@ abstract class AbstractPageTypeController extends AbstractController implements 
         $repository = GeneralUtility::makeInstance(ObjectManager::class)->get($this->registration->getObject()->getRepositoryClassName());
         $objects = $repository->findByDemand($this->demand);
 
-        if (($contentID = ($this->contentData['uid'] ?? null)) && !$this->demand->getContentId()) {
-            $this->demand->setContentId($contentID);
+        if (($contentId = ($this->contentData['uid'] ?? null)) && !$this->demand->getContentId()) {
+            $this->demand->setContentId($contentId);
         }
 
         // Pass variables to the fluid template
@@ -90,6 +90,7 @@ abstract class AbstractPageTypeController extends AbstractController implements 
         $this->view->assignMultiple([
             'topics' => GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($this->registration),
             'tags' => TagUtility::getTagsByRegistration($this->registration),
+            'categories' => ($categoryRegistration = $this->registration->getCategory()) && $categoryRegistration->getRepositoryClassName() ? $categoryRegistration->getRepositoryClass()->findAll() : null,
             'demand' => $this->demand
         ]);
     }

@@ -13,15 +13,10 @@ use Zeroseven\Rampage\Utility\CastUtility;
 
 class ObjectRegistration extends AbstractObjectRegistration
 {
-    protected ?string $demandClassName = null;
+    protected ?string $controllerClassName = null;
     protected bool $tagField = false;
     protected bool $topField = false;
     protected array $topicPageIds = [];
-
-    public function getDemandClassName(): ?string
-    {
-        return $this->demandClassName;
-    }
 
     public function getDemandClass(...$arguments): ObjectDemandInterface
     {
@@ -32,9 +27,14 @@ class ObjectRegistration extends AbstractObjectRegistration
         return GeneralUtility::makeInstance(ObjectDemand::class, $this->className, $arguments);
     }
 
-    public function setDemandClassName(string $demandClassName): self
+    public function getControllerClassName(): ?string
     {
-        $this->demandClassName = $demandClassName;
+        return $this->controllerClassName;
+    }
+
+    public function setControllerClass(string $controllerClassName): self
+    {
+        $this->controllerClassName = $controllerClassName;
         return $this;
     }
 

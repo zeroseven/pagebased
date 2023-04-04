@@ -23,7 +23,8 @@ call_user_func(static function () {
         ->enableTopics(27); // Enable topics for jobs and give it a pid where to store these
 
     $category = \Zeroseven\Rampage\Registration\CategoryRegistration::create('Job-Category')
-        ->setClassName(\Vendor\NewExtension\Domain\Model\Category::class);
+        ->setClassName(\Vendor\NewExtension\Domain\Model\Category::class)
+        ->setRepositoryClass(\Vendor\NewExtension\Domain\Repository\CategoryRepository::class);
 
     $listPlugin = \Zeroseven\Rampage\Registration\ListPluginRegistration::create('Job list')
         ->setDescription('Display jobs in a super nice list')
