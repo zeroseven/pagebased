@@ -46,7 +46,7 @@ abstract class AbstractDemand implements DemandInterface
         $this->initProperties();
 
         if ($parameterArray !== null) {
-            $this->setProperties(true, $parameterArray);
+            $this->setProperties($parameterArray, true, false);
         }
     }
 
@@ -58,9 +58,9 @@ abstract class AbstractDemand implements DemandInterface
         return GeneralUtility::makeInstance($demandClass, $objectClass, $arguments);
     }
 
-    public function addProperty(string $name, string $type, mixed $value = null): self
+    public function addProperty(string $name, string $type, string $extbasePropertyName = null): self
     {
-        $this->properties[$name] = GeneralUtility::makeInstance(DemandProperty::class, $name, $type, $value);
+        $this->properties[$name] = GeneralUtility::makeInstance(DemandProperty::class, $name, $type, null, $extbasePropertyName);
 
         return $this;
     }
@@ -187,11 +187,11 @@ abstract class AbstractDemand implements DemandInterface
         return isset($this->properties[$propertyName]);
     }
 
-    /** @throws TypeException | PropertyException | ValueException */
-    public function setProperty(string $propertyName, mixed $value): self
+    /** @throws TypeException | PropertyException */
+    public function setProperty(string $propertyName, mixed $value, bool $toggle = null): self
     {
         if ($property = $this->properties[$propertyName] ?? null) {
-            $property->setValue($value);
+            $toggle ? $property->toggleValue($value) : $property->setValue($value);
         } else {
             throw new PropertyException(sprintf('Property "%s" does not exists in %s', $propertyName, __CLASS__), 1676061710);
         }
@@ -199,29 +199,34 @@ abstract class AbstractDemand implements DemandInterface
         return $this;
     }
 
-    /** @throws TypeException | ValueException */
-    public function setProperties(bool $ignoreEmptyValues = false, ...$parameterArrays): self
+    /** @throws TypeException | PropertyException */
+    public function toggleProperty(string $propertyName, mixed $value): self
     {
-        // Check the types of arguments
-        foreach ($parameterArrays as $parameterArray) {
-            if (!is_array($parameterArray)) {
-                throw new ValueException('Argument must be type array, ' . gettype($parameterArray) . 'given', 1676061794);
-            }
+        return $this->setProperty($propertyName, $value, true);
+    }
 
-            // Set properties
-            foreach ($this->properties as $property) {
-                if (isset($parameterArray[$property->getParameter()])) {
-                    if ($value = $parameterArray[$property->getParameter()] ?? null) {
-                        $this->properties[$property->getName()]->setValue($value);
-                    } elseif ($ignoreEmptyValues === false) {
-                        $this->properties[$property->getName()]->clear();
-                    }
+    /** @throws TypeException | PropertyException */
+    public function setProperties(array $parameterArray, bool $ignoreEmptyValues = null, bool $toggle = null): self
+    {
+        foreach ($this->properties as $property) {
+            if (isset($parameterArray[$property->getParameter()])) {
+                if ($value = $parameterArray[$property->getParameter()] ?? null) {
+                    $this->setProperty($property->getName(), $value, $toggle);
+                } elseif ($ignoreEmptyValues === false) {
+                    $this->properties[$property->getName()]->clear();
                 }
             }
         }
 
         return $this;
     }
+
+    /** @throws TypeException | PropertyException */
+    public function toggleProperties(array $parameterArray, bool $ignoreEmptyValues = null): self
+    {
+        return $this->setProperties($parameterArray, $ignoreEmptyValues, true);
+    }
+
 
     public function getParameterArray(bool $ignoreEmptyValues = null): array
     {
@@ -347,6 +352,10 @@ abstract class AbstractDemand implements DemandInterface
         if (preg_match('/((?:s|g)et|is|has)([A-Z].*)/', $name, $matches)) {
             $action = $matches[1];
             $propertyName = lcfirst($matches[2]);
+
+            if ($action === 'toggle') {
+                return $this->toggleProperty($propertyName, ...$arguments);
+            }
 
             if ($action === 'set') {
                 return $this->setProperty($propertyName, ...$arguments);

@@ -19,14 +19,16 @@ class DemandProperty
     protected string $name;
     protected string $type;
     protected string $parameter;
+    protected string $extbasePropertyName;
     protected mixed $value;
 
     /** @throws TypeException */
-    public function __construct(string $name, string $type, mixed $value = null)
+    public function __construct(string $name, string $type, mixed $value = null, string $extbasePropertyName = null)
     {
         $this->name = $name;
         $this->type = $type;
         $this->parameter = GeneralUtility::camelCaseToLowerCaseUnderscored($name);
+        $this->extbasePropertyName = $extbasePropertyName ?? $name;
 
         $this->setValue($value);
     }
@@ -44,6 +46,11 @@ class DemandProperty
     public function getParameter(): string
     {
         return $this->parameter;
+    }
+
+    public function getExtbasePropertyName(): ?string
+    {
+        return $this->extbasePropertyName;
     }
 
     public function getValue(): mixed
@@ -75,12 +82,18 @@ class DemandProperty
     public function parseValue(mixed $value): mixed
     {
         if ($this->isArray()) {
-            return array_map(static fn($v) => CastUtility::string($v), CastUtility::array($this->handleArrayModifier($value)));
-        } elseif ($this->isInteger()) {
+            return array_map(static fn($v) => CastUtility::string($v), CastUtility::array($value));
+        }
+
+        if ($this->isInteger()) {
             return CastUtility::int($value);
-        } elseif ($this->isBoolean()) {
+        }
+
+        if ($this->isBoolean()) {
             return CastUtility::bool($value);
-        } elseif ($this->isString()) {
+        }
+
+        if ($this->isString()) {
             return CastUtility::string($value);
         }
 
@@ -94,82 +107,40 @@ class DemandProperty
     }
 
     /** @throws TypeException */
-    protected function parseArrayModifier(mixed $value): ?array
+    public function toggleValue(mixed $value): void
     {
-        if (is_string($value) && $this->isArray() && preg_match('/^(?:\:=\s*)?((?:addTo|removeFrom|toggleIn)List)\((.*)\)$/', trim($value), $matches)) {
-            return [$matches[1], CastUtility::array($matches[2])];
+        if ($this->isArray()) {
+            $this->isActive($value) ? $this->removeFromList($value) : $this->addToList($value);
+        } else {
+            $this->isActive($value) ? $this->clear() : $this->setValue($value);
         }
-
-        return null;
     }
 
     /** @throws TypeException */
-    protected function handleArrayModifier(mixed $value): mixed
+    protected function addToList(mixed $newValues): void
     {
-        if ($parts = $this->parseArrayModifier($value)) {
-            return $this->{$parts[0]}($parts[1]);
-        }
-
-        return $value;
-    }
-
-    /** @throws TypeException */
-    protected function toggleInList(array $toggleValues): array
-    {
-        $values = $this->getValue();
-
-        foreach ($toggleValues as $toggleValue) {
-            if (($key = array_search((string)$toggleValue, $values, true)) !== false) {
-                unset($values[$key]);
-            } else {
-                $values[] = $toggleValue;
+        foreach (CastUtility::array($newValues) as $newValue) {
+            if (!in_array((string)$newValue, $this->value, true)) {
+                $this->value[] = CastUtility::string($newValue);
             }
         }
-
-        return $values;
     }
 
     /** @throws TypeException */
-    protected function addToList(array $newValues): array
+    protected function removeFromList(mixed $removeValues): void
     {
-        $values = $this->getValue();
-
-        foreach ($newValues as $newValue) {
-            if (!in_array((string)$newValue, $values, true)) {
-                $values[] = $newValue;
+        foreach (CastUtility::array($removeValues) as $removeValue) {
+            if (($key = array_search((string)$removeValue, $this->value, true)) !== false) {
+                unset($this->value[$key]);
             }
         }
-
-        return $values;
     }
 
     /** @throws TypeException */
-    protected function removeFromList(array $removeValues): array
-    {
-        $values = $this->getValue();
-
-        foreach ($removeValues as $removeValue) {
-            if (($key = array_search((string)$removeValue, $values, true)) !== false) {
-                unset($values[$key]);
-            }
-        }
-
-        return $values;
-    }
-
-    /** @throws TypeException | ValueException */
     public function isActive(mixed $value): bool
     {
         if ($this->isArray()) {
-            if (($parts = $this->parseArrayModifier($value))) {
-                foreach ($parts[1] as $needle) {
-                    $inArray = in_array($needle, $this->getValue(), true);
-
-                    if (($inArray && ($parts[0] === 'toggleInList' || $parts[0] === 'addToList')) || (!$inArray && $parts[0] === 'removeFromList')) {
-                        return true;
-                    }
-                }
-            } else if (count(array_diff($this->parseValue($value), $this->getValue())) === 0) {
+            if (count(array_diff($this->parseValue($value), $this->getValue())) === 0) {
                 return true;
             }
         } else if ($this->parseValue($value) === $this->getValue()) {

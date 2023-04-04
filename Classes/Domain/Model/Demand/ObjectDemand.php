@@ -17,6 +17,6 @@ class ObjectDemand extends AbstractDemand implements ObjectDemandInterface
         parent::initProperties();
 
         $this->addProperty('category', DemandProperty::TYPE_INTEGER);
-        $this->addProperty('tags', DemandProperty::TYPE_ARRAY);
+        $this->addProperty('tags', DemandProperty::TYPE_ARRAY, 'tagsString');
     }
 }
