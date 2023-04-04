@@ -149,7 +149,7 @@ abstract class AbstractRepository extends Repository
         return $query->execute();
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
+    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException | RegistrationException */
     public function findByUidList(mixed $uidList, DemandInterface $demand = null): ?QueryResultInterface
     {
         return $this->findByDemand(($demand ?? $this->initializeDemand())->setUidList($uidList));
@@ -162,10 +162,10 @@ abstract class AbstractRepository extends Repository
     }
 
     /** @throws AspectNotFoundException | TypeException */
-    public function findByUid(mixed $pageUid, bool $ignoreRestrictions = null): ?object
+    public function findByUid(mixed $uid, bool $ignoreRestrictions = null): ?object
     {
         // Convert the uid to an integer
-        $uid = CastUtility::int($pageUid);
+        $uid = CastUtility::int($uid);
 
         // Load page without restrictions
         if ($ignoreRestrictions) {

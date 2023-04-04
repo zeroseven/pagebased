@@ -35,7 +35,7 @@ abstract class AbstractDemand implements DemandInterface
     protected ?DataMap $dataMap = null;
     protected ?array $tableDefinition = null;
 
-    /** @throws ValueException | TypeException | Exception */
+    /** @throws TypeException | Exception | PropertyException */
     public function __construct(string $className, array $parameterArray = null)
     {
         try {
@@ -227,7 +227,6 @@ abstract class AbstractDemand implements DemandInterface
         return $this->setProperties($parameterArray, $ignoreEmptyValues, true);
     }
 
-
     public function getParameterArray(bool $ignoreEmptyValues = null): array
     {
         $params = [];
@@ -285,7 +284,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->getProperty(self::PARAMETER_UID_LIST)->getValue();
     }
 
-    /** @throws TypeException | PropertyException | ValueException */
+    /** @throws TypeException | PropertyException */
     public function setUidList(mixed $value): self
     {
         $this->setProperty(self::PARAMETER_UID_LIST, $value);
@@ -299,7 +298,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->getProperty(self::PARAMETER_ORDER_BY)->getValue();
     }
 
-    /** @throws TypeException | PropertyException | ValueException */
+    /** @throws TypeException | PropertyException */
     public function setOrderBy(mixed $value): self
     {
         $this->setProperty(self::PARAMETER_ORDER_BY, $value);
@@ -313,7 +312,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->getProperty(self::PARAMETER_CONTENT_ID)->getValue();
     }
 
-    /** @throws TypeException | PropertyException | ValueException */
+    /** @throws TypeException | PropertyException */
     public function setContentId(mixed $value): self
     {
         $this->setProperty(self::PARAMETER_CONTENT_ID, $value);
@@ -333,7 +332,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->getProperty(self::PARAMETER_TOP_MODE)->getValue() === self::TOP_MODE_FIRST;
     }
 
-    /** @throws TypeException | PropertyException | ValueException */
+    /** @throws TypeException | PropertyException */
     public function setTop(mixed $value): self
     {
         $this->setProperty(self::PARAMETER_TOP_MODE, $value);

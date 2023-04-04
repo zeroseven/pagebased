@@ -6,7 +6,6 @@ namespace Zeroseven\Rampage\Domain\Model\Demand;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Exception\ValueException;
 use Zeroseven\Rampage\Utility\CastUtility;
 
 class DemandProperty
@@ -154,7 +153,7 @@ class DemandProperty
     {
         try {
             $this->setValue(null);
-        } catch (TypeException | ValueException $e) {
+        } catch (TypeException $e) {
         }
     }
 

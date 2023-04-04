@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
+use TYPO3\CMS\Extbase\Object\Exception as ObjectException;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -20,6 +21,7 @@ abstract class AbstractPageTypeController extends AbstractController implements 
     protected ?DemandInterface $demand = null;
     protected array $requestArguments = [];
 
+    /** @throws RegistrationException */
     public function initializeAction(): void
     {
         parent::initializeAction();
@@ -46,11 +48,13 @@ abstract class AbstractPageTypeController extends AbstractController implements 
         return $view;
     }
 
+    /** @throws RegistrationException */
     public function initializeRegistration(): void
     {
         $this->registration = RegistrationService::getRegistrationByController(get_class($this));
     }
 
+    /** @throws RegistrationException */
     public function initializeDemand(): void
     {
         $this->demand = AbstractDemand::makeInstance($this->registration->getObject(), array_merge($this->settings, $this->requestArguments));
@@ -61,6 +65,7 @@ abstract class AbstractPageTypeController extends AbstractController implements 
         return $this->demand;
     }
 
+    /** @throws RegistrationException | ObjectException */
     public function listAction(): void
     {
         $repository = GeneralUtility::makeInstance(ObjectManager::class)->get($this->registration->getObject()->getRepositoryClassName());

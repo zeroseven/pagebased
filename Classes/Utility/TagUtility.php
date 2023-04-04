@@ -29,7 +29,6 @@ class TagUtility
         return $tags;
     }
 
-    /** @throws RegistrationException */
     public static function getTags(ObjectDemandInterface $demand, RepositoryInterface $repository, int $rootPageUid = null, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
         // Override language
@@ -55,7 +54,7 @@ class TagUtility
     /** @throws RegistrationException */
     public static function getTagsByDemand(ObjectDemandInterface $demand, int $rootPageUid = null, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
-        if (($repository = RegistrationService::getRegistrationByDemandClass($demand)->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
+        if (($registration = RegistrationService::getRegistrationByDemandClass($demand)) && ($repository = $registration->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
             return self::getTags($demand, $repository, $rootPageUid, $ignoreTagsFromDemand, $languageUid);
         }
 

@@ -24,7 +24,7 @@ class Stage extends ObjectStorage
 
     public function getIndex(): int
     {
-        return (int)$this->index;
+        return $this->index;
     }
 
     public function setIndex(int $index): self
