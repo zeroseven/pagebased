@@ -11,6 +11,8 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Rampage\Exception\RegistrationException;
+use Zeroseven\Rampage\Registration\RegistrationService;
 
 abstract class AbstractObjectRepository extends AbstractPageRepository implements ObjectRepositoryInterface
 {
@@ -18,6 +20,12 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         '_rampage_date' => QueryInterface::ORDER_DESCENDING,
         'uid' => QueryInterface::ORDER_ASCENDING
     ];
+
+    /** @throws RegistrationException */
+    protected function initializeDemand(): DemandInterface
+    {
+        return RegistrationService::getRegistrationByRepository(get_class($this))->getObject()->getDemandClass();
+    }
 
     /** @throws PersistenceException */
     protected function setOrdering(DemandInterface $demand = null): void

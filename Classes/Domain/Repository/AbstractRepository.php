@@ -16,16 +16,12 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\CastUtility;
 
 abstract class AbstractRepository extends Repository
 {
     /** @throws RegistrationException */
-    protected function initializeDemand(): DemandInterface
-    {
-        return RegistrationService::getRegistrationByRepository(get_class($this))->getObject()->getDemandClass();
-    }
+    abstract protected function initializeDemand(): DemandInterface;
 
     public function getDefaultQuerySettings(): QuerySettingsInterface
     {
