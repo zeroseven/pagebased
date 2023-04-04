@@ -14,6 +14,7 @@ use Zeroseven\Rampage\Domain\Repository\TopicRepository;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\TagUtility;
 
 abstract class AbstractPageTypeController extends AbstractController implements PageTypeControllerInterface
 {
@@ -82,11 +83,13 @@ abstract class AbstractPageTypeController extends AbstractController implements 
         ]);
     }
 
+    /** @throws RegistrationException */
     public function filterAction(): void
     {
         // Pass variables to the fluid template
         $this->view->assignMultiple([
             'topics' => GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($this->registration),
+            'tags' => TagUtility::getTagsByRegistration($this->registration),
             'demand' => $this->demand
         ]);
     }
