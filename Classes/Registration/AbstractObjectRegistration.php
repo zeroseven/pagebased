@@ -7,6 +7,8 @@ namespace Zeroseven\Rampage\Registration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\Exception;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
+use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
@@ -16,7 +18,7 @@ abstract class AbstractObjectRegistration
     protected string $title;
     protected ?string $className = null;
     protected ?string $repositoryClassName = null;
-    protected ?string $controllerClassName = null;
+    protected ?string $demandClassName = null;
     protected ?string $iconIdentifier = null;
 
     public function __construct(string $title, string $className = null)
@@ -57,14 +59,16 @@ abstract class AbstractObjectRegistration
         return $this;
     }
 
-    public function getControllerClassName(): ?string
+    public function getDemandClassName(): ?string
     {
-        return $this->controllerClassName;
+        return $this->demandClassName;
     }
 
-    public function setControllerClass(string $controllerClassName): self
+    abstract public function getDemandClass(...$arguments): ObjectDemandInterface;
+
+    public function setDemandClassName(string $demandClassName): self
     {
-        $this->controllerClassName = $controllerClassName;
+        $this->demandClassName = $demandClassName;
         return $this;
     }
 

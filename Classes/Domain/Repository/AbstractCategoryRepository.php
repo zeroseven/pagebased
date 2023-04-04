@@ -1,25 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Zeroseven\Rampage\Domain\Repository;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use Zeroseven\Rampage\Domain\Model\Demand\CategoryDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
 
-class AbstractCategoryRepository extends AbstractPageRepository
+abstract class AbstractCategoryRepository extends AbstractPageRepository implements CategoryRepositoryInterface
 {
     protected $defaultOrderings = [
         'title' => QueryInterface::ORDER_ASCENDING,
         'uid' => QueryInterface::ORDER_ASCENDING
     ];
 
-    /** @throws RegistrationException */
     protected function initializeDemand(): DemandInterface
     {
-        return RegistrationService::getRegistrationByRepository(get_class($this))->getObject()->getDemandClass();
+        return GeneralUtility::makeInstance(CategoryDemand::class, PageObject::class);
     }
 
     public function initializeObject(): void

@@ -36,13 +36,5 @@ interface DemandInterface
 
     public function setOrderBy(mixed $value): self;
 
-    public function getContentId(): int;
-
-    public function setContentId(mixed $value): self;
-
-    public function getTopObjectOnly(): bool;
-
-    public function getTopObjectFirst(): bool;
-
     public function getCopy(): self;
 }

@@ -24,11 +24,6 @@ abstract class AbstractDemand implements DemandInterface
 {
     public const PARAMETER_UID_LIST = '_id';
     public const PARAMETER_ORDER_BY = '_sorting';
-    public const PARAMETER_CONTENT_ID = '_c';
-    public const PARAMETER_TOP_MODE = '_top';
-
-    public const TOP_MODE_ONLY = 1;
-    public const TOP_MODE_FIRST = 2;
 
     /** @var DemandProperty[] */
     protected array $properties = [];
@@ -67,17 +62,8 @@ abstract class AbstractDemand implements DemandInterface
 
     protected function initProperties(): void
     {
-        // Add default properties
-        $properties = [
-            self::PARAMETER_UID_LIST => DemandProperty::TYPE_ARRAY,
-            self::PARAMETER_ORDER_BY => DemandProperty::TYPE_STRING,
-            self::PARAMETER_CONTENT_ID => DemandProperty::TYPE_INTEGER,
-            self::PARAMETER_TOP_MODE => DemandProperty::TYPE_INTEGER,
-        ];
-
-        foreach ($properties as $name => $type) {
-            $this->addProperty($name, $type);
-        }
+        $this->addProperty(self::PARAMETER_UID_LIST, DemandProperty::TYPE_ARRAY);
+        $this->addProperty(self::PARAMETER_ORDER_BY, DemandProperty::TYPE_STRING);
 
         // Get properties from class
         if ($this->dataMap) {
@@ -302,40 +288,6 @@ abstract class AbstractDemand implements DemandInterface
     public function setOrderBy(mixed $value): self
     {
         $this->setProperty(self::PARAMETER_ORDER_BY, $value);
-
-        return $this;
-    }
-
-    /** @throws PropertyException */
-    public function getContentId(): int
-    {
-        return $this->getProperty(self::PARAMETER_CONTENT_ID)->getValue();
-    }
-
-    /** @throws TypeException | PropertyException */
-    public function setContentId(mixed $value): self
-    {
-        $this->setProperty(self::PARAMETER_CONTENT_ID, $value);
-
-        return $this;
-    }
-
-    /** @throws PropertyException */
-    public function getTopObjectOnly(): bool
-    {
-        return $this->getProperty(self::PARAMETER_TOP_MODE)->getValue() === self::TOP_MODE_ONLY;
-    }
-
-    /** @throws PropertyException */
-    public function getTopObjectFirst(): bool
-    {
-        return $this->getProperty(self::PARAMETER_TOP_MODE)->getValue() === self::TOP_MODE_FIRST;
-    }
-
-    /** @throws TypeException | PropertyException */
-    public function setTop(mixed $value): self
-    {
-        $this->setProperty(self::PARAMETER_TOP_MODE, $value);
 
         return $this;
     }

@@ -12,6 +12,7 @@ use Zeroseven\Rampage\Backend\TCA\GroupFilter;
 use Zeroseven\Rampage\Backend\TCA\ItemsProcFunc;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
+use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\AbstractObjectRegistration;
 use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
@@ -186,15 +187,15 @@ class AddTCAEvent
                 $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS');
 
                 if ($registration->getObject()->topEnabled()) {
-                    $optionsSheet->addField('settings.' . AbstractDemand::PARAMETER_TOP_MODE, [
+                    $optionsSheet->addField('settings.' . ObjectDemand::PARAMETER_TOP_MODE, [
                         'type' => 'select',
                         'renderType' => 'selectSingle',
                         'minitems' => 1,
                         'maxitems' => 1,
                         'items' => [
                             ['DEFAULT', 0],
-                            ['TOP OBJECTS FIRST', AbstractDemand::TOP_MODE_FIRST],
-                            ['ONLY TOP OBJECTS', AbstractDemand::TOP_MODE_ONLY]
+                            ['TOP OBJECTS FIRST', ObjectDemand::TOP_MODE_FIRST],
+                            ['ONLY TOP OBJECTS', ObjectDemand::TOP_MODE_ONLY]
                         ]
                     ], 'TOP MODE');
                 }
@@ -256,7 +257,7 @@ class AddTCAEvent
                 $table = 'tt_content';
 
                 $generalSheet = FlexFormSheetConfiguration::makeInstance('general', 'General setttings')
-                    ->addField('settings.' . AbstractDemand::PARAMETER_CONTENT_ID, [
+                    ->addField('settings.' . ObjectDemand::PARAMETER_CONTENT_ID, [
                         'type' => 'group',
                         'internal_type' => 'db',
                         'foreign_table' => $table,
