@@ -43,18 +43,10 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
 
     abstract protected function overrideArguments(): void;
 
-    protected function overridePageUid(): void
-    {
-        if (empty($this->arguments['pageUid']) && $category = $this->demand->getProperty('category')) {
-            $this->arguments['pageUid'] = $category->getValue();
-        }
-    }
-
     public function render(): string
     {
         $this->overrideDemandProperties();
         $this->overrideArguments();
-        $this->overridePageUid();
 
         if (empty($this->arguments['pluginName'])) {
             $this->arguments['pluginName'] = 'List';
