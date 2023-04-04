@@ -41,7 +41,7 @@ abstract class AbstractDemand implements DemandInterface
         $this->initProperties();
 
         if ($parameterArray !== null) {
-            $this->setProperties($parameterArray, true, false);
+            $this->setParameterArray($parameterArray, true);
         }
     }
 
@@ -192,14 +192,14 @@ abstract class AbstractDemand implements DemandInterface
     }
 
     /** @throws TypeException | PropertyException */
-    public function setProperties(array $parameterArray, bool $ignoreEmptyValues = null, bool $toggle = null): self
+    public function setProperties(array $propertyArray, bool $ignoreEmptyValues = null, bool $toggle = null): self
     {
-        foreach ($this->properties as $property) {
-            if (isset($parameterArray[$property->getParameter()])) {
-                if ($value = $parameterArray[$property->getParameter()] ?? null) {
-                    $this->setProperty($property->getName(), $value, $toggle);
+        foreach ($propertyArray as $key => $value) {
+            if ($this->getProperty($key)) {
+                if ($value) {
+                    $this->setProperty($key, $value, $toggle);
                 } elseif ($ignoreEmptyValues === false) {
-                    $this->properties[$property->getName()]->clear();
+                    $this->getProperty($key)->clear();
                 }
             }
         }
@@ -208,9 +208,24 @@ abstract class AbstractDemand implements DemandInterface
     }
 
     /** @throws TypeException | PropertyException */
-    public function toggleProperties(array $parameterArray, bool $ignoreEmptyValues = null): self
+    public function toggleProperties(array $propertyArray, bool $ignoreEmptyValues = null): self
     {
-        return $this->setProperties($parameterArray, $ignoreEmptyValues, true);
+        return $this->setProperties($propertyArray, $ignoreEmptyValues, true);
+    }
+
+    public function setParameterArray(array $parameterArray, bool $ignoreEmptyValues = null): self
+    {
+        foreach ($this->properties as $property) {
+            if (isset($parameterArray[$property->getParameter()])) {
+                if ($value = $parameterArray[$property->getParameter()] ?? null) {
+                    $this->setProperty($property->getName(), $value);
+                } elseif ($ignoreEmptyValues === false) {
+                    $this->properties[$property->getName()]->clear();
+                }
+            }
+        }
+
+        return $this;
     }
 
     public function getParameterArray(bool $ignoreEmptyValues = null): array

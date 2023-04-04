@@ -16,7 +16,7 @@ use Zeroseven\Rampage\Exception\TypeException;
 class ObjectDemand extends AbstractDemand implements ObjectDemandInterface
 {
     public const PARAMETER_CONTENT_ID = '_c';
-    public const PARAMETER_TOP_MODE = '_top';
+    public const PARAMETER_TOP_MODE = 'topMode';
 
     public const TOP_MODE_ONLY = 1;
     public const TOP_MODE_FIRST = 2;

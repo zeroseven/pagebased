@@ -7,7 +7,6 @@ namespace Zeroseven\Rampage\ViewHelpers\Filter;
 use ReflectionClass;
 use ReflectionException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
 use Zeroseven\Rampage\Exception\TypeException;
@@ -36,7 +35,7 @@ class LinkViewHelper extends AbstractLinkViewHelper
         if ($this->demand) {
             foreach (array_keys($this->arguments['properties'] ?? []) as $key) {
                 if (!$this->demand->hasProperty($key)) {
-                    throw new Exception(sprintf('Undefined property "%s" in demand class "%s". Allowed properties are %s', $key, (new ReflectionClass($this->demand))->getName(), implode(', ', array_keys($this->demand->getParameterArray(false)))), 1678130803);
+                    throw new Exception(sprintf('Undefined property "%s" in demand class "%s". Allowed properties are %s', $key, (new ReflectionClass($this->demand))->getName(), implode(', ', array_map(static fn($property) => $property->getName(), $this->demand->getProperties()))), 1678130803);
                 }
             }
         }
@@ -44,7 +43,13 @@ class LinkViewHelper extends AbstractLinkViewHelper
 
     protected function overrideDemandProperties(): void
     {
-        $this->demand->setProperties(array_merge($this->arguments['properties'] ?? [], $this->arguments['arguments'] ?? []), false, (bool)$this->arguments['toggle']);
+        if ($arguments = $this->arguments['arguments'] ?? null) {
+            $this->demand->setParameterArray($arguments, true);
+        }
+
+        if ($properties = $this->arguments['properties'] ?? null) {
+            $this->demand->setProperties($properties, false, (bool)$this->arguments['toggle']);
+        }
     }
 
     protected function overrideArguments(): void
@@ -61,7 +66,7 @@ class LinkViewHelper extends AbstractLinkViewHelper
 
             foreach ($this->arguments['properties'] ?? [] as $key => $value) {
                 if ($this->demand->hasProperty($key) && $this->demand->getProperty($key)->isActive($value)) {
-                    $matches += 1;
+                    ++$matches;
                 }
             }
 
