@@ -17,13 +17,14 @@ use Zeroseven\Rampage\Domain\Model\AbstractPageCategory;
 use Zeroseven\Rampage\Domain\Model\AbstractPageType;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
+use Zeroseven\Rampage\Domain\Model\Demand\GenericObjectDemand;
+use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Domain\Repository\AbstractObjectRepository;
-use Zeroseven\Rampage\Domain\Repository\CategoryRepositoryInterface;
 use Zeroseven\Rampage\Domain\Repository\ObjectRepositoryInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\AbstractObjectRegistration;
-use Zeroseven\Rampage\Registration\CategoryRegistration;
 use Zeroseven\Rampage\Registration\ObjectRegistration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
@@ -38,23 +39,14 @@ class ValidateRegistrationEvent
             throw new RegistrationException(sprintf('The controller "%s" is not an instance of "%s". You can simply extend class "%s".', $controllerClassName, PageTypeControllerInterface::class, AbstractPageTypeController::class), 1676498615);
         }
 
-        // Check demand
-        if (method_exists($pageObjectRegistration, 'getDemandClassName') && ($demandClassName = $pageObjectRegistration->getDemandClassName()) && !is_subclass_of($demandClassName, DemandInterface::class)) {
-            throw new RegistrationException(sprintf('The demand "%s" is not an instance of "%s". You can simply extend the class "%s".', $demandClassName, DemandInterface::class, AbstractDemand::class), 1676535114);
-        }
-
         // Check repository
         if (($repositoryClassName = $pageObjectRegistration->getRepositoryClassName()) && !is_subclass_of($repositoryClassName, ObjectRepositoryInterface::class)) {
             throw new RegistrationException(sprintf('The repository "%s" is not an instance of "%s". You can simply extend the class "%s".', $repositoryClassName, ObjectRepositoryInterface::class, AbstractObjectRepository::class), 1676667419);
         }
-    }
 
-    /** @throws RegistrationException */
-    protected function checkPageCategoryRegistration(CategoryRegistration $pageObjectRegistration): void
-    {
-        // Check repository
-        if (($repositoryClassName = $pageObjectRegistration->getRepositoryClassName()) && !is_subclass_of($repositoryClassName, CategoryRepositoryInterface::class)) {
-            throw new RegistrationException(sprintf('The repository "%s" is not an instance of "%s". You can simply extend the class "%s".', $repositoryClassName, CategoryRepositoryInterface::class, AbstractObjectRepository::class), 1676667419);
+        // Check demand
+        if (!($pageObjectRegistration->getDemandClass() instanceof ObjectDemandInterface)) {
+            throw new RegistrationException(sprintf('The demand of object "%s" is not an instance of "%s". You can simply extend the class "%s" or build an instance by the "%s".', $pageObjectRegistration->getClassName(), ObjectDemandInterface::class, AbstractObjectDemand::class, GenericObjectDemand::class), 1680634026);
         }
     }
 
@@ -101,6 +93,11 @@ class ValidateRegistrationEvent
                 throw new RegistrationException(sprintf('The class "%s" does not exists. %s', $objectClassName, $e->getMessage()), 1676065930);
             } catch (LogicException $e) {
             }
+        }
+
+        // Check demand
+        if (method_exists($pageTypeRegistration, 'getDemandClassName') && ($demandClassName = $pageTypeRegistration->getDemandClassName()) && !is_subclass_of($demandClassName, DemandInterface::class)) {
+            throw new RegistrationException(sprintf('The demand "%s" is not an instance of "%s". You can simply extend the class "%s".', $demandClassName, DemandInterface::class, AbstractDemand::class), 1676535114);
         }
     }
 

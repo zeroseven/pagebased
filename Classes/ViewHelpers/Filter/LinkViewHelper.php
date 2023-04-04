@@ -8,7 +8,7 @@ use ReflectionClass;
 use ReflectionException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
+use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Exception\ValueException;
 
@@ -54,7 +54,7 @@ class LinkViewHelper extends AbstractLinkViewHelper
 
     protected function overrideArguments(): void
     {
-        $overrides = $this->demand->getParameterDiff($this->templateVariableContainer->get('settings'), [ObjectDemand::PARAMETER_CONTENT_ID]);
+        $overrides = $this->demand->getParameterDiff($this->templateVariableContainer->get('settings'), [AbstractObjectDemand::PARAMETER_CONTENT_ID]);
         $this->arguments['arguments'] = array_merge((array)$this->arguments['arguments'], $overrides);
     }
 

@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Object\Exception as ObjectException;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Repository\TopicRepository;
 use Zeroseven\Rampage\Exception\RegistrationException;
@@ -58,7 +57,7 @@ abstract class AbstractPageTypeController extends AbstractController implements 
     /** @throws RegistrationException */
     public function initializeDemand(): void
     {
-        $this->demand = AbstractDemand::makeInstance($this->registration->getObject(), array_merge($this->settings, $this->requestArguments));
+        $this->demand = $this->registration->getObject()->getDemandClass()->setParameterArray(array_merge($this->settings, $this->requestArguments));
     }
 
     public function getDemand(): DemandInterface

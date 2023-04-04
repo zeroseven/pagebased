@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Domain\Model\Demand;
 
-use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionProperty;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap;
-use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMap;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use Zeroseven\Rampage\Exception\PropertyException;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Registration\AbstractObjectRegistration;
 use Zeroseven\Rampage\Utility\CastUtility;
 
 abstract class AbstractDemand implements DemandInterface
@@ -27,17 +24,11 @@ abstract class AbstractDemand implements DemandInterface
 
     /** @var DemandProperty[] */
     protected array $properties = [];
-    protected ?DataMap $dataMap = null;
     protected ?array $tableDefinition = null;
 
     /** @throws TypeException | Exception | PropertyException */
-    public function __construct(string $className, array $parameterArray = null)
+    public function __construct(array $parameterArray = null)
     {
-        try {
-            $this->dataMap = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($className);
-        } catch (InvalidArgumentException $e) {
-        }
-
         $this->initProperties();
 
         if ($parameterArray !== null) {
@@ -45,56 +36,16 @@ abstract class AbstractDemand implements DemandInterface
         }
     }
 
-    public static function makeInstance(AbstractObjectRegistration $objectRegistration, array $arguments = null): DemandInterface
-    {
-        $objectClass = $objectRegistration->getClassName();
-        $demandClass = $objectRegistration->getDemandClassName() ?? ObjectDemand::class;
-
-        return GeneralUtility::makeInstance($demandClass, $objectClass, $arguments);
-    }
-
-    public function addProperty(string $name, string $type, string $extbasePropertyName = null): self
-    {
-        $this->properties[$name] = GeneralUtility::makeInstance(DemandProperty::class, $name, $type, null, $extbasePropertyName);
-
-        return $this;
-    }
-
     protected function initProperties(): void
     {
         $this->addProperty(self::PARAMETER_UID_LIST, DemandProperty::TYPE_ARRAY);
         $this->addProperty(self::PARAMETER_ORDER_BY, DemandProperty::TYPE_STRING);
-
-        // Get properties from class
-        if ($this->dataMap) {
-            foreach (GeneralUtility::makeInstance(ReflectionClass::class, $this->dataMap->getClassName())->getProperties() ?? [] as $reflection) {
-                $name = $reflection->getName();
-
-                // Check if the property exists in the database and the type can be handled
-                if (($columnMap = $this->dataMap->getColumnMap($name)) && $type = $this->getType($reflection, $columnMap)) {
-                    $this->addProperty($name, $type);
-                }
-            }
-        }
     }
 
-    protected function getTableDefinition(): ?array
-    {
-        if ($this->tableDefinition === null && $this->dataMap) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->dataMap->getTableName());
-
-            if ($schemaManager = $queryBuilder->getSchemaManager()) {
-                $this->tableDefinition = $schemaManager->listTableColumns($this->dataMap->getTableName());
-            }
-        }
-
-        return $this->tableDefinition;
-    }
-
-    protected function getType(ReflectionProperty $reflection, ColumnMap $columnMap): ?string
+    protected function getType(ReflectionProperty $reflection, array $tableDefinition, ColumnMap $columnMap, string $tableName): ?string
     {
         // The field must not be defined in table controls
-        if ($ctrl = $GLOBALS['TCA'][$this->dataMap->getTableName()]['ctrl']) {
+        if ($ctrl = $GLOBALS['TCA'][$tableName]['ctrl']) {
             $fieldName = $columnMap->getColumnName();
 
             if (
@@ -135,7 +86,7 @@ abstract class AbstractDemand implements DemandInterface
         }
 
         // Check table definition
-        if (($tableDefinition = $this->getTableDefinition()) && ($column = $tableDefinition[$columnMap->getColumnName()] ?? null) && $type = $column->getType()) {
+        if (($column = $tableDefinition[$columnMap->getColumnName()] ?? null) && $type = $column->getType()) {
             if ($type->getName() === 'smallint') {
                 return DemandProperty::TYPE_BOOLEAN;
             }
@@ -150,6 +101,40 @@ abstract class AbstractDemand implements DemandInterface
         }
 
         return null;
+    }
+
+    public function detectPropertiesFromClass(string $className): self
+    {
+        try {
+            $dataMap = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($className);
+        } catch (Exception $e) {
+            $dataMap = null;
+        }
+
+        // Get properties from class
+        if ($dataMap) {
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($dataMap->getTableName());
+
+            if (($schemaManager = $queryBuilder->getSchemaManager()) && $tableDefinition = $schemaManager->listTableColumns($dataMap->getTableName())) {
+                foreach (GeneralUtility::makeInstance(ReflectionClass::class, $dataMap->getClassName())->getProperties() ?? [] as $reflection) {
+                    $name = $reflection->getName();
+
+                    // Check if the property exists in the database and the type can be handled
+                    if (!$this->hasProperty($name) && ($columnMap = $dataMap->getColumnMap($name)) && $type = $this->getType($reflection, $tableDefinition, $columnMap, $dataMap->getTableName())) {
+                        $this->addProperty($name, $type);
+                    }
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    public function addProperty(string $name, string $type, string $extbasePropertyName = null): self
+    {
+        $this->properties[$name] = GeneralUtility::makeInstance(DemandProperty::class, $name, $type, null, $extbasePropertyName);
+
+        return $this;
     }
 
     /** @throws PropertyException */
@@ -213,6 +198,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->setProperties($propertyArray, $ignoreEmptyValues, true);
     }
 
+    /** @throws TypeException | PropertyException */
     public function setParameterArray(array $parameterArray, bool $ignoreEmptyValues = null): self
     {
         foreach ($this->properties as $property) {
@@ -279,6 +265,21 @@ abstract class AbstractDemand implements DemandInterface
         return $this;
     }
 
+    public function getCopy(): self
+    {
+        $clone = GeneralUtility::makeInstance(get_class($this));
+
+        foreach ($this->properties as $property) {
+            if (!$clone->hasProperty($property->getName())) {
+                $clone->addProperty($property->getName(), $property->getType(), $property->getExtbasePropertyName());
+            }
+        }
+
+        $clone->setParameterArray($this->getParameterArray(true));
+
+        return $clone;
+    }
+
     /** @throws PropertyException */
     public function getUidList(): array
     {
@@ -305,11 +306,6 @@ abstract class AbstractDemand implements DemandInterface
         $this->setProperty(self::PARAMETER_ORDER_BY, $value);
 
         return $this;
-    }
-
-    public function getCopy(): self
-    {
-        return GeneralUtility::makeInstance(get_class($this), $this->dataMap->getClassName(), $this->getParameterArray());
     }
 
     /** @throws TypeException | PropertyException | ValueException */

@@ -13,7 +13,7 @@ use Zeroseven\Rampage\Exception\TypeException;
  * @method setTags(mixed $value): self
  * @method getTags(): array
  */
-class ObjectDemand extends AbstractDemand implements ObjectDemandInterface
+class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterface
 {
     public const PARAMETER_CONTENT_ID = '_c';
     public const PARAMETER_TOP_MODE = 'topMode';

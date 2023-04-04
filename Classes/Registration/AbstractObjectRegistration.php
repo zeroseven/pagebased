@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\Exception;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemand;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
+use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
@@ -50,7 +49,7 @@ abstract class AbstractObjectRegistration
 
     public function getRepositoryClass(): RepositoryInterface
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get($this->repositoryClassName);
+        return GeneralUtility::makeInstance(ObjectManager::class)->get($this->getRepositoryClassName());
     }
 
     public function setRepositoryClass(string $repositoryClassName): self
@@ -64,7 +63,14 @@ abstract class AbstractObjectRegistration
         return $this->demandClassName;
     }
 
-    abstract public function getDemandClass(...$arguments): ObjectDemandInterface;
+    public function getDemandClass(): DemandInterface
+    {
+        if ($className = $this->getDemandClassName()) {
+            return GeneralUtility::makeInstance($className);
+        }
+
+        return GenericDemand::build($this->className);
+    }
 
     public function setDemandClassName(string $demandClassName): self
     {
