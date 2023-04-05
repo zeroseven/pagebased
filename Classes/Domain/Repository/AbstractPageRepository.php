@@ -24,7 +24,7 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
     }
 
     /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
-    protected function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
+    public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = parent::createDemandConstraints($demand, $query);
 

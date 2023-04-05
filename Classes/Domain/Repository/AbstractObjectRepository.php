@@ -47,13 +47,13 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     }
 
     /** @throws RegistrationException */
-    protected function initializeDemand(): DemandInterface
+    public function initializeDemand(): DemandInterface
     {
         return RegistrationService::getRegistrationByRepository(get_class($this))->getObject()->getDemandClass();
     }
 
     /** @throws PersistenceException */
-    protected function setOrdering(DemandInterface $demand = null): void
+    public function setOrdering(DemandInterface $demand = null): void
     {
         parent::setOrdering($demand);
 
@@ -64,7 +64,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     }
 
     /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
-    protected function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
+    public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = parent::createDemandConstraints($demand, $query);
 

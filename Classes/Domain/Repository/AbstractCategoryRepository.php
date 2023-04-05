@@ -19,7 +19,7 @@ abstract class AbstractCategoryRepository extends AbstractPageRepository impleme
         'uid' => QueryInterface::ORDER_ASCENDING
     ];
 
-    protected function initializeDemand(): DemandInterface
+    public function initializeDemand(): DemandInterface
     {
         $className = get_class($this);
 

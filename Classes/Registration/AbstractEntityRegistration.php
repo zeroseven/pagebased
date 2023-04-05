@@ -8,11 +8,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
-use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
-use Zeroseven\Rampage\Exception\RegistrationException;
 
-abstract class AbstractObjectRegistration
+abstract class AbstractEntityRegistration
 {
     protected string $title;
     protected ?string $className = null;

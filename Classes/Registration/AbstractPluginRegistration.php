@@ -6,7 +6,7 @@ namespace Zeroseven\Rampage\Registration;
 
 abstract class AbstractPluginRegistration
 {
-    protected ?string $type = null;
+    protected string $type;
     protected ?string $title = null;
     protected ?string $description = null;
     protected ?string $iconIdentifier = null;
@@ -51,7 +51,7 @@ abstract class AbstractPluginRegistration
 
     public function getType(): string
     {
-        return $this->type ?? 'undefined';
+        return $this->type;
     }
 
     public function getCType(Registration $registration): string

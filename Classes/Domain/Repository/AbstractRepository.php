@@ -31,7 +31,7 @@ abstract class AbstractRepository extends Repository
     }
 
     /** @throws PersistenceException */
-    protected function setOrdering(DemandInterface $demand = null): void
+    public function setOrdering(DemandInterface $demand = null): void
     {
         if (
             $demand
@@ -52,7 +52,7 @@ abstract class AbstractRepository extends Repository
     }
 
     /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
-    protected function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
+    public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = [];
         $dataMapper = $this->objectManager->get(DataMapper::class);
