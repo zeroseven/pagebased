@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 
 class CategoryRegistration extends AbstractObjectRegistration
 {
@@ -19,6 +20,13 @@ class CategoryRegistration extends AbstractObjectRegistration
     {
         $this->iconIdentifier = $iconIdentifier;
         return $this;
+    }
+
+    public function getObjectType(): int
+    {
+        return is_subclass_of($this->className, PageTypeInterface::class)
+            ? $this->className::getType()
+            : 0;
     }
 
     public static function create(...$arguments): self

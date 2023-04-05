@@ -15,7 +15,7 @@ use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\TagUtility;
 
-abstract class AbstractPageTypeController extends AbstractController implements PageTypeControllerInterface
+abstract class AbstractPageObjectController extends AbstractController implements PageObjectControllerInterface
 {
     protected ?Registration $registration = null;
     protected ?DemandInterface $demand = null;

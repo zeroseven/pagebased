@@ -24,7 +24,7 @@ abstract class AbstractCategoryRepository extends AbstractPageRepository impleme
         $className = get_class($this);
 
         foreach (RegistrationService::getRegistrations() as $registration) {
-            if ($registration->getCategory() && $registration->getCategory()->getRepositoryClassName() === $className) {
+            if ($registration->getCategory()->getRepositoryClassName() === $className) {
                 return $registration->getCategory()->getDemandClass();
             }
         }

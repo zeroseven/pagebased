@@ -49,12 +49,12 @@ class Registration
         return $this->object !== null;
     }
 
-    public function getCategory(): ?CategoryRegistration
+    public function getCategory(): CategoryRegistration
     {
         return $this->category;
     }
 
-    public function enableCategory(CategoryRegistration $categoryRegistration): self
+    public function setCategory(CategoryRegistration $categoryRegistration): self
     {
         $this->category = $categoryRegistration;
 

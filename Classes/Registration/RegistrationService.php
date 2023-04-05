@@ -77,10 +77,10 @@ class RegistrationService
     }
 
     /** @throws RegistrationException */
-    public static function getRegistrationByObjectDocumentType(int $documentType): ?Registration
+    public static function getRegistrationByCategoryDocumentType(int $documentType): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {
-            if ($registration->getObject()->getObjectType() === $documentType) {
+            if ($registration->getCategory()->getObjectType() === $documentType) {
                 return $registration;
             }
         }

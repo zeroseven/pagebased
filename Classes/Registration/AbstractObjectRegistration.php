@@ -76,14 +76,4 @@ abstract class AbstractObjectRegistration
         $this->demandClassName = $demandClassName;
         return $this;
     }
-
-    /** @throws RegistrationException */
-    public function getObjectType(): int
-    {
-        if (!is_subclass_of($this->className, PageTypeInterface::class)) {
-            throw new RegistrationException(sprintf('Object "%s" is not a subclass of %s', $this->className, PageTypeInterface::class), 1677876156);
-        }
-
-        return $this->className::getType();
-    }
 }
