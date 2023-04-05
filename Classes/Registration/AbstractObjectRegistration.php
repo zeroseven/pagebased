@@ -18,7 +18,6 @@ abstract class AbstractObjectRegistration
     protected ?string $className = null;
     protected ?string $repositoryClassName = null;
     protected ?string $demandClassName = null;
-    protected ?string $iconIdentifier = null;
 
     public function __construct(string $title, string $className = null)
     {
@@ -75,17 +74,6 @@ abstract class AbstractObjectRegistration
     public function setDemandClassName(string $demandClassName): self
     {
         $this->demandClassName = $demandClassName;
-        return $this;
-    }
-
-    public function getIconIdentifier(bool $hideInMenu = null): string
-    {
-        return ($this->iconIdentifier ?? 'apps-pagetree-page-content-from-page') . ($hideInMenu === true ? '-hideinmenu' : '');
-    }
-
-    public function setIconIdentifier(string $iconIdentifier): self
-    {
-        $this->iconIdentifier = $iconIdentifier;
         return $this;
     }
 
