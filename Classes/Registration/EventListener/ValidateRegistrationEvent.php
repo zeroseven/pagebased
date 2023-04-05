@@ -16,8 +16,8 @@ use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\AbstractPageCategory;
 use Zeroseven\Rampage\Domain\Model\AbstractPageType;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
+use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericObjectDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
@@ -25,6 +25,7 @@ use Zeroseven\Rampage\Domain\Repository\AbstractObjectRepository;
 use Zeroseven\Rampage\Domain\Repository\ObjectRepositoryInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\AbstractObjectRegistration;
+use Zeroseven\Rampage\Registration\CategoryRegistration;
 use Zeroseven\Rampage\Registration\ObjectRegistration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
@@ -104,15 +105,17 @@ class ValidateRegistrationEvent
     /** @throws RegistrationException | Exception */
     protected function checkRegistration(Registration $registration): void
     {
-        if (!$registration->hasObject()) {
+        if ($registration->hasObject()) {
+            $this->checkPageObjectRegistration($registration->getObject());
+        } else {
             throw new RegistrationException(sprintf('An object must be configured in extension "%s". Please call "setObject()" methode, contains instance of "%s"', $registration->getExtensionName(), ObjectRegistration::class), 1678708145);
         }
 
-        $this->checkPageTypeRegistration($registration->getObject());
-        $this->checkPageObjectRegistration($registration->getObject());
-
         if ($registration->hasCategory()) {
             $this->checkPageTypeRegistration($registration->getCategory());
+            $this->checkPageObjectRegistration($registration->getCategory());
+        } else {
+            throw new RegistrationException(sprintf('An category must be configured in extension "%s". Please call "setCategory()" methode, contains instance of "%s"', $registration->getExtensionName(), CategoryRegistration::class), 1680694223);
         }
     }
 

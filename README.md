@@ -36,7 +36,7 @@ call_user_func(static function () {
 
     \Zeroseven\Rampage\Registration\RegistrationService::createRegistration('jobs')
         ->setObject($object)
-        ->enableCategory($category)
+        ->setCategory($category)
         ->enableListPlugin($listPlugin)
         ->enableFilterPlugin($filterPlugin)
         ->store();
