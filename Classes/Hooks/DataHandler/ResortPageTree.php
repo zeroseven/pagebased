@@ -63,15 +63,12 @@ class ResortPageTree
 
                 // Slice the first three …
                 foreach (array_slice($uids, 0, 3, true) as $uid => $data) {
-                    if (($documentType = (int)($data['doktype'] ?? 0)) && $registration = RegistrationService::getRegistrationByObjectDocumentType($documentType)) {
+                    $pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']);
+                    $parentPage = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pid);
 
-                        // Get the parent page id
-                        $pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']);
-
+                    if (($documentType = (int)($parentPage['doktype'] ?? 0)) && $registration = RegistrationService::getRegistrationByCategoryDocumentType($documentType)) {
                         if ($this->updateSorting($pid, $registration, $dataHandler)) {
                             BackendUtility::setUpdateSignal('updatePageTree');
-
-                            $parentPage = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pid);
 
                             $message = GeneralUtility::makeInstance(
                                 FlashMessage::class,
