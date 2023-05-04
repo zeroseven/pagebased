@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Domain\Repository;
 
-use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
@@ -29,9 +27,8 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
         $constraints = parent::createDemandConstraints($demand, $query);
 
         // Stay in the hood
-        if (empty($demand->getUidList()) && $startPageId = $demand->getCategory() ?: RootLineUtility::getRootPage()) {
-            $treeTableField = GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', null) ? 'pid' : 'uid';
-            $constraints[] = $query->in($treeTableField, array_keys(RootLineUtility::collectPagesBelow($startPageId)));
+        if ($startPageId = RootLineUtility::getRootPage()) {
+            $constraints[] = $query->equals('_rampage_site_identifier', $startPageId);
         }
 
         // Hide what wants to be hidden

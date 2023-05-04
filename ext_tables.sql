@@ -1,5 +1,7 @@
 CREATE TABLE pages
 (
+	_rampage_site_identifier   int(11) DEFAULT '0' NOT NULL,
+	_rampage_object_identifier varchar(255) DEFAULT '' NOT NULL,
 	_rampage_top               tinyint(1) unsigned DEFAULT '0' NOT NULL,
 	_rampage_date              int(11) DEFAULT '0' NOT NULL,
 	_rampage_tags              text,

@@ -27,13 +27,8 @@ class Registration
         return $this->extensionName;
     }
 
-    /** @throws RegistrationException */
     public function getObject(): ObjectRegistration
     {
-        if ($this->object === null) {
-            throw new RegistrationException('The object can not be empty', 1678709111);
-        }
-
         return $this->object;
     }
 

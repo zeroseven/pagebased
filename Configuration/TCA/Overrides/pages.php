@@ -4,6 +4,30 @@ defined('TYPO3') || die('🤬 F**k off!');
 
 call_user_func(static function (string $table) {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [
+        '_rampage_site_identifier' => [
+            'exclude' => false,
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_site_identifier',
+            'label' => '_rampage_site_identifier',
+            'config' => [
+                'type' => 'input',
+                'readOnly' => true,
+                'size' => 10,
+                'default' => ''
+            ]
+        ],
+        '_rampage_object_identifier' => [
+            'exclude' => false,
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_object_identifier',
+            'label' => '_rampage_object_identifier',
+            'config' => [
+                'type' => 'input',
+                'readOnly' => true,
+                'size' => 10,
+                'default' => ''
+            ]
+        ],
         '_rampage_top' => [
             'exclude' => false,
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_top',
@@ -105,4 +129,6 @@ call_user_func(static function (string $table) {
             ]
         ]
     ]);
+
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '_rampage_site_identifier,_rampage_object_identifier', 1, 'after:doktype');
 }, 'pages');

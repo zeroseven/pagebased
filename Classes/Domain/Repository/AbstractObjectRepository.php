@@ -34,18 +34,6 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         $this->registration = RegistrationService::getRegistrationByRepository(get_class($this));
     }
 
-    public function initializeObject(): void
-    {
-        // Get product productGroups
-        if ($categories = $this->registration->getCategory()->getRepositoryClass()->findAll()) {
-            $storagePageIds = array_map(static fn($category) => $category->getUid(), $categories->toArray());
-
-            $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
-            $querySettings->setStoragePageIds($storagePageIds);
-            $this->setDefaultQuerySettings($querySettings);
-        }
-    }
-
     /** @throws RegistrationException */
     public function initializeDemand(): DemandInterface
     {
@@ -70,6 +58,10 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
 
         if ($categoryType = $this->registration->getCategory()->getObjectType()) {
             $constraints[] = $query->logicalNot($query->equals('doktype', $categoryType));
+        }
+
+        if ($objectName = $this->registration->getObject()->getClassName()) {
+            $constraints[] = $query->equals('_rampage_object_identifier', $objectName);
         }
 
         if ($demand->getTopObjectOnly()) {
