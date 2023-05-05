@@ -7,6 +7,9 @@ namespace Zeroseven\Rampage\Backend\TCA;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Domain\Repository\TopicRepository;
+use Zeroseven\Rampage\Exception\RegistrationException;
+use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 
 class ItemsProcFunc
@@ -23,6 +26,22 @@ class ItemsProcFunc
         }
 
         return 0;
+    }
+
+    /** @throws RegistrationException */
+    public function topics(array &$PA): void
+    {
+        if (($objectIdentifier = $PA['row']['_rampage_object_identifier'] ?? null) && $registration = RegistrationService::getRegistrationByClassName($objectIdentifier)) {
+
+            // Clear items
+            $PA['items'] = [];
+
+            if($topics = GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($registration)) {
+                foreach ($topics->toArray() as $topic) {
+                    $PA['items'][] = [$topic->getTitle(), $topic->getUid(), 'actions-tag'];
+                }
+            }
+        }
     }
 
     public function filterCategories(array &$PA): void

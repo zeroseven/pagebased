@@ -36,3 +36,9 @@ services:
             - name: event.listener
               identifier: 'rampage/registration-plugin'
               event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
+
+    Zeroseven\Rampage\Backend\Identifier\IdentifierFormLoadEvent:
+        tags:
+            - name: event.listener
+              identifier: 'rampage/identifier-formload'
+              event: TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent

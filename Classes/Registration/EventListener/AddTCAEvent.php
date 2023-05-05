@@ -8,6 +8,7 @@ use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Type\Exception as TypeException;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use Zeroseven\Rampage\Backend\Identifier\IdentifierDetector;
 use Zeroseven\Rampage\Backend\TCA\GroupFilter;
 use Zeroseven\Rampage\Backend\TCA\ItemsProcFunc;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
@@ -19,6 +20,7 @@ use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\TCAUtility;
 
 class AddTCAEvent
 {
@@ -46,34 +48,25 @@ class AddTCAEvent
     /** @throws RegistrationException */
     protected function addPageType(Registration $registration): void
     {
-        if ($pageObject = $registration->getObject()) {
-//            if ($pageType = $pageObject->getObjectType()) {
-//                $fields = [];
-//
-//                $pageObject->topEnabled() && $fields[] = '_rampage_top';
-//
-//                $fields[] = '_rampage_date';
-//
-//                $pageObject->tagsEnabled() && $fields[] = '_rampage_tags';
-//                $pageObject->topicsEnabled() && $fields[] = '_rampage_topics';
-//
-//                $fields[] = '_rampage_relations_to';
-//                $fields[] = '_rampage_relations_from';
-//
-//                ExtensionManagementUtility::addToAllTCAtypes(AbstractPage::TABLE_NAME, sprintf('
-//                    --div--;%s,%s
-//                ', $pageObject->getTitle(), implode(',', $fields)), (string)$pageType);
-//
-//                // Configure tags
-//                if ($pageObject->topicsEnabled()) {
-//                    $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_tags']['config']['object'] = $registration->getObject()->getClassName();
-//                }
-//
-//                // Configure topics
-//                if ($pageObject->topicsEnabled()) {
-//                    $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_topics']['config']['foreign_table_where'] = sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s)', implode(',', $pageObject->getTopicPageIds()));
-//                }
-//
+        if ($objectRegistration = $registration->getObject()) {
+            $displayCondition = sprintf('FIELD:%s:=:%s', IdentifierDetector::OBJECT_FIELD_NAME, $objectRegistration->getClassName());
+
+            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_date', $displayCondition);
+            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_relations_to', $displayCondition);
+            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_relations_from', $displayCondition);
+
+            if ($objectRegistration->topEnabled()) {
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_top', $displayCondition);
+            }
+
+            if ($objectRegistration->tagsEnabled()) {
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_tags', $displayCondition);
+            }
+
+            if ($objectRegistration->topicsEnabled()) {
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_topics', $displayCondition);
+            }
+
 //                // Configure relations
 //                $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_relations_to']['config'] = [
 //                    'filter' => [

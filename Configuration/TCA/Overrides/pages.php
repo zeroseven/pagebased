@@ -8,7 +8,7 @@ call_user_func(static function (string $table) {
             'exclude' => false,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_site_identifier',
-            'label' => '_rampage_site_identifier',
+            'displayCond' => 'FIELD:_rampage_object_identifier:REQ:true',
             'config' => [
                 'type' => 'input',
                 'readOnly' => true,
@@ -20,7 +20,7 @@ call_user_func(static function (string $table) {
             'exclude' => false,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_object_identifier',
-            'label' => '_rampage_object_identifier',
+            'displayCond' => 'FIELD:_rampage_object_identifier:REQ:true',
             'config' => [
                 'type' => 'input',
                 'readOnly' => true,
@@ -31,6 +31,7 @@ call_user_func(static function (string $table) {
         '_rampage_top' => [
             'exclude' => false,
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_top',
+            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
             'config' => [
                 'type' => 'check',
                 'items' => [
@@ -43,6 +44,7 @@ call_user_func(static function (string $table) {
             'exclude' => false,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_date',
+            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
@@ -54,30 +56,32 @@ call_user_func(static function (string $table) {
         '_rampage_tags' => [
             'exclude' => false,
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_tags',
+            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
             'config' => [
                 'type' => 'user',
                 'renderType' => 'rampageTags',
                 'placeholder' => 'ADD TAGS …',
-                'default' => '',
-                'object' => ''
+                'default' => ''
             ]
         ],
         '_rampage_topics' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_topics',
+            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectCheckBox',
                 'foreign_table' => 'tx_rampage_domain_model_topic',
                 'MM' => 'tx_rampage_object_topic_mm',
+                'itemsProcFunc' => \Zeroseven\Rampage\Backend\TCA\ItemsProcFunc::class . '->topics',
                 'default' => 0
             ]
         ],
         '_rampage_relations_to' => [
             'exclude' => true,
-            'displayCond' => 'FIELD:l10n_parent:=:0',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_relations_to',
+            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
             'config' => [
                 'type' => 'group',
                 'internal_type' => 'db',
@@ -92,8 +96,8 @@ call_user_func(static function (string $table) {
         ],
         '_rampage_relations_from' => [
             'exclude' => true,
-            'displayCond' => 'FIELD:l10n_parent:=:0',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_relations_from',
+            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
             'config' => [
                 'type' => 'group',
                 'internal_type' => 'db',
@@ -109,6 +113,7 @@ call_user_func(static function (string $table) {
             'exclude' => true,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_redirect_category',
+            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
             'config' => [
                 'type' => 'check',
                 'items' => [
@@ -130,5 +135,5 @@ call_user_func(static function (string $table) {
         ]
     ]);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '_rampage_site_identifier,_rampage_object_identifier', 1, 'after:doktype');
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, _rampage_site_identifier, _rampage_object_identifier, _rampage_top, _rampage_date, _rampage_tags, _rampage_topics, _rampage_relations_to, _rampage_relations_from, _rampage_redirect_category', '', 'after:title');
 }, 'pages');

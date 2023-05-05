@@ -32,7 +32,7 @@ class TagsElement extends AbstractFormElement
         $this->id = $parameterArray['itemFormElID'] ?? '';
         $this->value = $parameterArray['itemFormElValue'] ?? '';
         $this->placeholder = str_starts_with($placeholder, 'LLL') ? $this->getLanguageService()->sL($placeholder) : $placeholder;
-        $this->objectClass = $parameterArray['fieldConf']['config']['object'] ?? '';
+        $this->objectClass = $this->data['databaseRow']['_rampage_object_identifier'] ?? '';
         $this->languageUid = (int)($sysLanguageUid[0] ?? $sysLanguageUid);
     }
 
