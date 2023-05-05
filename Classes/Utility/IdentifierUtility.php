@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Backend\Identifier;
+namespace Zeroseven\Rampage\Utility;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -12,9 +12,8 @@ use Zeroseven\Rampage\Registration\CategoryRegistration;
 use Zeroseven\Rampage\Registration\ObjectRegistration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\RootLineUtility;
 
-class IdentifierDetector
+class IdentifierUtility
 {
     public const OBJECT_FIELD_NAME = '_rampage_object_identifier';
     public const SITE_FIELD_NAME = '_rampage_site_identifier';

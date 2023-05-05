@@ -10,6 +10,7 @@ use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Repository\TopicRepository;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\IdentifierUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 
 class ItemsProcFunc
@@ -31,7 +32,7 @@ class ItemsProcFunc
     /** @throws RegistrationException */
     public function topics(array &$PA): void
     {
-        if (($objectIdentifier = $PA['row']['_rampage_object_identifier'] ?? null) && $registration = RegistrationService::getRegistrationByClassName($objectIdentifier)) {
+        if (($objectIdentifier = $PA['row'][IdentifierUtility::OBJECT_FIELD_NAME] ?? null) && $registration = RegistrationService::getRegistrationByClassName($objectIdentifier)) {
 
             // Clear items
             $PA['items'] = [];

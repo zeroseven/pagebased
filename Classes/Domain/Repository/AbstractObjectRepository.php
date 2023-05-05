@@ -16,6 +16,7 @@ use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\IdentifierUtility;
 
 abstract class AbstractObjectRepository extends AbstractPageRepository implements ObjectRepositoryInterface
 {
@@ -61,7 +62,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         }
 
         if ($objectName = $this->registration->getObject()->getClassName()) {
-            $constraints[] = $query->equals('_rampage_object_identifier', $objectName);
+            $constraints[] = $query->equals(IdentifierUtility::OBJECT_FIELD_NAME, $objectName);
         }
 
         if ($demand->getTopObjectOnly()) {

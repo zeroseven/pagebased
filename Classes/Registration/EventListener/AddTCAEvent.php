@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Type\Exception as TypeException;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
-use Zeroseven\Rampage\Backend\Identifier\IdentifierDetector;
 use Zeroseven\Rampage\Backend\TCA\GroupFilter;
 use Zeroseven\Rampage\Backend\TCA\ItemsProcFunc;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
@@ -20,6 +19,7 @@ use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\IdentifierUtility;
 use Zeroseven\Rampage\Utility\TCAUtility;
 
 class AddTCAEvent
@@ -49,7 +49,7 @@ class AddTCAEvent
     protected function addPageType(Registration $registration): void
     {
         if ($objectRegistration = $registration->getObject()) {
-            $displayCondition = sprintf('FIELD:%s:=:%s', IdentifierDetector::OBJECT_FIELD_NAME, $objectRegistration->getClassName());
+            $displayCondition = sprintf('FIELD:%s:=:%s', IdentifierUtility::OBJECT_FIELD_NAME, $objectRegistration->getClassName());
 
             TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_date', $displayCondition);
             TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_relations_to', $displayCondition);

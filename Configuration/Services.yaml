@@ -37,7 +37,7 @@ services:
               identifier: 'rampage/registration-plugin'
               event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
 
-    Zeroseven\Rampage\Backend\Identifier\IdentifierFormLoadEvent:
+    Zeroseven\Rampage\EventListener\BeforeFormInitializedEventListener:
         tags:
             - name: event.listener
               identifier: 'rampage/identifier-formload'

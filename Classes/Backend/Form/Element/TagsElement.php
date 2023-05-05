@@ -9,6 +9,7 @@ use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\IdentifierUtility;
 use Zeroseven\Rampage\Utility\TagUtility;
 
 class TagsElement extends AbstractFormElement
@@ -32,7 +33,7 @@ class TagsElement extends AbstractFormElement
         $this->id = $parameterArray['itemFormElID'] ?? '';
         $this->value = $parameterArray['itemFormElValue'] ?? '';
         $this->placeholder = str_starts_with($placeholder, 'LLL') ? $this->getLanguageService()->sL($placeholder) : $placeholder;
-        $this->objectClass = $this->data['databaseRow']['_rampage_object_identifier'] ?? '';
+        $this->objectClass = $this->data['databaseRow'][IdentifierUtility::OBJECT_FIELD_NAME] ?? '';
         $this->languageUid = (int)($sysLanguageUid[0] ?? $sysLanguageUid);
     }
 

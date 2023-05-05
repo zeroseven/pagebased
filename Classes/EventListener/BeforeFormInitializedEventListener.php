@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Backend\Identifier;
+namespace Zeroseven\Rampage\EventListener;
 
 use Doctrine\DBAL\DBALException;
 use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
@@ -10,9 +10,10 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Utility\IdentifierUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 
-class IdentifierFormLoadEvent
+class BeforeFormInitializedEventListener
 {
     protected ?QueryBuilder $queryBuilder = null;
 
@@ -38,23 +39,23 @@ class IdentifierFormLoadEvent
         $queryParams = $event->getRequest()->getQueryParams();
 
         if (($editConfiguration = $parsedBody['edit'] ?? $queryParams['edit'] ?? null) && ($table = array_key_first($editConfiguration)) && $uid = (int)(array_key_first($editConfiguration[$table] ?? []))) {
-            $detector = GeneralUtility::makeInstance(IdentifierDetector::class, $uid, $table);
+            $detector = GeneralUtility::makeInstance(IdentifierUtility::class, $uid, $table);
             $categoryRegistration = $detector->getCategoryRegistration();
             $objectRegistration = $detector->getObjectRegistration();
 
             $update = [
-                IdentifierDetector::SITE_FIELD_NAME => 0,
-                IdentifierDetector::OBJECT_FIELD_NAME => ''
+                IdentifierUtility::SITE_FIELD_NAME => 0,
+                IdentifierUtility::OBJECT_FIELD_NAME => ''
             ];
 
             if ($categoryRegistration || $objectRegistration) {
                 if ($rootPage = RootLineUtility::getRootPage($uid)) {
-                    $update[IdentifierDetector::SITE_FIELD_NAME] = $rootPage;
+                    $update[IdentifierUtility::SITE_FIELD_NAME] = $rootPage;
                 }
             }
 
             if ($objectRegistration) {
-                $update[IdentifierDetector::OBJECT_FIELD_NAME] = $objectRegistration->getClassName();
+                $update[IdentifierUtility::OBJECT_FIELD_NAME] = $objectRegistration->getClassName();
             }
 
             $this->updatePageRecord($uid, $update);

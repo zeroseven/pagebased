@@ -2,22 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Backend\Identifier;
+namespace Zeroseven\Rampage\Hooks\DataHandler;
 
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Zeroseven\Rampage\Utility\IdentifierUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 
-class IdentifierDataHandlerHook
+class IdentifierDetection
 {
     protected function updateIdentifier(string $table, mixed $id, array &$fieldArray): void
     {
-        $detector = GeneralUtility::makeInstance(IdentifierDetector::class, $id, $table);
+        $detector = GeneralUtility::makeInstance(IdentifierUtility::class, $id, $table);
         $categoryRegistration = $detector->getCategoryRegistration();
         $objectRegistration = $detector->getObjectRegistration();
 
-        $fieldArray[IdentifierDetector::SITE_FIELD_NAME] = ($categoryRegistration || $objectRegistration) ? RootLineUtility::getRootPage((int)$id) : 0;
-        $fieldArray[IdentifierDetector::OBJECT_FIELD_NAME] = $objectRegistration ? $objectRegistration->getClassName() : '';
+        $fieldArray[IdentifierUtility::SITE_FIELD_NAME] = ($categoryRegistration || $objectRegistration) ? RootLineUtility::getRootPage((int)$id) : 0;
+        $fieldArray[IdentifierUtility::OBJECT_FIELD_NAME] = $objectRegistration ? $objectRegistration->getClassName() : '';
     }
 
     public function processDatamap_postProcessFieldArray(string $status, string $table, mixed $id, array &$fieldArray, DataHandler $dataHandler): void
