@@ -4,34 +4,10 @@ defined('TYPO3') || die('🤬 F**k off!');
 
 call_user_func(static function (string $table) {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [
-        '_rampage_site_identifier' => [
-            'exclude' => false,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_site_identifier',
-            'displayCond' => 'FIELD:_rampage_object_identifier:REQ:true',
-            'config' => [
-                'type' => 'input',
-                'readOnly' => true,
-                'size' => 10,
-                'default' => ''
-            ]
-        ],
-        '_rampage_object_identifier' => [
-            'exclude' => false,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_object_identifier',
-            'displayCond' => 'FIELD:_rampage_object_identifier:REQ:true',
-            'config' => [
-                'type' => 'input',
-                'readOnly' => true,
-                'size' => 10,
-                'default' => ''
-            ]
-        ],
         '_rampage_top' => [
             'exclude' => false,
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_top',
-            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
+            'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'check',
                 'items' => [
@@ -44,7 +20,7 @@ call_user_func(static function (string $table) {
             'exclude' => false,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_date',
-            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
+            'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
@@ -56,7 +32,7 @@ call_user_func(static function (string $table) {
         '_rampage_tags' => [
             'exclude' => false,
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_tags',
-            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
+            'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'user',
                 'renderType' => 'rampageTags',
@@ -68,7 +44,7 @@ call_user_func(static function (string $table) {
             'exclude' => true,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_topics',
-            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
+            'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectCheckBox',
@@ -81,7 +57,7 @@ call_user_func(static function (string $table) {
         '_rampage_relations_to' => [
             'exclude' => true,
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_relations_to',
-            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
+            'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'group',
                 'internal_type' => 'db',
@@ -91,13 +67,31 @@ call_user_func(static function (string $table) {
                 'MM' => 'tx_rampage_relation_mm',
                 'size' => 5,
                 'autoSizeMax' => 10,
-                'maxitems' => 99
+                'maxitems' => 99,
+                'filter' => [
+                    [
+                        'userFunc' => \Zeroseven\Rampage\Backend\TCA\GroupFilter::class . '->filterTypes'
+                    ]
+                ],
+                'suggestOptions' => [
+                    'default' => [
+                        'receiverClass' => \Zeroseven\Rampage\Backend\Form\Wizard\SuggestRelationReceiver::class,
+                        'minimumCharacters' => 2,
+                        'searchWholePhrase' => true,
+                    ],
+                    $table => [
+                        'addWhere' => ' AND ' . $table . '.uid != ###THIS_UID###'
+                    ]
+                ],
+                'elementBrowserEntryPoints' => [
+                    $table => '###CURRENT_PID###'
+                ]
             ]
         ],
         '_rampage_relations_from' => [
             'exclude' => true,
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_relations_from',
-            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
+            'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'group',
                 'internal_type' => 'db',
@@ -113,13 +107,47 @@ call_user_func(static function (string $table) {
             'exclude' => true,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_redirect_category',
-            'displayCond' => 'FIELD:_rampage_object_identifier:=:HIDE_FIELD_BY_DEFAULT',
+            'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'check',
                 'items' => [
                     ['LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled', 1]
                 ],
                 'default' => 0
+            ]
+        ],
+
+        // System relevant fields
+        \Zeroseven\Rampage\Utility\IdentifierUtility::SITE_FIELD_NAME => [
+            'exclude' => false,
+            'l10n_mode' => 'exclude',
+            'label' => 'Site',
+            'displayCond' => [
+                'AND' => [
+                    'HIDE_FOR_NON_ADMINS',
+                    'FIELD:_rampage_site_identifier:REQ:true'
+                ]
+            ],
+            'config' => [
+                'type' => 'input',
+                'readOnly' => true,
+                'default' => ''
+            ]
+        ],
+        \Zeroseven\Rampage\Utility\IdentifierUtility::OBJECT_FIELD_NAME => [
+            'exclude' => false,
+            'l10n_mode' => 'exclude',
+            'label' => 'Object',
+            'displayCond' => [
+                'AND' => [
+                    'HIDE_FOR_NON_ADMINS',
+                    'FIELD:_rampage_object_identifier:REQ:true'
+                ]
+            ],
+            'config' => [
+                'type' => 'input',
+                'readOnly' => true,
+                'default' => ''
             ]
         ],
         'pid' => [
@@ -135,5 +163,5 @@ call_user_func(static function (string $table) {
         ]
     ]);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, _rampage_site_identifier, _rampage_object_identifier, _rampage_top, _rampage_date, _rampage_tags, _rampage_topics, _rampage_relations_to, _rampage_relations_from, _rampage_redirect_category', '', 'after:title');
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, _rampage_top, _rampage_date, _rampage_tags, _rampage_topics, _rampage_relations_to, _rampage_relations_from, _rampage_redirect_category, _rampage_site_identifier, _rampage_object_identifier', '', 'after:title');
 }, 'pages');

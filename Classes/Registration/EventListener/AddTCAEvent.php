@@ -66,28 +66,6 @@ class AddTCAEvent
             if ($objectRegistration->topicsEnabled()) {
                 TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_topics', $displayCondition);
             }
-
-//                // Configure relations
-//                $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_relations_to']['config'] = [
-//                    'filter' => [
-//                        [
-//                            'userFunc' => GroupFilter::class . '->filterTypes',
-//                            'parameters' => [
-//                                'allowed' => $pageType
-//                            ]
-//                        ]
-//                    ],
-//                    'suggestOptions' => [
-//                        'default' => [
-//                            'searchWholePhrase' => 1,
-//                            'addWhere' => ' AND ' . AbstractPage::TABLE_NAME . '.uid != ###THIS_UID###'
-//                        ],
-//                        AbstractPage::TABLE_NAME => [
-//                            'searchCondition' => 'doktype = ' . $pageType
-//                        ]
-//                    ],
-//                ];
-//            }
         }
     }
 
