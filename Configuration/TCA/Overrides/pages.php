@@ -70,7 +70,7 @@ call_user_func(static function (string $table) {
                 'maxitems' => 99,
                 'filter' => [
                     [
-                        'userFunc' => \Zeroseven\Rampage\Backend\TCA\GroupFilter::class . '->filterTypes'
+                        'userFunc' => \Zeroseven\Rampage\Backend\TCA\GroupFilter::class . '->filterObject'
                     ]
                 ],
                 'suggestOptions' => [
