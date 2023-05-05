@@ -12,6 +12,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Registration;
@@ -57,8 +58,8 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     {
         $constraints = parent::createDemandConstraints($demand, $query);
 
-        if ($categoryType = $this->registration->getCategory()->getObjectType()) {
-            $constraints[] = $query->logicalNot($query->equals('doktype', $categoryType));
+        if (($categoryType = $this->registration->getCategory()->getObjectType()) && $typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
+            $constraints[] = $query->logicalNot($query->equals($typeField, $categoryType));
         }
 
         if ($objectName = $this->registration->getObject()->getClassName()) {

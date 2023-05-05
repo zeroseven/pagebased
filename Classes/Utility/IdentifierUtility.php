@@ -30,7 +30,8 @@ class IdentifierUtility
     protected function getRegistrationByCategoryPageUid(int $id, array $row = null): ?Registration
     {
         if ($id > 0 && $this->table === AbstractPage::TABLE_NAME) {
-            $documentType = $row['doktype'] ?? (BackendUtility::getRecord(AbstractPage::TABLE_NAME, $id, 'doktype')['doktype'] ?? null);
+            $typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'];
+            $documentType = $row[$typeField] ?? (BackendUtility::getRecord(AbstractPage::TABLE_NAME, $id, $typeField)[$typeField] ?? null);
 
             try {
                 if ($documentType && $registration = RegistrationService::getRegistrationByCategoryDocumentType($documentType)) {
