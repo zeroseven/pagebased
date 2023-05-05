@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Domain\Repository;
 
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -18,6 +18,7 @@ use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\IdentifierUtility;
+use Zeroseven\Rampage\Utility\RootLineUtility;
 
 abstract class AbstractObjectRepository extends AbstractPageRepository implements ObjectRepositoryInterface
 {
@@ -58,10 +59,13 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     {
         $constraints = parent::createDemandConstraints($demand, $query);
 
-        if (($categoryType = $this->registration->getCategory()->getObjectType()) && $typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
-            $constraints[] = $query->logicalNot($query->equals($typeField, $categoryType));
+        // Search in category
+        if (empty($demand->getUidList()) && $categoryUid = $demand->getCategory()) {
+            $treeTableField = GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id') ? 'pid' : 'uid';
+            $constraints[] = $query->in($treeTableField, array_keys(RootLineUtility::collectPagesBelow($categoryUid)));
         }
 
+        // Search by object identifier
         if ($objectName = $this->registration->getObject()->getClassName()) {
             $constraints[] = $query->equals(IdentifierUtility::OBJECT_FIELD_NAME, $objectName);
         }
