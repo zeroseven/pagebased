@@ -10,7 +10,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\ObjectUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 use Zeroseven\Rampage\Utility\SettingsUtility;
 
@@ -45,23 +45,12 @@ class BeforeFormInitializedEventListener
             && $table === AbstractPage::TABLE_NAME
             && $uid = (int)(array_key_first($editConfiguration[$table] ?? []))
         ) {
-            $isCategory = RegistrationService::getRegistrationByCategoryPageUid($uid) !== null;
-            $registration = RegistrationService::getObjectRegistrationInRootLine($uid);
+            $registration = ObjectUtility::findCategoryInRootLine($uid);
 
-            $update = [
-                SettingsUtility::SITE_FIELD_NAME => 0,
-                SettingsUtility::REGISTRATION_FIELD_NAME => ''
-            ];
-
-            if (($isCategory || $registration) && $rootPage = RootLineUtility::getRootPage($uid)) {
-                $update[SettingsUtility::SITE_FIELD_NAME] = $rootPage;
-            }
-
-            if ($registration) {
-                $update[SettingsUtility::REGISTRATION_FIELD_NAME] = $registration->getIdentifier();
-            }
-
-            $this->updatePageRecord($uid, $update);
+            $this->updatePageRecord($uid, [
+                SettingsUtility::SITE_FIELD_NAME => $registration ? RootLineUtility::getRootPage($uid) : 0,
+                SettingsUtility::REGISTRATION_FIELD_NAME => $registration ? $registration->getIdentifier() : ''
+            ]);
         }
     }
 }

@@ -8,6 +8,7 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\ObjectUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 use Zeroseven\Rampage\Utility\SettingsUtility;
 
@@ -16,10 +17,9 @@ class IdentifierDetection
     protected function updateIdentifier(string $table, mixed $id, array &$fieldArray): void
     {
         if ($table === AbstractPage::TABLE_NAME && MathUtility::canBeInterpretedAsInteger($id)) {
-            $isCategory = RegistrationService::getRegistrationByCategoryPageUid((int)$id, $fieldArray) !== null;
-            $registration = RegistrationService::getObjectRegistrationInRootLine((int)$id);
+            $registration = ObjectUtility::findCategoryInRootLine((int)$id);
 
-            $fieldArray[SettingsUtility::SITE_FIELD_NAME] = ($isCategory || $registration) ? RootLineUtility::getRootPage((int)$id) : 0;
+            $fieldArray[SettingsUtility::SITE_FIELD_NAME] = $registration ? RootLineUtility::getRootPage((int)$id) : 0;
             $fieldArray[SettingsUtility::REGISTRATION_FIELD_NAME] = $registration ? $registration->getIdentifier() : '';
         }
     }

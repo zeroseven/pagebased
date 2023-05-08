@@ -16,6 +16,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\ObjectUtility;
 
 class ResortPageTree
 {
@@ -63,7 +64,7 @@ class ResortPageTree
 
                 // Slice the first three …
                 foreach (array_slice($uids, 0, 3, true) as $uid => $data) {
-                    if ($registration = RegistrationService::getObjectRegistrationInRootLine($uid)) {
+                    if ($registration = ObjectUtility::isObject($uid)) {
                         $pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']);
 
                         if ($this->updateSorting($pid, $registration, $dataHandler)) {
