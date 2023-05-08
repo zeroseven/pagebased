@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Domain\Model;
 
-use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
 
-interface PageObjectInterface extends DomainObjectInterface
+interface PageObjectInterface extends PageEntityInterface
 {
     public function isTop(): bool;
 

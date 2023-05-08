@@ -73,8 +73,10 @@ class RootLineUtility
             $rootLine = self::getRootLine($startingPoint);
         }
 
+        $typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'];
+
         foreach ($rootLine ?? [] as $row) {
-            if (isset($row['doktype'], $row['uid']) && (int)$row['doktype'] === $documentType) {
+            if (isset($row[$typeField], $row['uid']) && (int)$row[$typeField] === $documentType) {
                 return (int)$row['uid'];
             }
         }

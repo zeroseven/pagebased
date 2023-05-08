@@ -15,13 +15,12 @@ use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\TagUtility;
 
-abstract class AbstractPageTypeController extends AbstractController implements PageTypeControllerInterface
+abstract class AbstractPageObjectController extends AbstractController implements PageObjectControllerInterface
 {
     protected ?Registration $registration = null;
     protected ?DemandInterface $demand = null;
     protected array $requestArguments = [];
 
-    /** @throws RegistrationException */
     public function initializeAction(): void
     {
         parent::initializeAction();
@@ -48,13 +47,11 @@ abstract class AbstractPageTypeController extends AbstractController implements 
         return $view;
     }
 
-    /** @throws RegistrationException */
     public function initializeRegistration(): void
     {
         $this->registration = RegistrationService::getRegistrationByController(get_class($this));
     }
 
-    /** @throws RegistrationException */
     public function initializeDemand(): void
     {
         $this->demand = $this->registration->getObject()->getDemandClass()->setParameterArray(array_merge($this->settings, $this->requestArguments));
@@ -65,7 +62,7 @@ abstract class AbstractPageTypeController extends AbstractController implements 
         return $this->demand;
     }
 
-    /** @throws RegistrationException | ObjectException */
+    /** @throws ObjectException */
     public function listAction(): void
     {
         $repository = GeneralUtility::makeInstance(ObjectManager::class)->get($this->registration->getObject()->getRepositoryClassName());
@@ -82,7 +79,6 @@ abstract class AbstractPageTypeController extends AbstractController implements 
         ]);
     }
 
-    /** @throws RegistrationException */
     public function filterAction(): void
     {
         // Pass variables to the fluid template

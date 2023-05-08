@@ -4,31 +4,43 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Domain\Repository;
 
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Exception\RegistrationException;
+use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Rampage\Utility\SettingsUtility;
 
 abstract class AbstractObjectRepository extends AbstractPageRepository implements ObjectRepositoryInterface
 {
+    protected Registration $registration;
+
     protected $defaultOrderings = [
         '_rampage_date' => QueryInterface::ORDER_DESCENDING,
         'uid' => QueryInterface::ORDER_ASCENDING
     ];
 
-    /** @throws RegistrationException */
-    protected function initializeDemand(): DemandInterface
+    public function __construct(ObjectManagerInterface $objectManager)
+    {
+        parent::__construct($objectManager);
+
+        $this->registration = RegistrationService::getRegistrationByRepository(get_class($this));
+    }
+
+    public function initializeDemand(): DemandInterface
     {
         return RegistrationService::getRegistrationByRepository(get_class($this))->getObject()->getDemandClass();
     }
 
     /** @throws PersistenceException */
-    protected function setOrdering(DemandInterface $demand = null): void
+    public function setOrdering(DemandInterface $demand = null): void
     {
         parent::setOrdering($demand);
 
@@ -39,9 +51,18 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     }
 
     /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
-    protected function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
+    public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = parent::createDemandConstraints($demand, $query);
+
+        // Search in category
+        if (empty($demand->getUidList()) && $categoryUid = $demand->getCategory()) {
+            $treeTableField = GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id') ? 'pid' : 'uid';
+            $constraints[] = $query->in($treeTableField, array_keys(RootLineUtility::collectPagesBelow($categoryUid)));
+        }
+
+        // Search by object identifier
+        $constraints[] = $query->equals(SettingsUtility::REGISTRATION_FIELD_NAME, $this->registration->getIdentifier());
 
         if ($demand->getTopObjectOnly()) {
             $constraints[] = $query->equals('top', 1);

@@ -14,12 +14,13 @@ use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Registration\AbstractObjectRegistration;
 use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Rampage\Utility\TCAUtility;
 
 class AddTCAEvent
 {
@@ -45,9 +46,33 @@ class AddTCAEvent
     }
 
     /** @throws RegistrationException */
-    protected function createPageType(AbstractObjectRegistration $pageObjectRegistration): void
+    protected function addPageType(Registration $registration): void
     {
-        if ($pageType = $pageObjectRegistration->getObjectType()) {
+        if ($objectRegistration = $registration->getObject()) {
+            $displayCondition = sprintf('FIELD:%s:=:%s', SettingsUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier());
+
+            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_date', $displayCondition);
+            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_relations_to', $displayCondition);
+            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_relations_from', $displayCondition);
+
+            if ($objectRegistration->topEnabled()) {
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_top', $displayCondition);
+            }
+
+            if ($objectRegistration->tagsEnabled()) {
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_tags', $displayCondition);
+            }
+
+            if ($objectRegistration->topicsEnabled()) {
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_topics', $displayCondition);
+            }
+        }
+    }
+
+    /** @throws RegistrationException */
+    protected function addPageCategory(Registration $registration): void
+    {
+        if (($categoryRegistration = $registration->getCategory()) && $pageType = $categoryRegistration->getObjectType()) {
 
             // Add to type list
             if ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
@@ -55,9 +80,9 @@ class AddTCAEvent
                     AbstractPage::TABLE_NAME,
                     $tcaTypeField,
                     [
-                        $pageObjectRegistration->getTitle(),
+                        $categoryRegistration->getTitle(),
                         $pageType,
-                        $pageObjectRegistration->getIconIdentifier()
+                        $categoryRegistration->getIconIdentifier()
                     ],
                     '1',
                     'after'
@@ -68,72 +93,8 @@ class AddTCAEvent
             $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['showitem'] = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][1]['showitem'];
 
             // Add icon
-            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$pageType] = $pageObjectRegistration->getIconIdentifier();
-            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$pageType . '-hideinmenu'] = $pageObjectRegistration->getIconIdentifier(true);
-        }
-    }
-
-    /** @throws RegistrationException */
-    protected function addPageType(Registration $registration): void
-    {
-        if ($pageObject = $registration->getObject()) {
-            $this->createPageType($pageObject);
-
-            if ($pageType = $pageObject->getObjectType()) {
-                $fields = [];
-
-                $pageObject->topEnabled() && $fields[] = '_rampage_top';
-
-                $fields[] = '_rampage_date';
-
-                $pageObject->tagsEnabled() && $fields[] = '_rampage_tags';
-                $pageObject->topicsEnabled() && $fields[] = '_rampage_topics';
-
-                $fields[] = '_rampage_relations_to';
-                $fields[] = '_rampage_relations_from';
-
-                ExtensionManagementUtility::addToAllTCAtypes(AbstractPage::TABLE_NAME, sprintf('
-                    --div--;%s,%s
-                ', $pageObject->getTitle(), implode(',', $fields)), (string)$pageType);
-
-                // Configure tags
-                if ($pageObject->topicsEnabled()) {
-                    $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_tags']['config']['object'] = $registration->getObject()->getClassName();
-                }
-
-                // Configure topics
-                if ($pageObject->topicsEnabled()) {
-                    $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_topics']['config']['foreign_table_where'] = sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s)', implode(',', $pageObject->getTopicPageIds()));
-                }
-
-                // Configure relations
-                $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['types'][$pageType]['columnsOverrides']['_rampage_relations_to']['config'] = [
-                    'filter' => [
-                        [
-                            'userFunc' => GroupFilter::class . '->filterTypes',
-                            'parameters' => [
-                                'allowed' => $pageType
-                            ]
-                        ]
-                    ],
-                    'suggestOptions' => [
-                        'default' => [
-                            'searchWholePhrase' => 1,
-                            'addWhere' => ' AND ' . AbstractPage::TABLE_NAME . '.uid != ###THIS_UID###'
-                        ],
-                        AbstractPage::TABLE_NAME => [
-                            'searchCondition' => 'doktype = ' . $pageType
-                        ]
-                    ],
-                ];
-            }
-        }
-    }
-
-    protected function addPageCategory(Registration $registration): void
-    {
-        if ($pageCategory = $registration->getCategory()) {
-            $this->createPageType($pageCategory);
+            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$pageType] = $categoryRegistration->getIconIdentifier();
+            $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$pageType . '-hideinmenu'] = $categoryRegistration->getIconIdentifier(true);
         }
     }
 
@@ -147,7 +108,7 @@ class AddTCAEvent
             if ($cType) {
                 $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'FILTER');
 
-                if ($registration->hasCategory() && ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null)) {
+                if ($typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
                     $filterSheet->addField('settings.category', [
                         'type' => 'select',
                         'renderType' => 'selectSingle',
@@ -155,7 +116,7 @@ class AddTCAEvent
                         'maxitems' => 1,
                         'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
                         'foreign_table' => 'pages',
-                        'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $tcaTypeField, $registration->getCategory()->getObjectType()),
+                        'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $typeField, $registration->getCategory()->getObjectType()),
                         'items' => [
                             ['NO RESTRICTION', '--div--'],
                             ['SHOW ALL', 0],
@@ -169,7 +130,7 @@ class AddTCAEvent
                         'type' => 'user',
                         'renderType' => 'rampageTags',
                         'placeholder' => 'ADD TAGS …',
-                        'object' => $registration->getObject()->getClassName()
+                        'registrationIdentifier' => $registration->getIdentifier()
                     ], 'TAGS');
                 }
 

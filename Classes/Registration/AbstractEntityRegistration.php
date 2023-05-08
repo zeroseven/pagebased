@@ -8,17 +8,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
-use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
-use Zeroseven\Rampage\Exception\RegistrationException;
 
-abstract class AbstractObjectRegistration
+abstract class AbstractEntityRegistration
 {
     protected string $title;
     protected ?string $className = null;
     protected ?string $repositoryClassName = null;
     protected ?string $demandClassName = null;
-    protected ?string $iconIdentifier = null;
 
     public function __construct(string $title, string $className = null)
     {
@@ -76,26 +73,5 @@ abstract class AbstractObjectRegistration
     {
         $this->demandClassName = $demandClassName;
         return $this;
-    }
-
-    public function getIconIdentifier(bool $hideInMenu = null): string
-    {
-        return ($this->iconIdentifier ?? 'apps-pagetree-page-content-from-page') . ($hideInMenu === true ? '-hideinmenu' : '');
-    }
-
-    public function setIconIdentifier(string $iconIdentifier): self
-    {
-        $this->iconIdentifier = $iconIdentifier;
-        return $this;
-    }
-
-    /** @throws RegistrationException */
-    public function getObjectType(): int
-    {
-        if (!is_subclass_of($this->className, PageTypeInterface::class)) {
-            throw new RegistrationException(sprintf('Object "%s" is not a subclass of %s', $this->className, PageTypeInterface::class), 1677876156);
-        }
-
-        return $this->className::getType();
     }
 }

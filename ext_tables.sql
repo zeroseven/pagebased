@@ -6,7 +6,9 @@ CREATE TABLE pages
 	_rampage_topics            int(11) unsigned DEFAULT '0' NOT NULL,
 	_rampage_relations_to      int(11) unsigned DEFAULT '0' NOT NULL,
 	_rampage_relations_from    int(11) unsigned DEFAULT '0' NOT NULL,
-	_rampage_redirect_category tinyint(1) unsigned DEFAULT '0' NOT NULL
+	_rampage_redirect_category tinyint(1) unsigned DEFAULT '0' NOT NULL,
+	_rampage_site              int(11) DEFAULT '0' NOT NULL,
+	_rampage_registration      varchar(255) DEFAULT '' NOT NULL
 );
 
 CREATE TABLE tx_rampage_domain_model_topic

@@ -8,7 +8,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class FilterPluginRegistration extends AbstractPluginRegistration
 {
-    protected ?string $type = 'filter';
+    protected string $type = 'filter';
 
     public static function create(...$arguments): self
     {
