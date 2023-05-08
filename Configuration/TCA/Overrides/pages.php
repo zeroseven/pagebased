@@ -131,7 +131,7 @@ call_user_func(static function (string $table) {
             'config' => [
                 'type' => 'input',
                 'readOnly' => true,
-                'default' => ''
+                'default' => 0
             ]
         ],
         \Zeroseven\Rampage\Utility\SettingsUtility::REGISTRATION_FIELD_NAME => [

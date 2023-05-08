@@ -18,28 +18,30 @@ class GroupFilter
         return $row[SettingsUtility::REGISTRATION_FIELD_NAME] ?? null;
     }
 
-    public function filterObject(array $parameters, DataHandler $dataHandler): array
+    public function filterObject(array $parameters, mixed $parent): array
     {
         $table = $parameters['tcaFieldConfig']['foreign_table'] ?? '';
         $values = $parameters['values'] ?? null;
 
-        $uid = (int)array_key_first($dataHandler->datamap[$table] ?? []);
-        $registrationIdentifier = $this->getRegistrationIdentifier($uid);
+        if ($parent instanceof DataHandler) {
+            $uid = (int)array_key_first($parent->datamap[$table] ?? []);
+            $registrationIdentifier = $this->getRegistrationIdentifier($uid);
 
-        if ($registrationIdentifier && $values) {
-            $matches = [];
+            if ($registrationIdentifier && $values) {
+                $matches = [];
 
-            foreach ($values as $value) {
-                if (preg_match('/^(?:([a-z_]+)_)?(\d+)$/', $value, $matches)
-                    && ($recordUid = (int)($matches[2] ?? 0)) && $recordUid !== $uid
-                    && $matches[1] && $matches[1] === AbstractPage::TABLE_NAME
-                    && $this->getRegistrationIdentifier($recordUid) === $registrationIdentifier
-                ) {
-                    $matches[] = $value;
+                foreach ($values as $value) {
+                    if (preg_match('/^(?:([a-z_]+)_)?(\d+)$/', $value, $matches)
+                        && ($recordUid = (int)($matches[2] ?? 0)) && $recordUid !== $uid
+                        && $matches[1] && $matches[1] === AbstractPage::TABLE_NAME
+                        && $this->getRegistrationIdentifier($recordUid) === $registrationIdentifier
+                    ) {
+                        $matches[] = $value;
+                    }
                 }
-            }
 
-            return $matches;
+                return $matches;
+            }
         }
 
         return $values;

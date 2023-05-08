@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Hooks\DataHandler;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
@@ -13,7 +14,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 
@@ -55,7 +55,7 @@ class ResortPageTree
         return false;
     }
 
-    /** @throws RegistrationException */
+    /** @throws Exception */
     public function processDatamap_afterAllOperations(DataHandler $dataHandler): void
     {
         foreach ($dataHandler->datamap as $table => $uids) {
@@ -63,12 +63,11 @@ class ResortPageTree
 
                 // Slice the first three …
                 foreach (array_slice($uids, 0, 3, true) as $uid => $data) {
-                    $pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']);
-                    $parentPage = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pid);
+                    if ($registration = RegistrationService::getObjectRegistrationInRootLine($uid)) {
+                        $pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']);
 
-                    if (($documentType = (int)($parentPage['doktype'] ?? 0)) && $registration = RegistrationService::getRegistrationByCategoryDocumentType($documentType)) {
                         if ($this->updateSorting($pid, $registration, $dataHandler)) {
-                            BackendUtility::setUpdateSignal('updatePageTree');
+                            $parentPage = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pid);
 
                             $message = GeneralUtility::makeInstance(
                                 FlashMessage::class,
@@ -86,6 +85,8 @@ class ResortPageTree
 
                             $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
                             $messageQueue->enqueue($message);
+
+                            BackendUtility::setUpdateSignal('updatePageTree');
                         }
                     }
                 }

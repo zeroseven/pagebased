@@ -16,7 +16,6 @@ class RegisterPluginEvent
 {
     protected ?Registration $registration;
 
-    /** @throws RegistrationException */
     protected function registerPlugin(?AbstractPluginRegistration $plugin): void
     {
         if ($plugin) {
@@ -35,7 +34,6 @@ class RegisterPluginEvent
         }
     }
 
-    /** @throws RegistrationException */
     public function __invoke(StoreRegistrationEvent $event)
     {
         if ($this->registration = $event->getRegistration()) {
