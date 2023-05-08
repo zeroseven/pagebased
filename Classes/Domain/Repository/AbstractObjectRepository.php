@@ -12,13 +12,11 @@ use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\IdentifierUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Rampage\Utility\SettingsUtility;
 
 abstract class AbstractObjectRepository extends AbstractPageRepository implements ObjectRepositoryInterface
 {
@@ -29,7 +27,6 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         'uid' => QueryInterface::ORDER_ASCENDING
     ];
 
-    /** @throws RegistrationException */
     public function __construct(ObjectManagerInterface $objectManager)
     {
         parent::__construct($objectManager);
@@ -37,7 +34,6 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         $this->registration = RegistrationService::getRegistrationByRepository(get_class($this));
     }
 
-    /** @throws RegistrationException */
     public function initializeDemand(): DemandInterface
     {
         return RegistrationService::getRegistrationByRepository(get_class($this))->getObject()->getDemandClass();
@@ -66,9 +62,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         }
 
         // Search by object identifier
-        if ($objectName = $this->registration->getObject()->getClassName()) {
-            $constraints[] = $query->equals(IdentifierUtility::OBJECT_FIELD_NAME, $objectName);
-        }
+        $constraints[] = $query->equals(SettingsUtility::REGISTRATION_FIELD_NAME, $this->registration->getIdentifier());
 
         if ($demand->getTopObjectOnly()) {
             $constraints[] = $query->equals('top', 1);

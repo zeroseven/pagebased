@@ -145,14 +145,14 @@ class ValidateRegistrationEvent
     /** @throws RegistrationException */
     protected function checkRegistration(Registration $registration): void
     {
-        if ($registration->hasObject() && $objectRegistration = $registration->getObject()) {
+        if ($objectRegistration = $registration->getObject()) {
             $this->checkPageEntityConfiguration($objectRegistration);
             $this->checkPageObjectRegistration($objectRegistration);
         } else {
             throw new RegistrationException(sprintf('An object must be configured in extension "%s". Please call "setObject()" methode, contains instance of "%s"', $registration->getExtensionName(), ObjectRegistration::class), 1678708145);
         }
 
-        if ($registration->hasCategory() && $categoryRegistration = $registration->getCategory()) {
+        if ($categoryRegistration = $registration->getCategory()) {
             $this->checkPageEntityConfiguration($categoryRegistration);
             $this->checkCategoryConfiguration($categoryRegistration);
         } else {

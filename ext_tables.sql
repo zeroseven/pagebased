@@ -1,14 +1,14 @@
 CREATE TABLE pages
 (
-	_rampage_site_identifier   int(11) DEFAULT '0' NOT NULL,
-	_rampage_object_identifier varchar(255) DEFAULT '' NOT NULL,
 	_rampage_top               tinyint(1) unsigned DEFAULT '0' NOT NULL,
 	_rampage_date              int(11) DEFAULT '0' NOT NULL,
 	_rampage_tags              text,
 	_rampage_topics            int(11) unsigned DEFAULT '0' NOT NULL,
 	_rampage_relations_to      int(11) unsigned DEFAULT '0' NOT NULL,
 	_rampage_relations_from    int(11) unsigned DEFAULT '0' NOT NULL,
-	_rampage_redirect_category tinyint(1) unsigned DEFAULT '0' NOT NULL
+	_rampage_redirect_category tinyint(1) unsigned DEFAULT '0' NOT NULL,
+	_rampage_site              int(11) DEFAULT '0' NOT NULL,
+	_rampage_registration      varchar(255) DEFAULT '' NOT NULL
 );
 
 CREATE TABLE tx_rampage_domain_model_topic

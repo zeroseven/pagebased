@@ -6,9 +6,10 @@ namespace Zeroseven\Rampage\Backend\Form\Wizard;
 
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Form\Wizard\SuggestWizardDefaultReceiver;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Utility\IdentifierUtility;
+use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Rampage\Utility\SettingsUtility;
 
 class SuggestRelationReceiver extends SuggestWizardDefaultReceiver
 {
@@ -16,15 +17,17 @@ class SuggestRelationReceiver extends SuggestWizardDefaultReceiver
     {
         parent::__construct($table, $config);
 
-        if (($GLOBALS['TYPO3_REQUEST'] instanceof ServerRequestInterface) && ($parsedBody = $GLOBALS['TYPO3_REQUEST']->getParsedBody()) && $uid = (int)($parsedBody['uid'] ?? 0)) {
-            $objectRegistration = GeneralUtility::makeInstance(IdentifierUtility::class, $uid, $table)->getObjectRegistration();
+        if (
+            $table === AbstractPage::TABLE_NAME
+            && $GLOBALS['TYPO3_REQUEST'] instanceof ServerRequestInterface
+            && ($parsedBody = $GLOBALS['TYPO3_REQUEST']->getParsedBody())
+            && ($uid = (int)($parsedBody['uid'] ?? 0))
+            && ($objectRegistration = RegistrationService::getObjectRegistrationInRootLine($uid))
+        ) {
+            $this->queryBuilder->andWhere($this->queryBuilder->expr()->eq(SettingsUtility::REGISTRATION_FIELD_NAME, $this->queryBuilder->createNamedParameter($objectRegistration->getIdentifier())));
 
-            if ($objectRegistration) {
-                $this->queryBuilder->andWhere($this->queryBuilder->expr()->eq(IdentifierUtility::OBJECT_FIELD_NAME, $this->queryBuilder->createNamedParameter($objectRegistration->getClassName())));
-
-                if ($rootPage = RootLineUtility::getRootPage($uid)) {
-                    $this->queryBuilder->andWhere($this->queryBuilder->expr()->eq(IdentifierUtility::SITE_FIELD_NAME, $rootPage));
-                }
+            if ($rootPage = RootLineUtility::getRootPage($uid)) {
+                $this->queryBuilder->andWhere($this->queryBuilder->expr()->eq(SettingsUtility::SITE_FIELD_NAME, $rootPage));
             }
         }
     }

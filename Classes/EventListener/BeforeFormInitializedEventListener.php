@@ -10,8 +10,9 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Utility\IdentifierUtility;
+use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Rampage\Utility\SettingsUtility;
 
 class BeforeFormInitializedEventListener
 {
@@ -38,24 +39,26 @@ class BeforeFormInitializedEventListener
         $parsedBody = $event->getRequest()->getParsedBody();
         $queryParams = $event->getRequest()->getQueryParams();
 
-        if (($editConfiguration = $parsedBody['edit'] ?? $queryParams['edit'] ?? null) && ($table = array_key_first($editConfiguration)) && $uid = (int)(array_key_first($editConfiguration[$table] ?? []))) {
-            $detector = GeneralUtility::makeInstance(IdentifierUtility::class, $uid, $table);
-            $categoryRegistration = $detector->getCategoryRegistration();
-            $objectRegistration = $detector->getObjectRegistration();
+        if (
+            ($editConfiguration = $parsedBody['edit'] ?? $queryParams['edit'] ?? null)
+            && ($table = array_key_first($editConfiguration))
+            && $table === AbstractPage::TABLE_NAME
+            && $uid = (int)(array_key_first($editConfiguration[$table] ?? []))
+        ) {
+            $isCategory = RegistrationService::getRegistrationByCategoryPageUid($uid) !== null;
+            $registration = RegistrationService::getObjectRegistrationInRootLine($uid);
 
             $update = [
-                IdentifierUtility::SITE_FIELD_NAME => 0,
-                IdentifierUtility::OBJECT_FIELD_NAME => ''
+                SettingsUtility::SITE_FIELD_NAME => 0,
+                SettingsUtility::REGISTRATION_FIELD_NAME => ''
             ];
 
-            if ($categoryRegistration || $objectRegistration) {
-                if ($rootPage = RootLineUtility::getRootPage($uid)) {
-                    $update[IdentifierUtility::SITE_FIELD_NAME] = $rootPage;
-                }
+            if (($isCategory || $registration) && $rootPage = RootLineUtility::getRootPage($uid)) {
+                $update[SettingsUtility::SITE_FIELD_NAME] = $rootPage;
             }
 
-            if ($objectRegistration) {
-                $update[IdentifierUtility::OBJECT_FIELD_NAME] = $objectRegistration->getClassName();
+            if ($registration) {
+                $update[SettingsUtility::REGISTRATION_FIELD_NAME] = $registration->getIdentifier();
             }
 
             $this->updatePageRecord($uid, $update);

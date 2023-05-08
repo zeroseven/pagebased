@@ -8,10 +8,9 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Repository\TopicRepository;
-use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\IdentifierUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Rampage\Utility\SettingsUtility;
 
 class ItemsProcFunc
 {
@@ -29,15 +28,14 @@ class ItemsProcFunc
         return 0;
     }
 
-    /** @throws RegistrationException */
     public function topics(array &$PA): void
     {
-        if (($objectIdentifier = $PA['row'][IdentifierUtility::OBJECT_FIELD_NAME] ?? null) && $registration = RegistrationService::getRegistrationByClassName($objectIdentifier)) {
+        if (($objectIdentifier = $PA['row'][SettingsUtility::REGISTRATION_FIELD_NAME] ?? null) && $registration = RegistrationService::getRegistrationByClassName($objectIdentifier)) {
 
             // Clear items
             $PA['items'] = [];
 
-            if($topics = GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($registration)) {
+            if ($topics = GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($registration)) {
                 foreach ($topics->toArray() as $topic) {
                     $PA['items'][] = [$topic->getTitle(), $topic->getUid(), 'actions-tag'];
                 }

@@ -19,7 +19,7 @@ use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\IdentifierUtility;
+use Zeroseven\Rampage\Utility\SettingsUtility;
 use Zeroseven\Rampage\Utility\TCAUtility;
 
 class AddTCAEvent
@@ -49,7 +49,7 @@ class AddTCAEvent
     protected function addPageType(Registration $registration): void
     {
         if ($objectRegistration = $registration->getObject()) {
-            $displayCondition = sprintf('FIELD:%s:=:%s', IdentifierUtility::OBJECT_FIELD_NAME, $objectRegistration->getClassName());
+            $displayCondition = sprintf('FIELD:%s:=:%s', SettingsUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier());
 
             TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_date', $displayCondition);
             TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_relations_to', $displayCondition);
@@ -108,7 +108,7 @@ class AddTCAEvent
             if ($cType) {
                 $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'FILTER');
 
-                if ($registration->hasCategory() && ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null)) {
+                if ($typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
                     $filterSheet->addField('settings.category', [
                         'type' => 'select',
                         'renderType' => 'selectSingle',
@@ -116,7 +116,7 @@ class AddTCAEvent
                         'maxitems' => 1,
                         'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
                         'foreign_table' => 'pages',
-                        'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $tcaTypeField, $registration->getCategory()->getObjectType()),
+                        'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $typeField, $registration->getCategory()->getObjectType()),
                         'items' => [
                             ['NO RESTRICTION', '--div--'],
                             ['SHOW ALL', 0],
@@ -130,7 +130,7 @@ class AddTCAEvent
                         'type' => 'user',
                         'renderType' => 'rampageTags',
                         'placeholder' => 'ADD TAGS …',
-                        'object' => $registration->getObject()->getClassName()
+                        'registrationIdentifier' => $registration->getIdentifier()
                     ], 'TAGS');
                 }
 

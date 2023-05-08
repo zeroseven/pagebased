@@ -8,8 +8,9 @@ use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Exception\RegistrationException;
+use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\IdentifierUtility;
+use Zeroseven\Rampage\Utility\SettingsUtility;
 use Zeroseven\Rampage\Utility\TagUtility;
 
 class TagsElement extends AbstractFormElement
@@ -18,7 +19,7 @@ class TagsElement extends AbstractFormElement
     protected string $id;
     protected string $value;
     protected string $placeholder;
-    protected string $objectClass;
+    protected ?Registration $registration;
     protected int $languageUid;
 
     public function __construct(NodeFactory $nodeFactory, array $data)
@@ -33,16 +34,16 @@ class TagsElement extends AbstractFormElement
         $this->id = $parameterArray['itemFormElID'] ?? '';
         $this->value = $parameterArray['itemFormElValue'] ?? '';
         $this->placeholder = str_starts_with($placeholder, 'LLL') ? $this->getLanguageService()->sL($placeholder) : $placeholder;
-        $this->objectClass = $parameterArray['fieldConf']['config']['object'] ?? ($this->data['databaseRow'][IdentifierUtility::OBJECT_FIELD_NAME] ?? '');
         $this->languageUid = (int)($sysLanguageUid[0] ?? $sysLanguageUid);
+        $this->registration = ($registrationIdentifier = $parameterArray['fieldConf']['config']['registrationIdentifier'] ?? null)
+            ? RegistrationService::getRegistrationByClassName($registrationIdentifier)
+            : RegistrationService::getRegistrationByIdentifier($this->data['databaseRow'][SettingsUtility::REGISTRATION_FIELD_NAME] ?? '');
     }
 
     /** @throws RegistrationException */
     protected function renderRequireJsModules(): array
     {
-        $tags = ($registration = RegistrationService::getRegistrationByClassName($this->objectClass))
-            ? TagUtility::getTagsByRegistration($registration, null, true, $this->languageUid)
-            : [];
+        $tags = ($this->registration === null) ? [] : TagUtility::getTagsByRegistration($this->registration, true, $this->languageUid);
 
         return [['TYPO3/CMS/Rampage/Backend/Tagify' => 'function(Tagify){
              new Tagify(document.getElementById("' . $this->id . '"), {

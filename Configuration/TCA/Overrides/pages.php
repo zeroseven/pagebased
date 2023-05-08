@@ -118,14 +118,14 @@ call_user_func(static function (string $table) {
         ],
 
         // System relevant fields
-        \Zeroseven\Rampage\Utility\IdentifierUtility::SITE_FIELD_NAME => [
+        \Zeroseven\Rampage\Utility\SettingsUtility::SITE_FIELD_NAME => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
             'label' => 'Site',
             'displayCond' => [
                 'AND' => [
                     'HIDE_FOR_NON_ADMINS',
-                    'FIELD:_rampage_site_identifier:REQ:true'
+                    'FIELD:' . \Zeroseven\Rampage\Utility\SettingsUtility::SITE_FIELD_NAME . ':REQ:true'
                 ]
             ],
             'config' => [
@@ -134,14 +134,14 @@ call_user_func(static function (string $table) {
                 'default' => ''
             ]
         ],
-        \Zeroseven\Rampage\Utility\IdentifierUtility::OBJECT_FIELD_NAME => [
+        \Zeroseven\Rampage\Utility\SettingsUtility::REGISTRATION_FIELD_NAME => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
             'label' => 'Object',
             'displayCond' => [
                 'AND' => [
                     'HIDE_FOR_NON_ADMINS',
-                    'FIELD:_rampage_object_identifier:REQ:true'
+                    'FIELD:' . \Zeroseven\Rampage\Utility\SettingsUtility::REGISTRATION_FIELD_NAME . ':REQ:true'
                 ]
             ],
             'config' => [
@@ -163,5 +163,5 @@ call_user_func(static function (string $table) {
         ]
     ]);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, _rampage_top, _rampage_date, _rampage_tags, _rampage_topics, _rampage_relations_to, _rampage_relations_from, _rampage_redirect_category, _rampage_site_identifier, _rampage_object_identifier', '', 'after:title');
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, _rampage_top, _rampage_date, _rampage_tags, _rampage_topics, _rampage_relations_to, _rampage_relations_from, _rampage_redirect_category, _rampage_site, _rampage_registration', '', 'after:title');
 }, 'pages');
