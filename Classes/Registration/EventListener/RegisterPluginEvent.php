@@ -7,7 +7,6 @@ namespace Zeroseven\Rampage\Registration\EventListener;
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
-use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
 use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
 use Zeroseven\Rampage\Registration\Registration;
