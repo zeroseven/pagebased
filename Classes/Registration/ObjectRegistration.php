@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Registration;
 
+use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -17,6 +18,7 @@ class ObjectRegistration extends AbstractEntityRegistration
     protected bool $tagField = false;
     protected bool $topField = false;
     protected array $topicPageIds = [];
+    protected ?string $name = null;
 
     public function getDemandClass(): DemandInterface
     {
@@ -101,6 +103,11 @@ class ObjectRegistration extends AbstractEntityRegistration
     public function topicsEnabled(): bool
     {
         return count($this->topicPageIds) > 0;
+    }
+
+    public function getName(): string
+    {
+        return $this->name ?? ($this->name = $this->name = GeneralUtility::makeInstance(ReflectionClass::class, $this->className)->getShortName());
     }
 
     public static function create(...$arguments): self

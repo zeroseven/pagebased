@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Utility;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
@@ -17,9 +18,16 @@ class ObjectUtility
         return $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'];
     }
 
-    public static function isCategory(int $pageUid, array $row = null): ?Registration
+    protected static function getPageUid(): ?int
     {
-        if ($typeField = self::getPageTypeField()) {
+        return ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController
+            ? (int)$GLOBALS['TSFE']->id
+            : null;
+    }
+
+    public static function isCategory(int $pageUid = null, array $row = null): ?Registration
+    {
+        if (($typeField = self::getPageTypeField()) && ($pageUid || $pageUid = self::getPageUid())) {
             $documentType = $row[$typeField] ?? (BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, $typeField)[$typeField] ?? null);
 
             if ($documentType && $registration = RegistrationService::getRegistrationByCategoryDocumentType((int)$documentType)) {
@@ -30,9 +38,9 @@ class ObjectUtility
         return null;
     }
 
-    public static function isObject(int $pageUid, array $row = null): ?Registration
+    public static function isObject(int $pageUid = null, array $row = null): ?Registration
     {
-        if ($typeField = self::getPageTypeField()) {
+        if (($typeField = self::getPageTypeField()) && ($pageUid || $pageUid = self::getPageUid())) {
             $registrationField = SettingsUtility::REGISTRATION_FIELD_NAME;
 
             if (!isset($row[$typeField], $row[$registrationField])) {

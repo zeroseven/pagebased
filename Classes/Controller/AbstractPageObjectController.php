@@ -62,10 +62,9 @@ abstract class AbstractPageObjectController extends AbstractController implement
         return $this->demand;
     }
 
-    /** @throws ObjectException */
     public function listAction(): void
     {
-        $repository = GeneralUtility::makeInstance(ObjectManager::class)->get($this->registration->getObject()->getRepositoryClassName());
+        $repository = $this->registration->getObject()->getRepositoryClass();
         $objects = $repository->findByDemand($this->demand);
 
         if (($contentId = ($this->contentData['uid'] ?? null)) && !$this->demand->getContentId()) {
