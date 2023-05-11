@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\ViewHelpers\Pagination;
 
 use Closure;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
+use Zeroseven\Rampage\Pagination\Iterator;
 use Zeroseven\Rampage\Pagination\Pagination;
 use Zeroseven\Rampage\ViewHelpers\PaginationViewHelper;
 
@@ -28,6 +30,7 @@ class EachStageViewHelper extends AbstractViewHelper
         $this->registerArgument('active', 'bool', 'Loop the active stages only');
         $this->registerArgument('inactive', 'bool', 'Loop the inactive stages only');
         $this->registerArgument('as', 'string', 'The name of the iteration variable');
+        $this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)');
     }
 
     /** @throws Exception */
@@ -37,6 +40,7 @@ class EachStageViewHelper extends AbstractViewHelper
         $active = (bool)($arguments['active'] ?? false);
         $inactive = (bool)($arguments['inactive'] ?? false);
         $as = (empty($as = $arguments['as'] ?? null) || $as === self::STAGE_VARIABLE_IDENTIFIER) ? null : $as;
+        $iteration = $arguments['iteration'] ?? 'stageIteration';
 
         if (((int)$selected + (int)$active + (int)$inactive) > 1) {
             throw new Exception('You can only activate one filter in EachStageViewHelper. Either "selected" or "active" or "inactive"', 1677232999);
@@ -50,6 +54,7 @@ class EachStageViewHelper extends AbstractViewHelper
 
         /** @var Pagination $pagination */
         $pagination = $templateVariableContainer->get(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER);
+        $iterator = GeneralUtility::makeInstance(Iterator::class, count($pagination->getStageLengths()));
 
         if ($selected) {
             $stages = [$pagination->getStages()->getSelected()];
@@ -63,13 +68,17 @@ class EachStageViewHelper extends AbstractViewHelper
 
         $output = '';
         foreach ($stages as $stage) {
-            $as && $templateVariableContainer->add($as, $stage);
+            $templateVariableContainer->add($iteration, $iterator);
+            $templateVariableContainer->add($as, $stage);
             $templateVariableContainer->add(self::STAGE_VARIABLE_IDENTIFIER, $stage);
 
             $output .= $renderChildrenClosure();
 
-            $as && $templateVariableContainer->remove($as);
+            $templateVariableContainer->remove($iteration);
+            $templateVariableContainer->remove($as);
             $templateVariableContainer->remove(self::STAGE_VARIABLE_IDENTIFIER);
+
+            $iterator->count();
         }
 
         return $output;

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\ViewHelpers\Pagination;
 
 use Closure;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
+use Zeroseven\Rampage\Pagination\Iterator;
 use Zeroseven\Rampage\ViewHelpers\PaginationViewHelper;
 
 class EachItemViewHelper extends AbstractViewHelper
@@ -22,6 +24,7 @@ class EachItemViewHelper extends AbstractViewHelper
         parent::initializeArguments();
 
         $this->registerArgument('as', 'string', 'The name of the iteration variable', false, 'item');
+        $this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)');
     }
 
     /** @throws Exception */
@@ -29,6 +32,7 @@ class EachItemViewHelper extends AbstractViewHelper
     {
         $templateVariableContainer = $renderingContext->getVariableProvider();
         $as = $arguments['as'] ?? 'item';
+        $iteration = $arguments['iteration'] ?? 'itemIteration';
         $output = '';
 
         if (!$templateVariableContainer->exists(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER) && !$templateVariableContainer->exists(EachStageViewHelper::STAGE_VARIABLE_IDENTIFIER)) {
@@ -36,12 +40,18 @@ class EachItemViewHelper extends AbstractViewHelper
         }
 
         if ($items = ($templateVariableContainer->get(EachStageViewHelper::STAGE_VARIABLE_IDENTIFIER) ?? $templateVariableContainer->get(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER))->getItems()) {
+            $iterator = GeneralUtility::makeInstance(Iterator::class, count($items));
+
             foreach ($items as $item) {
-                $as && $templateVariableContainer->add($as, $item);
+                $templateVariableContainer->add($iteration, $iterator);
+                $templateVariableContainer->add($as, $item);
 
                 $output .= $renderChildrenClosure();
 
-                $as && $templateVariableContainer->remove($as);
+                $templateVariableContainer->remove($iteration);
+                $templateVariableContainer->remove($as);
+
+                $iterator->count();
             }
         }
 
