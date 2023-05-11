@@ -17,6 +17,8 @@ use Zeroseven\Rampage\ViewHelpers\PaginationViewHelper;
 
 abstract class AbstractLinkViewHelper extends ActionViewHelper
 {
+    public const AJAX_CONTENT_PARAMETER = '_rampage_content';
+
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -70,12 +72,12 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
                     ->setTargetPageType($ajaxTypeNum)
                     ->setArguments((array)($this->arguments['arguments'] ?? []))
                     ->setAddQueryString((bool)($this->arguments['addQueryString'] ?? false))
-                    ->setArguments((array)($this->arguments['additionalParams'] ?? []))
+                    ->setArguments(array_merge((array)($this->arguments['additionalParams'] ?? []), [self::AJAX_CONTENT_PARAMETER => $demand->getContentId()]))
                     ->uriFor($this->arguments['action'] ?? '', array_merge(($this->arguments['arguments'] ?? []), [
                         '_ajax' => 1
                     ]), $this->arguments['controller'] ?? null, $this->arguments['extensionName'] ?? null, $this->arguments['pluginName'] ?? null);
 
-                $ajaxUrl && $this->tag->addAttribute('onclick', sprintf('Zeroseven.Rampage.load(%s,%s,%s)', GeneralUtility::quoteJSvalue($ajaxUrl), json_encode($replaceSelectors, JSON_THROW_ON_ERROR), json_encode($appendSelectors, JSON_THROW_ON_ERROR)));
+                $ajaxUrl && $this->tag->addAttribute('onclick', sprintf('Zeroseven.Rampage.Pagination.load(%s,%s,%s,event)', GeneralUtility::quoteJSvalue($ajaxUrl), json_encode($replaceSelectors, JSON_THROW_ON_ERROR), json_encode($appendSelectors, JSON_THROW_ON_ERROR)));
             } else {
                 throw new Exception('Ajax-Loading failed: Either the content ID of the demand class or the key "list.ajaxTypeNum" is not configured in your plugin settings.', 1677489279);
             }
