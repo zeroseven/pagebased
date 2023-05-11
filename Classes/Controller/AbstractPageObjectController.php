@@ -46,14 +46,14 @@ abstract class AbstractPageObjectController extends AbstractController implement
 
     protected function pluralizeWord(string $word): string
     {
-        $length = strlen($word);
+        $lastCharacter = strtolower(substr($word, -1));
+        $lastTwoCharacters = strtolower(substr($word, -2));
 
-        // It's not working with the word "boy". LOL
-        if (strtolower($word[$length - 1]) === 'y') {
+        if ($lastCharacter === 'y' && !in_array($lastTwoCharacters, ['ay', 'ey', 'iy', 'oy', 'uy'], true)) {
             return substr_replace($word, 'ies', -1);
         }
 
-        if (in_array(strtolower($word[$length - 1]), ['s', 'x', 'z'], true) || in_array(strtolower(substr($word, -2)), ['ch', 'sh'], true)) {
+        if (in_array($lastCharacter, ['s', 'x', 'z'], true) || in_array($lastTwoCharacters, ['ch', 'sh'], true)) {
             return $word . 'es';
         }
 
