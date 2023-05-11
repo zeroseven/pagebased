@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"lib": [
+			"esnext",
+			"dom",
+			"dom.iterable",
+			"es2015"
+		],
+		"rootDir": "./Resources/Private/JavaScript/"
+	},
+	"exclude": [
+		"node_modules"
+	]
+}
