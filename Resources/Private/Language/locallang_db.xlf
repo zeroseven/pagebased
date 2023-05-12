@@ -31,6 +31,9 @@
 	  <trans-unit id="tx_rampage_domain_model_topic">
 	  	<source>Topic</source>
 	  </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_topic.objects">
+      	<source>Objects</source>
+      </trans-unit>
       <trans-unit id="tx_rampage_domain_model_topic.title">
       	<source>Title</source>
       </trans-unit>
@@ -55,6 +58,9 @@
       </trans-unit>
       <trans-unit id="tx_rampage_domain_model_contact.palette.address">
       	<source>Address</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.objects">
+      	<source>Objects</source>
       </trans-unit>
       <trans-unit id="tx_rampage_domain_model_contact.firstname">
       	<source>First name</source>
