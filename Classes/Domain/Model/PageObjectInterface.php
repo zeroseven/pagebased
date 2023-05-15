@@ -20,11 +20,9 @@ interface PageObjectInterface extends PageEntityInterface
 
     public function getParentObject(): ?PageObject;
 
-    public function getChildObjects(): QueryResultInterface;
+    public function getChildObjects(): ?QueryResultInterface;
 
     public function getCategory(): ?AbstractPageCategory;
-
-    public function setCategory(AbstractPageCategory $category): self;
 
     public function getRelationsTo(): ObjectStorage;
 

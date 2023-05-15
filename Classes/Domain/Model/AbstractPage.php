@@ -24,11 +24,16 @@ abstract class AbstractPage extends AbstractEntity
     protected string $navigationTitle;
     protected string $description;
     protected string $abstract;
-    protected ?ParentPage $parentPage = null;
     protected DateTime $lastChange;
     protected ?FileReference $firstMedia = null;
     protected ?FileReference $firstImage = null;
     protected ?ObjectStorage $media = null;
+
+    /**
+     * @var ParentPage | null
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected ?ParentPage $parentPage = null;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
@@ -127,25 +132,9 @@ abstract class AbstractPage extends AbstractEntity
         return $this->lastChange;
     }
 
-    public function getParentPage(): ?ParentPage
-    {
-        return $this->parentPage;
-    }
-
     public function setLastChange(DateTime $lastChange): self
     {
         $this->lastChange = $lastChange;
-        return $this;
-    }
-
-    public function getFileReferences(): ?ObjectStorage
-    {
-        return $this->fileReferences;
-    }
-
-    public function setFileReferences(ObjectStorage $fileReferences): self
-    {
-        $this->fileReferences = $fileReferences;
         return $this;
     }
 
@@ -192,5 +181,21 @@ abstract class AbstractPage extends AbstractEntity
         }
 
         return $this->firstImage;
+    }
+
+    public function getParentPage(): ?ParentPage
+    {
+        return $this->parentPage;
+    }
+
+    public function getFileReferences(): ?ObjectStorage
+    {
+        return $this->fileReferences;
+    }
+
+    public function setFileReferences(ObjectStorage $fileReferences): self
+    {
+        $this->fileReferences = $fileReferences;
+        return $this;
     }
 }

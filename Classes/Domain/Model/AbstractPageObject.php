@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Domain\Model;
 
 use DateTime;
-use TYPO3\CMS\Extbase\Annotation as Annotation;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
 use Zeroseven\Rampage\Exception\TypeException;
+use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\CastUtility;
+use Zeroseven\Rampage\Utility\ObjectUtility;
+use Zeroseven\Rampage\Utility\RootLineUtility;
 
 abstract class AbstractPageObject extends AbstractPage implements PageObjectInterface
 {
@@ -22,28 +24,43 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     protected string $tagsString;
     protected array $tags = [];
     protected ?Contact $contact = null;
-    protected ?PageObject $parentObject = null;
-    protected ?QueryResultInterface $childObjects = null;
-    protected ?AbstractPageCategory $category = null;
     protected ?ObjectStorage $relations = null;
 
     /**
-     * @var ObjectStorage<Topic>
-     * Annotation\Lazy
+     * @var ObjectStorage<Topic> | null
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected ?ObjectStorage $topics = null;
 
     /**
+     * @var PageObject | null
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected ?PageObject $parentObject = null;
+
+    /**
+     * @var QueryResultInterface | null
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected ?QueryResultInterface $childObjects = null;
+
+    /**
+     * @var AbstractPageCategory | null
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected ?AbstractPageCategory $category = null;
+
+    /**
      * @var ObjectStorage<PageObject>
      * Annotation\Cascade("remove")
-     * Annotation\Lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected ObjectStorage $relationsTo;
 
     /**
      * @var ObjectStorage<PageObject>
      * Annotation\Cascade("remove")
-     * Annotation\Lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected ObjectStorage $relationsFrom;
 
@@ -99,6 +116,34 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
         return $this;
     }
 
+    public function getContact(): ?Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(Contact $contact): self
+    {
+        $this->contact = $contact;
+        return $this;
+    }
+
+    public function getRelations(): ObjectStorage
+    {
+        if ($this->relations === null) {
+            $this->relations = GeneralUtility::makeInstance(ObjectStorage::class);
+
+            if ($relationsTo = $this->getRelationsTo()) {
+                $this->relations->addAll($relationsTo);
+            }
+
+            if ($relationsFrom = $this->getRelationsFrom()) {
+                $this->relations->addAll($relationsFrom);
+            }
+        }
+
+        return $this->relations;
+    }
+
     public function addTopic(Topic $topic): void
     {
         $this->topics->attach($topic);
@@ -120,15 +165,17 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
         return $this;
     }
 
-    public function getContact(): Contact
+    public function getCategory(): ?AbstractPageCategory
     {
-        return $this->contact;
-    }
+        if ($this->category === null) {
+            foreach (RootLineUtility::collectPagesAbove($this->uid) as $row) {
+                if ($registration = ObjectUtility::isCategory(null, $row)) {
+                    return $this->category = $registration->getCategory()->getRepositoryClass()->findByUid($row['uid']);
+                }
+            }
+        }
 
-    public function setContact(Contact $contact): self
-    {
-        $this->contact = $contact;
-        return $this;
+        return $this->category;
     }
 
     public function getParentObject(): ?PageObject
@@ -138,24 +185,18 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
         return $this->parentObject;
     }
 
-    public function getChildObjects(): QueryResultInterface
+    public function getChildObjects(): ?QueryResultInterface
     {
-        // Todo: find child objects
+        if (
+            $this->childObjects === null
+            && ($childPages = RootLineUtility::collectPagesBelow($this->uid, 1))
+            && ($registration = RegistrationService::getRegistrationByClassName(get_class($this)))
+        ) {
+            die(debug($childPages));
+            return $this->childObjects = $registration->getObject()->getRepositoryClass()->findByUidList(array_keys($childPages));
+        }
 
-        return $this->childObjects;
-    }
-
-    public function getCategory(): ?AbstractPageCategory
-    {
-        // Todo: Find category
-        return $this->category;
-    }
-
-    public function setCategory(AbstractPageCategory $category): self
-    {
-        $this->category = $category;
-
-        return $this;
+        return null;
     }
 
     public function getRelationsTo(): ObjectStorage
@@ -183,22 +224,5 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
         $this->relations = null;
 
         return $this;
-    }
-
-    public function getRelations(): ObjectStorage
-    {
-        if ($this->relations === null) {
-            $this->relations = GeneralUtility::makeInstance(ObjectStorage::class);
-
-            if ($relationsTo = $this->getRelationsTo()) {
-                $this->relations->addAll($relationsTo);
-            }
-
-            if ($relationsFrom = $this->getRelationsFrom()) {
-                $this->relations->addAll($relationsFrom);
-            }
-        }
-
-        return $this->relations;
     }
 }

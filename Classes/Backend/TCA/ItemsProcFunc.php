@@ -80,7 +80,7 @@ class ItemsProcFunc
                 }
             }
 
-            // Add closes category
+            // Add closest category
             if ($closestCategoryUid) {
                 array_unshift($PA['items'], ['SUGGESTED CATEGORY', '--div--'], [$localPages[$closestCategoryUid]['title'] ?? '', $closestCategoryUid]);
             }

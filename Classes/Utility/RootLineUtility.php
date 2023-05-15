@@ -67,23 +67,6 @@ class RootLineUtility
         return self::collectPagesBelow($startingPoint);
     }
 
-    public static function findDocumentType(int $documentType, int $startingPoint = null, array $rootLine = null): ?int
-    {
-        if (empty($rootLine)) {
-            $rootLine = self::getRootLine($startingPoint);
-        }
-
-        $typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'];
-
-        foreach ($rootLine ?? [] as $row) {
-            if (isset($row[$typeField], $row['uid']) && (int)$row[$typeField] === $documentType) {
-                return (int)$row['uid'];
-            }
-        }
-
-        return null;
-    }
-
     public static function getRootPage(int $startingPoint = null): int
     {
         if (self::isBackendMode()) {
