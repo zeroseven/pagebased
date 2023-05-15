@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Utility;
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception as DriverException;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
@@ -16,7 +18,6 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use function Zeroseven\Rampage\Backend\TCA\getPageData;
 
 class RootLineUtility
 {
@@ -103,38 +104,45 @@ class RootLineUtility
         return $queryBuilder;
     }
 
-    protected static function lookUp(array &$list, int $pid, int $looped, QueryBuilder $queryBuilder): void
+    /** @throws DBALException | DriverException */
+    protected static function getStartingPoint(array &$list, int $startingPoint, QueryBuilder $queryBuilder): void
     {
-        if ($pid > 0) {
-            $queryBuilder->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
+        $queryBuilder->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($startingPoint, Connection::PARAM_INT)))
+            ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($startingPoint, Connection::PARAM_INT)));
 
-            if ($looped === 0) {
-                $queryBuilder->orWhere($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)))
-                    ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
+        foreach ($queryBuilder->execute()->fetchAllAssociative() as $row) {
+            if ($uid = (int)($row['uid'] ?? 0)) {
+                $list[$uid] = $row;
             }
+        }
+    }
+
+    /** @throws DBALException | DriverException */
+    protected static function lookUp(array &$list, int $pid, int $looped, int $depth, QueryBuilder $queryBuilder): void
+    {
+        if ($pid > 0 && $looped <= $depth) {
+            $queryBuilder->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
 
             $statement = $queryBuilder->execute();
             while ($row = $statement->fetchAssociative()) {
                 if ($uid = (int)($row['uid'] ?? 0)) {
-                    $list[$uid] = $row;
+                    if ($looped) {
+                        $list[$uid] = $row;
+                    }
 
                     if ($pid = (int)($row['pid'] ?? 0)) {
-                        self::lookUp($list, $pid, $looped + 1, $queryBuilder);
+                        self::lookUp($list, $pid, $looped + 1, $depth, $queryBuilder);
                     }
                 }
             }
         }
     }
 
+    /** @throws DBALException | DriverException */
     protected static function lookDown(array &$list, int $uid, int $looped, int $depth, QueryBuilder $queryBuilder): void
     {
         if ($looped < $depth) {
             $queryBuilder->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
-
-            if ($looped === 0) {
-                $queryBuilder->orWhere($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
-                    ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
-            }
 
             $statement = $queryBuilder->execute();
             while ($row = $statement->fetchAssociative()) {
@@ -147,20 +155,36 @@ class RootLineUtility
         }
     }
 
-    public static function collectPagesAbove(int $startingPoint): array
+    public static function collectPagesAbove(int $startingPoint, ?bool $includingStartingPoint = null, ?int $depth = null): array
     {
         $list = [];
+        $queryBuilder = self::getTreeCollectQueryBuilder();
 
-        self::lookUp($list, $startingPoint, 0, self::getTreeCollectQueryBuilder());
+        try {
+            if ($includingStartingPoint) {
+                self::getStartingPoint($list, $startingPoint, $queryBuilder);
+            }
+
+            self::lookUp($list, $startingPoint, 0, $depth ?? 100, $queryBuilder);
+        } catch (DBALException | DriverException $e) {
+        }
 
         return $list;
     }
 
-    public static function collectPagesBelow(int $startingPoint, ?int $depth = null): array
+    public static function collectPagesBelow(int $startingPoint, ?bool $includingStartingPoint = null, ?int $depth = null): array
     {
         $list = [];
+        $queryBuilder = self::getTreeCollectQueryBuilder();
 
-        self::lookDown($list, $startingPoint, 0, $depth ?? 100, self::getTreeCollectQueryBuilder());
+        try {
+            if ($includingStartingPoint) {
+                self::getStartingPoint($list, $startingPoint, $queryBuilder);
+            }
+
+            self::lookDown($list, $startingPoint, 0, $depth ?? 100, $queryBuilder);
+        } catch (DBALException | DriverException $e) {
+        }
 
         return $list;
     }

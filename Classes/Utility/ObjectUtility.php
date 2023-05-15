@@ -58,7 +58,7 @@ class ObjectUtility
     public static function findRegistrationInRootLine(mixed $startPoint): ?Registration
     {
         if (MathUtility::canBeInterpretedAsInteger($startPoint)) {
-            foreach (RootLineUtility::collectPagesAbove($startPoint) as $uid => $row) {
+            foreach (RootLineUtility::collectPagesAbove($startPoint, true) as $uid => $row) {
                 if ($registration = self::isCategory((int)$uid, $row)) {
                     return $registration;
                 }
@@ -75,7 +75,7 @@ class ObjectUtility
     public static function findObjectInRootLine(mixed $startPoint): ?Registration
     {
         if (MathUtility::canBeInterpretedAsInteger($startPoint)) {
-            foreach (RootLineUtility::collectPagesAbove($startPoint) as $uid => $row) {
+            foreach (RootLineUtility::collectPagesAbove($startPoint, true) as $uid => $row) {
                 if ($registration = self::isObject((int)$uid, $row)) {
                     return $registration;
                 }
@@ -88,7 +88,7 @@ class ObjectUtility
     public static function findCategoryInRootLine(mixed $startPoint): ?Registration
     {
         if (MathUtility::canBeInterpretedAsInteger($startPoint)) {
-            foreach (RootLineUtility::collectPagesAbove($startPoint) as $uid => $row) {
+            foreach (RootLineUtility::collectPagesAbove($startPoint, true) as $uid => $row) {
                 if ($registration = self::isCategory((int)$uid, $row)) {
                     return $registration;
                 }

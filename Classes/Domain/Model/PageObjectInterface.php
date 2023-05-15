@@ -18,7 +18,7 @@ interface PageObjectInterface extends PageEntityInterface
 
     public function setTags(mixed $value): self;
 
-    public function getParentObject(): ?PageObject;
+    public function getParentObject(): ?PageObjectInterface;
 
     public function getChildObjects(): ?QueryResultInterface;
 

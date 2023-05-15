@@ -62,7 +62,7 @@ class ItemsProcFunc
         if ($rootPages = $this->getRootPageUid($PA)) {
             $queryConstraints = $PA['config']['foreign_table_where'] ?? '';
             $localPages = RootLineUtility::collectPagesBelow($rootPages);
-            $parentPages = RootLineUtility::collectPagesAbove($this->getPageUid($PA));
+            $parentPages = RootLineUtility::collectPagesAbove($this->getPageUid($PA), true);
             $closestCategoryUid = 0;
 
             // Search for the closest category in rootline

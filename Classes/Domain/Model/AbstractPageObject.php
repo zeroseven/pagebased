@@ -33,10 +33,10 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     protected ?ObjectStorage $topics = null;
 
     /**
-     * @var PageObject | null
+     * @var PageObjectInterface | null
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected ?PageObject $parentObject = null;
+    protected ?PageObjectInterface $parentObject = null;
 
     /**
      * @var QueryResultInterface | null
@@ -178,21 +178,26 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
         return $this->category;
     }
 
-    public function getParentObject(): ?PageObject
+    public function getParentObject(): ?PageObjectInterface
     {
-        // Todo: find parent object
+        if (
+            $this->parentObject === null
+            && count($parentPages = RootLineUtility::collectPagesAbove($this->uid, false, 1))
+            && ($registration = RegistrationService::getRegistrationByClassName(get_class($this)))
+        ) {
+            return $this->parentObject = $registration->getObject()->getRepositoryClass()->findByUid(array_key_first($parentPages));
+        }
 
-        return $this->parentObject;
+        return null;
     }
 
     public function getChildObjects(): ?QueryResultInterface
     {
         if (
             $this->childObjects === null
-            && ($childPages = RootLineUtility::collectPagesBelow($this->uid, 1))
+            && count($childPages = RootLineUtility::collectPagesBelow($this->uid, false, 1))
             && ($registration = RegistrationService::getRegistrationByClassName(get_class($this)))
         ) {
-            die(debug($childPages));
             return $this->childObjects = $registration->getObject()->getRepositoryClass()->findByUidList(array_keys($childPages));
         }
 
