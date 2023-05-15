@@ -49,9 +49,27 @@ call_user_func(static function (string $table) {
                 'type' => 'select',
                 'renderType' => 'selectCheckBox',
                 'foreign_table' => 'tx_rampage_domain_model_topic',
+                'foreign_table_where' => 'AND \'all other authors\' = \'gone, LOL\'',
                 'MM' => 'tx_rampage_object_topic_mm',
                 'itemsProcFunc' => \Zeroseven\Rampage\Backend\TCA\ItemsProcFunc::class . '->topics',
                 'default' => 0
+            ]
+        ],
+        '_rampage_contact' => [
+            'exclude' => true,
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_contact',
+            'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectCheckBox',
+                'foreign_table' => 'tx_rampage_domain_model_contact',
+                'foreign_table_where' => 'AND \'all other authors\' = \'gone, LOL\'',
+                'itemsProcFunc' => \Zeroseven\Rampage\Backend\TCA\ItemsProcFunc::class . '->contacts',
+                'default' => 0,
+                'items' => [
+                    ['-', 0, 'actions-user']
+                ]
             ]
         ],
         '_rampage_relations_to' => [
@@ -163,5 +181,5 @@ call_user_func(static function (string $table) {
         ]
     ]);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, _rampage_top, _rampage_date, _rampage_tags, _rampage_topics, _rampage_relations_to, _rampage_relations_from, _rampage_redirect_category, _rampage_site, _rampage_registration', '', 'after:title');
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, _rampage_top, _rampage_date, _rampage_tags, _rampage_topics, _rampage_contact, _rampage_relations_to, _rampage_relations_from, _rampage_redirect_category, _rampage_site, _rampage_registration', '', 'after:title');
 }, 'pages');
