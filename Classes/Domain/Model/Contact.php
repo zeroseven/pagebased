@@ -29,8 +29,8 @@ class Contact extends AbstractEntity
     protected string $facebook;
     protected string $linkedin;
     protected string $xing;
-    protected ?string $pageLink;
-    protected ?string $fullName;
+    protected ?string $pageLink = null;
+    protected ?string $fullName = null;
 
     public function getFirstname(): string
     {

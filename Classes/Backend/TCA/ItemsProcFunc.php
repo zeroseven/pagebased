@@ -50,11 +50,11 @@ class ItemsProcFunc
 
     public function contacts(array &$PA): void
     {
-//        if (($registration = $this->getRegistration($PA)) && $contacts = GeneralUtility::makeInstance(ContactRepository::class)->findByRegistration($registration)) {
-//            foreach ($contacts->toArray() as $contact) {
-//                $PA['items'][] = [$contact->getFullName(), $contact->getUid(), 'actions-user'];
-//            }
-//        }
+        if (($registration = $this->getRegistration($PA)) && $contacts = GeneralUtility::makeInstance(ContactRepository::class)->findByRegistration($registration)) {
+            foreach ($contacts->toArray() as $contact) {
+                $PA['items'][] = [$contact->getFullName(), $contact->getUid(), 'actions-user'];
+            }
+        }
     }
 
     public function filterCategories(array &$PA): void

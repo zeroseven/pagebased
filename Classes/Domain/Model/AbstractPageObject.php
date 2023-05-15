@@ -22,6 +22,7 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     protected string $tagsString;
     protected array $tags = [];
     protected ?ObjectStorage $topics = null;
+    protected ?Contact $contact = null;
     protected ?PageObject $parentObject = null;
     protected ?QueryResultInterface $childObjects = null;
     protected ?AbstractPageCategory $category = null;
@@ -111,6 +112,17 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     public function setTopics(ObjectStorage $topics): self
     {
         $this->topics = $topics;
+        return $this;
+    }
+
+    public function getContact(): Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(Contact $contact): self
+    {
+        $this->contact = $contact;
         return $this;
     }
 

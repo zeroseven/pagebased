@@ -28,7 +28,7 @@ abstract class AbstractPage extends AbstractEntity
     protected DateTime $lastChange;
     protected ?FileReference $firstMedia = null;
     protected ?FileReference $firstImage = null;
-    protected ?ObjectStorage $media;
+    protected ?ObjectStorage $media = null;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>

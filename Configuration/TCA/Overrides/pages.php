@@ -62,7 +62,7 @@ call_user_func(static function (string $table) {
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'select',
-                'renderType' => 'selectCheckBox',
+                'renderType' => 'selectSingle',
                 'foreign_table' => 'tx_rampage_domain_model_contact',
                 'foreign_table_where' => 'AND \'all other authors\' = \'gone, LOL\'',
                 'itemsProcFunc' => \Zeroseven\Rampage\Backend\TCA\ItemsProcFunc::class . '->contacts',
