@@ -21,7 +21,6 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     protected DateTime $date;
     protected string $tagsString;
     protected array $tags = [];
-    protected ?ObjectStorage $topics = null;
     protected ?Contact $contact = null;
     protected ?PageObject $parentObject = null;
     protected ?QueryResultInterface $childObjects = null;
@@ -29,14 +28,20 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     protected ?ObjectStorage $relations = null;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Zeroseven\Rampage\Domain\Model\Entity\PageObject>
+     * @var ObjectStorage<Topic>
+     * Annotation\Lazy
+     */
+    protected ?ObjectStorage $topics = null;
+
+    /**
+     * @var ObjectStorage<PageObject>
      * Annotation\Cascade("remove")
      * Annotation\Lazy
      */
     protected ObjectStorage $relationsTo;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Zeroseven\Rampage\Domain\Model\Entity\PageObject>
+     * @var ObjectStorage<PageObject>
      * Annotation\Cascade("remove")
      * Annotation\Lazy
      */
@@ -104,7 +109,7 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
         $this->topics->detach($topicToRemove);
     }
 
-    public function getTopics(): ObjectStorage
+    public function getTopics(): ?ObjectStorage
     {
         return $this->topics;
     }
