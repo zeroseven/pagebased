@@ -3,8 +3,6 @@
 	<file source-language="en" datatype="plaintext" original="messages">
 		<header />
 		<body>
-
-			<!-- Backend notifications -->
 			<trans-unit id="notification.resortPagetree.title">
 				<source>Sorting for "%s" has been adjusted</source>
 			</trans-unit>
@@ -12,6 +10,9 @@
 				<source>The pages below "%s" in the page tree have been rearranged to reflect their sorting.</source>
 			</trans-unit>
 
+			<trans-unit id="notification.objectRelations.description">
+				<source>The record is responsible to the following objects: %s</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

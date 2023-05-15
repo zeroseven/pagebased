@@ -21,7 +21,7 @@ return [
     ],
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, objects, hidden, title'
+            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, title'
         ]
     ],
     'columns' => [
@@ -66,12 +66,6 @@ return [
                 'items' => [
                     ['LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled', 1]
                 ]
-            ]
-        ],
-        'objects' => [
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_topic.objects',
-            'config' => [
-                'type' => 'rampageObjects'
             ]
         ],
         'title' => [

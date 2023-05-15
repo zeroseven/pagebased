@@ -37,7 +37,7 @@ return [
     ],
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, objects, hidden, --palette--;;name, company, expertise, image,
+            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, --palette--;;name, company, expertise, image,
                 --div--;LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.tab.contact, --palette--;;address, --palette--;;contact,
                 --div--;LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.tab.info, description, page,
                 --div--;LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.tab.social, twitter, facebook, linkedin, xing'
@@ -68,12 +68,6 @@ return [
         'l10n_diffsource' => [
             'config' => [
                 'type' => 'passthrough'
-            ]
-        ],
-        'objects' => [
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.objects',
-            'config' => [
-                'type' => 'rampageObjects'
             ]
         ],
         'hidden' => [
