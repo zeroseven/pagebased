@@ -7,6 +7,7 @@ namespace Zeroseven\Rampage\Controller;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Rampage\Domain\Repository\ContactRepository;
 use Zeroseven\Rampage\Domain\Repository\TopicRepository;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
@@ -96,9 +97,10 @@ abstract class AbstractPageObjectController extends AbstractController implement
     {
         // Pass variables to the fluid template
         $this->view->assignMultiple([
-            'topics' => GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($this->registration),
-            'tags' => TagUtility::getTagsByRegistration($this->registration),
             'categories' => ($categoryRegistration = $this->registration->getCategory()) && $categoryRegistration->getRepositoryClassName() ? $categoryRegistration->getRepositoryClass()->findAll() : null,
+            'tags' => TagUtility::getTagsByRegistration($this->registration),
+            'topics' => GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($this->registration),
+            'contacts' => GeneralUtility::makeInstance(ContactRepository::class)->findByRegistration($this->registration),
             'demand' => $this->demand
         ]);
     }

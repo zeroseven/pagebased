@@ -18,6 +18,7 @@ class ObjectRegistration extends AbstractEntityRegistration
     protected bool $tagField = false;
     protected bool $topField = false;
     protected array $topicPageIds = [];
+    protected array $contactPageIds = [];
     protected ?string $name = null;
 
     public function getDemandClass(): DemandInterface
@@ -103,6 +104,33 @@ class ObjectRegistration extends AbstractEntityRegistration
     public function topicsEnabled(): bool
     {
         return count($this->topicPageIds) > 0;
+    }
+
+    public function enableContact(mixed $pageIds): self
+    {
+        try {
+            $this->contactPageIds = array_map(static fn($pageId) => (int)$pageId, array_filter(CastUtility::array($pageIds), static fn($pageId) => MathUtility::canBeInterpretedAsInteger($pageId)));
+        } catch (TypeException $e) {
+        }
+
+        return $this;
+    }
+
+    public function disableContact(): self
+    {
+        $this->contactPageIds = [];
+
+        return $this;
+    }
+
+    public function getContactPageIds(): array
+    {
+        return $this->contactPageIds;
+    }
+
+    public function contactEnabled(): bool
+    {
+        return count($this->contactPageIds) > 0;
     }
 
     public function getName(): string

@@ -14,7 +14,7 @@ use Zeroseven\Rampage\Utility\ObjectUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 use Zeroseven\Rampage\Utility\SettingsUtility;
 
-class BeforeFormInitializedEventListener
+class DetectRegistrationEventListener
 {
     protected ?QueryBuilder $queryBuilder = null;
 

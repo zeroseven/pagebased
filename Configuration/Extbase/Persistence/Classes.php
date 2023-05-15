@@ -42,6 +42,9 @@ return [
             'topics' => [
                 'fieldName' => '_rampage_topics'
             ],
+            'contact' => [
+                'fieldName' => '_rampage_contact'
+            ],
             'relationsTo' => [
                 'fieldName' => '_rampage_relations_to'
             ],

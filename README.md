@@ -18,9 +18,10 @@ call_user_func(static function () {
         ->setControllerClass(\Vendor\NewExtension\Controller\JobController::class)
         ->setRepositoryClass(\Vendor\NewExtension\Domain\Repository\JobRepository::class)
         ->setIconIdentifier('custom-job-icon')
-        ->enableTop()       // Enable top job feature for job objects
-        ->enableTags()      // Enable tag feature for job objects, so tagging and filtering tags is possible
-        ->enableTopics(27); // Enable topics for jobs and give it a pid where to store these
+        ->enableTop()        // Enable top job feature for job objects
+        ->enableTags()       // Enable tag feature for job objects, so tagging and filtering tags is possible
+        ->enableTopics(24)   // Enable topics for jobs and give it a pid where to store these
+        ->enableContact(24); // Enable responsible contact person for job objects
 
     $category = \Zeroseven\Rampage\Registration\CategoryRegistration::create('Job-Category')
         ->setClassName(\Vendor\NewExtension\Domain\Model\Category::class)

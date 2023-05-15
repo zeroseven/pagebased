@@ -78,7 +78,7 @@ class TagsElement extends AbstractFormElement
         ';
     }
 
-    public function render()
+    public function render(): array
     {
         return [
             'html' => $this->renderHtml(),

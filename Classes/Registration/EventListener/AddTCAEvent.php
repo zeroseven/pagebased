@@ -66,6 +66,10 @@ class AddTCAEvent
             if ($objectRegistration->topicsEnabled()) {
                 TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_topics', $displayCondition);
             }
+
+            if ($objectRegistration->contactEnabled()) {
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_contact', $displayCondition);
+            }
         }
     }
 
@@ -143,6 +147,19 @@ class AddTCAEvent
                         'default' => 0,
                         'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s)', implode(',', $topicPageIds))
                     ], 'TOPICS');
+                }
+
+                if ($registration->getObject()->contactEnabled() && $contactPageIds = $registration->getObject()->getContactPageIds()) {
+                    $filterSheet->addField('settings.contact', [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'foreign_table' => 'tx_rampage_domain_model_contact',
+                        'default' => 0,
+                        'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_contact}.{#pid} IN(%s)', implode(',', $contactPageIds)),
+                        'items' => [
+                            ['DEFAULT', 0, 'actions-user']
+                        ]
+                    ], 'CONTACT');
                 }
 
                 $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS');

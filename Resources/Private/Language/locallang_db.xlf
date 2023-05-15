@@ -34,6 +34,82 @@
       <trans-unit id="tx_rampage_domain_model_topic.title">
       	<source>Title</source>
       </trans-unit>
+
+      <trans-unit id="tx_rampage_domain_model_contact">
+      	<source>Contact</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.tab.contact">
+		<source>Contact</source>
+	  </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.tab.info">
+		<source>Info</source>
+	  </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.tab.social">
+		<source>Social</source>
+	  </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.palette.name">
+      	<source>Name</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.palette.contact">
+      	<source>Contact</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.palette.address">
+      	<source>Address</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.firstname">
+      	<source>First name</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.lastname">
+      	<source>Last name</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.company">
+      	<source>Company</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.expertise">
+      	<source>Expertise</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.email">
+      	<source>Email</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.phone">
+      	<source>Phone</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.website">
+      	<source>Website</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.address">
+      	<source>Address</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.city">
+      	<source>City</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.zip">
+      	<source>Zip</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.country">
+      	<source>Country</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.description">
+      	<source>Description</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.image">
+      	<source>Image</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.page">
+      	<source>Page</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.twitter">
+      	<source>Twitter</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.facebook">
+      	<source>Facebook</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.linkedin">
+      	<source>Linkedin</source>
+      </trans-unit>
+      <trans-unit id="tx_rampage_domain_model_contact.xing">
+      	<source>Xing</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
