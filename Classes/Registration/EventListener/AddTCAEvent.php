@@ -45,11 +45,13 @@ class AddTCAEvent
         return $CType;
     }
 
-    /** @throws RegistrationException */
-    protected function addPageType(Registration $registration): void
+    protected function addPageObject(Registration $registration): void
     {
-        if ($objectRegistration = $registration->getObject()) {
-            $displayCondition = sprintf('FIELD:%s:=:%s', SettingsUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier());
+        if (($objectRegistration = $registration->getObject()) && $tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
+            $displayCondition = ['AND' => [
+                sprintf('FIELD:%s:=:%s', SettingsUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier()),
+                sprintf('FIELD:%s:!=:%d', $tcaTypeField, $registration->getCategory()->getObjectType()),
+            ]];
 
             TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_date', $displayCondition);
             TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_relations_to', $displayCondition);
@@ -73,7 +75,6 @@ class AddTCAEvent
         }
     }
 
-    /** @throws RegistrationException */
     protected function addPageCategory(Registration $registration): void
     {
         if (($categoryRegistration = $registration->getCategory()) && $pageType = $categoryRegistration->getObjectType()) {
@@ -102,7 +103,7 @@ class AddTCAEvent
         }
     }
 
-    /** @throws TypeException | RegistrationException */
+    /** @throws TypeException */
     protected function addListPlugin(Registration $registration): void
     {
         if ($registration->getListPlugin()) {
@@ -228,7 +229,7 @@ class AddTCAEvent
     {
         if ($registration->getFilterPlugin()) {
             $cType = $this->createPlugin($registration, $registration->getFilterPlugin());
-            $listCType = $registration->getListPlugin()->getCType($registration);
+            $listCType = $registration->getFilterPlugin()->getCType($registration);
 
             // FlexForm configuration
             if ($cType && $listCType) {
@@ -269,7 +270,7 @@ class AddTCAEvent
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
         foreach (RegistrationService::getRegistrations() as $registration) {
-            $this->addPageType($registration);
+            $this->addPageObject($registration);
             $this->addPageCategory($registration);
             $this->addListPlugin($registration);
             $this->addFilterPlugin($registration);

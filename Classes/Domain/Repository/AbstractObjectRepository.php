@@ -12,6 +12,7 @@ use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
@@ -62,7 +63,12 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         }
 
         // Search by object identifier
-        $constraints[] = $query->equals(SettingsUtility::REGISTRATION_FIELD_NAME, $this->registration->getIdentifier());
+        $constraints[] = $query->logicalAnd(
+            $query->equals(SettingsUtility::REGISTRATION_FIELD_NAME, $this->registration->getIdentifier()),
+            $query->logicalNot(
+                $query->equals($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'], $this->registration->getCategory()->getObjectType()),
+            )
+        );
 
         if ($demand->getTopObjectOnly()) {
             $constraints[] = $query->equals('top', 1);

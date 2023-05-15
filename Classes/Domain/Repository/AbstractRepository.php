@@ -159,7 +159,7 @@ abstract class AbstractRepository extends Repository
         return $this->findByDemand($demand ?? $this->initializeDemand());
     }
 
-    /** @throws AspectNotFoundException | TypeException */
+    /** @throws AspectNotFoundException | TypeException | InvalidQueryException | PersistenceException | RegistrationException */
     public function findByUid(mixed $uid, bool $ignoreRestrictions = null): ?object
     {
         // Convert the uid to an integer
@@ -185,6 +185,10 @@ abstract class AbstractRepository extends Repository
             return ($pages = $query->execute()) ? $pages->getFirst() : null;
         }
 
-        return parent::findByUid($uid);
+        if ($results = $this->findByDemand($this->initializeDemand()->setUidList([$uid]))) {
+            return $results->getFirst();
+        }
+
+        return null;
     }
 }

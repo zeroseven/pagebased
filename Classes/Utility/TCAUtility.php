@@ -6,7 +6,7 @@ namespace Zeroseven\Rampage\Utility;
 
 class TCAUtility
 {
-    public static function addDisplayCondition(string $table, string $field, string $condition): void
+    public static function addDisplayCondition(string $table, string $field, $condition): void
     {
         if (isset($GLOBALS['TCA'][$table]['columns'][$field]['displayCond']['OR'])) {
             $GLOBALS['TCA'][$table]['columns'][$field]['displayCond']['OR'][] = $condition;
