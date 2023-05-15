@@ -168,12 +168,6 @@ call_user_func(static function (string $table) {
                 'default' => ''
             ]
         ],
-        'pid' => [
-            'config' => [
-                'type' => 'passthrough',
-                'foreign_table' => $table,
-            ]
-        ],
         'SYS_LASTCHANGED' => [
             'config' => [
                 'type' => 'passthrough'

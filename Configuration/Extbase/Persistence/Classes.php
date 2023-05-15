@@ -1,9 +1,6 @@
 <?php
 
 return [
-    \Zeroseven\Rampage\Domain\Model\Entity\ParentPage::class => [
-        'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
-    ],
     \Zeroseven\Rampage\Domain\Model\Entity\PageObject::class => [
         'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
     ],
@@ -18,9 +15,6 @@ return [
             ],
             'navigationTitle' => [
                 'fieldName' => 'nav_title'
-            ],
-            'parentPage' => [
-                'fieldName' => 'pid'
             ],
             'lastChange' => [
                 'fieldName' => 'SYS_LASTCHANGED'

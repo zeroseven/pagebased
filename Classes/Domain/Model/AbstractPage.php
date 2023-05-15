@@ -11,7 +11,6 @@ use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use Zeroseven\Rampage\Domain\Model\Entity\ParentPage;
 
 abstract class AbstractPage extends AbstractEntity
 {
@@ -28,12 +27,6 @@ abstract class AbstractPage extends AbstractEntity
     protected ?FileReference $firstMedia = null;
     protected ?FileReference $firstImage = null;
     protected ?ObjectStorage $media = null;
-
-    /**
-     * @var ParentPage | null
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     */
-    protected ?ParentPage $parentPage = null;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
@@ -181,11 +174,6 @@ abstract class AbstractPage extends AbstractEntity
         }
 
         return $this->firstImage;
-    }
-
-    public function getParentPage(): ?ParentPage
-    {
-        return $this->parentPage;
     }
 
     public function getFileReferences(): ?ObjectStorage
