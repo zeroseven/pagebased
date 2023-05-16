@@ -19,9 +19,6 @@ use Zeroseven\Rampage\Utility\CastUtility;
 
 abstract class AbstractDemand implements DemandInterface
 {
-    public const PARAMETER_UID_LIST = '_id';
-    public const PARAMETER_ORDER_BY = '_sorting';
-
     /** @var DemandProperty[] */
     protected array $properties = [];
     protected ?array $tableDefinition = null;
