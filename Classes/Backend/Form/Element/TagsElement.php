@@ -36,7 +36,7 @@ class TagsElement extends AbstractFormElement
         $this->placeholder = str_starts_with($placeholder, 'LLL') ? $this->getLanguageService()->sL($placeholder) : $placeholder;
         $this->languageUid = (int)($sysLanguageUid[0] ?? $sysLanguageUid);
         $this->registration = ($registrationIdentifier = $parameterArray['fieldConf']['config']['registrationIdentifier'] ?? null)
-            ? RegistrationService::getRegistrationByClassName($registrationIdentifier)
+            ? RegistrationService::getRegistrationByIdentifier($registrationIdentifier)
             : RegistrationService::getRegistrationByIdentifier($this->data['databaseRow'][SettingsUtility::REGISTRATION_FIELD_NAME] ?? '');
     }
 
