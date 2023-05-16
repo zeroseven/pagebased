@@ -11,7 +11,7 @@ services:
         tags:
             - name: event.listener
               identifier: 'rampage/registration-validation'
-              event: TYPO3\CMS\Core\Authentication\Event\AfterGroupsResolvedEvent
+              event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
 
     Zeroseven\Rampage\Registration\EventListener\AddTCAEvent:
         tags:

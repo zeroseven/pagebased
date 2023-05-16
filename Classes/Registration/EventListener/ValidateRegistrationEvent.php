@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration\EventListener;
 
 use LogicException;
-use TYPO3\CMS\Core\Authentication\Event\AfterGroupsResolvedEvent;
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
+use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
@@ -66,7 +64,7 @@ class ValidateRegistrationEvent
         // Check class inheritance of the controller
         if ($controllerClassName = $objectRegistration->getControllerClassName()) {
             if (!is_subclass_of($controllerClassName, PageObjectControllerInterface::class)) {
-                throw new RegistrationException(sprintf('The class "%s" must be an instance of "%s". You can simply extend the class "%s"', $className, PageObjectControllerInterface::class, AbstractPageObjectController::class), 1680722536);
+                throw new RegistrationException(sprintf('The class "%s" must be an instance of "%s". Yau can simply extend the class "%s"', $className, PageObjectControllerInterface::class, AbstractPageObjectController::class), 1680722536);
             }
         } else {
             throw new RegistrationException(sprintf('An extbase controller for class "%s" ("%s") is required.', $objectRegistration->getClassName(), $objectRegistration->getTitle()), 1680722535);
@@ -165,13 +163,11 @@ class ValidateRegistrationEvent
         }
     }
 
-    /** @throws RegistrationException | AspectNotFoundException */
-    public function __invoke(AfterGroupsResolvedEvent $event): void
+    /** @throws RegistrationException */
+    public function __invoke(AfterTcaCompilationEvent $event): void
     {
-        if (GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('backend.user', 'isLoggedIn', false)) {
-            foreach (RegistrationService::getRegistrations() as $registration) {
-                $this->checkRegistration($registration);
-            }
+        foreach (RegistrationService::getRegistrations() as $registration) {
+            $this->checkRegistration($registration);
         }
     }
 }
