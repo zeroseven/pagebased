@@ -8,7 +8,7 @@ use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Utility\DetectionUtility;
 
-class DetectRegistrationEventListener
+class DetectObjects
 {
     public function __invoke(BeforeFormEnginePageInitializedEvent $event): void
     {

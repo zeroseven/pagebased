@@ -8,6 +8,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 
@@ -50,6 +51,22 @@ class ObjectUtility
             if (($identifier = $row[$registrationField]) && !self::isCategory($pageUid, $row) && $registration = RegistrationService::getRegistrationByIdentifier($identifier)) {
                 return $registration;
             }
+        }
+
+        return null;
+    }
+
+    public static function isChildObject(mixed $uid): ?Registration
+    {
+        try {
+            if ($parentPages = RootLineUtility::collectPagesAbove(CastUtility::int($uid), false, 1)) {
+                foreach ($parentPages as $parentPage) {
+                    if ($registration = self::isObject(null, $parentPage)) {
+                        return $registration;
+                    }
+                }
+            }
+        } catch (TypeException $e) {
         }
 
         return null;

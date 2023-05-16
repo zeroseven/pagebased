@@ -13,6 +13,10 @@
 			<trans-unit id="notification.objectRelations.description">
 				<source>The record is responsible to the following objects: %s</source>
 			</trans-unit>
+
+			<trans-unit id="notification.objectAffiliation.description">
+				<source>This page of type "%s" is a subpage of "%s".</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

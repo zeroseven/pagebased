@@ -15,19 +15,6 @@ class DetectionUtility
     public const SITE_FIELD_NAME = '_rampage_site';
     public const CHILD_OBJECT_FIELD_NAME = '_rampage_child_object';
 
-    protected static function isSubObject(int $uid): bool
-    {
-        if ($parentPages = RootLineUtility::collectPagesAbove($uid, false, 1)) {
-            foreach ($parentPages as $parentPage) {
-                if (ObjectUtility::isObject(null, $parentPage)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     protected static function updatePageRecord(int $uid, array $update): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(AbstractPage::TABLE_NAME);
@@ -51,7 +38,7 @@ class DetectionUtility
         return [
             self::SITE_FIELD_NAME => $registration ? RootLineUtility::getRootPage($uid) : 0,
             self::REGISTRATION_FIELD_NAME => $registration ? $registration->getIdentifier() : '',
-            self::CHILD_OBJECT_FIELD_NAME => $registration && self::isSubObject($uid) ? 1 : 0
+            self::CHILD_OBJECT_FIELD_NAME => $registration && ObjectUtility::isChildObject($uid) ? 1 : 0
         ];
     }
 
