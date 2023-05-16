@@ -106,121 +106,116 @@ class AddTCAEvent
     /** @throws TypeException */
     protected function addListPlugin(Registration $registration): void
     {
-        if ($registration->getListPlugin()) {
-            $cType = $this->createPlugin($registration, $registration->getListPlugin());
+        if ($registration->getListPlugin() && $cType = $this->createPlugin($registration, $registration->getListPlugin())) {
+            $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'FILTER');
 
-            // FlexForm configuration
-            if ($cType) {
-                $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'FILTER');
+            if ($typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
+                $filterSheet->addField('settings.category', [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'minitems' => 0,
+                    'maxitems' => 1,
+                    'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
+                    'foreign_table' => 'pages',
+                    'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $typeField, $registration->getCategory()->getObjectType()),
+                    'items' => [
+                        ['NO RESTRICTION', '--div--'],
+                        ['SHOW ALL', 0],
+                        ['AVAILABLE CATEGORIES', '--div--'],
+                    ]
+                ], 'CATEGORY');
+            }
 
-                if ($typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
-                    $filterSheet->addField('settings.category', [
-                        'type' => 'select',
-                        'renderType' => 'selectSingle',
-                        'minitems' => 0,
-                        'maxitems' => 1,
-                        'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
-                        'foreign_table' => 'pages',
-                        'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $typeField, $registration->getCategory()->getObjectType()),
-                        'items' => [
-                            ['NO RESTRICTION', '--div--'],
-                            ['SHOW ALL', 0],
-                            ['AVAILABLE CATEGORIES', '--div--'],
-                        ]
-                    ], 'CATEGORY');
-                }
+            if ($registration->getObject()->tagsEnabled()) {
+                $filterSheet->addField('settings.tags', [
+                    'type' => 'user',
+                    'renderType' => 'rampageTags',
+                    'placeholder' => 'ADD TAGS …',
+                    'registrationIdentifier' => $registration->getIdentifier()
+                ], 'TAGS');
+            }
 
-                if ($registration->getObject()->tagsEnabled()) {
-                    $filterSheet->addField('settings.tags', [
-                        'type' => 'user',
-                        'renderType' => 'rampageTags',
-                        'placeholder' => 'ADD TAGS …',
-                        'registrationIdentifier' => $registration->getIdentifier()
-                    ], 'TAGS');
-                }
+            if ($registration->getObject()->topicsEnabled() && $topicPageIds = $registration->getObject()->getTopicPageIds()) {
+                $filterSheet->addField('settings.topics', [
+                    'type' => 'select',
+                    'renderType' => 'selectCheckBox',
+                    'foreign_table' => 'tx_rampage_domain_model_topic',
+                    'MM' => 'tx_rampage_object_topic_mm',
+                    'default' => 0,
+                    'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s)', implode(',', $topicPageIds))
+                ], 'TOPICS');
+            }
 
-                if ($registration->getObject()->topicsEnabled() && $topicPageIds = $registration->getObject()->getTopicPageIds()) {
-                    $filterSheet->addField('settings.topics', [
-                        'type' => 'select',
-                        'renderType' => 'selectCheckBox',
-                        'foreign_table' => 'tx_rampage_domain_model_topic',
-                        'MM' => 'tx_rampage_object_topic_mm',
-                        'default' => 0,
-                        'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s)', implode(',', $topicPageIds))
-                    ], 'TOPICS');
-                }
+            if ($registration->getObject()->contactEnabled() && $contactPageIds = $registration->getObject()->getContactPageIds()) {
+                $filterSheet->addField('settings.contact', [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'foreign_table' => 'tx_rampage_domain_model_contact',
+                    'default' => 0,
+                    'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_contact}.{#pid} IN(%s)', implode(',', $contactPageIds)),
+                    'items' => [
+                        ['DEFAULT', 0, 'actions-user']
+                    ]
+                ], 'CONTACT');
+            }
 
-                if ($registration->getObject()->contactEnabled() && $contactPageIds = $registration->getObject()->getContactPageIds()) {
-                    $filterSheet->addField('settings.contact', [
-                        'type' => 'select',
-                        'renderType' => 'selectSingle',
-                        'foreign_table' => 'tx_rampage_domain_model_contact',
-                        'default' => 0,
-                        'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_contact}.{#pid} IN(%s)', implode(',', $contactPageIds)),
-                        'items' => [
-                            ['DEFAULT', 0, 'actions-user']
-                        ]
-                    ], 'CONTACT');
-                }
+            $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS');
 
-                $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS');
-
-                if ($registration->getObject()->topEnabled()) {
-                    $optionsSheet->addField('settings.' . AbstractObjectDemand::PARAMETER_TOP_MODE, [
-                        'type' => 'select',
-                        'renderType' => 'selectSingle',
-                        'minitems' => 1,
-                        'maxitems' => 1,
-                        'items' => [
-                            ['DEFAULT', 0],
-                            ['TOP OBJECTS FIRST', AbstractObjectDemand::TOP_MODE_FIRST],
-                            ['ONLY TOP OBJECTS', AbstractObjectDemand::TOP_MODE_ONLY]
-                        ]
-                    ], 'TOP MODE');
-                }
-
-                $optionsSheet->addField('settings.' . AbstractDemand::PARAMETER_ORDER_BY, [
+            if ($registration->getObject()->topEnabled()) {
+                $optionsSheet->addField('settings.' . AbstractObjectDemand::PARAMETER_TOP_MODE, [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'minitems' => 1,
                     'maxitems' => 1,
                     'items' => [
-                        ['DEFAULT', ''],
-                        ['Date (newest first)', 'date_desc'],
-                        ['Date (oldest first)', 'date_asc'],
-                        ['Title (ASC)', 'title_asc'],
-                        ['Title (DESC)', 'title_desc']
+                        ['DEFAULT', 0],
+                        ['TOP OBJECTS FIRST', AbstractObjectDemand::TOP_MODE_FIRST],
+                        ['ONLY TOP OBJECTS', AbstractObjectDemand::TOP_MODE_ONLY]
                     ]
-                ], 'SORTING');
-
-                $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LAYOUT')
-                    ->addField('settings.itemsPerStage', [
-                        'placeholder' => '6',
-                        'type' => 'input',
-                        'eval' => 'trim,is_in',
-                        'is_in' => ',0123456789'
-                    ], 'ITEMS_PER_PAGE')
-                    ->addField('settings.maxStages', [
-                        'type' => 'select',
-                        'renderType' => 'selectSingle',
-                        'minitems' => 1,
-                        'maxitems' => 1,
-                        'items' => [
-                            ['UNLIMITED', 0],
-                            [1, 1],
-                            [2, 2],
-                            [3, 3],
-                            [4, 4],
-                            [5, 5],
-                        ]
-                    ], 'MAX_STAGES');
-
-                FlexFormConfiguration::makeInstance('tt_content', $cType, 'pi_flexform', 'after:header')
-                    ->addSheet($filterSheet)
-                    ->addSheet($optionsSheet)
-                    ->addSheet($layoutSheet)
-                    ->addToTCA();
+                ], 'TOP MODE');
             }
+
+            $optionsSheet->addField('settings.' . AbstractDemand::PARAMETER_ORDER_BY, [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'minitems' => 1,
+                'maxitems' => 1,
+                'items' => [
+                    ['DEFAULT', ''],
+                    ['Date (newest first)', 'date_desc'],
+                    ['Date (oldest first)', 'date_asc'],
+                    ['Title (ASC)', 'title_asc'],
+                    ['Title (DESC)', 'title_desc']
+                ]
+            ], 'SORTING');
+
+            $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LAYOUT')
+                ->addField('settings.itemsPerStage', [
+                    'placeholder' => '6',
+                    'type' => 'input',
+                    'eval' => 'trim,is_in',
+                    'is_in' => ',0123456789'
+                ], 'ITEMS_PER_PAGE')
+                ->addField('settings.maxStages', [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'minitems' => 1,
+                    'maxitems' => 1,
+                    'items' => [
+                        ['UNLIMITED', 0],
+                        [1, 1],
+                        [2, 2],
+                        [3, 3],
+                        [4, 4],
+                        [5, 5],
+                    ]
+                ], 'MAX_STAGES');
+
+            FlexFormConfiguration::makeInstance('tt_content', $cType, 'pi_flexform', 'after:header')
+                ->addSheet($filterSheet)
+                ->addSheet($optionsSheet)
+                ->addSheet($layoutSheet)
+                ->addToTCA();
         }
     }
 

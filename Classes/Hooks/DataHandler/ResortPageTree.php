@@ -11,6 +11,7 @@ use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
@@ -64,7 +65,7 @@ class ResortPageTree
 
                 // Slice the first three …
                 foreach (array_slice($uids, 0, 3, true) as $uid => $data) {
-                    if ($registration = ObjectUtility::isObject($uid)) {
+                    if (MathUtility::canBeInterpretedAsInteger($uid) && $registration = ObjectUtility::isObject($uid)) {
                         $pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']);
 
                         if ($this->updateSorting($pid, $registration, $dataHandler)) {
