@@ -19,7 +19,7 @@ use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Rampage\Utility\DetectionUtility;
 use Zeroseven\Rampage\Utility\TCAUtility;
 
 class AddTCAEvent

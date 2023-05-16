@@ -8,18 +8,15 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Utility\DetectionUtility;
-use Zeroseven\Rampage\Utility\ObjectUtility;
-use Zeroseven\Rampage\Utility\RootLineUtility;
 
 class IdentifierDetection
 {
     protected function updateIdentifier(string $table, mixed $id, array &$fieldArray): void
     {
         if ($table === AbstractPage::TABLE_NAME && MathUtility::canBeInterpretedAsInteger($id)) {
-            $registration = ObjectUtility::findCategoryInRootLine((int)$id);
-
-            $fieldArray[DetectionUtility::SITE_FIELD_NAME] = $registration ? RootLineUtility::getRootPage((int)$id) : 0;
-            $fieldArray[DetectionUtility::REGISTRATION_FIELD_NAME] = $registration ? $registration->getIdentifier() : '';
+            foreach (DetectionUtility::getUpdateFields((int)$id) as $field => $value) {
+                $fieldArray[$field] = $value;
+            }
         }
     }
 
