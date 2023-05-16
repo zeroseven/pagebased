@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Controller;
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -62,6 +66,27 @@ abstract class AbstractPageObjectController extends AbstractController implement
         return $word . 's';
     }
 
+    protected function getPluginSettings(int $uid): ?array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+        try {
+            $flexForm = $queryBuilder
+                ->select('pi_flexform')
+                ->from('tt_content')
+                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)))
+                ->execute()
+                ->fetchOne();
+        } catch (DBALException | Exception $e) {
+            return null;
+        }
+
+        if ($flexForm && $pluginSettings = GeneralUtility::makeInstance(FlexFormService::class)->convertFlexFormContentToArray($flexForm)) {
+            return $pluginSettings['settings'] ?? null;
+        }
+
+        return null;
+    }
+
     public function initializeRegistration(): void
     {
         $this->registration = RegistrationService::getRegistrationByController(get_class($this));
@@ -107,6 +132,14 @@ abstract class AbstractPageObjectController extends AbstractController implement
 
     public function filterAction(): void
     {
+
+        // Apply filter settings of the linked list plugin
+        if (($listID = (int)($this->settings[ObjectDemandInterface::PARAMETER_CONTENT_ID] ?? 0)) && $settings = $this->getPluginSettings($listID)) {
+            $this->demand->setParameterArray($settings, true);
+            $this->view->getRenderingContext()->getVariableProvider()->add('settings', array_merge($settings, $this->settings));
+        }
+
+        // Apply request arguments
         $this->applyRequestArguments(false);
 
         // Pass variables to the fluid template
