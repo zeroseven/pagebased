@@ -36,22 +36,23 @@ class RenderUtility
         return $view;
     }
 
-    public function render(string $templateNameAndFilePath, array $settings = null, PageObjectInterface $object = null): string
+    public function render(string $templateNameAndFilePath, string $registrationIdentifier, array $settings = null, PageObjectInterface $object = null): string
     {
         $pageUid = ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController
             ? (int)$GLOBALS['TSFE']->id
             : null;
 
-        if ($pageUid && $registration = ObjectUtility::isObject($pageUid)) {
+        if ($pageUid && ($registration = ObjectUtility::isObject($pageUid)) && $registration->getIdentifier() === $registrationIdentifier) {
             $settings = array_merge($settings ?? [], SettingsUtility::getPluginConfiguration($registration));
             $view = $this->initializeView($registration, $settings);
+
 
             try {
                 $object || $object = $registration->getObject()->getRepositoryClass()->findByUid($pageUid);
             } catch (AspectNotFoundException $e) {
             }
 
-            if($object) {
+            if ($object) {
                 $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templateNameAndFilePath));
                 $view->assignMultiple([
                     'object' => $object,
@@ -70,12 +71,18 @@ class RenderUtility
     /** @throws ContentRenderingException */
     public function renderUserFunc(string $content, array $conf): string
     {
+        $file = $conf['file'] ?? null;
+        $registrationIdentifier = $conf['registration'] ?? null;
         $settings = ($configSettings = $conf['settings.'] ?? null) ? GeneralUtility::makeInstance(TypoScriptService::class)->convertTypoScriptArrayToPlainArray($configSettings) : null;
 
-        if ($file = $conf['file'] ?? null) {
-            return $content . $this->render($file, $settings);
+        if ($file === null) {
+            throw new ContentRenderingException('Configuration "file" is not set or empty.', 1683709643);
         }
 
-        throw new ContentRenderingException('Configuration "file" is not set or empty.', 1683709643);
+        if ($registrationIdentifier === null) {
+            throw new ContentRenderingException('Configuration "registration" (the identifier of a registration) is not set or empty.', 1683709644);
+        }
+
+        return $content . $this->render($file, $registrationIdentifier, $settings);
     }
 }
