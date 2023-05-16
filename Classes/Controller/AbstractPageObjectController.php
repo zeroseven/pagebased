@@ -97,7 +97,7 @@ abstract class AbstractPageObjectController extends AbstractController implement
     {
         // Pass variables to the fluid template
         $this->view->assignMultiple([
-            'categories' => ($categoryRegistration = $this->registration->getCategory()) && $categoryRegistration->getRepositoryClassName() ? $categoryRegistration->getRepositoryClass()->findAll() : null,
+            'categories' => $this->registration->getCategory()->getRepositoryClass()->findAll(),
             'tags' => TagUtility::getTagsByRegistration($this->registration),
             'topics' => GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($this->registration),
             'contacts' => GeneralUtility::makeInstance(ContactRepository::class)->findByRegistration($this->registration),
