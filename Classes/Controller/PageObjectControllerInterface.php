@@ -13,7 +13,5 @@ interface PageObjectControllerInterface extends ControllerInterface
 
     public function initializeDemand(): void;
 
-    public function getDemand(): DemandInterface;
-
     public function listAction(): void;
 }

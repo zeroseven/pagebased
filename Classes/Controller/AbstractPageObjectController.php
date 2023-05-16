@@ -7,6 +7,7 @@ namespace Zeroseven\Rampage\Controller;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Rampage\Domain\Repository\ContactRepository;
 use Zeroseven\Rampage\Domain\Repository\TopicRepository;
 use Zeroseven\Rampage\Registration\Registration;
@@ -68,20 +69,31 @@ abstract class AbstractPageObjectController extends AbstractController implement
 
     public function initializeDemand(): void
     {
-        $this->demand = $this->registration->getObject()->getDemandClass()->setParameterArray(array_merge($this->settings, $this->requestArguments));
+        $this->demand = $this->registration->getObject()->getDemandClass()->setParameterArray($this->settings);
     }
 
-    public function getDemand(): DemandInterface
+    public function applyRequestArguments(bool $respectContentParameter = null): void
     {
-        return $this->demand;
+        if ($respectContentParameter) {
+            $contentID = (int)($this->contentData['uid'] ?? 0);
+            $requestID = (int)($this->requestArguments[ObjectDemandInterface::PARAMETER_CONTENT_ID] ?? 0);
+
+            if ($contentID && $requestID && $contentID === $requestID) {
+                $this->demand->setParameterArray($this->requestArguments);
+            }
+        } else {
+            $this->demand->setParameterArray($this->requestArguments);
+        }
     }
 
     public function listAction(): void
     {
+        $this->applyRequestArguments(true);
+
         $repository = $this->registration->getObject()->getRepositoryClass();
         $objects = $repository->findByDemand($this->demand->setExcludeChildObjects(true));
 
-        if (($contentId = ($this->contentData['uid'] ?? null)) && !$this->demand->getContentId()) {
+        if (!$this->demand->getContentId() && $contentId = $this->contentData['uid'] ?? null) {
             $this->demand->setContentId($contentId);
         }
 
@@ -95,6 +107,8 @@ abstract class AbstractPageObjectController extends AbstractController implement
 
     public function filterAction(): void
     {
+        $this->applyRequestArguments(false);
+
         // Pass variables to the fluid template
         $this->view->assignMultiple([
             'categories' => $this->registration->getCategory()->getRepositoryClass()->findAll(),
