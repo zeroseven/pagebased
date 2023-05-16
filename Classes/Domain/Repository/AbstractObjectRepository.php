@@ -27,8 +27,6 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
 {
     protected Registration $registration;
 
-    protected string $childObjectConstraintKey;
-
     protected $defaultOrderings = [
         '_rampage_date' => QueryInterface::ORDER_DESCENDING,
         'uid' => QueryInterface::ORDER_ASCENDING
@@ -38,7 +36,6 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     {
         parent::__construct($objectManager);
 
-        $this->childObjectConstraintKey = uniqid('', false);
         $this->registration = RegistrationService::getRegistrationByRepository(get_class($this));
     }
 
@@ -78,7 +75,9 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         );
 
         // Exclude child objects
-        $constraints[$this->childObjectConstraintKey] = $query->logicalNot($query->equals(DetectionUtility::CHILD_OBJECT_FIELD_NAME, 1));
+        if ($demand->getExcludeChildObjects()) {
+            $constraints[] = $query->logicalNot($query->equals(DetectionUtility::CHILD_OBJECT_FIELD_NAME, 1));
+        }
 
         if ($demand->getTopObjectOnly()) {
             $constraints[] = $query->equals('top', 1);
@@ -92,19 +91,13 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         $query = $this->createQuery();
 
         try {
-            $uid = CastUtility::int($value);
-            $constraints = $this->createDemandConstraints($this->initializeDemand(), $query);
-        } catch (AspectNotFoundException | InvalidQueryException | PersistenceException | RegistrationException | TypeException $e) {
-            return null;
+            $query->getQuerySettings()->setRespectStoragePage(true)->setStoragePageIds([CastUtility::int($value)]);
+            $demand = $this->initializeDemand()->setExcludeChildObjects(false);
+
+            return $this->findByDemand($demand, $query);
+        } catch (RegistrationException | TypeException | AspectNotFoundException | InvalidQueryException | PersistenceException $e) {
         }
 
-        if (isset($constraints[$this->childObjectConstraintKey])) {
-            unset($constraints[$this->childObjectConstraintKey]);
-        }
-
-        $query->getQuerySettings()->setRespectStoragePage(true)->setStoragePageIds([$uid]);
-        $query->matching(...$constraints);
-
-        return $query->execute();
+        return null;
     }
 }

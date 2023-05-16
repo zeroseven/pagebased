@@ -124,13 +124,13 @@ abstract class AbstractRepository extends Repository
     }
 
     /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
-    public function findByDemand(DemandInterface $demand): ?QueryResultInterface
+    public function findByDemand(DemandInterface $demand, ?QueryInterface $query = null): ?QueryResultInterface
     {
         // Override sorting
         $this->setOrdering($demand);
 
         // Create query
-        $query = $this->createQuery();
+        $query = $query ?? $this->createQuery();
 
         // Apply constraints
         if (!empty($constraints = $this->createDemandConstraints($demand, $query))) {

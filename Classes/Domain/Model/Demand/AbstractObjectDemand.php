@@ -17,6 +17,7 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
 {
     public const PARAMETER_CONTENT_ID = '_c';
     public const PARAMETER_TOP_MODE = 'topMode';
+    public const PARAMETER_EXCLUDE_CHILD_OBJECTS = 'excludeChildObjects';
 
     public const TOP_MODE_ONLY = 1;
     public const TOP_MODE_FIRST = 2;
@@ -27,6 +28,7 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
 
         $this->addProperty(self::PARAMETER_CONTENT_ID, DemandProperty::TYPE_INTEGER);
         $this->addProperty(self::PARAMETER_TOP_MODE, DemandProperty::TYPE_INTEGER);
+        $this->addProperty(self::PARAMETER_EXCLUDE_CHILD_OBJECTS, DemandProperty::TYPE_BOOLEAN);
 
         $this->addProperty('category', DemandProperty::TYPE_INTEGER);
         $this->addProperty('tags', DemandProperty::TYPE_ARRAY, 'tagsString');
@@ -64,5 +66,19 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
         $this->setProperty(self::PARAMETER_TOP_MODE, $value);
 
         return $this;
+    }
+
+    /** @throws TypeException | PropertyException */
+    public function setExcludeChildObjects(mixed $value): ObjectDemandInterface
+    {
+        $this->setProperty(self::PARAMETER_EXCLUDE_CHILD_OBJECTS, $value);
+
+        return $this;
+    }
+
+    /** @throws PropertyException */
+    public function getExcludeChildObjects(): bool
+    {
+        return $this->getProperty(self::PARAMETER_EXCLUDE_CHILD_OBJECTS)->getValue();
     }
 }

@@ -79,7 +79,7 @@ abstract class AbstractPageObjectController extends AbstractController implement
     public function listAction(): void
     {
         $repository = $this->registration->getObject()->getRepositoryClass();
-        $objects = $repository->findByDemand($this->demand);
+        $objects = $repository->findByDemand($this->demand->setExcludeChildObjects(true));
 
         if (($contentId = ($this->contentData['uid'] ?? null)) && !$this->demand->getContentId()) {
             $this->demand->setContentId($contentId);

@@ -28,7 +28,7 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
         $constraints = parent::createDemandConstraints($demand, $query);
 
         // Stay in the hood
-        if ($startPageId = RootLineUtility::getRootPage()) {
+        if ($query->getQuerySettings()->getRespectStoragePage() === false && $startPageId = RootLineUtility::getRootPage()) {
             $constraints[] = $query->equals(DetectionUtility::SITE_FIELD_NAME, $startPageId);
         }
 
