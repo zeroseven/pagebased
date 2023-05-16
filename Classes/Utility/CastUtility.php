@@ -20,12 +20,12 @@ class CastUtility
     /** @throws TypeException */
     public static function int(mixed $value): int
     {
-        if (is_int($value) || empty($value) || MathUtility::canBeInterpretedAsInteger($value)) {
-            return (int)$value;
-        }
-
         if ($value instanceof AbstractDomainObject) {
             return $value->getUid();
+        }
+
+        if (is_int($value) || empty($value) || MathUtility::canBeInterpretedAsInteger($value)) {
+            return (int)$value;
         }
 
         self::throwException($value);

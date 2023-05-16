@@ -14,4 +14,7 @@ interface ObjectDemandInterface extends DemandInterface
 
     public function getTopObjectFirst(): bool;
 
+    public function setExcludeChildObjects(mixed $value): self;
+
+    public function getExcludeChildObjects(): bool;
 }

@@ -7,15 +7,15 @@ namespace Zeroseven\Rampage\Backend\TCA;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Rampage\Utility\DetectionUtility;
 
 class GroupFilter
 {
     protected function getRegistrationIdentifier(int $uid): ?string
     {
-        $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, SettingsUtility::REGISTRATION_FIELD_NAME);
+        $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, DetectionUtility::REGISTRATION_FIELD_NAME);
 
-        return $row[SettingsUtility::REGISTRATION_FIELD_NAME] ?? null;
+        return $row[DetectionUtility::REGISTRATION_FIELD_NAME] ?? null;
     }
 
     public function filterObject(array $parameters, mixed $parent): array

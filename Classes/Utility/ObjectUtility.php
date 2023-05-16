@@ -8,6 +8,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 
@@ -41,7 +42,7 @@ class ObjectUtility
     public static function isObject(int $pageUid = null, array $row = null): ?Registration
     {
         if (($typeField = self::getPageTypeField()) && ($pageUid || ($pageUid = (int)($row['uid'] ?? 0)) || ($pageUid = self::getPageUid()))) {
-            $registrationField = SettingsUtility::REGISTRATION_FIELD_NAME;
+            $registrationField = DetectionUtility::REGISTRATION_FIELD_NAME;
 
             if (!isset($row[$typeField], $row[$registrationField])) {
                 $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, implode(',', [$registrationField, $typeField]));
@@ -50,6 +51,22 @@ class ObjectUtility
             if (($identifier = $row[$registrationField]) && !self::isCategory($pageUid, $row) && $registration = RegistrationService::getRegistrationByIdentifier($identifier)) {
                 return $registration;
             }
+        }
+
+        return null;
+    }
+
+    public static function isChildObject(mixed $uid): ?Registration
+    {
+        try {
+            if ($parentPages = RootLineUtility::collectPagesAbove(CastUtility::int($uid), false, 1)) {
+                foreach ($parentPages as $parentPage) {
+                    if ($registration = self::isObject(null, $parentPage)) {
+                        return $registration;
+                    }
+                }
+            }
+        } catch (TypeException $e) {
         }
 
         return null;

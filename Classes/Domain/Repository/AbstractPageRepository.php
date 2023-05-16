@@ -10,7 +10,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Rampage\Utility\DetectionUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 
 abstract class AbstractPageRepository extends AbstractRepository implements RepositoryInterface
@@ -28,8 +28,8 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
         $constraints = parent::createDemandConstraints($demand, $query);
 
         // Stay in the hood
-        if ($startPageId = RootLineUtility::getRootPage()) {
-            $constraints[] = $query->equals(SettingsUtility::SITE_FIELD_NAME, $startPageId);
+        if ($query->getQuerySettings()->getRespectStoragePage() === false && $startPageId = RootLineUtility::getRootPage()) {
+            $constraints[] = $query->equals(DetectionUtility::SITE_FIELD_NAME, $startPageId);
         }
 
         // Hide what wants to be hidden

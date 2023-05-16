@@ -19,7 +19,7 @@ use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Rampage\Utility\DetectionUtility;
 use Zeroseven\Rampage\Utility\TCAUtility;
 
 class AddTCAEvent
@@ -49,7 +49,7 @@ class AddTCAEvent
     {
         if (($objectRegistration = $registration->getObject()) && $tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
             $displayCondition = ['AND' => [
-                sprintf('FIELD:%s:=:%s', SettingsUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier()),
+                sprintf('FIELD:%s:=:%s', DetectionUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier()),
                 sprintf('FIELD:%s:!=:%d', $tcaTypeField, $registration->getCategory()->getObjectType()),
             ]];
 

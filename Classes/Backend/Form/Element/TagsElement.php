@@ -7,10 +7,9 @@ namespace Zeroseven\Rampage\Backend\Form\Element;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Rampage\Utility\DetectionUtility;
 use Zeroseven\Rampage\Utility\TagUtility;
 
 class TagsElement extends AbstractFormElement
@@ -37,10 +36,9 @@ class TagsElement extends AbstractFormElement
         $this->languageUid = (int)($sysLanguageUid[0] ?? $sysLanguageUid);
         $this->registration = ($registrationIdentifier = $parameterArray['fieldConf']['config']['registrationIdentifier'] ?? null)
             ? RegistrationService::getRegistrationByIdentifier($registrationIdentifier)
-            : RegistrationService::getRegistrationByIdentifier($this->data['databaseRow'][SettingsUtility::REGISTRATION_FIELD_NAME] ?? '');
+            : RegistrationService::getRegistrationByIdentifier($this->data['databaseRow'][DetectionUtility::REGISTRATION_FIELD_NAME] ?? '');
     }
 
-    /** @throws RegistrationException */
     protected function renderRequireJsModules(): array
     {
         $tags = ($this->registration === null) ? [] : TagUtility::getTagsByRegistration($this->registration, true, $this->languageUid);

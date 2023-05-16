@@ -43,7 +43,7 @@ services:
               identifier: 'rampage/registration-plugin'
               event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
 
-    Zeroseven\Rampage\EventListener\DetectRegistrationEventListener:
+    Zeroseven\Rampage\EventListener\DetectObjects:
         tags:
             - name: event.listener
               identifier: 'rampage/detect-registration'
@@ -53,4 +53,10 @@ services:
         tags:
             - name: event.listener
               identifier: 'rampage/display-object-relations'
+              event: TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent
+
+    Zeroseven\Rampage\EventListener\DisplayObjectAffiliation:
+        tags:
+            - name: event.listener
+              identifier: 'rampage/display-object-affiliation'
               event: TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent

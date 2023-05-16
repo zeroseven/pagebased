@@ -193,12 +193,8 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
 
     public function getChildObjects(): ?QueryResultInterface
     {
-        if (
-            $this->childObjects === null
-            && count($childPages = RootLineUtility::collectPagesBelow($this->uid, false, 1))
-            && ($registration = RegistrationService::getRegistrationByClassName(get_class($this)))
-        ) {
-            return $this->childObjects = $registration->getObject()->getRepositoryClass()->findByUidList(array_keys($childPages));
+        if ($this->childObjects === null && $registration = RegistrationService::getRegistrationByClassName(get_class($this))) {
+            return $this->childObjects = $registration->getObject()->getRepositoryClass()->findChildObjects($this);
         }
 
         return null;

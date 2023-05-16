@@ -11,8 +11,8 @@ use Zeroseven\Rampage\Domain\Repository\ContactRepository;
 use Zeroseven\Rampage\Domain\Repository\TopicRepository;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\DetectionUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
-use Zeroseven\Rampage\Utility\SettingsUtility;
 
 class ItemsProcFunc
 {
@@ -32,7 +32,7 @@ class ItemsProcFunc
 
     protected function getRegistration(array $PA): ?Registration
     {
-        if (($objectIdentifier = $PA['row'][SettingsUtility::REGISTRATION_FIELD_NAME] ?? null) && $registration = RegistrationService::getRegistrationByIdentifier($objectIdentifier)) {
+        if (($objectIdentifier = $PA['row'][DetectionUtility::REGISTRATION_FIELD_NAME] ?? null) && $registration = RegistrationService::getRegistrationByIdentifier($objectIdentifier)) {
             return $registration;
         }
 
