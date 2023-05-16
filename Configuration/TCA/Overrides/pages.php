@@ -168,6 +168,23 @@ call_user_func(static function (string $table) {
                 'default' => ''
             ]
         ],
+        \Zeroseven\Rampage\Utility\DetectionUtility::SUB_OBJECT_FIELD_NAME => [
+            'exclude' => false,
+            'l10n_mode' => 'exclude',
+            'label' => 'Sub object',
+            'displayCond' => [
+                'AND' => [
+                    'HIDE_FOR_NON_ADMINS',
+                    'FIELD:' . \Zeroseven\Rampage\Utility\DetectionUtility::SUB_OBJECT_FIELD_NAME . ':REQ:true'
+                ]
+            ],
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'readOnly' => true,
+                'default' => 0
+            ]
+        ],
         'SYS_LASTCHANGED' => [
             'config' => [
                 'type' => 'passthrough'
@@ -175,5 +192,9 @@ call_user_func(static function (string $table) {
         ]
     ]);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, _rampage_top, _rampage_date, _rampage_tags, _rampage_topics, _rampage_contact, _rampage_relations_to, _rampage_relations_from, _rampage_redirect_category, _rampage_site, _rampage_registration', '', 'after:title');
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, _rampage_top, _rampage_date, _rampage_tags, _rampage_topics, _rampage_contact, _rampage_relations_to, _rampage_relations_from, _rampage_redirect_category, ' . implode(',', [
+            \Zeroseven\Rampage\Utility\DetectionUtility::SITE_FIELD_NAME,
+            \Zeroseven\Rampage\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
+            \Zeroseven\Rampage\Utility\DetectionUtility::SUB_OBJECT_FIELD_NAME
+        ]), '', 'after:title');
 }, 'pages');
