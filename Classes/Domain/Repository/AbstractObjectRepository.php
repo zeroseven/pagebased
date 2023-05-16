@@ -77,8 +77,8 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
             )
         );
 
-        // Exclude sub objects
-        $constraints[$this->childObjectConstraintKey] = $query->logicalNot($query->equals(DetectionUtility::SUB_OBJECT_FIELD_NAME, 1));
+        // Exclude child objects
+        $constraints[$this->childObjectConstraintKey] = $query->logicalNot($query->equals(DetectionUtility::CHILD_OBJECT_FIELD_NAME, 1));
 
         if ($demand->getTopObjectOnly()) {
             $constraints[] = $query->equals('top', 1);

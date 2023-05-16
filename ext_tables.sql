@@ -10,7 +10,7 @@ CREATE TABLE pages
 	_rampage_redirect_category tinyint(1) unsigned DEFAULT '0' NOT NULL,
 	_rampage_site              int(11) DEFAULT '0' NOT NULL,
 	_rampage_registration      varchar(255) DEFAULT '' NOT NULL,
-	_rampage_sub_object        tinyint(1) unsigned DEFAULT '0' NOT NULL
+	_rampage_child_object      tinyint(1) unsigned DEFAULT '0' NOT NULL
 );
 
 CREATE TABLE tx_rampage_domain_model_topic

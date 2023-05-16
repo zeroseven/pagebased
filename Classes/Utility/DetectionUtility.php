@@ -13,7 +13,7 @@ class DetectionUtility
 {
     public const REGISTRATION_FIELD_NAME = '_rampage_registration';
     public const SITE_FIELD_NAME = '_rampage_site';
-    public const SUB_OBJECT_FIELD_NAME = '_rampage_sub_object';
+    public const CHILD_OBJECT_FIELD_NAME = '_rampage_child_object';
 
     protected static function isSubObject(int $uid): bool
     {
@@ -51,7 +51,7 @@ class DetectionUtility
         return [
             self::SITE_FIELD_NAME => $registration ? RootLineUtility::getRootPage($uid) : 0,
             self::REGISTRATION_FIELD_NAME => $registration ? $registration->getIdentifier() : '',
-            self::SUB_OBJECT_FIELD_NAME => $registration && self::isSubObject($uid) ? 1 : 0
+            self::CHILD_OBJECT_FIELD_NAME => $registration && self::isSubObject($uid) ? 1 : 0
         ];
     }
 
