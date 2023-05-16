@@ -136,14 +136,14 @@ call_user_func(static function (string $table) {
         ],
 
         // System relevant fields
-        \Zeroseven\Rampage\Utility\SettingsUtility::SITE_FIELD_NAME => [
+        \Zeroseven\Rampage\Utility\DetectionUtility::SITE_FIELD_NAME => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
             'label' => 'Site',
             'displayCond' => [
                 'AND' => [
                     'HIDE_FOR_NON_ADMINS',
-                    'FIELD:' . \Zeroseven\Rampage\Utility\SettingsUtility::SITE_FIELD_NAME . ':REQ:true'
+                    'FIELD:' . \Zeroseven\Rampage\Utility\DetectionUtility::SITE_FIELD_NAME . ':REQ:true'
                 ]
             ],
             'config' => [
@@ -152,14 +152,14 @@ call_user_func(static function (string $table) {
                 'default' => 0
             ]
         ],
-        \Zeroseven\Rampage\Utility\SettingsUtility::REGISTRATION_FIELD_NAME => [
+        \Zeroseven\Rampage\Utility\DetectionUtility::REGISTRATION_FIELD_NAME => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
             'label' => 'Object',
             'displayCond' => [
                 'AND' => [
                     'HIDE_FOR_NON_ADMINS',
-                    'FIELD:' . \Zeroseven\Rampage\Utility\SettingsUtility::REGISTRATION_FIELD_NAME . ':REQ:true'
+                    'FIELD:' . \Zeroseven\Rampage\Utility\DetectionUtility::REGISTRATION_FIELD_NAME . ':REQ:true'
                 ]
             ],
             'config' => [

@@ -15,8 +15,6 @@ use Zeroseven\Rampage\Registration\Registration;
 class SettingsUtility
 {
     public const EXTENSION_NAME = 'rampage';
-    public const REGISTRATION_FIELD_NAME = '_rampage_registration';
-    public const SITE_FIELD_NAME = '_rampage_site';
 
     protected static function getPropertyPath($subject, string $propertyPath = null)
     {

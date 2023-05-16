@@ -49,7 +49,7 @@ class AddTCAEvent
     {
         if (($objectRegistration = $registration->getObject()) && $tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
             $displayCondition = ['AND' => [
-                sprintf('FIELD:%s:=:%s', SettingsUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier()),
+                sprintf('FIELD:%s:=:%s', DetectionUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier()),
                 sprintf('FIELD:%s:!=:%d', $tcaTypeField, $registration->getCategory()->getObjectType()),
             ]];
 

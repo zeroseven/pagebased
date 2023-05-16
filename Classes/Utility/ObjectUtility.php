@@ -41,7 +41,7 @@ class ObjectUtility
     public static function isObject(int $pageUid = null, array $row = null): ?Registration
     {
         if (($typeField = self::getPageTypeField()) && ($pageUid || ($pageUid = (int)($row['uid'] ?? 0)) || ($pageUid = self::getPageUid()))) {
-            $registrationField = SettingsUtility::REGISTRATION_FIELD_NAME;
+            $registrationField = DetectionUtility::REGISTRATION_FIELD_NAME;
 
             if (!isset($row[$typeField], $row[$registrationField])) {
                 $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, implode(',', [$registrationField, $typeField]));

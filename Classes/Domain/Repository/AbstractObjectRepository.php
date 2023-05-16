@@ -16,8 +16,8 @@ use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\DetectionUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
-use Zeroseven\Rampage\Utility\SettingsUtility;
 
 abstract class AbstractObjectRepository extends AbstractPageRepository implements ObjectRepositoryInterface
 {
@@ -64,7 +64,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
 
         // Search by object identifier
         $constraints[] = $query->logicalAnd(
-            $query->equals(SettingsUtility::REGISTRATION_FIELD_NAME, $this->registration->getIdentifier()),
+            $query->equals(DetectionUtility::REGISTRATION_FIELD_NAME, $this->registration->getIdentifier()),
             $query->logicalNot(
                 $query->equals($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'], $this->registration->getCategory()->getObjectType()),
             )

@@ -8,7 +8,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Rampage\Utility\DetectionUtility;
 
 class OverrideIconOverlay
 {
@@ -18,12 +18,12 @@ class OverrideIconOverlay
             $uid = $row['uid'] ?? 0;
             $typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'];
 
-            if (!isset($row[$typeField], $row[SettingsUtility::REGISTRATION_FIELD_NAME])) {
-                $row = (array)BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, implode(',', [$typeField, SettingsUtility::REGISTRATION_FIELD_NAME]));
+            if (!isset($row[$typeField], $row[DetectionUtility::REGISTRATION_FIELD_NAME])) {
+                $row = (array)BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, implode(',', [$typeField, DetectionUtility::REGISTRATION_FIELD_NAME]));
             }
 
             if (
-                ($identifier = $row[SettingsUtility::REGISTRATION_FIELD_NAME] ?? null)
+                ($identifier = $row[DetectionUtility::REGISTRATION_FIELD_NAME] ?? null)
                 && ($registration = RegistrationService::getRegistrationByIdentifier($identifier))
                 && ($object = $registration->getObject()->getRepositoryClass()->findByUid($uid))
                 && $object->isTop()

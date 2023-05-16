@@ -10,9 +10,9 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Utility\DetectionUtility;
 use Zeroseven\Rampage\Utility\ObjectUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
-use Zeroseven\Rampage\Utility\SettingsUtility;
 
 class DetectRegistrationEventListener
 {
@@ -48,8 +48,8 @@ class DetectRegistrationEventListener
             $registration = ObjectUtility::findCategoryInRootLine($uid);
 
             $this->updatePageRecord($uid, [
-                SettingsUtility::SITE_FIELD_NAME => $registration ? RootLineUtility::getRootPage($uid) : 0,
-                SettingsUtility::REGISTRATION_FIELD_NAME => $registration ? $registration->getIdentifier() : ''
+                DetectionUtility::SITE_FIELD_NAME => $registration ? RootLineUtility::getRootPage($uid) : 0,
+                DetectionUtility::REGISTRATION_FIELD_NAME => $registration ? $registration->getIdentifier() : ''
             ]);
         }
     }
