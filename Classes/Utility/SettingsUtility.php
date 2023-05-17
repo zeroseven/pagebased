@@ -29,9 +29,9 @@ class SettingsUtility
     {
         $extensionName = $registration->getExtensionName();
 
-        if (empty($settings = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven-rampage']['settings'][$extensionName] ?? null)) {
+        if (empty($settings = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['settings'][$extensionName] ?? null)) {
             try {
-                $settings = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven-rampage']['settings'][$extensionName] = GeneralUtility::makeInstance(ConfigurationManager::class)->getConfiguration(
+                $settings = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['settings'][$extensionName] = GeneralUtility::makeInstance(ConfigurationManager::class)->getConfiguration(
                     ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
                     $extensionName,
                     AddTypoScriptEvent::getTypoScriptPluginKey($registration)

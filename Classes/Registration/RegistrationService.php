@@ -18,12 +18,12 @@ class RegistrationService
     /** @return Registration[] */
     public static function getRegistrations(): array
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven-rampage']['registrations'] ?? [];
+        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['registrations'] ?? [];
     }
 
     public static function addRegistration(Registration $registration): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven-rampage']['registrations'][$registration->getIdentifier()] = $registration;
+        $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['registrations'][$registration->getIdentifier()] = $registration;
     }
 
     public static function getRegistrationByClassName($className): ?Registration
