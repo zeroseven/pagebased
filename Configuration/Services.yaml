@@ -24,25 +24,25 @@ services:
         tags:
             - name: event.listener
               identifier: 'rampage/registration-add-tsconfig'
-              event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
+              event: Zeroseven\Rampage\Event\StoreRegistrationEvent
 
     Zeroseven\Rampage\Registration\EventListener\AddUserTSConfigEvent:
         tags:
             - name: event.listener
               identifier: 'rampage/registration-add-usertsconfig'
-              event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
+              event: Zeroseven\Rampage\Event\StoreRegistrationEvent
 
     Zeroseven\Rampage\Registration\EventListener\AddTypoScriptEvent:
         tags:
             - name: event.listener
               identifier: 'rampage/registration-add-typoscript'
-              event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
+              event: Zeroseven\Rampage\Event\StoreRegistrationEvent
 
     Zeroseven\Rampage\Registration\EventListener\RegisterPluginEvent:
         tags:
             - name: event.listener
               identifier: 'rampage/registration-plugin'
-              event: Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent
+              event: Zeroseven\Rampage\Event\StoreRegistrationEvent
 
     Zeroseven\Rampage\EventListener\DetectObjects:
         tags:

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration\EventListener;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
+use Zeroseven\Rampage\Event\StoreRegistrationEvent;
 use Zeroseven\Rampage\Registration\Registration;
 
 class AddTypoScriptEvent
