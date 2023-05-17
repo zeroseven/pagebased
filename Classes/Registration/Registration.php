@@ -7,7 +7,7 @@ namespace Zeroseven\Rampage\Registration;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Event\StoreRegistrationEvent;
+use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
 
 class Registration
 {

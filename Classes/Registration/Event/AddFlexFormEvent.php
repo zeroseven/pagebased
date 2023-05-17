@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Event;
+namespace Zeroseven\Rampage\Registration\Event;
 
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 
