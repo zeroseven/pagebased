@@ -10,7 +10,7 @@ use TYPO3\CMS\Core\Type\Exception;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Registration\Event\AddFlexFormEvent;
-use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
+use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
 
 class FlexFormConfiguration
 {

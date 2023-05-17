@@ -7,7 +7,8 @@ namespace Zeroseven\Rampage\Registration;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
+use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
+use Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent;
 
 class Registration
 {
@@ -95,7 +96,7 @@ class Registration
     public function store(): void
     {
         $this->identifier = $this->extensionName . '_' . substr(md5($this->object->getClassName()), 0, 7);
-        $registration = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new StoreRegistrationEvent($this))->getRegistration();
+        GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new BeforeStoreRegistrationEvent($this))->getRegistration();
 
         if ($this->object === null) {
             throw new RegistrationException(sprintf('An object must be configured in extension "%s". Please call "setObject()" methode, contains instance of "%s"', $this->extensionName, ObjectRegistration::class), 1684312103);
@@ -105,6 +106,8 @@ class Registration
             throw new RegistrationException(sprintf('A category must be configured in extension "%s". Please call "setCategory()" methode, contains instance of "%s"', $this->extensionName, CategoryRegistration::class), 1684312124);
         }
 
-        RegistrationService::addRegistration($registration);
+        RegistrationService::addRegistration($this);
+
+        GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new AfterStoreRegistrationEvent($this));
     }
 }

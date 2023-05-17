@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration\EventListener;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
+use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
 use Zeroseven\Rampage\Registration\Registration;
 
 class AddTypoScriptEvent
@@ -67,7 +67,7 @@ class AddTypoScriptEvent
         ExtensionManagementUtility::addTypoScriptSetup(implode("\n", array_map(static fn($v): string => 'plugin.' . $pluginKey . '.' . trim($v), $setup)));
     }
 
-    public function __invoke(StoreRegistrationEvent $event): void
+    public function __invoke(AfterStoreRegistrationEvent $event): void
     {
         $this->addTypoScriptSetup($event->getRegistration());
         $this->addTypoScriptConstants($event->getRegistration());
