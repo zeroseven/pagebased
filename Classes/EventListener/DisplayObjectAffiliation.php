@@ -11,14 +11,14 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use Zeroseven\Rampage\Domain\Model\PageObjectInterface;
+use Zeroseven\Rampage\Domain\Model\ObjectInterface;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Utility\ObjectUtility;
 use Zeroseven\Rampage\Utility\SettingsUtility;
 
 class DisplayObjectAffiliation
 {
-    protected function showMessage(Registration $registration, PageObjectInterface $parentObject): void
+    protected function showMessage(Registration $registration, ObjectInterface $parentObject): void
     {
         $message = LocalizationUtility::translate('LLL:EXT:rampage/Resources/Private/Language/locallang_be.xlf:notification.objectAffiliation.description',
             SettingsUtility::EXTENSION_NAME, [$registration->getObject()->getName(), $parentObject->getTitle()]);

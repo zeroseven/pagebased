@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Domain\Model\Entity;
 
-use Zeroseven\Rampage\Domain\Model\AbstractPageObject;
+use Zeroseven\Rampage\Domain\Model\AbstractObject;
 
-class PageObject extends AbstractPageObject
+class PageObject extends AbstractObject
 {
 }

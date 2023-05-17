@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Domain\Model;
 
-abstract class AbstractPageCategory extends AbstractPage implements PageTypeInterface
+abstract class AbstractCategory extends AbstractPage implements PageTypeInterface
 {
     protected bool $redirect;
 

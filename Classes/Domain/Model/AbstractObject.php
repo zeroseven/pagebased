@@ -15,7 +15,7 @@ use Zeroseven\Rampage\Utility\CastUtility;
 use Zeroseven\Rampage\Utility\ObjectUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
 
-abstract class AbstractPageObject extends AbstractPage implements PageObjectInterface
+abstract class AbstractObject extends AbstractPage implements ObjectInterface
 {
     protected const TAG_DELIMITER = ',';
 
@@ -33,10 +33,10 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     protected ?ObjectStorage $topics = null;
 
     /**
-     * @var PageObjectInterface | null
+     * @var ObjectInterface | null
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected ?PageObjectInterface $parentObject = null;
+    protected ?ObjectInterface $parentObject = null;
 
     /**
      * @var QueryResultInterface | null
@@ -45,10 +45,10 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
     protected ?QueryResultInterface $childObjects = null;
 
     /**
-     * @var AbstractPageCategory | null
+     * @var AbstractCategory | null
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected ?AbstractPageCategory $category = null;
+    protected ?AbstractCategory $category = null;
 
     /**
      * @var ObjectStorage<PageObject>
@@ -165,7 +165,7 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
         return $this;
     }
 
-    public function getCategory(): ?AbstractPageCategory
+    public function getCategory(): ?AbstractCategory
     {
         if ($this->category === null) {
             foreach (RootLineUtility::collectPagesAbove($this->uid) as $row) {
@@ -178,7 +178,7 @@ abstract class AbstractPageObject extends AbstractPage implements PageObjectInte
         return $this->category;
     }
 
-    public function getParentObject(): ?PageObjectInterface
+    public function getParentObject(): ?ObjectInterface
     {
         if (
             $this->parentObject === null

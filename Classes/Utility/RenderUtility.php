@@ -12,7 +12,7 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use Zeroseven\Rampage\Domain\Model\PageObjectInterface;
+use Zeroseven\Rampage\Domain\Model\ObjectInterface;
 use Zeroseven\Rampage\Event\AssignTemplateVariablesEvent;
 use Zeroseven\Rampage\Registration\Registration;
 
@@ -38,7 +38,7 @@ class RenderUtility
         return $view;
     }
 
-    public function render(string $templateNameAndFilePath, string $registrationIdentifier, array $settings = null, PageObjectInterface $object = null): string
+    public function render(string $templateNameAndFilePath, string $registrationIdentifier, array $settings = null, ObjectInterface $object = null): string
     {
         $pageUid = ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController
             ? (int)$GLOBALS['TSFE']->id

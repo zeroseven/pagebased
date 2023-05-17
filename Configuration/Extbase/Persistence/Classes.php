@@ -21,7 +21,7 @@ return [
             ]
         ]
     ],
-    \Zeroseven\Rampage\Domain\Model\AbstractPageObject::class => [
+    \Zeroseven\Rampage\Domain\Model\AbstractObject::class => [
         'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
         'properties' => [
             'top' => [

@@ -13,15 +13,15 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use Zeroseven\Rampage\Controller\AbstractPageObjectController;
 use Zeroseven\Rampage\Controller\PageObjectControllerInterface;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Domain\Model\AbstractPageCategory;
-use Zeroseven\Rampage\Domain\Model\AbstractPageObject;
+use Zeroseven\Rampage\Domain\Model\AbstractCategory;
+use Zeroseven\Rampage\Domain\Model\AbstractObject;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericObjectDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
-use Zeroseven\Rampage\Domain\Model\PageObjectInterface;
+use Zeroseven\Rampage\Domain\Model\ObjectInterface;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Domain\Repository\AbstractCategoryRepository;
 use Zeroseven\Rampage\Domain\Repository\AbstractObjectRepository;
@@ -58,11 +58,11 @@ class ValidateRegistrationEvent
     {
         // Check domain model
         if ($objectRegistration->getClassName()) {
-            if (!is_subclass_of($objectRegistration->getClassName(), PageObjectInterface::class)) {
-                throw new RegistrationException(sprintf('For registration of "%s" a domain model of type "%s" is required. You can simply extend a class "%s".', $objectRegistration->getTitle(), PageObjectInterface::class, AbstractPageObject::class), 1684310714);
+            if (!is_subclass_of($objectRegistration->getClassName(), ObjectInterface::class)) {
+                throw new RegistrationException(sprintf('For registration of "%s" a domain model of type "%s" is required. You can simply extend a class "%s".', $objectRegistration->getTitle(), ObjectInterface::class, AbstractObject::class), 1684310714);
             }
         } else {
-            throw new RegistrationException(sprintf('The registration requires a domain model of type "%s". Use "ObjectRegistration::setClassName()".', PageObjectInterface::class), 1684310718);
+            throw new RegistrationException(sprintf('The registration requires a domain model of type "%s". Use "ObjectRegistration::setClassName()".', ObjectInterface::class), 1684310718);
         }
 
         // Check class inheritance of the controller
@@ -95,10 +95,10 @@ class ValidateRegistrationEvent
         // Check domain model
         if ($categoryRegistration->getClassName()) {
             if (!is_subclass_of($categoryRegistration->getClassName(), PageTypeInterface::class)) {
-                throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s".', $categoryRegistration->getClassName(), PageTypeInterface::class, AbstractPageCategory::class), 1676063874);
+                throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s".', $categoryRegistration->getClassName(), PageTypeInterface::class, AbstractCategory::class), 1676063874);
             }
         } else {
-            throw new RegistrationException(sprintf('The registration requires a category domain model of type "%s". Use "CategoryRegistration::setClassName()" to define a model. You can extend the class "%s".', PageTypeInterface::class, AbstractPageCategory::class), 1678708348);
+            throw new RegistrationException(sprintf('The registration requires a category domain model of type "%s". Use "CategoryRegistration::setClassName()" to define a model. You can extend the class "%s".', PageTypeInterface::class, AbstractCategory::class), 1678708348);
         }
 
         // Check demand class

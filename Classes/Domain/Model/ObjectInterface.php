@@ -8,7 +8,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
 
-interface PageObjectInterface extends PageEntityInterface
+interface ObjectInterface extends PageEntityInterface
 {
     public function isTop(): bool;
 
@@ -18,11 +18,11 @@ interface PageObjectInterface extends PageEntityInterface
 
     public function setTags(mixed $value): self;
 
-    public function getParentObject(): ?PageObjectInterface;
+    public function getParentObject(): ?ObjectInterface;
 
     public function getChildObjects(): ?QueryResultInterface;
 
-    public function getCategory(): ?AbstractPageCategory;
+    public function getCategory(): ?AbstractCategory;
 
     public function getRelationsTo(): ObjectStorage;
 
