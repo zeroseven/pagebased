@@ -43,3 +43,32 @@ call_user_func(static function () {
         ->store();
 });
 ```
+
+## Extend plugin flexForm
+
+Use the `AddFlexFormEvent` to extend the flexForm of a plugin. Example:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Zeroseven\Jobs\EventListener;
+
+use Zeroseven\Rampage\Registration\Event\AddFlexFormEvent;
+
+class ExtendFlexFormEvent
+{
+    public function __invoke(AddFlexFormEvent $event)
+    {
+        $flexFormConfiguration = $event->getFlexFormConfiguration();
+
+        if ($flexFormConfiguration->getType() === 'jobs_list' && $sheet = $flexFormConfiguration->getSheet('filter')) {
+            $sheet->addField('settings.customField', [
+                'type' => 'input',
+                'eval' => 'trim,required'
+            ], 'Custom field');
+        }
+    }
+}
+```

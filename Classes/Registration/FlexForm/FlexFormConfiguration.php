@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration\FlexForm;
 
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Type\Exception;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Zeroseven\Rampage\Registration\Event\AddFlexFormEvent;
+use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
 
 class FlexFormConfiguration
 {
     protected string $table;
     protected string $type;
     protected string $field;
-    protected string $position;
+    protected ?string $position;
 
     /** @var FlexFormSheetConfiguration[] */
     protected array $sheets = [];
@@ -32,6 +35,36 @@ class FlexFormConfiguration
         return GeneralUtility::makeInstance(self::class, $table, $type, $field, $position);
     }
 
+    public function getTable(): string
+    {
+        return $this->table;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getField(): string
+    {
+        return $this->field;
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
+    }
+
+    public function getSheets(): array
+    {
+        return $this->sheets;
+    }
+
+    public function getSheet(string $key): ?FlexFormSheetConfiguration
+    {
+        return $this->sheets[$key] ?? null;
+    }
+
     public function addSheet(FlexFormSheetConfiguration $sheet): self
     {
         $this->sheets[$sheet->getKey()] = $sheet;
@@ -43,6 +76,8 @@ class FlexFormConfiguration
     public function addToTCA(): void
     {
         $config = [];
+
+        GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new AddFlexFormEvent($this));
 
         foreach ($this->sheets as $sheet) {
             if ($sheet instanceof FlexFormSheetConfiguration) {
