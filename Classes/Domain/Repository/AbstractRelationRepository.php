@@ -28,7 +28,6 @@ abstract class AbstractRelationRepository extends Repository
             $query = $this->createQuery();
             $query->getQuerySettings()->setStoragePageIds($pageIds)->setRespectStoragePage(true);
 
-
             return $query->execute();
         }
 

@@ -10,9 +10,9 @@ final class AssignTemplateVariablesEvent
 {
     protected array $variables;
     protected Registration $registration;
-    protected string $controllerAction;
+    protected ?string $controllerAction;
 
-    public function __construct(array $variables, Registration $registration, string $controllerAction)
+    public function __construct(array $variables, Registration $registration, ?string $controllerAction = null)
     {
         $this->variables = $variables;
         $this->registration = $registration;
@@ -43,7 +43,7 @@ final class AssignTemplateVariablesEvent
         return $this->registration;
     }
 
-    public function getControllerAction(): string
+    public function getControllerAction(): ?string
     {
         return $this->controllerAction;
     }
