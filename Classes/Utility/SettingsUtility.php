@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Utility;
 
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -23,6 +26,20 @@ class SettingsUtility
         }
 
         return ObjectAccess::getPropertyPath((array)$subject, $propertyPath);
+    }
+
+    public static function getExtensionConfiguration(Registration $registration, string $propertyPath = null): mixed
+    {
+        $extensionName = $registration->getExtensionName();
+
+        if (empty($configuration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['configuration'][$extensionName] ?? null)) {
+            try {
+                $configuration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['configuration'][$extensionName] = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get($extensionName);
+            } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException $e) {
+            }
+        }
+
+        return self::getPropertyPath($configuration, $propertyPath);
     }
 
     public static function getPluginConfiguration(Registration $registration, string $propertyPath = null): mixed
