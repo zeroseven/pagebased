@@ -139,7 +139,7 @@ call_user_func(static function (string $table) {
         \Zeroseven\Rampage\Utility\DetectionUtility::SITE_FIELD_NAME => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
-            'label' => 'Site',
+            'label' => 'Site identifier',
             'displayCond' => [
                 'AND' => [
                     'HIDE_FOR_NON_ADMINS',
@@ -155,7 +155,7 @@ call_user_func(static function (string $table) {
         \Zeroseven\Rampage\Utility\DetectionUtility::REGISTRATION_FIELD_NAME => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
-            'label' => 'Object',
+            'label' => 'Object registration',
             'displayCond' => [
                 'AND' => [
                     'HIDE_FOR_NON_ADMINS',

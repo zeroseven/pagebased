@@ -35,9 +35,12 @@ class RegisterPluginEvent
 
     public function __invoke(StoreRegistrationEvent $event)
     {
-        if ($this->registration = $event->getRegistration()) {
-            $this->registerPlugin($this->registration->getListPlugin());
-            $this->registerPlugin($this->registration->getFilterPlugin());
+        try {
+            if ($this->registration = $event->getRegistration()) {
+                $this->registerPlugin($this->registration->getListPlugin());
+                $this->registerPlugin($this->registration->getFilterPlugin());
+            }
+        } catch (\TYPO3\CMS\Core\Error\Exception $e) {
         }
     }
 }

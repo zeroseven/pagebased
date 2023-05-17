@@ -30,7 +30,7 @@ abstract class AbstractEntityRegistration
 
     public function getClassName(): string
     {
-        return $this->className;
+        return $this->className ?? '';
     }
 
     public function setClassName(string $className): self
@@ -39,9 +39,9 @@ abstract class AbstractEntityRegistration
         return $this;
     }
 
-    public function getRepositoryClassName(): ?string
+    public function getRepositoryClassName(): string
     {
-        return $this->repositoryClassName;
+        return $this->repositoryClassName ?? '';
     }
 
     public function getRepositoryClass(): RepositoryInterface
@@ -55,9 +55,9 @@ abstract class AbstractEntityRegistration
         return $this;
     }
 
-    public function getDemandClassName(): ?string
+    public function getDemandClassName(): string
     {
-        return $this->demandClassName;
+        return $this->demandClassName ?? '';
     }
 
     public function getDemandClass(): DemandInterface

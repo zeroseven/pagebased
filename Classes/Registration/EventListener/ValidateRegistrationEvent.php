@@ -57,8 +57,12 @@ class ValidateRegistrationEvent
     protected function checkPageObjectRegistration(ObjectRegistration $objectRegistration): void
     {
         // Check domain model
-        if (empty($className = $objectRegistration->getClassName()) || !is_subclass_of($className, PageObjectInterface::class)) {
-            throw new RegistrationException(sprintf('For registration of "%s" a domain model of type "%s" is required. You can simply extend a class "%s".', $objectRegistration->getTitle(), PageObjectInterface::class, AbstractPageObject::class), 1680721601);
+        if ($objectRegistration->getClassName()) {
+            if (!is_subclass_of($objectRegistration->getClassName(), PageObjectInterface::class)) {
+                throw new RegistrationException(sprintf('For registration of "%s" a domain model of type "%s" is required. You can simply extend a class "%s".', $objectRegistration->getTitle(), PageObjectInterface::class, AbstractPageObject::class), 1684310714);
+            }
+        } else {
+            throw new RegistrationException(sprintf('The registration requires a domain model of type "%s". Use "ObjectRegistration::setClassName()".', PageObjectInterface::class), 1684310718);
         }
 
         // Check class inheritance of the controller
@@ -67,7 +71,7 @@ class ValidateRegistrationEvent
                 throw new RegistrationException(sprintf('The class "%s" must be an instance of "%s". Yau can simply extend the class "%s"', $className, PageObjectControllerInterface::class, AbstractPageObjectController::class), 1680722536);
             }
         } else {
-            throw new RegistrationException(sprintf('An extbase controller for class "%s" ("%s") is required.', $objectRegistration->getClassName(), $objectRegistration->getTitle()), 1680722535);
+            throw new RegistrationException(sprintf('An extbase controller for class "%s" ("%s") is required. Use "ObjectRegistration::setControllerClass()" to define the controller.', $objectRegistration->getClassName(), $objectRegistration->getTitle()), 1680722535);
         }
 
         // Check demand
@@ -81,7 +85,7 @@ class ValidateRegistrationEvent
                 throw new RegistrationException(sprintf('The repository "%s" is not a subclass of "%s". You can simply extend the class "%s".', $className, ObjectRepositoryInterface::class, AbstractObjectRepository::class), 1680722761);
             }
         } else {
-            throw new RegistrationException(sprintf('Please provide a repository of "%s" for the object "%s"', ObjectRepositoryInterface::class, $objectRegistration->getTitle()), 1680722762);
+            throw new RegistrationException(sprintf('Please provide a repository of "%s" for the object "%s". Use "ObjectRegistration::setRepositoryClass()" to define a repository.', ObjectRepositoryInterface::class, $objectRegistration->getTitle()), 1680722762);
         }
     }
 
@@ -94,7 +98,7 @@ class ValidateRegistrationEvent
                 throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s".', $categoryRegistration->getClassName(), PageTypeInterface::class, AbstractPageCategory::class), 1676063874);
             }
         } else {
-            throw new RegistrationException(sprintf('The registration requires a domain model of type "%s". You can extend the class "%s".', PageTypeInterface::class, AbstractPageCategory::class), 1678708348);
+            throw new RegistrationException(sprintf('The registration requires a category domain model of type "%s". Use "CategoryRegistration::setClassName()" to define a model. You can extend the class "%s".', PageTypeInterface::class, AbstractPageCategory::class), 1678708348);
         }
 
         // Check demand class
@@ -146,20 +150,13 @@ class ValidateRegistrationEvent
     protected function checkRegistration(Registration $registration): void
     {
         if ($objectRegistration = $registration->getObject()) {
-            $this->checkPageEntityConfiguration($objectRegistration);
             $this->checkPageObjectRegistration($objectRegistration);
-        } else {
-            throw new RegistrationException(sprintf('An object must be configured in extension "%s". Please call "setObject()" methode, contains instance of "%s"', $registration->getExtensionName(), ObjectRegistration::class), 1678708145);
+            $this->checkPageEntityConfiguration($objectRegistration);
         }
 
         if ($categoryRegistration = $registration->getCategory()) {
-            $this->checkPageEntityConfiguration($categoryRegistration);
             $this->checkCategoryConfiguration($categoryRegistration);
-        } else {
-            throw new RegistrationException(sprintf('An category must be configured in extension "%s". Please call "setCategory()" methode, contains instance of "%s"', $registration->getExtensionName(), CategoryRegistration::class), 1680694223);
-        }
-
-        if ($registration->hasListPlugin() && $listPlugin = $registration->getListPlugin()) {
+            $this->checkPageEntityConfiguration($categoryRegistration);
         }
     }
 

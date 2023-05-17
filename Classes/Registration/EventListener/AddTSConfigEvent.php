@@ -13,7 +13,7 @@ class AddTSConfigEvent
 {
     protected ?Registration $registration;
 
-    protected function addContentWizard(?AbstractPluginRegistration $plugin): void
+    protected function addContentWizard(?AbstractPluginRegistration $plugin = null): void
     {
         if ($plugin && $this->registration) {
             $cType = $plugin->getCType($this->registration);
