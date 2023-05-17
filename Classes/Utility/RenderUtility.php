@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Utility;
 
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -12,6 +13,7 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Domain\Model\PageObjectInterface;
+use Zeroseven\Rampage\Event\AssignTemplateVariablesEvent;
 use Zeroseven\Rampage\Registration\Registration;
 
 class RenderUtility
@@ -54,12 +56,12 @@ class RenderUtility
 
             if ($object) {
                 $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templateNameAndFilePath));
-                $view->assignMultiple([
+                $view->assignMultiple(GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new AssignTemplateVariablesEvent([
                     'object' => $object,
                     'settings' => $settings,
                     'data' => $this->cObj->data ?? [],
                     strtolower($registration->getObject()->getName()) => $object // alias variable
-                ]);
+                ], $registration, 'info'))->getVariables());
 
                 return $view->render();
             }
