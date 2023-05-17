@@ -47,11 +47,8 @@ class AddTCAEvent
 
     protected function addPageObject(Registration $registration): void
     {
-        if (($objectRegistration = $registration->getObject()) && $tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
-            $displayCondition = ['AND' => [
-                sprintf('FIELD:%s:=:%s', DetectionUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier()),
-                sprintf('FIELD:%s:!=:%d', $tcaTypeField, $registration->getCategory()->getObjectType()),
-            ]];
+        if ($objectRegistration = $registration->getObject()) {
+            $displayCondition = TCAUtility::getObjectDisplayCondition($registration);
 
             TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_date', $displayCondition);
             TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_relations_to', $displayCondition);
