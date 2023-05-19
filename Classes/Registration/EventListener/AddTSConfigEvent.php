@@ -6,14 +6,14 @@ namespace Zeroseven\Rampage\Registration\EventListener;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
-use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
+use Zeroseven\Rampage\Registration\AbstractRegistrationPluginProperty;
 use Zeroseven\Rampage\Registration\Registration;
 
 class AddTSConfigEvent
 {
     protected ?Registration $registration;
 
-    protected function addContentWizard(?AbstractPluginRegistration $plugin = null): void
+    protected function addContentWizard(?AbstractRegistrationPluginProperty $plugin = null): void
     {
         if ($plugin && $this->registration) {
             $cType = $plugin->getCType($this->registration);

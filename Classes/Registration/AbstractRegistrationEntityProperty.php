@@ -10,7 +10,7 @@ use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
 use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
 
-abstract class AbstractEntityRegistration implements RegistrationPropertyInterface
+abstract class AbstractRegistrationEntityProperty implements RegistrationPropertyInterface
 {
     protected string $title;
     protected ?string $className = null;

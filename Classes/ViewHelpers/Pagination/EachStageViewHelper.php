@@ -14,7 +14,7 @@ use Zeroseven\Rampage\Pagination\Iterator;
 use Zeroseven\Rampage\Pagination\Pagination;
 use Zeroseven\Rampage\ViewHelpers\PaginationViewHelper;
 
-class EachStageViewHelper extends AbstractViewHelper
+final class EachStageViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 

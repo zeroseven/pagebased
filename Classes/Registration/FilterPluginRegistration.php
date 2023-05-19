@@ -6,7 +6,7 @@ namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class FilterPluginRegistration extends AbstractPluginRegistration
+final class FilterPluginRegistration extends AbstractRegistrationPluginProperty
 {
     protected string $type = 'filter';
 

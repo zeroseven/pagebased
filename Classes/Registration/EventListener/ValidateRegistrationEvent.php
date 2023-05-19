@@ -28,8 +28,8 @@ use Zeroseven\Rampage\Domain\Repository\AbstractObjectRepository;
 use Zeroseven\Rampage\Domain\Repository\CategoryRepositoryInterface;
 use Zeroseven\Rampage\Domain\Repository\ObjectRepositoryInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Registration\AbstractEntityRegistration;
-use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
+use Zeroseven\Rampage\Registration\AbstractRegistrationEntityProperty;
+use Zeroseven\Rampage\Registration\AbstractRegistrationPluginProperty;
 use Zeroseven\Rampage\Registration\CategoryRegistration;
 use Zeroseven\Rampage\Registration\ObjectRegistration;
 use Zeroseven\Rampage\Registration\Registration;
@@ -39,7 +39,7 @@ class ValidateRegistrationEvent
 {
 
     /** @throws RegistrationException */
-    protected function checkPageEntityConfiguration(AbstractEntityRegistration $entity): void
+    protected function checkPageEntityConfiguration(AbstractRegistrationEntityProperty $entity): void
     {
         // Check the persistence configuration
         if ($className = $entity->getClassName()) {
@@ -138,7 +138,7 @@ class ValidateRegistrationEvent
     }
 
     /** @throws RegistrationException */
-    protected function checkPluginConfiguration(AbstractPluginRegistration $pluginRegistration): void
+    protected function checkPluginConfiguration(AbstractRegistrationPluginProperty $pluginRegistration): void
     {
         // Check plugin icon
         if (($iconIdentifier = $pluginRegistration->getIconIdentifier()) && !GeneralUtility::makeInstance(IconRegistry::class)->isRegistered($iconIdentifier)) {

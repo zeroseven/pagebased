@@ -7,7 +7,7 @@ namespace Zeroseven\Rampage\Registration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 
-class CategoryRegistration extends AbstractEntityRegistration
+final class CategoryRegistration extends AbstractRegistrationEntityProperty
 {
     protected ?string $iconIdentifier = null;
 

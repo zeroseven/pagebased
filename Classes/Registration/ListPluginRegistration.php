@@ -6,7 +6,7 @@ namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ListPluginRegistration extends AbstractPluginRegistration
+final class ListPluginRegistration extends AbstractRegistrationPluginProperty
 {
     protected string $type = 'list';
 

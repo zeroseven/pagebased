@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 use Zeroseven\Rampage\Pagination\Pagination;
 
-class PaginationViewHelper extends AbstractViewHelper
+final class PaginationViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 

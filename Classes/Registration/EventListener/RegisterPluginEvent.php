@@ -7,7 +7,7 @@ namespace Zeroseven\Rampage\Registration\EventListener;
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
-use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
+use Zeroseven\Rampage\Registration\AbstractRegistrationPluginProperty;
 use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
 use Zeroseven\Rampage\Registration\Registration;
 
@@ -15,7 +15,7 @@ class RegisterPluginEvent
 {
     protected ?Registration $registration;
 
-    protected function registerPlugin(?AbstractPluginRegistration $plugin): void
+    protected function registerPlugin(?AbstractRegistrationPluginProperty $plugin): void
     {
         if ($plugin) {
             $controllerClassName = $this->registration->getObject()->getControllerClassName();

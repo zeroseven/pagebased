@@ -14,7 +14,7 @@ use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
+use Zeroseven\Rampage\Registration\AbstractRegistrationPluginProperty;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\Registration;
@@ -24,7 +24,7 @@ use Zeroseven\Rampage\Utility\TCAUtility;
 
 class AddTCAEvent
 {
-    protected function createPlugin(Registration $registration, AbstractPluginRegistration $pluginRegistration): string
+    protected function createPlugin(Registration $registration, AbstractRegistrationPluginProperty $pluginRegistration): string
     {
         $CType = $pluginRegistration->getCType($registration);
 

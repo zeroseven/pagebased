@@ -10,7 +10,7 @@ use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
 use Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent;
 
-class Registration
+final class Registration
 {
     protected string $extensionName;
     protected ?string $identifier = null;
@@ -116,5 +116,10 @@ class Registration
         RegistrationService::addRegistration($this);
 
         GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new AfterStoreRegistrationEvent($this));
+    }
+
+    public static function create(...$arguments): self
+    {
+        return GeneralUtility::makeInstance(self::class, ...$arguments);
     }
 }

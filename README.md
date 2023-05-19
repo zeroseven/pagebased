@@ -35,7 +35,7 @@ call_user_func(static function () {
         ->setDescription('Filter jobs')
         ->setIconIdentifier('custom-joblist-icon');
 
-    \Zeroseven\Rampage\Registration\RegistrationService::createRegistration('jobs')
+    \Zeroseven\Rampage\Registration\Registration::create('jobs')
         ->setObject($object)
         ->setCategory($category)
         ->enableListPlugin($listPlugin)

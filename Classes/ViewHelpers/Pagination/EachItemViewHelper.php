@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 use Zeroseven\Rampage\Pagination\Iterator;
 use Zeroseven\Rampage\ViewHelpers\PaginationViewHelper;
 
-class EachItemViewHelper extends AbstractViewHelper
+final class EachItemViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 

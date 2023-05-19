@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Registration;
 
-abstract class AbstractPluginRegistration implements RegistrationPropertyInterface
+abstract class AbstractRegistrationPluginProperty implements RegistrationPropertyInterface
 {
     protected string $type;
     protected ?string $title = null;

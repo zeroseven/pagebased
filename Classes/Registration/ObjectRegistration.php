@@ -12,7 +12,7 @@ use Zeroseven\Rampage\Domain\Model\Demand\GenericObjectDemand;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Utility\CastUtility;
 
-class ObjectRegistration extends AbstractEntityRegistration
+final class ObjectRegistration extends AbstractRegistrationEntityProperty
 {
     protected ?string $controllerClassName = null;
     protected bool $tags = false;

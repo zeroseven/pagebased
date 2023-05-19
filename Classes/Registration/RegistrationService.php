@@ -10,11 +10,6 @@ use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 
 class RegistrationService
 {
-    public static function createRegistration(string $extensionName): Registration
-    {
-        return GeneralUtility::makeInstance(Registration::class, $extensionName);
-    }
-
     /** @return Registration[] */
     public static function getRegistrations(): array
     {
