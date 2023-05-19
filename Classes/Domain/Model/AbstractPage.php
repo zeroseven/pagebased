@@ -18,6 +18,8 @@ abstract class AbstractPage extends AbstractEntity
 
     protected int $documentType;
     protected int $l10nParent;
+    protected int $shortcut;
+    protected int $shortcutMode;
     protected string $title;
     protected string $subtitle;
     protected string $navigationTitle;
@@ -63,6 +65,16 @@ abstract class AbstractPage extends AbstractEntity
     {
         $this->documentType = $documentType;
         return $this;
+    }
+
+    public function getShortcut(): int
+    {
+        return $this->shortcut;
+    }
+
+    public function getShortcutMode(): int
+    {
+        return $this->shortcutMode;
     }
 
     public function getTitle(): string

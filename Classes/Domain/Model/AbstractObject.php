@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Domain\Model;
 
 use DateTime;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -31,6 +32,12 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected ?ObjectStorage $topics = null;
+
+    /**
+     * @var ObjectInterface | null
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected ?ObjectInterface $linkedObject = null;
 
     /**
      * @var ObjectInterface | null
@@ -176,6 +183,22 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
         }
 
         return $this->category;
+    }
+
+    public function getLinkedObject(): ?ObjectInterface
+    {
+        if (
+            $this->linkedObject === null
+            && $this->getDocumentType() === PageRepository::DOKTYPE_SHORTCUT
+            && $this->shortcut > 0
+            && $this->shortcutMode === 0
+            && ($registration = RegistrationService::getRegistrationByClassName(get_class($this)))
+            && ($linkedObject = $registration->getObject()->getRepositoryClass()->findByUid($this->shortcut))
+        ) {
+            return $this->linkedObject = $linkedObject;
+        }
+
+        return $this->linkedObject;
     }
 
     public function getParentObject(): ?ObjectInterface
