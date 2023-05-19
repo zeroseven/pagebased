@@ -5,34 +5,26 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Event;
 
 use JsonException;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Rampage\Utility\ArrayPathUtility;
 
 final class StructuredDataEvent
 {
     protected Registration $registration;
     protected int $uid;
     protected array $row;
-    protected array $properties = [];
-    protected PropertyAccessor $propertyAccessor;
+    protected ArrayPathUtility $properties;
 
     public function __construct(Registration $registration, int $uid, array $row)
     {
         $this->registration = $registration;
         $this->uid = $uid;
         $this->row = $row;
-        $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
-            ->enableExceptionOnInvalidIndex()
-            ->disableMagicGet()
-            ->disableMagicSet()
-            ->disableMagicCall()
-            ->disableMagicMethods()
-            ->getPropertyAccessor();
+        $this->properties = ArrayPathUtility::create();
     }
 
     public function getRegistration(): Registration
@@ -50,59 +42,32 @@ final class StructuredDataEvent
         return $this->row;
     }
 
-    public function getProperties(): array
+    public function getProperty(string $path): mixed
     {
-        return $this->properties;
+        return $this->properties->get($path);
     }
 
-    /**
-     * @param string $propertyPath Example: 'author.image.url'
-     * @return mixed
-     */
-    public function getProperty(string $propertyPath): mixed
+    public function setProperty(string $path, $value): self
     {
-        if (($path = $this->convertPathToPropertyPath($propertyPath)) && $this->propertyAccessor->isReadable($this->properties, $path)) {
-            return $this->propertyAccessor->getValue($this->properties, $path);
-        }
+        $this->properties->set($path, $value);
 
-        return null;
+        return $this;
     }
 
-    public function addProperty(string $propertyPath, mixed $value, bool $force = null): self
+    public function addProperty(string $path, $value, bool $force = null): self
     {
-        if ($force || !$this->getProperty($propertyPath)) {
-            $this->setProperty($propertyPath, $value);
-        }
+        $this->properties->add($path, $value, $force);
 
         return $this;
     }
 
     public function addProperties(array $properties, bool $force = null): self
     {
-        foreach ($properties as $propertyPath => $value) {
-            $this->addProperty($propertyPath, $value, $force);
+        foreach ($properties as $path => $value) {
+            $this->properties->add($path, $value, $force);
         }
 
         return $this;
-    }
-
-    /**
-     * @param string $propertyPath Example: 'author.image.url'
-     * @param mixed $value Example: 'https://www.example.com/image.jpg'
-     * @return $this
-     */
-    public function setProperty(string $propertyPath, mixed $value): self
-    {
-        if (($path = $this->convertPathToPropertyPath($propertyPath)) && $this->propertyAccessor->isWritable($this->properties, $path)) {
-            $this->propertyAccessor->setValue($this->properties, $path, $value);
-        }
-
-        return $this;
-    }
-
-    protected function convertPathToPropertyPath(string $path): string
-    {
-        return implode('', array_map(static fn($property) => '[' . $property . ']', explode('.', $path)));
     }
 
     protected function createImageObjectType(FileReference $media = null): array
@@ -153,9 +118,9 @@ final class StructuredDataEvent
 
     public function parse(): ?string
     {
-        if ($this->properties) {
+        if (!$this->properties->isEmpty()) {
             try {
-                return json_encode($this->parseProperties($this->properties), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                return json_encode($this->parseProperties($this->properties->toArray()), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             } catch (JsonException $e) {
             }
         }

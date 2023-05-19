@@ -11,22 +11,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException;
-use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 use Zeroseven\Rampage\Registration\EventListener\AddTypoScriptEvent;
 use Zeroseven\Rampage\Registration\Registration;
 
 class SettingsUtility
 {
     public const EXTENSION_NAME = 'rampage';
-
-    protected static function getPropertyPath($subject, string $propertyPath = null)
-    {
-        if ($propertyPath === null) {
-            return $subject;
-        }
-
-        return ObjectAccess::getPropertyPath((array)$subject, $propertyPath);
-    }
 
     public static function getExtensionConfiguration(Registration $registration, string $propertyPath = null): mixed
     {
@@ -39,7 +29,7 @@ class SettingsUtility
             }
         }
 
-        return self::getPropertyPath($configuration, $propertyPath);
+        return ArrayPathUtility::getPath($configuration, $propertyPath);
     }
 
     public static function getPluginConfiguration(Registration $registration, string $propertyPath = null): mixed
@@ -57,6 +47,6 @@ class SettingsUtility
             }
         }
 
-        return self::getPropertyPath($settings, $propertyPath);
+        return ArrayPathUtility::getPath($settings, $propertyPath);
     }
 }
