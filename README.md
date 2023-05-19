@@ -44,6 +44,12 @@ call_user_func(static function () {
 });
 ```
 
+### Override existing registration
+
+In case you want to override an existing registration the event `BeforeRegistrationEvent` gives you access to all properties, to update them before the rampage extension does the rest.
+
+Alternatively an extension configuration template will be created automatically. Use the settings module of the TYPO3 InstallTool to override the default values.
+
 ## Extend plugin flexForm
 
 Use the `AddFlexFormEvent` to extend the flexForm of a plugin. Example:
