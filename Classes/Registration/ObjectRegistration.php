@@ -15,8 +15,8 @@ use Zeroseven\Rampage\Utility\CastUtility;
 class ObjectRegistration extends AbstractEntityRegistration
 {
     protected ?string $controllerClassName = null;
-    protected bool $tagField = false;
-    protected bool $topField = false;
+    protected bool $tags = false;
+    protected bool $top = false;
     protected array $topicPageIds = [];
     protected array $contactPageIds = [];
     protected ?string $name = null;
@@ -43,46 +43,53 @@ class ObjectRegistration extends AbstractEntityRegistration
 
     public function enableTags(): self
     {
-        $this->tagField = true;
+        $this->tags = true;
 
         return $this;
     }
 
     public function disableTags(): self
     {
-        $this->tagField = false;
+        $this->tags = false;
 
         return $this;
     }
 
     public function tagsEnabled(): bool
     {
-        return $this->tagField;
+        return $this->tags;
     }
 
     public function enableTop(): self
     {
-        $this->topField = true;
+        $this->top = true;
 
         return $this;
     }
 
     public function disableTop(): self
     {
-        $this->topField = false;
+        $this->top = false;
 
         return $this;
     }
 
     public function topEnabled(): bool
     {
-        return $this->topField;
+        return $this->top;
     }
 
     public function enableTopics(mixed $pageIds): self
     {
+        $this->addTopicPageIds($pageIds);
+
+        return $this;
+    }
+
+    public function addTopicPageIds($pageIds): self
+    {
         try {
-            $this->topicPageIds = array_map(static fn($pageId) => (int)$pageId, array_filter(CastUtility::array($pageIds), static fn($pageId) => MathUtility::canBeInterpretedAsInteger($pageId)));
+            $this->topicPageIds = array_merge($this->topicPageIds ?? [], array_map(static fn($pageId) => (int)$pageId, array_filter(CastUtility::array($pageIds), static fn($pageId) => MathUtility::canBeInterpretedAsInteger($pageId))));
         } catch (TypeException $e) {
         }
 
@@ -108,8 +115,15 @@ class ObjectRegistration extends AbstractEntityRegistration
 
     public function enableContact(mixed $pageIds): self
     {
+        $this->addContactPageIds($pageIds);
+
+        return $this;
+    }
+
+    public function addContactPageIds($pageIds): self
+    {
         try {
-            $this->contactPageIds = array_map(static fn($pageId) => (int)$pageId, array_filter(CastUtility::array($pageIds), static fn($pageId) => MathUtility::canBeInterpretedAsInteger($pageId)));
+            $this->contactPageIds = array_merge($this->contactPageIds ?? [], array_map(static fn($pageId) => (int)$pageId, array_filter(CastUtility::array($pageIds), static fn($pageId) => MathUtility::canBeInterpretedAsInteger($pageId))));
         } catch (TypeException $e) {
         }
 

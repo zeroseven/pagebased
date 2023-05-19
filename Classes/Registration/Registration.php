@@ -13,20 +13,33 @@ use Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent;
 class Registration
 {
     protected string $extensionName;
+    protected ?string $identifier = null;
     protected ?ObjectRegistration $object = null;
     protected ?CategoryRegistration $category = null;
     protected ?ListPluginRegistration $listPlugin = null;
     protected ?FilterPluginRegistration $filterPlugin = null;
-    protected ?string $identifier = null;
 
-    public function __construct(string $extensionName)
+    public function __construct(string $extensionName, ?string $identifier = null)
     {
         $this->extensionName = $extensionName;
+        $this->identifier = $identifier ?? $extensionName;
     }
 
     public function getExtensionName(): string
     {
         return $this->extensionName;
+    }
+
+    public function getIdentifier(): string
+    {
+        return $this->identifier ?? $this->identifier = $this->extensionName . '_' . substr(md5($this->object->getClassName()), 0, 7);;
+    }
+
+    public function setIdentifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
+
+        return $this;
     }
 
     public function getObject(): ObjectRegistration
@@ -87,15 +100,9 @@ class Registration
         return $this->filterPlugin !== null;
     }
 
-    public function getIdentifier(): string
-    {
-        return $this->identifier;
-    }
-
     /** @throws RegistrationException */
     public function store(): void
     {
-        $this->identifier = $this->extensionName . '_' . substr(md5($this->object->getClassName()), 0, 7);
         GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new BeforeStoreRegistrationEvent($this))->getRegistration();
 
         if ($this->object === null) {
