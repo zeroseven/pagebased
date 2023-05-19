@@ -196,5 +196,5 @@ call_user_func(static function (string $table) {
             \Zeroseven\Rampage\Utility\DetectionUtility::SITE_FIELD_NAME,
             \Zeroseven\Rampage\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
             \Zeroseven\Rampage\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME
-        ]), '', 'after:title');
+        ]), '', 'before:backend_layout');
 }, 'pages');
