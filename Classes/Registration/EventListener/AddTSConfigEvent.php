@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration\EventListener;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
+use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
 use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
 use Zeroseven\Rampage\Registration\Registration;
 
@@ -33,7 +33,7 @@ class AddTSConfigEvent
         }
     }
 
-    public function __invoke(StoreRegistrationEvent $event): void
+    public function __invoke(AfterStoreRegistrationEvent $event): void
     {
         $this->registration = $event->getRegistration();
 

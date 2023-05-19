@@ -8,7 +8,7 @@ use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use Zeroseven\Rampage\Registration\AbstractPluginRegistration;
-use Zeroseven\Rampage\Registration\Event\StoreRegistrationEvent;
+use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
 use Zeroseven\Rampage\Registration\Registration;
 
 class RegisterPluginEvent
@@ -33,7 +33,7 @@ class RegisterPluginEvent
         }
     }
 
-    public function __invoke(StoreRegistrationEvent $event)
+    public function __invoke(AfterStoreRegistrationEvent $event)
     {
         try {
             if ($this->registration = $event->getRegistration()) {

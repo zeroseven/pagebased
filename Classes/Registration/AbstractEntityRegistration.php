@@ -10,7 +10,7 @@ use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
 use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
 
-abstract class AbstractEntityRegistration
+abstract class AbstractEntityRegistration implements RegistrationPropertyInterface
 {
     protected string $title;
     protected ?string $className = null;
@@ -26,6 +26,13 @@ abstract class AbstractEntityRegistration
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
     }
 
     public function getClassName(): string

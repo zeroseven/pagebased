@@ -6,7 +6,7 @@ namespace Zeroseven\Rampage\Registration\Event;
 
 use Zeroseven\Rampage\Registration\Registration;
 
-final class StoreRegistrationEvent
+final class BeforeStoreRegistrationEvent
 {
     private Registration $registration;
 
