@@ -128,6 +128,7 @@ abstract class AbstractPageObjectController extends AbstractController implement
         $this->view->assignMultiple(GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new AssignTemplateVariablesEvent([
             'objects' => $objects,
             'demand' => $this->demand,
+            'registration' => $this->registration,
             $this->pluralizeWord(strtolower($this->registration->getObject()->getName())) => $objects // alias variable
         ], $this->registration, 'list'))->getVariables());
     }
@@ -149,7 +150,8 @@ abstract class AbstractPageObjectController extends AbstractController implement
             'tags' => TagUtility::getTagsByRegistration($this->registration),
             'topics' => GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($this->registration),
             'contacts' => GeneralUtility::makeInstance(ContactRepository::class)->findByRegistration($this->registration),
-            'demand' => $this->demand
+            'demand' => $this->demand,
+            'registration' => $this->registration
         ], $this->registration, 'filter'))->getVariables());
     }
 }
