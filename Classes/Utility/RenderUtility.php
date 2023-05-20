@@ -48,7 +48,6 @@ class RenderUtility
             $settings = array_merge($settings ?? [], SettingsUtility::getPluginConfiguration($registration));
             $view = $this->initializeView($registration, $settings);
 
-
             try {
                 $object || $object = $registration->getObject()->getRepositoryClass()->findByUid($pageUid);
             } catch (AspectNotFoundException $e) {
