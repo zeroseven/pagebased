@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Event;
 
 use JsonException;
 use TYPO3\CMS\Core\Resource\FileReference;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference as ExtbaseFileReference;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
@@ -42,21 +43,33 @@ final class StructuredDataEvent
         return $this->row;
     }
 
+    public function getProperties(): array
+    {
+        return $this->properties->toArray();
+    }
+
     public function getProperty(string $path): mixed
     {
         return $this->properties->get($path);
     }
 
-    public function setProperty(string $path, $value): self
+    public function setProperty(string $path, mixed $value): self
     {
         $this->properties->set($path, $value);
 
         return $this;
     }
 
-    public function addProperty(string $path, $value, bool $force = null): self
+    public function addProperty(string $path, mixed $value, bool $force = null): self
     {
         $this->properties->add($path, $value, $force);
+
+        return $this;
+    }
+
+    public function addPropertyType(string $path, array $value, string $type, bool $force = null): self
+    {
+        $this->properties->add($path, array_merge(['@type' => $type], $value), $force);
 
         return $this;
     }
@@ -94,10 +107,6 @@ final class StructuredDataEvent
 
     protected function parseProperties(array $array): array
     {
-        if (empty($array['@type'])) {
-            return [];
-        }
-
         // Create output
         $output = [];
 
@@ -110,6 +119,10 @@ final class StructuredDataEvent
                 $value = $this->createImageObjectType($value);
             }
 
+            if ($value instanceof ExtbaseFileReference) {
+                $value = $this->createImageObjectType($value->getOriginalResource());
+            }
+
             $output[$key] = is_array($value) ? $this->parseProperties($value) : $value;
         }
 
@@ -120,6 +133,7 @@ final class StructuredDataEvent
     {
         if (!$this->properties->isEmpty()) {
             try {
+                debug($this->parseProperties($this->properties->toArray()), self::class);
                 return json_encode($this->parseProperties($this->properties->toArray()), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             } catch (JsonException $e) {
             }

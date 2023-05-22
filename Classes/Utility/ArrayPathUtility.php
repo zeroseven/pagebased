@@ -38,7 +38,7 @@ class ArrayPathUtility
 
     public function get(string $propertyPath = null): mixed
     {
-        if($propertyPath === null) {
+        if (empty($propertyPath)) {
             return $this->data;
         }
 
@@ -51,6 +51,14 @@ class ArrayPathUtility
 
     public function set(string $propertyPath, mixed $value): self
     {
+        if ($propertyPath === '' && is_array($value)) {
+            foreach ($value as $key => $v) {
+                $this->set($key, $v);
+            }
+
+            return $this;
+        }
+
         if (($path = $this->convertPathToPropertyPath($propertyPath)) && $this->propertyAccessor->isWritable($this->data, $path)) {
             $this->propertyAccessor->setValue($this->data, $path, $value);
         }

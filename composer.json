@@ -17,6 +17,7 @@
   ],
   "require": {
     "typo3/cms-core": "^11.5.0",
+    "symfony/property-access": "*",
     "ext-json": "*"
   },
   "autoload": {
