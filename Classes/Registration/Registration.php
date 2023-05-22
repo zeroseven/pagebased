@@ -103,8 +103,6 @@ final class Registration
     /** @throws RegistrationException */
     public function store(): void
     {
-        GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new BeforeStoreRegistrationEvent($this))->getRegistration();
-
         if ($this->object === null) {
             throw new RegistrationException(sprintf('An object must be configured in extension "%s". Please call "setObject()" methode, contains instance of "%s"', $this->extensionName, ObjectRegistration::class), 1684312103);
         }
@@ -112,6 +110,8 @@ final class Registration
         if ($this->category === null) {
             throw new RegistrationException(sprintf('A category must be configured in extension "%s". Please call "setCategory()" methode, contains instance of "%s"', $this->extensionName, CategoryRegistration::class), 1684312124);
         }
+
+        GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new BeforeStoreRegistrationEvent($this))->getRegistration();
 
         RegistrationService::addRegistration($this);
 

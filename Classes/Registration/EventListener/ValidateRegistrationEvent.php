@@ -6,15 +6,16 @@ namespace Zeroseven\Rampage\Registration\EventListener;
 
 use LogicException;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use Zeroseven\Rampage\Controller\AbstractPageObjectController;
 use Zeroseven\Rampage\Controller\PageObjectControllerInterface;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\AbstractCategory;
 use Zeroseven\Rampage\Domain\Model\AbstractObject;
+use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -163,8 +164,10 @@ class ValidateRegistrationEvent
     /** @throws RegistrationException */
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
-        foreach (RegistrationService::getRegistrations() as $registration) {
-            $this->checkRegistration($registration);
+        if (Environment::isCli()) {
+            foreach (RegistrationService::getRegistrations() as $registration) {
+                $this->checkRegistration($registration);
+            }
         }
     }
 }
