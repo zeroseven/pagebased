@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace {{ cookiecutter.vendor_name|capitalize }}\{{ cookiecutter.extension_key.split('_')|map('capitalize')|join  }}\Domain\Model;
+namespace {{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Model;
 
 use Zeroseven\Rampage\Domain\Model\AbstractCategory;
 
@@ -10,6 +10,6 @@ class Category extends AbstractCategory
 {
     public static function getType(): int
     {
-        return 77;
+        return {{ cookiecutter.category_doktype }};
     }
 }

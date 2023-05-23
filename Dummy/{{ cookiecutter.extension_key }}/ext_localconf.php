@@ -4,16 +4,16 @@ defined('TYPO3') || die('🧨');
 
 call_user_func(static function () {
     $object = \Zeroseven\Rampage\Registration\ObjectRegistration::create('{{ cookiecutter.object_name|capitalize }}')
-        ->setClassName(\{{ cookiecutter.vendor_name|capitalize }}\{{ cookiecutter.extension_key.split('_')|map('capitalize')|join  }}\Domain\Model\{{ cookiecutter.object_name|lower|capitalize }}::class)
-        ->setControllerClass(\{{ cookiecutter.vendor_name|capitalize }}\{{ cookiecutter.extension_key.split('_')|map('capitalize')|join  }}\Controller\{{ cookiecutter.object_name|lower|capitalize }}Controller::class)
-        ->setRepositoryClass(\{{ cookiecutter.vendor_name|capitalize }}\{{ cookiecutter.extension_key.split('_')|map('capitalize')|join  }}\Domain\Repository\{{ cookiecutter.object_name|lower|capitalize }}Repository::class)
+        ->setClassName(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Model\{{ cookiecutter.__object_class_name }}::class)
+        ->setControllerClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Controller\{{ cookiecutter.__object_class_name }}Controller::class)
+        ->setRepositoryClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Repository\{{ cookiecutter.__object_class_name }}Repository::class)
         ->enableTopics(25)
         ->enableTop()
         ->enableTags();
 
     $category = \Zeroseven\Rampage\Registration\CategoryRegistration::create('{{ cookiecutter.object_name|capitalize }}-Category')
-        ->setClassName(\{{ cookiecutter.vendor_name|capitalize }}\{{ cookiecutter.extension_key.split('-')|map('capitalize')|join  }}\Domain\Model\Category::class)
-        ->setRepositoryClass(\{{ cookiecutter.vendor_name|capitalize }}\{{ cookiecutter.extension_key.split('-')|map('capitalize')|join  }}\Domain\Repository\CategoryRepository::class);
+        ->setClassName(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Model\Category::class)
+        ->setRepositoryClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Repository\CategoryRepository::class);
 
     $listPlugin = \Zeroseven\Rampage\Registration\ListPluginRegistration::create('{{ cookiecutter.object_name|capitalize }} list')
         ->setDescription('Display object in a list')

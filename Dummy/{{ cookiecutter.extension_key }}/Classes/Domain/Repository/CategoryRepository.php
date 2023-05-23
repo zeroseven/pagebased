@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace {{ cookiecutter.vendor_name|capitalize }}\{{ cookiecutter.extension_key.split('_')|map('capitalize')|join  }}\Domain\Repository;
+namespace {{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Repository;
 
 use Zeroseven\Rampage\Domain\Repository\AbstractCategoryRepository;
 
