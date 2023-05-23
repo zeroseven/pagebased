@@ -50,6 +50,16 @@ In case you want to override an existing registration the event `BeforeRegistrat
 
 Alternatively an extension configuration template will be created automatically. Use the settings module of the TYPO3 InstallTool to override the default values.
 
+## Create your own extension
+
+The fast and easy way to create a new Rampage-Extension is to build it from the extension dummy template.
+
+1. Install [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/installation.html#alternate-installations)
+2. Run `cookiecutter rampage/Resources/Private/ExtensionDummy`
+
+You will be asked for a view variables like extension key, object name, etc.
+After that a new configured extension will be generated for you.
+
 ## Extend plugin flexForm
 
 Use the `AddFlexFormEvent` to extend the flexForm of a plugin. Example:
