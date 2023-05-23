@@ -16,16 +16,19 @@ abstract class AbstractPage extends AbstractEntity
 {
     public const TABLE_NAME = 'pages';
 
-    protected int $documentType;
-    protected int $l10nParent;
-    protected int $shortcut;
-    protected int $shortcutMode;
-    protected string $title;
-    protected string $subtitle;
-    protected string $navigationTitle;
-    protected string $description;
-    protected string $abstract;
-    protected DateTime $lastChange;
+    protected int $documentType = 0;
+    protected int $l10nParent = 0;
+    protected int $shortcut = 0;
+    protected int $shortcutMode = 0;
+    protected string $title = '';
+    protected string $subtitle = '';
+    protected string $navigationTitle = '';
+    protected string $description = '';
+    protected string $abstract = '';
+    protected ?DateTime $lastChangeDate = null;
+    protected ?DateTime $createDate = null;
+    protected ?DateTime $accessStartDate = null;
+    protected ?DateTime $accessEndDate = null;
     protected ?FileReference $firstMedia = null;
     protected ?FileReference $firstImage = null;
     protected ?ObjectStorage $media = null;
@@ -132,14 +135,47 @@ abstract class AbstractPage extends AbstractEntity
         return $this;
     }
 
-    public function getLastChange(): ?DateTime
+    public function getLastChangeDate(): ?DateTime
     {
-        return $this->lastChange;
+        return $this->lastChangeDate;
     }
 
-    public function setLastChange(DateTime $lastChange): self
+    public function setLastChangeDate(DateTime $lastChangeDate): self
     {
-        $this->lastChange = $lastChange;
+        $this->lastChangeDate = $lastChangeDate;
+        return $this;
+    }
+
+    public function getCreateDate(): ?DateTime
+    {
+        return $this->createDate;
+    }
+
+    public function setCreateDate(DateTime $createDate): self
+    {
+        $this->createDate = $createDate;
+        return $this;
+    }
+
+    public function getAccessStartDate(): ?DateTime
+    {
+        return $this->accessStartDate;
+    }
+
+    public function setAccessStartDate(DateTime $accessStartDate): self
+    {
+        $this->accessStartDate = $accessStartDate;
+        return $this;
+    }
+
+    public function getAccessEndDate(): ?DateTime
+    {
+        return $this->accessEndDate;
+    }
+
+    public function setAccessEndDate(DateTime $accessEndDate): self
+    {
+        $this->accessEndDate = $accessEndDate;
         return $this;
     }
 

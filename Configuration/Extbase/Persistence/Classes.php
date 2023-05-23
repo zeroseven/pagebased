@@ -16,8 +16,17 @@ return [
             'navigationTitle' => [
                 'fieldName' => 'nav_title'
             ],
-            'lastChange' => [
+            'lastChangeDate' => [
                 'fieldName' => 'SYS_LASTCHANGED'
+            ],
+            'createDate' => [
+                'fieldName' => 'crdate'
+            ],
+            'accessStartDate' => [
+                'fieldName' => 'starttime'
+            ],
+            'accessEndDate' => [
+                'fieldName' => 'endtime'
             ]
         ]
     ],
