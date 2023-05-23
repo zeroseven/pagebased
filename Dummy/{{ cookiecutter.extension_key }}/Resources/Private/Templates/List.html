@@ -1,0 +1,37 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:rampage="http://typo3.org/ns/Zeroseven/Rampage/ViewHelpers" data-namespace-typo3-fluid="true">
+	<rampage:pagination items="{objects}" itemsPerStage="{settings.itemsPerStage}" maxStages="{settings.maxStages}" as="pagination">
+		<div id="id-{{ cookiecutter.extension_key }}-l{data.uid}">
+			<f:if condition="{requestArguments._ajax}">
+				<f:then>
+					<rampage:pagination.eachStage selected="1">
+						{f:render(section: "Stage", arguments: "{_all}")}
+					</rampage:pagination.eachStage>
+				</f:then>
+				<f:else>
+					<rampage:pagination.eachStage active="1" iteration="i">
+						{f:render(section: "Stage", arguments: "{_all}")}
+					</rampage:pagination.eachStage>
+				</f:else>
+			</f:if>
+		</div>
+
+		<div id="id-{{ cookiecutter.extension_key }}-c{data.uid}">
+			<rampage:pagination.link.next ajaxAppendSelectors="#id-{{ cookiecutter.extension_key }}-l{data.uid}" ajaxReplaceSelectors="#id-{{ cookiecutter.extension_key }}-c{data.uid}" demand="{demand}">
+				Next
+			</rampage:pagination.link.next>
+		</div>
+	</rampage:pagination>
+
+	<f:section name="Stage">
+		<rampage:pagination.eachItem as="object" iteration="i">
+			<div class="item{i.cycle}">
+				<f:link.page pageUid="{object.uid}">
+					<f:if condition="{object.firstImage}">
+							<f:image image="{object.firstImage}" width="200" /><br>
+					</f:if>
+					{object.title} <small>{object.date -> f:format.date(format:"d.m.Y")}</small>
+				</f:link.page>
+			</div>
+		</rampage:pagination.eachItem>
+	</f:section>
+</html>

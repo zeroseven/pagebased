@@ -1,0 +1,3 @@
+plugin.tx_{{ cookiecutter.extension_key.replace("_", "") }} {
+
+}

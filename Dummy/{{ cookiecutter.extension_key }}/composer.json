@@ -1,0 +1,27 @@
+{
+  "name": "{{ cookiecutter.vendor_name|lower }}/{{ cookiecutter.extension_key }}",
+  "license": "GPL-2.0-only",
+  "type": "typo3-cms-extension",
+  "authors": [
+    {
+      "name": "zeroseven design studios GmbH",
+      "email": "typo3@zeroseven.de",
+      "homepage": "https://www.zeroseven.de/",
+      "role": "Company"
+    }
+  ],
+  "require": {
+    "typo3/cms-core": "^11.5.0",
+    "zeroseven/rampage": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zeroseven\\{{ cookiecutter.extension_key.split('_')|map('capitalize')|join  }}\\": "Classes"
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "{{ cookiecutter.extension_key }}"
+    }
+  }
+}
