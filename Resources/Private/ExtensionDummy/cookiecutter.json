@@ -1,0 +1,10 @@
+{
+	"extension_key": "my_extension",
+	"vendor_name": "Zeroseven",
+	"object_name": "e.g. job, news, event",
+	"category_doktype": "a number between 10 and 200",
+	"__namespace_vendor": "{{ cookiecutter.vendor_name|lower|capitalize }}",
+	"__namespace_extension": "{{ cookiecutter.extension_key.split('_')|map('capitalize')|join }}",
+	"__object_class_name": "{{ cookiecutter.object_name|lower|capitalize }}",
+	"__plugin_key": "{{cookiecutter.extension_key.replace('_', '') }}"
+}
