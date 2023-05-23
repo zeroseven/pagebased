@@ -1,3 +1,12 @@
+# Configure plugin
 plugin.tx_{{ cookiecutter.__plugin_key }} {
 
+}
+
+# Add info template to the {{ cookiecutter.object_name|lower }} page
+page.1684843032{{ cookiecutter.category_doktype }} = USER
+page.1684843032{{ cookiecutter.category_doktype }} {
+  userFunc = Zeroseven\Rampage\Utility\RenderUtility->renderUserFunc
+  file = EXT:{{ cookiecutter.extension_key }}/Resources/Private/Templates/Info.html
+  registration = {{ cookiecutter.extension_key }}
 }
