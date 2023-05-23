@@ -1,9 +1,23 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-    <f:if condition="object">
-        <h1>({object.title})</h1>
+<f:if condition="object">
+	<h1>{object.title}</h1>
 
-        <f:if condition="{object.firstImage}">
-            <f:image image="{object.firstImage}" width="200" />
-        </f:if>
-    </f:if>
+	<f:if condition="{object.firstImage}">
+		<f:image image="{object.firstImage}" width="200"/>
+	</f:if>
+
+	<f:if condition="{object.parentObject}">
+		<f:link.page pageUid="{object.parentObject.uid}">{object.parentObject.title}</f:link.page>
+	</f:if>
+
+	<f:if condition="{object.childObjects}">
+		<ul>
+			<f:for each="{object.childObjects}" as="childObject">
+				<li>
+					<f:link.page pageUid="{childObject.uid}">{childObject.title}</f:link.page>
+				</li>
+			</f:for>
+		</ul>
+	</f:if>
+</f:if>
 </html>

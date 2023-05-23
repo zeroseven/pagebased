@@ -211,7 +211,7 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
             return $this->parentObject = $registration->getObject()->getRepositoryClass()->findByUid(array_key_first($parentPages));
         }
 
-        return null;
+        return $this->parentObject;
     }
 
     public function getChildObjects(): ?QueryResultInterface
@@ -220,7 +220,7 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
             return $this->childObjects = $registration->getObject()->getRepositoryClass()->findChildObjects($this);
         }
 
-        return null;
+        return $this->childObjects;
     }
 
     public function getRelationsTo(): ObjectStorage
