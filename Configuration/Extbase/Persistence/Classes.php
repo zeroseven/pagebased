@@ -34,25 +34,25 @@ return [
         'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
         'properties' => [
             'top' => [
-                'fieldName' => '_rampage_top'
+                'fieldName' => 'rampage_top'
             ],
             'date' => [
-                'fieldName' => '_rampage_date'
+                'fieldName' => 'rampage_date'
             ],
             'tagsString' => [
-                'fieldName' => '_rampage_tags'
+                'fieldName' => 'rampage_tags'
             ],
             'topics' => [
-                'fieldName' => '_rampage_topics'
+                'fieldName' => 'rampage_topics'
             ],
             'contact' => [
-                'fieldName' => '_rampage_contact'
+                'fieldName' => 'rampage_contact'
             ],
             'relationsTo' => [
-                'fieldName' => '_rampage_relations_to'
+                'fieldName' => 'rampage_relations_to'
             ],
             'relationsFrom' => [
-                'fieldName' => '_rampage_relations_from'
+                'fieldName' => 'rampage_relations_from'
             ]
         ]
     ]

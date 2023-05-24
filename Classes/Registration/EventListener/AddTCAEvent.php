@@ -50,24 +50,24 @@ class AddTCAEvent
         if ($objectRegistration = $registration->getObject()) {
             $displayCondition = TCAUtility::getObjectDisplayCondition($registration);
 
-            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_date', $displayCondition);
-            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_relations_to', $displayCondition);
-            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_relations_from', $displayCondition);
+            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_date', $displayCondition);
+            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_relations_to', $displayCondition);
+            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_relations_from', $displayCondition);
 
             if ($objectRegistration->topEnabled()) {
-                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_top', $displayCondition);
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_top', $displayCondition);
             }
 
             if ($objectRegistration->tagsEnabled()) {
-                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_tags', $displayCondition);
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_tags', $displayCondition);
             }
 
             if ($objectRegistration->topicsEnabled()) {
-                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_topics', $displayCondition);
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_topics', $displayCondition);
             }
 
             if ($objectRegistration->contactEnabled()) {
-                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, '_rampage_contact', $displayCondition);
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_contact', $displayCondition);
             }
         }
     }

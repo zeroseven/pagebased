@@ -3,31 +3,31 @@
   <file source-language="en" datatype="plaintext" original="messages">
     <header />
     <body>
-	  <trans-unit id="pages._rampage_top">
+	  <trans-unit id="pages.rampage_top">
 	    <source>Top</source>
 	  </trans-unit>
-	  <trans-unit id="pages._rampage_date">
+	  <trans-unit id="pages.rampage_date">
 	    <source>Date</source>
 	  </trans-unit>
-	  <trans-unit id="pages._rampage_tags">
+	  <trans-unit id="pages.rampage_tags">
 	    <source>Tags</source>
 	  </trans-unit>
-	  <trans-unit id="pages._rampage_topics">
+	  <trans-unit id="pages.rampage_topics">
 	    <source>Topics</source>
 	  </trans-unit>
-	  <trans-unit id="pages._rampage_contact">
+	  <trans-unit id="pages.rampage_contact">
 	    <source>Contact</source>
 	  </trans-unit>
-	  <trans-unit id="pages._rampage_tags.placeholder">
+	  <trans-unit id="pages.rampage_tags.placeholder">
 	    <source>Add new tags</source>
 	  </trans-unit>
-	  <trans-unit id="pages._rampage_relations_to">
+	  <trans-unit id="pages.rampage_relations_to">
 	    <source>Relations to</source>
 	  </trans-unit>
-	  <trans-unit id="pages._rampage_relations_from">
+	  <trans-unit id="pages.rampage_relations_from">
 	    <source>Relations from</source>
 	  </trans-unit>
-	  <trans-unit id="pages._rampage_redirect_category">
+	  <trans-unit id="pages.rampage_redirect_category">
 	    <source>Redirect category</source>
 	  </trans-unit>
 

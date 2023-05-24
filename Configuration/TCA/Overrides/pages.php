@@ -4,9 +4,9 @@ defined('TYPO3') || die('🤬 F**k off!');
 
 call_user_func(static function (string $table) {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [
-        '_rampage_top' => [
+        'rampage_top' => [
             'exclude' => false,
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_top',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_top',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'check',
@@ -16,10 +16,10 @@ call_user_func(static function (string $table) {
                 'default' => 0
             ]
         ],
-        '_rampage_date' => [
+        'rampage_date' => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_date',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_date',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'input',
@@ -29,9 +29,9 @@ call_user_func(static function (string $table) {
                 'default' => time()
             ]
         ],
-        '_rampage_tags' => [
+        'rampage_tags' => [
             'exclude' => false,
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_tags',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_tags',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'user',
@@ -40,10 +40,10 @@ call_user_func(static function (string $table) {
                 'default' => ''
             ]
         ],
-        '_rampage_topics' => [
+        'rampage_topics' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_topics',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_topics',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'select',
@@ -55,10 +55,10 @@ call_user_func(static function (string $table) {
                 'default' => 0
             ]
         ],
-        '_rampage_contact' => [
+        'rampage_contact' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_contact',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_contact',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'select',
@@ -72,16 +72,16 @@ call_user_func(static function (string $table) {
                 ]
             ]
         ],
-        '_rampage_relations_to' => [
+        'rampage_relations_to' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_relations_to',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_relations_to',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'group',
                 'internal_type' => 'db',
                 'allowed' => $table,
                 'foreign_table' => $table,
-                'MM_opposite_field' => '_rampage_relations_from',
+                'MM_opposite_field' => 'rampage_relations_from',
                 'MM' => 'tx_rampage_relation_mm',
                 'size' => 5,
                 'autoSizeMax' => 10,
@@ -106,9 +106,9 @@ call_user_func(static function (string $table) {
                 ]
             ]
         ],
-        '_rampage_relations_from' => [
+        'rampage_relations_from' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_relations_from',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_relations_from',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'group',
@@ -121,10 +121,10 @@ call_user_func(static function (string $table) {
                 'readOnly' => 1
             ]
         ],
-        '_rampage_redirect_category' => [
+        'rampage_redirect_category' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages._rampage_redirect_category',
+            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_redirect_category',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'check',
@@ -192,7 +192,7 @@ call_user_func(static function (string $table) {
         ]
     ]);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, _rampage_top, _rampage_date, _rampage_tags, _rampage_topics, _rampage_contact, _rampage_relations_to, _rampage_relations_from, _rampage_redirect_category, ' . implode(',', [
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, rampage_top, rampage_date, rampage_tags, rampage_topics, rampage_contact, rampage_relations_to, rampage_relations_from, rampage_redirect_category, ' . implode(',', [
             \Zeroseven\Rampage\Utility\DetectionUtility::SITE_FIELD_NAME,
             \Zeroseven\Rampage\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
             \Zeroseven\Rampage\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME

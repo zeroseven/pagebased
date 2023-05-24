@@ -28,7 +28,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     protected Registration $registration;
 
     protected $defaultOrderings = [
-        '_rampage_date' => QueryInterface::ORDER_DESCENDING,
+        'rampage_date' => QueryInterface::ORDER_DESCENDING,
         'uid' => QueryInterface::ORDER_ASCENDING
     ];
 
