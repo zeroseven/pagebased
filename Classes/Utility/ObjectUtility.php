@@ -14,6 +14,16 @@ use Zeroseven\Rampage\Registration\RegistrationService;
 
 class ObjectUtility
 {
+    protected static function getObjectCache(int $uid): ?Registration
+    {
+        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['object'][$uid] ?? null;
+    }
+
+    protected static function setObjectCache(int $uid, Registration $registration): Registration
+    {
+        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['object'][$uid] = $registration;
+    }
+
     protected static function getPageTypeField(): string
     {
         return $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'];
@@ -41,7 +51,13 @@ class ObjectUtility
 
     public static function isObject(int $pageUid = null, array $row = null): ?Registration
     {
-        if (($typeField = self::getPageTypeField()) && ($pageUid || ($pageUid = (int)($row['uid'] ?? 0)) || ($pageUid = self::getPageUid()))) {
+        $pageUid || ($pageUid = (int)($row['uid'] ?? 0)) || ($pageUid = self::getPageUid());
+
+        if ($registration = self::getObjectCache($pageUid)) {
+            return $registration;
+        }
+
+        if ($pageUid && $typeField = self::getPageTypeField()) {
             $registrationField = DetectionUtility::REGISTRATION_FIELD_NAME;
 
             if (!isset($row[$typeField], $row[$registrationField])) {
@@ -49,7 +65,7 @@ class ObjectUtility
             }
 
             if (($identifier = $row[$registrationField]) && !self::isCategory($pageUid, $row) && $registration = RegistrationService::getRegistrationByIdentifier($identifier)) {
-                return $registration;
+                return self::setObjectCache($pageUid, $registration);
             }
         }
 
