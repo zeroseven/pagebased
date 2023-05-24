@@ -88,3 +88,14 @@ class ExtendFlexFormEvent
     }
 }
 ```
+
+## Commands and Tasks
+
+Update registration information of category and object pages with the command `rampage:update`. Example:
+
+| Command | Description |
+|---------|-------------|
+|`rampage:update 7`| Starting from page uid: `7`. |
+|`rampage:update 7 2`| Starting from page uid: `7` with depth of `2` levels |
+
+This can be useful if you change the identifier of a registration, or you add pages by API.
