@@ -16,20 +16,46 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\ObjectUtility;
+use Zeroseven\Rampage\Utility\RootLineUtility;
 
 class ResortPageTree
 {
+    protected function addNotification(int $parentPageUid, Registration $registration): void
+    {
+        $parentPage = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $parentPageUid);
+
+        $message = GeneralUtility::makeInstance(
+            FlashMessage::class,
+            LocalizationUtility::translate(
+                'LLL:EXT:rampage/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.description',
+                'rampage',
+                [0 => BackendUtility::getRecordTitle(AbstractPage::TABLE_NAME, $parentPage)]
+            ),
+            LocalizationUtility::translate(
+                'LLL:EXT:rampage/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.title',
+                'rampage',
+                [0 => $registration->getObject()->getTitle()]
+            ), AbstractMessage::INFO, true
+        );
+
+        $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
+
+        try {
+            $messageQueue->enqueue($message);
+        } catch (Exception $e) {
+        }
+    }
+
     protected function getUidList(QueryResultInterface $result): array
     {
         return array_map(static fn($object) => $object->getUid(), $result->toArray());
     }
 
-    protected function updateSorting(int $parentPageUid, Registration $registration, DataHandler $dataHandler): bool
+    protected function updateSorting(int $parentPageUid, Registration $registration, DataHandler $dataHandler): void
     {
         $repository = $registration->getObject()->getRepositoryClass();
-        $demand = $registration->getObject()->getDemandClass()->setCategory($parentPageUid);
+        $demand = $registration->getObject()->getDemandClass()->setUidList(RootLineUtility::collectPagesBelow($parentPageUid, false, 1));
 
         $expectedOrdering = $repository->findByDemand($demand);
         $currentOrdering = $repository->findByDemand($demand->setOrderBy('sorting'));
@@ -39,8 +65,6 @@ class ResortPageTree
             $currentUidList = $this->getUidList($currentOrdering);
 
             if (implode('', $currentUidList) !== implode('', $expectedUidList)) {
-
-                // Create command to sort the pages
                 $command = [];
 
                 foreach (array_reverse($expectedUidList) as $uid) {
@@ -50,11 +74,10 @@ class ResortPageTree
                 $dataHandler->start([], $command);
                 $dataHandler->process_cmdmap();
 
-                return true;
+                $this->addNotification($parentPageUid, $registration);
+                BackendUtility::setUpdateSignal('updatePageTree');
             }
         }
-
-        return false;
     }
 
     /** @throws Exception */
@@ -62,35 +85,17 @@ class ResortPageTree
     {
         foreach ($dataHandler->datamap as $table => $uids) {
             if ($table === AbstractPage::TABLE_NAME) {
+                $pidList = [];
 
-                // Slice the first three …
-                foreach (array_slice($uids, 0, 3, true) as $uid => $data) {
-                    if (MathUtility::canBeInterpretedAsInteger($uid) && $registration = ObjectUtility::isObject($uid)) {
-                        $pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']);
+                foreach ($uids as $uid => $data) {
+                    MathUtility::canBeInterpretedAsInteger($uid)
+                    && ($registration = ObjectUtility::isObject($uid, $data))
+                    && ($pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']))
+                    && ($pidList[$pid] = $registration);
+                }
 
-                        if ($this->updateSorting($pid, $registration, $dataHandler)) {
-                            $parentPage = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pid);
-
-                            $message = GeneralUtility::makeInstance(
-                                FlashMessage::class,
-                                LocalizationUtility::translate(
-                                    'LLL:EXT:rampage/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.description',
-                                    'rampage',
-                                    [0 => BackendUtility::getRecordTitle(AbstractPage::TABLE_NAME, $parentPage)]
-                                ),
-                                LocalizationUtility::translate(
-                                    'LLL:EXT:rampage/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.title',
-                                    'rampage',
-                                    [0 => $registration->getObject()->getTitle()]
-                                ), AbstractMessage::INFO, true
-                            );
-
-                            $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
-                            $messageQueue->enqueue($message);
-
-                            BackendUtility::setUpdateSignal('updatePageTree');
-                        }
-                    }
+                foreach ($pidList as $pid => $registration) {
+                    $this->updateSorting($pid, $registration, $dataHandler);
                 }
             }
         }
