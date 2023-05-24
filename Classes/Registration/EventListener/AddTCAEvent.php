@@ -19,7 +19,6 @@ use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Rampage\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\DetectionUtility;
 use Zeroseven\Rampage\Utility\TCAUtility;
 
 class AddTCAEvent
@@ -104,7 +103,7 @@ class AddTCAEvent
     protected function addListPlugin(Registration $registration): void
     {
         if ($registration->getListPlugin() && $cType = $this->createPlugin($registration, $registration->getListPlugin())) {
-            $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'FILTER');
+            $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.filter');
 
             if ($typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
                 $filterSheet->addField('settings.category', [
@@ -116,11 +115,11 @@ class AddTCAEvent
                     'foreign_table' => 'pages',
                     'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $typeField, $registration->getCategory()->getObjectType()),
                     'items' => [
-                        ['NO RESTRICTION', '--div--'],
-                        ['SHOW ALL', 0],
-                        ['AVAILABLE CATEGORIES', '--div--'],
+                        ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.no_restrictions', '--div--'],
+                        ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.all', 0],
+                        ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.available', '--div--'],
                     ]
-                ], 'CATEGORY');
+                ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category');
             }
 
             if ($registration->getObject()->tagsEnabled()) {
@@ -129,7 +128,7 @@ class AddTCAEvent
                     'renderType' => 'rampageTags',
                     'placeholder' => 'ADD TAGS …',
                     'registrationIdentifier' => $registration->getIdentifier()
-                ], 'TAGS');
+                ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tags');
             }
 
             if ($registration->getObject()->topicsEnabled() && $topicPageIds = $registration->getObject()->getTopicPageIds()) {
@@ -140,7 +139,7 @@ class AddTCAEvent
                     'MM' => 'tx_rampage_object_topic_mm',
                     'default' => 0,
                     'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s)', implode(',', $topicPageIds))
-                ], 'TOPICS');
+                ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topics');
             }
 
             if ($registration->getObject()->contactEnabled() && $contactPageIds = $registration->getObject()->getContactPageIds()) {
@@ -153,10 +152,10 @@ class AddTCAEvent
                     'items' => [
                         ['DEFAULT', 0, 'actions-user']
                     ]
-                ], 'CONTACT');
+                ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.contact');
             }
 
-            $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'OPTIONS');
+            $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.options');
 
             if ($registration->getObject()->topEnabled()) {
                 $optionsSheet->addField('settings.' . AbstractObjectDemand::PARAMETER_TOP_MODE, [
@@ -165,11 +164,11 @@ class AddTCAEvent
                     'minitems' => 1,
                     'maxitems' => 1,
                     'items' => [
-                        ['DEFAULT', 0],
-                        ['TOP OBJECTS FIRST', AbstractObjectDemand::TOP_MODE_FIRST],
-                        ['ONLY TOP OBJECTS', AbstractObjectDemand::TOP_MODE_ONLY]
+                        ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode.0', 0],
+                        ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode.1', AbstractObjectDemand::TOP_MODE_FIRST],
+                        ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode.2', AbstractObjectDemand::TOP_MODE_ONLY]
                     ]
-                ], 'TOP MODE');
+                ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode');
             }
 
             $optionsSheet->addField('settings.' . AbstractDemand::PARAMETER_ORDER_BY, [
@@ -178,35 +177,35 @@ class AddTCAEvent
                 'minitems' => 1,
                 'maxitems' => 1,
                 'items' => [
-                    ['DEFAULT', ''],
-                    ['Date (newest first)', 'date_desc'],
-                    ['Date (oldest first)', 'date_asc'],
-                    ['Title (ASC)', 'title_asc'],
-                    ['Title (DESC)', 'title_desc']
+                    ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.default', ''],
+                    ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.date_desc', 'date_desc'],
+                    ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.date_asc', 'date_asc'],
+                    ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.title_asc', 'title_asc'],
+                    ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.title_desc', 'title_desc']
                 ]
-            ], 'SORTING');
+            ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting');
 
-            $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LAYOUT')
+            $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.layout')
                 ->addField('settings.itemsPerStage', [
                     'placeholder' => '6',
                     'type' => 'input',
                     'eval' => 'trim,is_in',
                     'is_in' => ',0123456789'
-                ], 'ITEMS_PER_PAGE')
+                ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.itemsPerStage')
                 ->addField('settings.maxStages', [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'minitems' => 1,
                     'maxitems' => 1,
                     'items' => [
-                        ['UNLIMITED', 0],
-                        [1, 1],
-                        [2, 2],
-                        [3, 3],
-                        [4, 4],
-                        [5, 5],
+                        ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.maxStages.0', 0],
+                        ['1', 1],
+                        ['2', 2],
+                        ['3', 3],
+                        ['4', 4],
+                        ['5', 5]
                     ]
-                ], 'MAX_STAGES');
+                ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.maxStages');
 
             FlexFormConfiguration::makeInstance('tt_content', $cType, 'pi_flexform', 'after:header')
                 ->addSheet($filterSheet)
@@ -249,7 +248,7 @@ class AddTCAEvent
                                 'allowed' => $listCType
                             ]
                         ]
-                    ], 'CONTENT id');
+                    ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.contentId');
 
                 FlexFormConfiguration::makeInstance($table, $cType, 'pi_flexform', 'after:header')
                     ->addSheet($generalSheet)

@@ -82,7 +82,7 @@ class ItemsProcFunc
 
             // Add closest category
             if ($closestCategoryUid) {
-                array_unshift($PA['items'], ['SUGGESTED CATEGORY', '--div--'], [$localPages[$closestCategoryUid]['title'] ?? '', $closestCategoryUid]);
+                array_unshift($PA['items'], ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.suggestion', '--div--'], [$localPages[$closestCategoryUid]['title'] ?? '', $closestCategoryUid]);
             }
         }
     }

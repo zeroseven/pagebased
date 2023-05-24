@@ -184,15 +184,16 @@ call_user_func(static function (string $table) {
                 'readOnly' => true,
                 'default' => 0
             ]
-        ],
-        'SYS_LASTCHANGED' => [
-            'config' => [
-                'type' => 'passthrough'
-            ]
         ]
     ]);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;OPTIONS, rampage_top, rampage_date, rampage_tags, rampage_topics, rampage_contact, rampage_relations_to, rampage_relations_from, rampage_redirect_category, ' . implode(',', [
+    // System relevant fields must exist in TCA to map their values to the model
+    foreach (['SYS_LASTCHANGED', 'crdate'] as $fieldName) {
+        !isset($GLOBALS['TCA'][$table]['columns'][$fieldName])
+        || \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [$fieldName => ['config' => ['type' => 'passthrough',]]]);
+    }
+
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.tab.rampage_settings, rampage_top, rampage_date, rampage_tags, rampage_topics, rampage_contact, rampage_relations_to, rampage_relations_from, rampage_redirect_category,' . implode(',', [
             \Zeroseven\Rampage\Utility\DetectionUtility::SITE_FIELD_NAME,
             \Zeroseven\Rampage\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
             \Zeroseven\Rampage\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME

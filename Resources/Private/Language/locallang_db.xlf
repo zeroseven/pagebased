@@ -3,6 +3,9 @@
   <file source-language="en" datatype="plaintext" original="messages">
     <header />
     <body>
+	  <trans-unit id="pages.tab.rampage_settings">
+	    <source>Settings</source>
+	  </trans-unit>
 	  <trans-unit id="pages.rampage_top">
 	    <source>Top</source>
 	  </trans-unit>
@@ -30,6 +33,82 @@
 	  <trans-unit id="pages.rampage_redirect_category">
 	    <source>Redirect category</source>
 	  </trans-unit>
+
+	  <trans-unit id="tt_content.pi_flexform.tab.filter">
+	  	<source>Filter</source>
+	  </trans-unit>
+	  <trans-unit id="tt_content.pi_flexform.tab.options">
+	  	<source>Options</source>
+	  </trans-unit>
+	  <trans-unit id="tt_content.pi_flexform.tab.layout">
+	  	<source>Layout</source>
+	  </trans-unit>
+	  <trans-unit id="tt_content.pi_flexform.category">
+	  	<source>Category</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.category.div.suggestion">
+      	<source>Suggested category</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.category.div.no_restrictions">
+      	<source>No restrictions</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.category.div.available">
+      	<source>Available categories</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.category.all">
+      	<source>All</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.tags">
+      	<source>Tags</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.topics">
+      	<source>Topics</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.contact">
+      	<source>Contact</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.topMode">
+      	<source>Top</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.topMode.0">
+      	<source>Default</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.topMode.1">
+      	<source>Top first</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.topMode.2">
+      	<source>Top only</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.sorting">
+      	<source>Sorting</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.sorting.default">
+      	<source>default</source>
+	  </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.sorting.date_desc">
+      	<source>Date (newest first)</source>
+	  </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.sorting.date_asc">
+      	<source>Date (oldest first)</source>
+	  </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.sorting.title_asc">
+      	<source>Title (A-Z)</source>
+	  </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.sorting.title_desc">
+      	<source>Title (Z-A)</source>
+	  </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.itemsPerStage">
+      	<source>Items per stage</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.maxStages">
+      	<source>Maximum stages</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.maxStages.0">
+      	<source>Unlimited</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.contentId">
+      	<source>List element</source>
+      </trans-unit>
 
 	  <trans-unit id="tx_rampage_domain_model_topic">
 	  	<source>Topic</source>
