@@ -7,6 +7,14 @@ services:
     Zeroseven\Rampage\:
         resource: '../Classes/*'
 
+    Zeroseven\Rampage\Command\DetectionCommand:
+        tags:
+            -   name: console.command
+                command: 'rampage:detection'
+                description: 'Detect objects and categories'
+                hidden: false
+                schedulable: true
+
     Zeroseven\Rampage\Registration\EventListener\ValidateRegistrationEvent:
         tags:
             - name: event.listener
