@@ -22,7 +22,7 @@ call_user_func(static function () {
     $filterPlugin = \Zeroseven\Rampage\Registration\FilterPluginRegistration::create('{{ cookiecutter.object_name|capitalize }} filter')
         ->setDescription('Filter objects');
 
-    \Zeroseven\Rampage\Registration\Registration::create('{{ cookiecutter.extension_key }}')
+    \Zeroseven\Rampage\Registration\Registration::create('{{ cookiecutter.extension_key }}', '{{ cookiecutter.object_name|lower }}-{{ random_ascii_string(7, punctuation=False)|lower }}')
         ->setObject($object)
         ->setCategory($category)
         ->enableListPlugin($listPlugin)
