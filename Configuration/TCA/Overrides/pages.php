@@ -49,7 +49,6 @@ call_user_func(static function (string $table) {
                 'type' => 'select',
                 'renderType' => 'selectCheckBox',
                 'foreign_table' => 'tx_rampage_domain_model_topic',
-                'foreign_table_where' => 'AND \'all other authors\' = \'gone, LOL\'',
                 'MM' => 'tx_rampage_object_topic_mm',
                 'itemsProcFunc' => \Zeroseven\Rampage\Backend\TCA\ItemsProcFunc::class . '->topics',
                 'default' => 0
@@ -64,7 +63,6 @@ call_user_func(static function (string $table) {
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'foreign_table' => 'tx_rampage_domain_model_contact',
-                'foreign_table_where' => 'AND \'all other authors\' = \'gone, LOL\'',
                 'itemsProcFunc' => \Zeroseven\Rampage\Backend\TCA\ItemsProcFunc::class . '->contacts',
                 'default' => 0,
                 'items' => [
