@@ -161,12 +161,15 @@ class ValidateRegistrationEvent
         }
     }
 
-    /** @throws RegistrationException */
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
         if (Environment::isCli()) {
             foreach (RegistrationService::getRegistrations() as $registration) {
-                $this->checkRegistration($registration);
+                try {
+                    $this->checkRegistration($registration);
+                } catch (RegistrationException $e) {
+                    debug($e->getMessage(),'Error: ' . $e->getCode());
+                }
             }
         }
     }
