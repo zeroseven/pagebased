@@ -50,8 +50,6 @@ class AddTCAEvent
             $displayCondition = TCAUtility::getObjectDisplayCondition($registration);
 
             TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_date', $displayCondition);
-            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_relations_to', $displayCondition);
-            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_relations_from', $displayCondition);
 
             if ($objectRegistration->topEnabled()) {
                 TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_top', $displayCondition);
@@ -67,6 +65,11 @@ class AddTCAEvent
 
             if ($objectRegistration->contactEnabled()) {
                 TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_contact', $displayCondition);
+            }
+
+            if ($objectRegistration->relationsEnabled()) {
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_relations_to', $displayCondition);
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'rampage_relations_from', $displayCondition);
             }
         }
     }
