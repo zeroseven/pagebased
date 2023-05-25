@@ -19,6 +19,7 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     protected bool $top = false;
     protected array $topicPageIds = [];
     protected array $contactPageIds = [];
+    protected bool $relations = false;
     protected ?string $name = null;
 
     public function getDemandClass(): DemandInterface
@@ -44,14 +45,12 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     public function enableTags(): self
     {
         $this->tags = true;
-
         return $this;
     }
 
     public function disableTags(): self
     {
         $this->tags = false;
-
         return $this;
     }
 
@@ -63,14 +62,12 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     public function enableTop(): self
     {
         $this->top = true;
-
         return $this;
     }
 
     public function disableTop(): self
     {
         $this->top = false;
-
         return $this;
     }
 
@@ -82,7 +79,6 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     public function enableTopics(mixed $pageIds): self
     {
         $this->addTopicPageIds($pageIds);
-
         return $this;
     }
 
@@ -99,7 +95,6 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     public function disableTopics(): self
     {
         $this->topicPageIds = [];
-
         return $this;
     }
 
@@ -116,7 +111,6 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     public function enableContact(mixed $pageIds): self
     {
         $this->addContactPageIds($pageIds);
-
         return $this;
     }
 
@@ -133,7 +127,6 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     public function disableContact(): self
     {
         $this->contactPageIds = [];
-
         return $this;
     }
 
@@ -145,6 +138,23 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     public function contactEnabled(): bool
     {
         return count($this->contactPageIds) > 0;
+    }
+
+    public function enableRelations(): self
+    {
+        $this->relations = true;
+        return $this;
+    }
+
+    public function disableRelations(): self
+    {
+        $this->relations = false;
+        return $this;
+    }
+
+    public function relationsEnabled(): bool
+    {
+        return $this->relations;
     }
 
     public function getName(): string
