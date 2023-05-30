@@ -77,7 +77,7 @@ class DisplayObjectInformation
     {
         if (($registration = ObjectUtility::isCategory($uid)) && $demand = $registration->getObject()->getDemandClass()) {
             $this->showMessage($this->translate('notification.category.description', [
-                $registration->getObject()->getRepositoryClass()->findByDemand($demand->setCategory($uid))->count(),
+                $registration->getObject()->getRepositoryClass()->findByDemand($demand->setCategory($uid)->setExcludeChildObjects(true))->count(),
                 $registration->getObject()->getName(),
             ]), $uid);
 
