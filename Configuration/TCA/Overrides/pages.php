@@ -6,6 +6,7 @@ call_user_func(static function (string $table) {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [
         'rampage_top' => [
             'exclude' => false,
+            'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_top',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
@@ -30,7 +31,7 @@ call_user_func(static function (string $table) {
             ]
         ],
         'rampage_tags' => [
-            'exclude' => false,
+            'exclude' => true,
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_tags',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
