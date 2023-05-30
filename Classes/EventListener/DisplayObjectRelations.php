@@ -73,7 +73,6 @@ class DisplayObjectRelations
                 $objects = $result;
             }
 
-
             if ($table === self::TABLES[Contact::class] && $result = $this->getObjectsByPageIds($pid, 'getContactPageIds')) {
                 $objects = $result;
             }
