@@ -15,6 +15,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
+use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Exception\TypeException;
@@ -170,7 +171,7 @@ abstract class AbstractRepository extends Repository
             $query = $this->createQuery();
 
             if ((int)GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', 0) > 0) {
-                $constraint = $query->equals('l10n_parent', $uid);
+                $constraint = $query->equals($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['transOrigPointerField'], $uid);
             } else {
                 $constraint = $query->equals('uid', $uid);
             }

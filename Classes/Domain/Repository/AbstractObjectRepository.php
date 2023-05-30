@@ -60,9 +60,17 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     {
         $constraints = parent::createDemandConstraints($demand, $query);
 
+        // Stay in the hood
+        if ($query->getQuerySettings()->getRespectStoragePage() === false && $startPageId = RootLineUtility::getRootPage()) {
+            $constraints[] = $query->equals(DetectionUtility::SITE_FIELD_NAME, $startPageId);
+        }
+
         // Search in category
         if (empty($demand->getUidList()) && $categoryUid = $demand->getCategory()) {
-            $treeTableField = GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id') ? 'pid' : 'uid';
+            $treeTableField = (int)GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', 0) > 0
+                ? $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['transOrigPointerField']
+                : 'uid';
+
             $constraints[] = $query->in($treeTableField, array_keys(RootLineUtility::collectPagesBelow($categoryUid)));
         }
 
@@ -70,7 +78,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         $constraints[] = $query->logicalAnd(
             $query->equals(DetectionUtility::REGISTRATION_FIELD_NAME, $this->registration->getIdentifier()),
             $query->logicalNot(
-                $query->equals($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'], $this->registration->getCategory()->getObjectType()),
+                $query->equals($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'], $this->registration->getCategory()->getObjectType())
             )
         );
 
