@@ -6,8 +6,8 @@ namespace Zeroseven\Rampage\Event;
 
 use JsonException;
 use TYPO3\CMS\Core\Resource\FileReference;
-use TYPO3\CMS\Extbase\Domain\Model\FileReference as ExtbaseFileReference;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference as ExtbaseFileReference;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Registration\Registration;
@@ -133,7 +133,6 @@ final class StructuredDataEvent
     {
         if (!$this->properties->isEmpty()) {
             try {
-                debug($this->parseProperties($this->properties->toArray()), self::class);
                 return json_encode($this->parseProperties($this->properties->toArray()), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             } catch (JsonException $e) {
             }

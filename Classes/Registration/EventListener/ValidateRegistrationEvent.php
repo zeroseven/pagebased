@@ -8,6 +8,7 @@ use LogicException;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
@@ -168,7 +169,7 @@ class ValidateRegistrationEvent
                 try {
                     $this->checkRegistration($registration);
                 } catch (RegistrationException $e) {
-                    debug($e->getMessage(),'Error: ' . $e->getCode());
+                    DebugUtility::debug($e->getMessage(),'Error: ' . $e->getCode());
                 }
             }
         }
