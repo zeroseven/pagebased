@@ -42,7 +42,7 @@ class ItemsProcFunc
     public function topics(array &$PA): void
     {
         if (($registration = $this->getRegistration($PA)) && $topics = GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($registration)) {
-            $PA['items'] = [];
+            $PA['items'] = array_filter($PA['items'] ?? [], static fn($item) => empty($item[1]));
 
             foreach ($topics->toArray() as $topic) {
                 $PA['items'][] = [$topic->getTitle(), $topic->getUid(), 'actions-tag'];
@@ -53,7 +53,7 @@ class ItemsProcFunc
     public function contacts(array &$PA): void
     {
         if (($registration = $this->getRegistration($PA)) && $contacts = GeneralUtility::makeInstance(ContactRepository::class)->findByRegistration($registration)) {
-            $PA['items'] = [];
+            $PA['items'] = array_filter($PA['items'] ?? [], static fn($item) => empty($item[1]));
 
             foreach ($contacts->toArray() as $contact) {
                 $PA['items'][] = [$contact->getFullName(), $contact->getUid(), 'actions-user'];
