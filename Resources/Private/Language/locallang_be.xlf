@@ -17,6 +17,12 @@
 			<trans-unit id="notification.objectAffiliation.description">
 				<source>This page of type "%s" is a subpage of "%s".</source>
 			</trans-unit>
+			<trans-unit id="notification.object.description">
+				<source>This page is object of type "%s". See tab "%s" for more options.</source>
+			</trans-unit>
+			<trans-unit id="notification.category.description">
+				<source>This page is a category containing %d objects of type "%s".</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
