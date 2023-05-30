@@ -4,9 +4,9 @@ registration {
         tags =
         # cat=object/enable/20; type=options[default=,enable=1,disable=0]; label=Top for {{ cookiecutter.__object_class_name }}
         top =
-        # cat=object/enable/30; type=string; label=Comma separated list of topic storage page ids
+        # cat=object/enable/30; type=string; label=Topics;Comma separated list of topic storage page ids
         topicPageIds =
-        # cat=object/enable/40; type=string; label=Comma separated list of topic storage page ids
+        # cat=object/enable/40; type=string; label=Contacts;Comma separated list of topic storage page ids
         contactPageIds =
         # cat=object/enable/50; type=options[default=,enable=1,disable=0]; label=Enable/disable relations between {{ cookiecutter.object_name|lower }}
         relations =
