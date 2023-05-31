@@ -33,38 +33,31 @@ class AddTypoScriptEvent
 
     public function addTypoScriptSetup(Registration $registration): void
     {
-        $setup = [];
         $pluginKey = self::getTypoScriptPluginKey($registration);
         $resourcePath = 'EXT:' . $registration->getExtensionName() . '/Resources/';
 
-        $copyPluginOptions = [
-            'settings.list.ajaxTypeNum',
-            'features.skipDefaultArguments',
-            'mvc.callDefaultActionIfActionCantBeResolved'
-        ];
+        // Plugin settings
+        ExtensionManagementUtility::addTypoScriptSetup('plugin.' . $pluginKey . '{
+            settings.list.ajaxTypeNum = {$plugin.tx_rampage.settings.list.ajaxTypeNum}
+            features.skipDefaultArguments = 1
+            mvc.callDefaultActionIfActionCantBeResolved = 1
+            view {
+                templateRootPaths {
+                    0 = ' . $resourcePath . 'Private/Templates/
+                    100 = {$plugin.' . $pluginKey . '.view.templateRootPath}
+                }
 
-        $setup[] = 'view {
-            templateRootPaths {
-                0 = ' . $resourcePath . 'Private/Templates/
-                100 = {$plugin.' . $pluginKey . '.view.templateRootPath}
+                partialRootPaths {
+                    0 = ' . $resourcePath . 'Private/Partials/
+                    100 = {$plugin.' . $pluginKey . '.view.partialRootPath}
+                }
+
+                layoutRootPaths {
+                    0 = ' . $resourcePath . 'Private/Layouts/
+                    100 = {$plugin.' . $pluginKey . '.view.layoutRootPath}
+                }
             }
-
-            partialRootPaths {
-                0 = ' . $resourcePath . 'Private/Partials/
-                100 = {$plugin.' . $pluginKey . '.view.partialRootPath}
-            }
-
-            layoutRootPaths {
-                0 = ' . $resourcePath . 'Private/Layouts/
-                100 = {$plugin.' . $pluginKey . '.view.layoutRootPath}
-            }
-        }';
-
-        foreach ($copyPluginOptions as $pluginOption) {
-            $setup[] = $pluginOption . ' < plugin.tx_rampage.' . $pluginOption;
-        }
-
-        ExtensionManagementUtility::addTypoScriptSetup(implode("\n", array_map(static fn($v): string => 'plugin.' . $pluginKey . '.' . trim($v), $setup)));
+        }');
     }
 
     public function __invoke(AfterStoreRegistrationEvent $event): void
