@@ -22,7 +22,6 @@ namespace Zeroseven {
       }
     }).then((markup: string) => getMap(replaceSelectors, appendSelectors, (new DOMParser()).parseFromString(markup, 'text/html')));
 
-
   const replaceHistory = (url: string): void => url && window.history.replaceState(null, null, url);
 
   const disableLink = (link: HTMLAnchorElement | HTMLButtonElement): void => {
@@ -49,7 +48,7 @@ namespace Zeroseven {
       event.initCustomEvent(name, true, true, parameter || {});
     }
 
-    window.dispatchEvent(event);
+    document.dispatchEvent(event);
   };
 
   const load = (url: string, replaceSelectors: string[], appendSelectors: string[], e: Event): void => {
@@ -69,15 +68,20 @@ namespace Zeroseven {
       getSourceNodes(url, replaceSelectors, appendSelectors).then(source => {
         triggerEvent('loaded', {target: target, source: source, link: link});
 
+        // Collect nodes
+        const replaced = [] as HTMLElement[];
+        const appended = [] as HTMLElement[];
+
         // Replace target nodes with given source nodes
         target.replace.forEach((element, index) => {
+          replaced.push(source.replace[index]);
           element.replaceWith(source.replace[index]);
         });
 
         // Append all children of given source nodes to target nodes
         target.append.forEach((element, index) => {
           Array.prototype.slice.call(source.append[index].children).forEach(child => {
-            element.append(child);
+            appended.push(element.appendChild(child));
           });
         });
 
@@ -88,7 +92,7 @@ namespace Zeroseven {
         updateLoadingState(target, false);
 
         // Trigger event
-        triggerEvent('complete', {target: target, source: source, link: link});
+        triggerEvent('complete', {replaced: replaced, appended: appended, target: target, link: link});
       }).catch(() => confirm('Oops, an error occurred!\nDo you want to try again?') && (window.location.href = originalUrl));
     }
   }
