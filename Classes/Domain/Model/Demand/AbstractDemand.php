@@ -35,8 +35,8 @@ abstract class AbstractDemand implements DemandInterface
 
     protected function initProperties(): void
     {
-        $this->addProperty(self::PARAMETER_UID_LIST, DemandProperty::TYPE_ARRAY);
-        $this->addProperty(self::PARAMETER_ORDER_BY, DemandProperty::TYPE_STRING);
+        $this->addProperty(self::PROPERTY_UID_LIST, DemandProperty::TYPE_ARRAY);
+        $this->addProperty(self::PROPERTY_ORDER_BY, DemandProperty::TYPE_STRING);
     }
 
     protected function getType(ReflectionProperty $reflection, array $tableDefinition, ColumnMap $columnMap, string $tableName): ?string
@@ -280,13 +280,13 @@ abstract class AbstractDemand implements DemandInterface
     /** @throws PropertyException */
     public function getUidList(): array
     {
-        return $this->getProperty(self::PARAMETER_UID_LIST)->getValue();
+        return $this->getProperty(self::PROPERTY_UID_LIST)->getValue();
     }
 
     /** @throws TypeException | PropertyException */
     public function setUidList(mixed $value): self
     {
-        $this->setProperty(self::PARAMETER_UID_LIST, $value);
+        $this->setProperty(self::PROPERTY_UID_LIST, $value);
 
         return $this;
     }
@@ -294,13 +294,13 @@ abstract class AbstractDemand implements DemandInterface
     /** @throws PropertyException */
     public function getOrderBy(): string
     {
-        return $this->getProperty(self::PARAMETER_ORDER_BY)->getValue();
+        return $this->getProperty(self::PROPERTY_ORDER_BY)->getValue();
     }
 
     /** @throws TypeException | PropertyException */
     public function setOrderBy(mixed $value): self
     {
-        $this->setProperty(self::PARAMETER_ORDER_BY, $value);
+        $this->setProperty(self::PROPERTY_ORDER_BY, $value);
 
         return $this;
     }

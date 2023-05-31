@@ -103,7 +103,7 @@ abstract class AbstractPageObjectController extends AbstractController implement
     {
         if ($respectContentParameter) {
             $contentID = (int)($this->contentData['uid'] ?? 0);
-            $requestID = (int)($this->requestArguments[ObjectDemandInterface::PARAMETER_CONTENT_ID] ?? 0);
+            $requestID = (int)($this->requestArguments[ObjectDemandInterface::PROPERTY_CONTENT_ID] ?? 0);
 
             if ($contentID && $requestID && $contentID === $requestID) {
                 $this->demand->setParameterArray($this->requestArguments);
@@ -136,7 +136,7 @@ abstract class AbstractPageObjectController extends AbstractController implement
     public function filterAction(): void
     {
         // Apply filter settings of the linked list plugin
-        if (($listID = (int)($this->settings[ObjectDemandInterface::PARAMETER_CONTENT_ID] ?? 0)) && $settings = $this->getPluginSettings($listID)) {
+        if (($listID = (int)($this->settings[ObjectDemandInterface::PROPERTY_CONTENT_ID] ?? 0)) && $settings = $this->getPluginSettings($listID)) {
             $this->demand->setParameterArray($settings, true);
             $this->view->getRenderingContext()->getVariableProvider()->add('settings', array_merge($settings, $this->settings));
         }

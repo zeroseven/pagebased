@@ -161,7 +161,7 @@ class AddTCAEvent
             $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.options');
 
             if ($registration->getObject()->topEnabled()) {
-                $optionsSheet->addField('settings.' . AbstractObjectDemand::PARAMETER_TOP_MODE, [
+                $optionsSheet->addField('settings.' . AbstractObjectDemand::PROPERTY_TOP_MODE, [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'minitems' => 1,
@@ -174,7 +174,7 @@ class AddTCAEvent
                 ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode');
             }
 
-            $optionsSheet->addField('settings.' . AbstractDemand::PARAMETER_ORDER_BY, [
+            $optionsSheet->addField('settings.' . AbstractDemand::PROPERTY_ORDER_BY, [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'minitems' => 1,
@@ -230,7 +230,7 @@ class AddTCAEvent
                 $table = 'tt_content';
 
                 $generalSheet = FlexFormSheetConfiguration::makeInstance('general', 'General setttings')
-                    ->addField('settings.' . AbstractObjectDemand::PARAMETER_CONTENT_ID, [
+                    ->addField('settings.' . AbstractObjectDemand::PROPERTY_CONTENT_ID, [
                         'type' => 'group',
                         'internal_type' => 'db',
                         'foreign_table' => $table,

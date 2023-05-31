@@ -49,8 +49,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     {
         parent::setOrdering($demand);
 
-        if ($demand && $demand->getTopObjectFirst()) {
-            $fieldName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($this->objectType)->getColumnMap('top')->getColumnName();
+        if ($demand && $demand->getTopObjectFirst() && $fieldName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($this->objectType)->getColumnMap('top')->getColumnName()) {
             $this->setDefaultOrderings(array_merge([$fieldName => QueryInterface::ORDER_DESCENDING], $this->defaultOrderings));
         }
     }
@@ -87,8 +86,9 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
             $constraints[] = $query->logicalNot($query->equals(DetectionUtility::CHILD_OBJECT_FIELD_NAME, 1));
         }
 
-        if ($demand->getTopObjectOnly()) {
-            $constraints[] = $query->equals('top', 1);
+        // Check for top objects
+        if ($this->registration->getObject()->topEnabled() && $demand->getTopObjectOnly() && $fieldName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($this->objectType)->getColumnMap('top')->getColumnName()) {
+            $constraints[] = $query->equals($fieldName, 1);
         }
 
         return $constraints;

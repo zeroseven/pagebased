@@ -6,8 +6,8 @@ namespace Zeroseven\Rampage\Domain\Model\Demand;
 
 interface DemandInterface
 {
-    public const PARAMETER_UID_LIST = '_id';
-    public const PARAMETER_ORDER_BY = '_sorting';
+    public const PROPERTY_UID_LIST = '_id';
+    public const PROPERTY_ORDER_BY = '_sorting';
 
     public function addProperty(string $name, string $type, string $extbasePropertyName = null): self;
 

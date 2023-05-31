@@ -54,7 +54,7 @@ final class LinkViewHelper extends AbstractLinkViewHelper
 
     protected function overrideArguments(): void
     {
-        $overrides = $this->demand->getParameterDiff($this->templateVariableContainer->get('settings'), [AbstractObjectDemand::PARAMETER_CONTENT_ID]);
+        $overrides = $this->demand->getParameterDiff($this->templateVariableContainer->get('settings'), [AbstractObjectDemand::PROPERTY_CONTENT_ID]);
         $this->arguments['arguments'] = array_merge((array)$this->arguments['arguments'], $overrides);
     }
 

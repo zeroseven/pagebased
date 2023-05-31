@@ -43,7 +43,7 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
 
         if (($targetStage = $this->getTargetStage($this->templateVariableContainer->get(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER))) !== null) {
             if ($demand) {
-                $overrides = $demand->getParameterDiff($this->templateVariableContainer->get('settings'), [AbstractDemand::PARAMETER_UID_LIST]);
+                $overrides = $demand->getParameterDiff($this->templateVariableContainer->get('settings'), [AbstractDemand::PROPERTY_UID_LIST]);
 
                 foreach ($overrides as $key => $value) {
                     $this->arguments['arguments'][$key] = $value;

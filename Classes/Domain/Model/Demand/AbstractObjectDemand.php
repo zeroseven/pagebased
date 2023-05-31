@@ -22,9 +22,9 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
     {
         parent::initProperties();
 
-        $this->addProperty(self::PARAMETER_CONTENT_ID, DemandProperty::TYPE_INTEGER);
-        $this->addProperty(self::PARAMETER_TOP_MODE, DemandProperty::TYPE_INTEGER);
-        $this->addProperty(self::PARAMETER_EXCLUDE_CHILD_OBJECTS, DemandProperty::TYPE_BOOLEAN);
+        $this->addProperty(self::PROPERTY_CONTENT_ID, DemandProperty::TYPE_INTEGER);
+        $this->addProperty(self::PROPERTY_TOP_MODE, DemandProperty::TYPE_INTEGER);
+        $this->addProperty(self::PROPERTY_EXCLUDE_CHILD_OBJECTS, DemandProperty::TYPE_BOOLEAN);
 
         $this->addProperty('category', DemandProperty::TYPE_INTEGER);
         $this->addProperty('tags', DemandProperty::TYPE_ARRAY, 'tagsString');
@@ -33,13 +33,13 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
     /** @throws PropertyException */
     public function getContentId(): int
     {
-        return $this->getProperty(self::PARAMETER_CONTENT_ID)->getValue();
+        return $this->getProperty(self::PROPERTY_CONTENT_ID)->getValue();
     }
 
     /** @throws TypeException | PropertyException */
     public function setContentId(mixed $value): self
     {
-        $this->setProperty(self::PARAMETER_CONTENT_ID, $value);
+        $this->setProperty(self::PROPERTY_CONTENT_ID, $value);
 
         return $this;
     }
@@ -47,19 +47,19 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
     /** @throws PropertyException */
     public function getTopObjectOnly(): bool
     {
-        return $this->getProperty(self::PARAMETER_TOP_MODE)->getValue() === self::TOP_MODE_ONLY;
+        return $this->getProperty(self::PROPERTY_TOP_MODE)->getValue() === self::TOP_MODE_ONLY;
     }
 
     /** @throws PropertyException */
     public function getTopObjectFirst(): bool
     {
-        return $this->getProperty(self::PARAMETER_TOP_MODE)->getValue() === self::TOP_MODE_FIRST;
+        return $this->getProperty(self::PROPERTY_TOP_MODE)->getValue() === self::TOP_MODE_FIRST;
     }
 
     /** @throws TypeException | PropertyException */
     public function setTop(mixed $value): self
     {
-        $this->setProperty(self::PARAMETER_TOP_MODE, $value);
+        $this->setProperty(self::PROPERTY_TOP_MODE, $value);
 
         return $this;
     }
@@ -67,7 +67,7 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
     /** @throws TypeException | PropertyException */
     public function setExcludeChildObjects(mixed $value): ObjectDemandInterface
     {
-        $this->setProperty(self::PARAMETER_EXCLUDE_CHILD_OBJECTS, $value);
+        $this->setProperty(self::PROPERTY_EXCLUDE_CHILD_OBJECTS, $value);
 
         return $this;
     }
@@ -75,6 +75,6 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
     /** @throws PropertyException */
     public function getExcludeChildObjects(): bool
     {
-        return $this->getProperty(self::PARAMETER_EXCLUDE_CHILD_OBJECTS)->getValue();
+        return $this->getProperty(self::PROPERTY_EXCLUDE_CHILD_OBJECTS)->getValue();
     }
 }

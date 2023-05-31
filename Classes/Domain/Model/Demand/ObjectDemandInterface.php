@@ -6,9 +6,9 @@ namespace Zeroseven\Rampage\Domain\Model\Demand;
 
 interface ObjectDemandInterface extends DemandInterface
 {
-    public const PARAMETER_CONTENT_ID = '_c';
-    public const PARAMETER_TOP_MODE = 'topMode';
-    public const PARAMETER_EXCLUDE_CHILD_OBJECTS = 'excludeChildObjects';
+    public const PROPERTY_CONTENT_ID = '_c';
+    public const PROPERTY_TOP_MODE = '_top_mode';
+    public const PROPERTY_EXCLUDE_CHILD_OBJECTS = '_exclude_child_objects';
 
     public function getContentId(): int;
 
