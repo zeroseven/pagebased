@@ -12,8 +12,8 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use Zeroseven\Rampage\Controller\AbstractPageObjectController;
-use Zeroseven\Rampage\Controller\PageObjectControllerInterface;
+use Zeroseven\Rampage\Controller\AbstractObjectController;
+use Zeroseven\Rampage\Controller\ObjectControllerInterface;
 use Zeroseven\Rampage\Domain\Model\AbstractCategory;
 use Zeroseven\Rampage\Domain\Model\AbstractObject;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
@@ -69,8 +69,8 @@ class ValidateRegistrationEvent
 
         // Check class inheritance of the controller
         if ($controllerClassName = $objectRegistration->getControllerClassName()) {
-            if (!is_subclass_of($controllerClassName, PageObjectControllerInterface::class)) {
-                throw new RegistrationException(sprintf('The class "%s" must be an instance of "%s". Yau can simply extend the class "%s"', $className, PageObjectControllerInterface::class, AbstractPageObjectController::class), 1680722536);
+            if (!is_subclass_of($controllerClassName, ObjectControllerInterface::class)) {
+                throw new RegistrationException(sprintf('The class "%s" must be an instance of "%s". Yau can simply extend the class "%s"', $className, ObjectControllerInterface::class, AbstractObjectController::class), 1680722536);
             }
         } else {
             throw new RegistrationException(sprintf('An extbase controller for class "%s" ("%s") is required. Use "ObjectRegistration::setControllerClass()" to define the controller.', $objectRegistration->getClassName(), $objectRegistration->getTitle()), 1680722535);

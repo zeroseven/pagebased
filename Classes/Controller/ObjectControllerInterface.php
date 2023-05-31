@@ -7,7 +7,7 @@ namespace Zeroseven\Rampage\Controller;
 use TYPO3\CMS\Extbase\Mvc\Controller\ControllerInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 
-interface PageObjectControllerInterface extends ControllerInterface
+interface ObjectControllerInterface extends ControllerInterface
 {
     public function initializeRegistration(): void;
 

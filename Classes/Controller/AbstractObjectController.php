@@ -20,7 +20,7 @@ use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\TagUtility;
 
-abstract class AbstractPageObjectController extends AbstractController implements PageObjectControllerInterface
+abstract class AbstractObjectController extends AbstractController implements ObjectControllerInterface
 {
     protected ?Registration $registration = null;
     protected ?DemandInterface $demand = null;
