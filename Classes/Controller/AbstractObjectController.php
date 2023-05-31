@@ -99,23 +99,12 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         $this->demand = $this->registration->getObject()->getDemandClass()->setParameterArray($this->settings);
     }
 
-    public function applyRequestArguments(bool $respectContentParameter = null): void
-    {
-        if ($respectContentParameter) {
-            $contentID = (int)($this->contentData['uid'] ?? 0);
-            $requestID = (int)($this->requestArguments[ObjectDemandInterface::PROPERTY_CONTENT_ID] ?? 0);
-
-            if ($contentID && $requestID && $contentID === $requestID) {
-                $this->demand->setParameterArray($this->requestArguments);
-            }
-        } else {
-            $this->demand->setParameterArray($this->requestArguments);
-        }
-    }
-
     public function listAction(): void
     {
-        $this->applyRequestArguments(true);
+        // Apply request arguments
+        if (empty($requestID = (int)($this->requestArguments[ObjectDemandInterface::PROPERTY_CONTENT_ID] ?? 0)) || (int)($this->contentData['uid'] ?? 0) === $requestID) {
+            $this->demand->setParameterArray($this->requestArguments);
+        }
 
         $repository = $this->registration->getObject()->getRepositoryClass();
         $objects = $repository->findByDemand($this->demand->setExcludeChildObjects(true));
@@ -142,7 +131,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         }
 
         // Apply request arguments
-        $this->applyRequestArguments(false);
+        $this->demand->setParameterArray($this->requestArguments);
 
         // Pass variables to the fluid template
         $this->view->assignMultiple(GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new AssignTemplateVariablesEvent([
