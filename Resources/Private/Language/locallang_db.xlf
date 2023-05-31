@@ -83,7 +83,7 @@
       	<source>Sorting</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.sorting.default">
-      	<source>default</source>
+      	<source>Default</source>
 	  </trans-unit>
       <trans-unit id="tt_content.pi_flexform.sorting.date_desc">
       	<source>Date (newest first)</source>
