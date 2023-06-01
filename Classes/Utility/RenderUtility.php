@@ -57,6 +57,7 @@ class RenderUtility
                 $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templateNameAndFilePath));
                 $view->assignMultiple(GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new AssignTemplateVariablesEvent([
                     'object' => $object,
+                    'demand' => $registration->getObject()->getDemandClass(),
                     'settings' => $settings,
                     'data' => $this->cObj->data ?? [],
                     strtolower($registration->getObject()->getName()) => $object // alias variable

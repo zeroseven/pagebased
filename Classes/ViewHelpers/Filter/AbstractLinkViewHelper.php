@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\ViewHelpers\Filter;
 
 use TYPO3\CMS\Fluid\ViewHelpers\Link\ActionViewHelper;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Rampage\Utility\ObjectUtility;
 
 abstract class AbstractLinkViewHelper extends ActionViewHelper
 {
-    protected ?DemandInterface $demand;
+    protected ?DemandInterface $demand = null;
 
     public function initializeArguments(): void
     {
@@ -36,6 +38,10 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
     {
         if (($demand = $this->arguments['demand'] ?? ($this->templateVariableContainer->get('demand'))) instanceof DemandInterface) {
             $this->demand = $demand->getCopy();
+        } elseif (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController && $uid = (int)$GLOBALS['TSFE']->id) {
+            if ($registration = (ObjectUtility::isObject($uid) ?? ObjectUtility::isCategory($uid))) {
+                $this->demand = $registration->getObject()->getDemandClass();
+            }
         }
     }
 

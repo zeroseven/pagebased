@@ -16,8 +16,6 @@ final class LinkViewHelper extends AbstractLinkViewHelper
 {
     protected const FILTER_ACTIVE_ATTRIBUTE = 'data-filter-active';
 
-    protected ?DemandInterface $demand;
-
     public function initializeArguments(): void
     {
         parent::initializeArguments();
