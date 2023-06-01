@@ -33,7 +33,11 @@ class TagUtility
         // Override language
         if ($languageUid !== null) {
             $querySettings = $repository->getDefaultQuerySettings();
-            $querySettings->setLanguageUid($languageUid);
+
+            $languageUid === -1
+                ? $querySettings->setRespectSysLanguage(false)
+                : $querySettings->setLanguageUid($languageUid);
+
             $repository->setDefaultQuerySettings($querySettings);
         }
 
