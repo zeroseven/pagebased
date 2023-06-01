@@ -141,7 +141,7 @@ class AddTCAEvent
                     'foreign_table' => 'tx_rampage_domain_model_topic',
                     'MM' => 'tx_rampage_object_topic_mm',
                     'default' => 0,
-                    'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s)', implode(',', $topicPageIds))
+                    'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_topic}.{#pid} IN(%s) AND {#tx_rampage_domain_model_topic}.{#%s} < 1', implode(',', $topicPageIds), $GLOBALS['TCA']['tx_rampage_domain_model_topic']['ctrl']['languageField']),
                 ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topics');
             }
 
@@ -151,9 +151,9 @@ class AddTCAEvent
                     'renderType' => 'selectSingle',
                     'foreign_table' => 'tx_rampage_domain_model_contact',
                     'default' => 0,
-                    'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_contact}.{#pid} IN(%s)', implode(',', $contactPageIds)),
+                    'foreign_table_where' => sprintf(' AND {#tx_rampage_domain_model_contact}.{#pid} IN(%s) AND {#tx_rampage_domain_model_contact}.{#%s} < 1', implode(',', $contactPageIds), $GLOBALS['TCA']['tx_rampage_domain_model_contact']['ctrl']['languageField']),
                     'items' => [
-                        ['DEFAULT', 0, 'actions-user']
+                        ['-', 0, 'actions-user']
                     ]
                 ], 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.contact');
             }
