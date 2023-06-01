@@ -64,16 +64,14 @@ abstract class AbstractRegistrationEntityProperty implements RegistrationPropert
 
     public function getDemandClassName(): string
     {
-        return $this->demandClassName ?? '';
+        return $this->demandClassName ?? GenericDemand::class;
     }
 
     public function getDemandClass(): DemandInterface
     {
-        if ($className = $this->getDemandClassName()) {
-            return GeneralUtility::makeInstance($className);
-        }
-
-        return GenericDemand::build($this->className);
+        return ($demandClass = $this->getDemandClassName()) === GenericDemand::class
+            ? GenericDemand::build($this->className)
+            : GeneralUtility::makeInstance($demandClass);
     }
 
     public function setDemandClassName(string $demandClassName): self

@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\ViewHelpers\Filter;
 
 use TYPO3\CMS\Fluid\ViewHelpers\Link\ActionViewHelper;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
+use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\ObjectUtility;
+use Zeroseven\Rampage\Utility\RootLineUtility;
 
 abstract class AbstractLinkViewHelper extends ActionViewHelper
 {
@@ -20,6 +23,7 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
 
         // Register demand argument
         $this->registerArgument('demand', 'object', sprintf('The demand object (instance of %s)', DemandInterface::class));
+        $this->registerArgument('findList', 'bool', 'Find the next list in rootline');
     }
 
     /** @throws Exception */
@@ -34,13 +38,35 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
         }
     }
 
+    protected function getRegistration(): ?Registration
+    {
+        return $this->templateVariableContainer->exists('registration') && ($registration = $this->templateVariableContainer->get('registration')) instanceof Registration
+            ? $registration
+            : ObjectUtility::isObject() ?? ObjectUtility::isCategory();
+    }
+
     protected function initializeDemand(): void
     {
         if (($demand = $this->arguments['demand'] ?? ($this->templateVariableContainer->get('demand'))) instanceof DemandInterface) {
             $this->demand = $demand->getCopy();
-        } elseif (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController && $uid = (int)$GLOBALS['TSFE']->id) {
-            if ($registration = (ObjectUtility::isObject($uid) ?? ObjectUtility::isCategory($uid))) {
-                $this->demand = $registration->getObject()->getDemandClass();
+        } elseif ($registration = $this->getRegistration()) {
+            $this->demand = $registration->getObject()->getDemandClass();
+        }
+    }
+
+    protected function overridePageUid(): void
+    {
+        if ($this->arguments['findList'] ?? false) {
+            $listPlugin = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['listPlugin'] ?? null;
+
+            if (empty($listPlugin) && ($registration = $this->getRegistration() ?? RegistrationService::getRegistrationByDemandClass(get_class($this->demand)))) {
+                $listPlugin = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['listPlugin'] = RootLineUtility::findListPlugin($registration);
+            }
+
+            if (($uid = (int)($listPlugin['uid'] ?? 0)) && $pid = (int)($listPlugin['pid'] ?? 0)) {
+                $this->arguments['arguments'][ObjectDemandInterface::PROPERTY_CONTENT_ID] = $uid;
+                $this->arguments['pageUid'] = $pid;
+                $this->arguments['section'] = 'c' . $uid;
             }
         }
     }
@@ -53,7 +79,9 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
     {
         $this->overrideDemandProperties();
         $this->overrideArguments();
+        $this->overridePageUid();
 
+        // Set plugin name
         if (empty($this->arguments['pluginName'])) {
             $this->arguments['pluginName'] = 'List';
         }

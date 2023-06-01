@@ -18,6 +18,7 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Registration\Registration;
 
 class RootLineUtility
 {
@@ -155,8 +156,32 @@ class RootLineUtility
         }
     }
 
-    public static function collectPagesAbove(int $startingPoint, ?bool $includingStartingPoint = null, ?int $depth = null): array
+    protected static function searchContentElementInRootline(int $pid, string $pluginName, QueryBuilder $queryBuilder): ?array
     {
+        if ($pid > 0) {
+            $queryBuilder->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
+            $queryBuilder->andWhere($queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter($pluginName, Connection::PARAM_STR)));
+
+            // An element with the same CType can be found on the given pid
+            if (count($result = $queryBuilder->execute()->fetchAllAssociative())) {
+                return $result[0];
+            }
+
+            // Check the next level in rootline
+            $list = [];
+            self::lookUp($list, $pid, 0, 1, self::getTreeCollectQueryBuilder());
+
+            if ($nextPid = (int)(reset($list)['uid'] ?? 0)) {
+                return self::searchContentElementInRootline($nextPid, $pluginName, $queryBuilder);
+            }
+        }
+
+        return null;
+    }
+
+    public static function collectPagesAbove(?int $startingPoint = null, ?bool $includingStartingPoint = null, ?int $depth = null): array
+    {
+        $startingPoint || $startingPoint = self::getCurrentPage();
         $list = [];
         $queryBuilder = self::getTreeCollectQueryBuilder();
 
@@ -172,8 +197,9 @@ class RootLineUtility
         return $list;
     }
 
-    public static function collectPagesBelow(int $startingPoint, ?bool $includingStartingPoint = null, ?int $depth = null): array
+    public static function collectPagesBelow(?int $startingPoint = null, ?bool $includingStartingPoint = null, ?int $depth = null): array
     {
+        $startingPoint || $startingPoint = self::getCurrentPage();
         $list = [];
         $queryBuilder = self::getTreeCollectQueryBuilder();
 
@@ -187,5 +213,23 @@ class RootLineUtility
         }
 
         return $list;
+    }
+
+    public static function findListPlugin(Registration $registration, ?int $startingPoint = null): ?array
+    {
+        if ($registration->hasListPlugin()) {
+            $startingPoint || $startingPoint = self::getCurrentPage();
+            $cType = $registration->getListPlugin()->getCType($registration);
+
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+            $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+            $queryBuilder->select('*')->from('tt_content')
+                ->andWhere($queryBuilder->expr()->eq('sys_language_uid', 0))
+                ->orderBy($GLOBALS['TCA']['pages']['ctrl']['sortby'] ?? 'uid');
+
+            return self::searchContentElementInRootline($startingPoint, $cType, $queryBuilder);
+        }
+
+        return null;
     }
 }

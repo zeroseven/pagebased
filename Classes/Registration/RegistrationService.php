@@ -21,7 +21,7 @@ class RegistrationService
         $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['registrations'][$registration->getIdentifier()] = $registration;
     }
 
-    public static function getRegistrationByClassName($className): ?Registration
+    public static function getRegistrationByClassName(string $className): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {
             if ($registration->getObject()->getClassName() === $className) {
@@ -32,7 +32,7 @@ class RegistrationService
         return null;
     }
 
-    public static function getRegistrationByController($className): ?Registration
+    public static function getRegistrationByController(string $className): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {
             if ($registration->getObject()->getControllerClassName() === $className) {
@@ -43,7 +43,7 @@ class RegistrationService
         return null;
     }
 
-    public static function getRegistrationByRepository($className): ?Registration
+    public static function getRegistrationByRepository(string $className): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {
             if ($registration->getObject()->getRepositoryClassName() === $className) {
@@ -54,10 +54,10 @@ class RegistrationService
         return null;
     }
 
-    public static function getRegistrationByDemandClass($className): ?Registration
+    public static function getRegistrationByDemandClass(string $className): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {
-            if ($registration->getObject()->getRepositoryClassName() === $className) {
+            if ($registration->getObject()->getDemandClassName() === $className) {
                 return $registration;
             }
         }

@@ -22,13 +22,16 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     protected bool $relations = false;
     protected ?string $name = null;
 
+    public function getDemandClassName(): string
+    {
+        return $this->demandClassName ?? GenericObjectDemand::class;
+    }
+
     public function getDemandClass(): DemandInterface
     {
-        if ($className = $this->getDemandClassName()) {
-            return GeneralUtility::makeInstance($className);
-        }
-
-        return GenericObjectDemand::build($this->className);
+        return ($demandClass = $this->getDemandClassName()) === GenericObjectDemand::class
+            ? GenericObjectDemand::build($this->className)
+            : GeneralUtility::makeInstance($demandClass);
     }
 
     public function getControllerClassName(): ?string
