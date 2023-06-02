@@ -33,6 +33,9 @@
 	  <trans-unit id="pages.rampage_redirect_category">
 	    <source>Redirect category</source>
 	  </trans-unit>
+	  <trans-unit id="pages.rampage_redirect_category.description">
+	    <source>Redirects to the next list plugin in the rootline and sets the appropriate category.</source>
+	  </trans-unit>
 
 	  <trans-unit id="tt_content.pi_flexform.tab.filter">
 	  	<source>Filter</source>

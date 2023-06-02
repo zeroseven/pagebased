@@ -99,6 +99,9 @@ class AddTCAEvent
             // Add icon
             $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$pageType] = $categoryRegistration->getIconIdentifier();
             $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['typeicon_classes'][$pageType . '-hideinmenu'] = $categoryRegistration->getIconIdentifier(true);
+
+            // Add redirect field in page properties
+            TCAUtility::addCategoryDisplayCondition($registration, 'rampage_redirect_category');
         }
     }
 
