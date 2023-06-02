@@ -8,6 +8,8 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception as DriverException;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -173,14 +175,16 @@ class RootLineUtility
         }
     }
 
+    /** @throws AspectNotFoundException | DriverException | DBALException */
     protected static function searchContentElementInRootline(int $pid, string $pluginName, QueryBuilder $queryBuilder, array $constraints = null): ?array
     {
         if ($pid > 0) {
             if ($constraints === null) {
                 $constraints = [$queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter($pluginName, Connection::PARAM_STR))];
+                $languageId = GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', 0);
 
                 if ($languageField = $GLOBALS['TCA']['tt_content']['ctrl']['languageField'] ?? null) {
-                    $constraints[] = $queryBuilder->expr()->lte($languageField, 0);
+                    $constraints[] = $queryBuilder->expr()->in($languageField, [-1, $languageId]);
                 }
 
                 if ($hiddenField = $GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled'] ?? null) {
@@ -190,7 +194,6 @@ class RootLineUtility
 
             $queryBuilder->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
             $queryBuilder->andWhere(...$constraints);
-
 
             // An element with the same CType can be found on the given pid
             if (count($result = $queryBuilder->execute()->fetchAllAssociative())) {
@@ -257,7 +260,10 @@ class RootLineUtility
                 $startingPoint = $parentPageUid;
             }
 
-            return self::searchContentElementInRootline($startingPoint, $cType, $queryBuilder);
+            try {
+                return self::searchContentElementInRootline($startingPoint, $cType, $queryBuilder);
+            } catch (DBALException | DriverException | AspectNotFoundException $e) {
+            }
         }
 
         return null;
