@@ -67,7 +67,7 @@ call_user_func(static function (string $table) {
                 'itemsProcFunc' => \Zeroseven\Rampage\Backend\TCA\ItemsProcFunc::class . '->contacts',
                 'default' => 0,
                 'items' => [
-                    ['-', 0, 'actions-user']
+                    ['-', 0, $GLOBALS['TCA']['tx_rampage_domain_model_contact']['ctrl']['typeicon_classes']['default'] ?? ''],
                 ]
             ]
         ],
