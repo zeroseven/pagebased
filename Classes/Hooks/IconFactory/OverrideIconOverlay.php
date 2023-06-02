@@ -13,7 +13,6 @@ class OverrideIconOverlay
     public function postOverlayPriorityLookup(string $table, array $row, array $status, string $iconName = null): ?string
     {
         if ($table === AbstractPage::TABLE_NAME && empty($iconName) && $uid = (int)($row['uid'] ?? 0)) {
-
             if (($registration = ObjectUtility::isObject($uid)) && $object = $registration->getObject()->getRepositoryClass()->findByUid($uid)) {
                 if ($object->isTop()) {
                     return 'overlay-approved';
@@ -24,6 +23,12 @@ class OverrideIconOverlay
                 }
 
                 return 'overlay-list';
+            }
+
+            if (($registration = ObjectUtility::isCategory($uid)) && $category = $registration->getCategory()->getRepositoryClass()->findByUid($uid)) {
+                if ($category->getRedirectCategory()) {
+                    return 'overlay-shortcut';
+                }
             }
         }
 
