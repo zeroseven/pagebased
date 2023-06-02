@@ -6,6 +6,6 @@ namespace {{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_exte
 
 use Zeroseven\Rampage\Controller\AbstractObjectController;
 
-class {{ cookiecutter.__object_class_name }}Controller extends AbstractPageObjectController
+class {{ cookiecutter.__object_class_name }}Controller extends AbstractObjectController
 {
 }
