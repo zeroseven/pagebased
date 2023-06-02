@@ -6,21 +6,16 @@ namespace Zeroseven\Rampage\Domain\Model;
 
 abstract class AbstractCategory extends AbstractPage implements PageTypeInterface
 {
-    protected bool $redirect;
+    protected bool $redirectCategory = false;
 
-    public function getRedirect(): int
+    public function getRedirectCategory(): bool
     {
-        return (int)($this->redirect ?? 0);
+        return $this->redirectCategory;
     }
 
-    public function hasRedirect(): bool
+    public function setRedirectCategory($redirectCategory): self
     {
-        return (bool)$this->getRedirect();
-    }
-
-    public function setRedirect($redirect): self
-    {
-        $this->redirect = $redirect;
+        $this->redirectCategory = $redirectCategory;
         return $this;
     }
 }

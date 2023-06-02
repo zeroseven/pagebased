@@ -55,5 +55,13 @@ return [
                 'fieldName' => 'rampage_relations_from'
             ]
         ]
+    ],
+    \Zeroseven\Rampage\Domain\Model\AbstractCategory::class => [
+        'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
+        'properties' => [
+            'redirectCategory' => [
+                'fieldName' => 'rampage_redirect_category'
+            ]
+        ]
     ]
 ];
