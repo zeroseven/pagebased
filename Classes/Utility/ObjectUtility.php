@@ -19,7 +19,7 @@ class ObjectUtility
         return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['object'][$uid] ?? null;
     }
 
-    protected static function setObjectCache(int $uid, Registration $registration): Registration
+    protected static function setObjectCache(int $uid, ?Registration $registration = null): ?Registration
     {
         return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['object'][$uid] = $registration;
     }
@@ -38,7 +38,9 @@ class ObjectUtility
 
     public static function isCategory(int $pageUid = null, array $row = null): ?Registration
     {
-        if (($typeField = self::getPageTypeField()) && ($pageUid || ($pageUid = (int)($row['uid'] ?? 0)) || ($pageUid = self::getPageUid()))) {
+        if ($pageUid || ($pageUid = (int)($row['uid'] ?? 0)) || ($pageUid = self::getPageUid())) {
+            $typeField = self::getPageTypeField();
+
             $documentType = $row[$typeField] ?? (BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, $typeField)[$typeField] ?? null);
 
             if ($documentType && $registration = RegistrationService::getRegistrationByCategoryDocumentType((int)$documentType)) {
@@ -57,19 +59,20 @@ class ObjectUtility
             return $registration;
         }
 
-        if ($pageUid && $typeField = self::getPageTypeField()) {
+        if ($pageUid) {
+            $typeField = self::getPageTypeField();
             $registrationField = DetectionUtility::REGISTRATION_FIELD_NAME;
 
             if (!isset($row[$typeField], $row[$registrationField])) {
                 $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, implode(',', [$registrationField, $typeField]));
             }
 
-            if (($identifier = $row[$registrationField]) && !self::isCategory($pageUid, $row) && $registration = RegistrationService::getRegistrationByIdentifier($identifier)) {
+            if (($identifier = $row[$registrationField] ?? null) && !self::isCategory($pageUid, $row) && $registration = RegistrationService::getRegistrationByIdentifier($identifier)) {
                 return self::setObjectCache($pageUid, $registration);
             }
         }
 
-        return null;
+        return self::setObjectCache($pageUid);;
     }
 
     public static function isChildObject(mixed $uid): ?Registration
