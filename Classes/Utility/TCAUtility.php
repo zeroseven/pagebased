@@ -39,8 +39,18 @@ class TCAUtility
         ]];
     }
 
+    public static function getCategoryDisplayCondition(Registration $registration): string
+    {
+        return sprintf('FIELD:%s:=:%d', self::getPageTypeField(), $registration->getCategory()->getObjectType());
+    }
+
     public static function addObjectDisplayCondition(Registration $registration, string $fieldName): void
     {
         self::addDisplayCondition(AbstractPage::TABLE_NAME, $fieldName, self::getObjectDisplayCondition($registration));
+    }
+
+    public static function addCategoryDisplayCondition(Registration $registration, string $fieldName): void
+    {
+        self::addDisplayCondition(AbstractPage::TABLE_NAME, $fieldName, self::getCategoryDisplayCondition($registration));
     }
 }

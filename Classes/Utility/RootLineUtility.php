@@ -60,6 +60,23 @@ class RootLineUtility
         return 0;
     }
 
+    protected static function getParentPage(int $staringPoint = null): int
+    {
+        $staringPoint || $staringPoint = self::getCurrentPage();
+
+        $list = [];
+        try {
+            self::lookUp($list, $staringPoint, 0, 1, self::getTreeCollectQueryBuilder());
+        } catch (DBALException | DriverException $e) {
+        }
+
+        if (($parentPage = reset($list)) && $uid = $parentPage['uid'] ?? null) {
+            return $uid;
+        }
+
+        return 0;
+    }
+
     protected static function getRootLine(int $startingPoint = null): array
     {
         if ($startingPoint === null && ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController && $rootLine = $GLOBALS['TSFE']->rootLine) {
@@ -156,11 +173,24 @@ class RootLineUtility
         }
     }
 
-    protected static function searchContentElementInRootline(int $pid, string $pluginName, QueryBuilder $queryBuilder): ?array
+    protected static function searchContentElementInRootline(int $pid, string $pluginName, QueryBuilder $queryBuilder, array $constraints = null): ?array
     {
         if ($pid > 0) {
+            if ($constraints === null) {
+                $constraints = [$queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter($pluginName, Connection::PARAM_STR))];
+
+                if ($languageField = $GLOBALS['TCA']['tt_content']['ctrl']['languageField'] ?? null) {
+                    $constraints[] = $queryBuilder->expr()->lte($languageField, 0);
+                }
+
+                if ($hiddenField = $GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled'] ?? null) {
+                    $constraints[] = $queryBuilder->expr()->eq($hiddenField, 0);
+                }
+            }
+
             $queryBuilder->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
-            $queryBuilder->andWhere($queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter($pluginName, Connection::PARAM_STR)));
+            $queryBuilder->andWhere(...$constraints);
+
 
             // An element with the same CType can be found on the given pid
             if (count($result = $queryBuilder->execute()->fetchAllAssociative())) {
@@ -168,11 +198,8 @@ class RootLineUtility
             }
 
             // Check the next level in rootline
-            $list = [];
-            self::lookUp($list, $pid, 0, 1, self::getTreeCollectQueryBuilder());
-
-            if ($nextPid = (int)(reset($list)['uid'] ?? 0)) {
-                return self::searchContentElementInRootline($nextPid, $pluginName, $queryBuilder);
+            if ($nextPid = self::getParentPage($pid)) {
+                return self::searchContentElementInRootline($nextPid, $pluginName, $queryBuilder, $constraints);
             }
         }
 
@@ -215,7 +242,7 @@ class RootLineUtility
         return $list;
     }
 
-    public static function findListPlugin(Registration $registration, ?int $startingPoint = null): ?array
+    public static function findListPlugin(Registration $registration, ?int $startingPoint = null, ?bool $includingStartingPoint = null): ?array
     {
         if ($registration->hasListPlugin()) {
             $startingPoint || $startingPoint = self::getCurrentPage();
@@ -224,8 +251,11 @@ class RootLineUtility
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
             $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
             $queryBuilder->select('*')->from('tt_content')
-                ->andWhere($queryBuilder->expr()->eq('sys_language_uid', 0))
                 ->orderBy($GLOBALS['TCA']['pages']['ctrl']['sortby'] ?? 'uid');
+
+            if ($includingStartingPoint !== true && ($parentPageUid = self::getParentPage($startingPoint))) {
+                $startingPoint = $parentPageUid;
+            }
 
             return self::searchContentElementInRootline($startingPoint, $cType, $queryBuilder);
         }

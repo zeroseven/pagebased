@@ -124,6 +124,7 @@ call_user_func(static function (string $table) {
             'exclude' => true,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_redirect_category',
+            'description' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_redirect_category.description',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'check',
