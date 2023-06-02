@@ -27,7 +27,7 @@ class DisplayObjectInformation
         try {
             $uid && GeneralUtility::makeInstance(Context::class)->getAspect('backend.user')->isAdmin()
             && ($fieldName = DetectionUtility::REGISTRATION_FIELD_NAME)
-            && ($registrationIdentifier = BackendUtility::getRecord(AbstractPage::TABLE_NAME, 1717, $fieldName)[$fieldName] ?? null)
+            && ($registrationIdentifier = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, $fieldName)[$fieldName] ?? null)
             && $message .= ' [identifier: ' . $registrationIdentifier . ']';
         } catch (AspectNotFoundException $e) {
         }
