@@ -28,6 +28,11 @@ class AddTypoScriptEvent
                 # cat=plugin.' . $pluginKey . '/file; type=string; label=Path to template layouts (FE)
                 layoutRootPath =
             }
+
+            persistence {
+                # cat=plugin.' . $pluginKey . '/links; type=string; label=Default storage PID
+                storagePid = ' . implode(',', array_unique(array_merge($registration->getObject()->getTopicPageIds(), $registration->getObject()->getContactPageIds()), SORT_NUMERIC)) . '
+              }
         }');
     }
 
@@ -56,6 +61,9 @@ class AddTypoScriptEvent
                     0 = ' . $resourcePath . 'Private/Layouts/
                     100 = {$plugin.' . $pluginKey . '.view.layoutRootPath}
                 }
+            }
+            persistence {
+                storagePid = {$plugin.' . $pluginKey . '.persistence.storagePid}
             }
         }');
     }
