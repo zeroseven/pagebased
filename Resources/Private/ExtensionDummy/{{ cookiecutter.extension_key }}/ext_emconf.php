@@ -1,10 +1,10 @@
 <?php
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'News',
+    'title' => '{{ cookiecutter.__object_class_name }}',
     'category' => 'plugin',
-    'author' => 'Raphael Thanner',
-    'author_email' => 'r.thanner@zeroseven.de',
+//  'author' => 'Max Mustermann',
+//  'author_email' => 'm.mustermann@zeroseven.de',
     'author_company' => 'zeroseven design studios GmbH',
     'state' => 'stable',
     'clearCacheOnLoad' => 1,
