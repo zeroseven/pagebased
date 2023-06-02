@@ -13,6 +13,7 @@ use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Exception\BadConstraintException;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Utility\DetectionUtility;
@@ -76,10 +77,13 @@ class DisplayObjectInformation
     protected function isCategory(int $uid): bool
     {
         if (($registration = ObjectUtility::isCategory($uid)) && $demand = $registration->getObject()->getDemandClass()) {
-            $this->showMessage($this->translate('notification.category.description', [
-                $registration->getObject()->getRepositoryClass()->findByDemand($demand->setCategory($uid)->setExcludeChildObjects(true))->count(),
-                $registration->getObject()->getName(),
-            ]), $uid);
+            try {
+                $count = $registration->getObject()->getRepositoryClass()->findByDemand($demand->setCategory($uid)->setExcludeChildObjects(true))->count();
+            } catch (BadConstraintException $e) {
+                $count = 0;
+            }
+
+            $this->showMessage($this->translate('notification.category.description', [$count, $registration->getObject()->getName()]), $uid);
 
             return true;
         }
