@@ -60,7 +60,7 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
             $listPlugin = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['listPlugin'] ?? null;
 
             if (empty($listPlugin) && ($registration = $this->getRegistration() ?? RegistrationService::getRegistrationByDemandClass(get_class($this->demand)))) {
-                $listPlugin = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['listPlugin'] = RootLineUtility::findListPlugin($registration);
+                $listPlugin = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['listPlugin'] = RootLineUtility::findListPlugin($registration, null, true);
             }
 
             if (($uid = (int)($listPlugin['uid'] ?? 0)) && $pid = (int)($listPlugin['pid'] ?? 0)) {
