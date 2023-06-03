@@ -29,10 +29,15 @@ class AddTypoScriptEvent
                 layoutRootPath =
             }
 
+            registration {
+                identifier = ' . $registration->getIdentifier() . '
+                category.type = ' . $registration->getCategory()->getObjectType() . '
+            }
+
             persistence {
                 # cat=plugin.' . $pluginKey . '/links; type=string; label=Default storage PID
                 storagePid = ' . implode(',', array_unique(array_merge($registration->getObject()->getTopicPageIds(), $registration->getObject()->getContactPageIds()), SORT_NUMERIC)) . '
-              }
+            }
         }');
     }
 

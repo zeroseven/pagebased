@@ -1,6 +1,5 @@
 # Configure plugin
 plugin.tx_{{ cookiecutter.__plugin_key }} {
-
 }
 
 # Add info template to the {{ cookiecutter.object_name|lower }} page

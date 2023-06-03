@@ -1,3 +1,2 @@
 plugin.tx_{{ cookiecutter.__plugin_key }} {
-  settings.category.doktype = {{ cookiecutter.category_doktype }}
 }
