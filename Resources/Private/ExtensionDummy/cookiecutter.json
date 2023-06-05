@@ -6,5 +6,5 @@
 	"__namespace_vendor": "{{ cookiecutter.vendor_name|lower|capitalize }}",
 	"__namespace_extension": "{{ cookiecutter.extension_key.split('_')|map('capitalize')|join }}",
 	"__object_class_name": "{{ cookiecutter.object_name|lower|capitalize }}",
-	"__plugin_key": "{{cookiecutter.extension_key.replace('_', '') }}"
+	"__plugin_key": "tx_{{ cookiecutter.extension_key }}"
 }

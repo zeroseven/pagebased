@@ -1,2 +1,2 @@
-plugin.tx_{{ cookiecutter.__plugin_key }} {
+plugin.{{ cookiecutter.__plugin_key }} {
 }

@@ -12,7 +12,7 @@ class AddTypoScriptEvent
 {
     public static function getTypoScriptPluginKey(Registration $registration): string
     {
-        return 'tx_' . str_replace('_', '', strtolower($registration->getExtensionName()));
+        return 'tx_' . strtolower($registration->getExtensionName());
     }
 
     public function addTypoScriptConstants(Registration $registration): void
