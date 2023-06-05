@@ -15,6 +15,7 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Domain\Model\ObjectInterface;
 use Zeroseven\Rampage\Event\AssignTemplateVariablesEvent;
 use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Rampage\Registration\RegistrationService;
 
 class RenderUtility
 {
@@ -82,7 +83,9 @@ class RenderUtility
         }
 
         if ($registrationIdentifier === null) {
-            throw new ContentRenderingException('Configuration "registration" (the identifier of a registration) is not set or empty.', 1683709644);
+            $validIdentifier = array_map(static fn($registration) => '"' . $registration->getIdentifier() . '"', RegistrationService::getRegistrations());
+
+            throw new ContentRenderingException('Configuration "registration" (the identifier of a registration) is not set or empty.' . (count($validIdentifier) ? ' Valid identifiers are ' . implode(',', $validIdentifier) . '.' : '') , 1685960418);
         }
 
         return $content . $this->render($file, $registrationIdentifier, $settings);
