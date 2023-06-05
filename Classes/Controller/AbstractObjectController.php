@@ -30,18 +30,31 @@ abstract class AbstractObjectController extends AbstractController implements Ob
     {
         parent::initializeAction();
 
-        if ($extbaseSetup = $this->request->getAttribute('extbase')) {
-            $requestKey = strtolower('tx_' . $extbaseSetup->getControllerExtensionName() . '_list');
-
-            $listArguments = GeneralUtility::_GP($requestKey) ?: [];
-        } else {
-            $listArguments = [];
-        }
-
-        $this->requestArguments = array_merge($this->request->getArguments(), $listArguments);
-
         $this->initializeRegistration();
         $this->initializeDemand();
+        $this->initializeRequestArguments();
+    }
+
+    protected function initializeRegistration(): void
+    {
+        $this->registration = RegistrationService::getRegistrationByController(get_class($this));
+    }
+
+    protected function initializeDemand(): void
+    {
+        $this->demand = $this->registration->getObject()->getDemandClass()->setParameterArray($this->settings);
+    }
+
+    protected function initializeRequestArguments(): void
+    {
+        if ($extbaseSetup = $this->request->getAttribute('extbase')) {
+            $requestKey = strtolower('tx_' . $extbaseSetup->getControllerExtensionName() . '_list');
+            $arguments = GeneralUtility::_GP($requestKey) ?: [];
+        } else {
+            $arguments = [];
+        }
+
+        $this->requestArguments = array_merge($this->request->getArguments(), $arguments);
     }
 
     protected function resolveView(): ViewInterface
@@ -87,16 +100,6 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         }
 
         return null;
-    }
-
-    public function initializeRegistration(): void
-    {
-        $this->registration = RegistrationService::getRegistrationByController(get_class($this));
-    }
-
-    public function initializeDemand(): void
-    {
-        $this->demand = $this->registration->getObject()->getDemandClass()->setParameterArray($this->settings);
     }
 
     public function listAction(): void

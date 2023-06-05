@@ -9,9 +9,5 @@ use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 
 interface ObjectControllerInterface extends ControllerInterface
 {
-    public function initializeRegistration(): void;
-
-    public function initializeDemand(): void;
-
     public function listAction(): void;
 }
