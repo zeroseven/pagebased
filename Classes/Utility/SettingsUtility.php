@@ -7,6 +7,7 @@ namespace Zeroseven\Rampage\Utility;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -36,17 +37,24 @@ class SettingsUtility
     {
         $extensionName = $registration->getExtensionName();
 
-        if (empty($settings = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['settings'][$extensionName] ?? null)) {
-            try {
-                $settings = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['settings'][$extensionName] = GeneralUtility::makeInstance(ConfigurationManager::class)->getConfiguration(
-                    ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
-                    $extensionName,
-                    AddTypoScriptEvent::getTypoScriptPluginKey($registration)
-                ) ?: [];
-            } catch (InvalidConfigurationTypeException $e) {
-            }
-        }
+        $pluginConfiguration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['plugin-settings'][$extensionName] ?? call_user_func(static function () use ($registration, $extensionName) {
+                $pluginKey = AddTypoScriptEvent::getTypoScriptPluginKey($registration);
+                try {
+                    $pluginConfiguration = GeneralUtility::makeInstance(ConfigurationManager::class)
+                            ->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT)['plugin.'][$pluginKey . '.'] ?? [];
+                } catch (InvalidConfigurationTypeException $e) {
+                    $pluginConfiguration = [];
+                }
 
-        return ArrayPathUtility::getPath($settings, $propertyPath);
+                return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['plugin-settings'][$extensionName]
+                    = GeneralUtility::makeInstance(TypoScriptService::class)->convertTypoScriptArrayToPlainArray($pluginConfiguration);
+            });
+
+        return ArrayPathUtility::getPath($pluginConfiguration, $propertyPath);
+    }
+
+    public static function getPluginSettings(Registration $registration, string $propertyPath = null): mixed
+    {
+        return self::getPluginConfiguration($registration, 'settings');
     }
 }

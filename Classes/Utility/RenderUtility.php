@@ -25,15 +25,15 @@ class RenderUtility
      */
     public ?ContentObjectRenderer $cObj = null;
 
-    protected function initializeView(Registration $registration, array $settings): StandaloneView
+    protected function initializeView(Registration $registration, array $pluginConfiguration): StandaloneView
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
 
         $view->getRequest()->setControllerExtensionName(GeneralUtility::underscoredToLowerCamelCase($registration->getExtensionName()));
         $view->getRequest()->setControllerName($registration->getObject()->getName());
-        $view->setTemplateRootPaths($settings['view']['templateRootPaths'] ?? []);
-        $view->setPartialRootPaths($settings['view']['partialRootPaths'] ?? []);
-        $view->setLayoutRootPaths($settings['view']['layoutRootPaths'] ?? []);
+        $view->setTemplateRootPaths($pluginConfiguration['view']['templateRootPaths'] ?? []);
+        $view->setPartialRootPaths($pluginConfiguration['view']['partialRootPaths'] ?? []);
+        $view->setLayoutRootPaths($pluginConfiguration['view']['layoutRootPaths'] ?? []);
         $view->setFormat('html');
 
         return $view;
@@ -46,8 +46,8 @@ class RenderUtility
             : null;
 
         if ($pageUid && ($registration = ObjectUtility::isObject($pageUid)) && $registration->getIdentifier() === $registrationIdentifier) {
-            $settings = array_merge($settings ?? [], SettingsUtility::getPluginConfiguration($registration));
-            $view = $this->initializeView($registration, $settings);
+            $pluginConfiguration = SettingsUtility::getPluginConfiguration($registration);
+            $view = $this->initializeView($registration, $pluginConfiguration);
 
             try {
                 $object || $object = $registration->getObject()->getRepositoryClass()->findByUid($pageUid);
@@ -59,7 +59,7 @@ class RenderUtility
                 $view->assignMultiple(GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new AssignTemplateVariablesEvent([
                     'object' => $object,
                     'demand' => $registration->getObject()->getDemandClass(),
-                    'settings' => $settings,
+                    'settings' => array_merge($pluginConfiguration['settings'] ?? [], $settings ?? []),
                     'data' => $this->cObj->data ?? [],
                     strtolower($registration->getObject()->getName()) => $object // alias variable
                 ], $registration, 'info'))->getVariables());
@@ -85,7 +85,7 @@ class RenderUtility
         if ($registrationIdentifier === null) {
             $validIdentifier = array_map(static fn($registration) => '"' . $registration->getIdentifier() . '"', RegistrationService::getRegistrations());
 
-            throw new ContentRenderingException('Configuration "registration" (the identifier of a registration) is not set or empty.' . (count($validIdentifier) ? ' Valid identifiers are ' . implode(',', $validIdentifier) . '.' : '') , 1685960418);
+            throw new ContentRenderingException('Configuration "registration" (the identifier of a registration) is not set or empty.' . (count($validIdentifier) ? ' Valid identifiers are ' . implode(',', $validIdentifier) . '.' : ''), 1685960418);
         }
 
         return $content . $this->render($file, $registrationIdentifier, $settings);
