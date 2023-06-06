@@ -38,7 +38,7 @@ class ObjectUtility
 
     public static function isCategory(int $pageUid = null, array $row = null): ?Registration
     {
-        if ($pageUid || ($pageUid = (int)($row['uid'] ?? 0)) || ($pageUid = self::getPageUid())) {
+        if ($pageUid || ($pageUid = (int)($row['uid'] ?? self::getPageUid()))) {
             $typeField = self::getPageTypeField();
 
             $documentType = $row[$typeField] ?? (BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, $typeField)[$typeField] ?? null);
@@ -53,7 +53,7 @@ class ObjectUtility
 
     public static function isObject(int $pageUid = null, array $row = null): ?Registration
     {
-        $pageUid || ($pageUid = (int)($row['uid'] ?? 0)) || ($pageUid = self::getPageUid());
+        $pageUid || ($pageUid = (int)($row['uid'] ?? self::getPageUid()));
 
         if ($registration = self::getObjectCache($pageUid)) {
             return $registration;

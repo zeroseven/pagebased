@@ -99,3 +99,29 @@ Update registration information of category and object pages with the command `r
 |`rampage:update 7 2`| Starting from page uid: `7` with depth of `2` levels |
 
 This can be useful if you change the identifier of a registration, or you add pages by API.
+
+## Conditions
+
+### TypoScript
+```typo3_typoscript
+page.10 = TEXT
+page.10.value = It's a normal page.
+
+[my_registration_identifier.object]
+page.10.value = Nice! It's an object.
+[my_registration_identifier.category]
+page.10.value = This is a category page.
+[global]
+```
+
+### Fluid
+```html
+<html xmlns:rampage="http://typo3.org/ns/Zeroseven/Rampage/ViewHelpers" data-namespace-typo3-fluid="true">
+<rampage:condition.isObject registration="my_registration_identifier">
+    <p>Nice! It's an object.</p>
+</rampage:condition.isObject>
+<rampage:condition.isCategory registration="my_registration_identifier">
+    <p>This is a category page.</p>
+</rampage:condition.isCategory>
+</html>
+```
