@@ -163,30 +163,14 @@ abstract class AbstractRepository extends Repository
     /** @throws AspectNotFoundException | TypeException | InvalidQueryException | PersistenceException | RegistrationException */
     public function findByUid(mixed $uid, bool $ignoreRestrictions = null): ?object
     {
-        // Convert the uid to an integer
         $uid = CastUtility::int($uid);
+        $query = $this->createQuery();
 
-        // Load page without restrictions
-        if ($ignoreRestrictions) {
-            $query = $this->createQuery();
-
-            if ((int)GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', 0) > 0) {
-                $constraint = $query->equals($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['transOrigPointerField'], $uid);
-            } else {
-                $constraint = $query->equals('uid', $uid);
-            }
-
-            $query->setLimit(1);
-            $query->matching($constraint);
-
-            // Allow hidden pages
+        if ($ignoreRestrictions === true) {
             $query->getQuerySettings()->setIgnoreEnableFields(true)->setIncludeDeleted(true)->setRespectStoragePage(false);
-
-            // Get pages and return the first one …
-            return ($pages = $query->execute()) ? $pages->getFirst() : null;
         }
 
-        if ($results = $this->findByDemand($this->initializeDemand()->setUidList([$uid]))) {
+        if ($results = $this->findByDemand($this->initializeDemand()->setUidList([$uid]), $query)) {
             return $results->getFirst();
         }
 
