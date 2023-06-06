@@ -11,6 +11,8 @@ use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
 use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\DetectionUtility;
+use Zeroseven\Rampage\Utility\RootLineUtility;
 
 abstract class AbstractCategoryRepository extends AbstractPageRepository implements CategoryRepositoryInterface
 {
@@ -37,5 +39,16 @@ abstract class AbstractCategoryRepository extends AbstractPageRepository impleme
         $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
         $querySettings->setRespectStoragePage(false);
         $this->setDefaultQuerySettings($querySettings);
+    }
+
+    public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
+    {
+        $constraints = parent::createDemandConstraints($demand, $query);
+
+        if ($query->getQuerySettings()->getRespectStoragePage() === false && $startPageId = RootLineUtility::getRootPage()) {
+            $constraints[] = $query->equals(DetectionUtility::SITE_FIELD_NAME, $startPageId);
+        }
+
+        return $constraints;
     }
 }
