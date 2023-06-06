@@ -24,10 +24,10 @@ class ObjectProcessor implements DataProcessorInterface
             throw new ValueException(sprintf('Registration not found, or empty "registration" configuration in %s. Use one of the following identifier %s', self::class, implode(', ', $validIdentifier)), 1623157889);
         }
 
-        $uid = $cObj->stdWrapValue('id', $processorConfiguration, null) ??
+        $uid = $cObj->stdWrapValue('uid', $processorConfiguration, null) ??
             (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController ? $GLOBALS['TSFE']->id : null);
 
-        if ($uid && $object = $registration->getObject()->getRepositoryClass()->findByUid((int)$uid, true)) {
+        if ($uid && $object = $registration->getObject()->getRepositoryClass()->findByUid($uid, true)) {
             if ($key = $cObj->stdWrapValue('as', $processorConfiguration, null)) {
                 $processedData[$key] = $object;
             } else {

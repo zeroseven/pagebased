@@ -122,10 +122,7 @@ page.1684843032 {
 page.1686075417 = HMENU
 page.1686075417 {
   special = browse
-  special {
-    items = next
-    items.prevnextToSection = 1
-  }
+  special.items = next
 
   1 = TMENU
   1.NO {
@@ -136,7 +133,7 @@ page.1686075417 {
 
       dataProcessing.10 = Zeroseven\Rampage\DataProcessing\ObjectProcessor
       dataProcessing.10 {
-        id.data = field:uid
+        uid.data = field:uid
         registration = my_registration_identifier
       }
     }
