@@ -80,7 +80,8 @@ class TagsElement extends AbstractFormElement
     {
         return [
             'html' => $this->renderHtml(),
-            'requireJsModules' => $this->renderRequireJsModules()
+            'requireJsModules' => $this->renderRequireJsModules(),
+            'stylesheetFiles' => ['EXT:rampage/Resources/Public/Css/Backend/Tagify.css']
         ];
     }
 
