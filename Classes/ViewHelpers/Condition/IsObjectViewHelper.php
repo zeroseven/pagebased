@@ -7,7 +7,7 @@ namespace Zeroseven\Rampage\ViewHelpers\Condition;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Utility\ObjectUtility;
 
-class isObjectViewHelper extends AbstractConditionViewHelper
+class IsObjectViewHelper extends AbstractConditionViewHelper
 {
     protected function detectRegistration(): ?Registration
     {
