@@ -100,6 +100,50 @@ Update registration information of category and object pages with the command `r
 
 This can be useful if you change the identifier of a registration, or you add pages by API.
 
+## Extend your template
+
+### TypoScript
+
+#### User object_
+
+```typo3_typoscript
+page.1684843032 = USER
+page.1684843032 {
+    userFunc = Zeroseven\Rampage\Utility\RenderUtility->renderUserFunc
+    file = EXT:my_extension/Resources/Private/Templates/Info.html
+    registration = my_registration_identifier
+}
+```
+
+#### Data processor:
+
+```typo3_typoscript
+# Example to show the next object
+page.1686075417 = HMENU
+page.1686075417 {
+  special = browse
+  special {
+    items = next
+    items.prevnextToSection = 1
+  }
+
+  1 = TMENU
+  1.NO {
+    doNotLinkIt = 1
+    stdWrap.cObject = FLUIDTEMPLATE
+    stdWrap.cObject {
+      file = EXT:zeroseven_projects/Resources/Private/Templates/Info/Next.html
+
+      dataProcessing.10 = Zeroseven\Rampage\DataProcessing\ObjectProcessor
+      dataProcessing.10 {
+        id.data = field:uid
+        registration = my_registration_identifier
+      }
+    }
+  }
+}
+```
+
 ## Conditions
 
 ### TypoScript
