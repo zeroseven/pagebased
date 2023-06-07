@@ -3,7 +3,6 @@
 defined('TYPO3') || die('🧨');
 
 call_user_func(static function () {
-    // Build registration
     $object = \Zeroseven\Rampage\Registration\ObjectRegistration::create('{{ cookiecutter.object_name|capitalize }}')
         ->setClassName(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Model\{{ cookiecutter.__object_class_name }}::class)
         ->setControllerClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Controller\{{ cookiecutter.__object_class_name }}Controller::class)
@@ -30,17 +29,4 @@ call_user_func(static function () {
         ->enableListPlugin($listPlugin)
         ->enableFilterPlugin($filterPlugin)
         ->store();
-
-    // Add custom icons
-    $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
-    $iconRegistry->registerIcon(
-        'apps-pagetree-page-{{ cookiecutter.object_name|lower }}',
-        \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
-        ['source' => 'EXT:{{ cookiecutter.extension_key }}/Resources/Public/Icons/Apps/apps-pagetree-page-{{ cookiecutter.object_name|lower }}.svg']
-    );
-    $iconRegistry->registerIcon(
-        'apps-pagetree-page-{{ cookiecutter.object_name|lower }}-hideinmenu',
-        \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
-        ['source' => 'EXT:{{ cookiecutter.extension_key }}/Resources/Public/Icons/Apps/apps-pagetree-page-{{ cookiecutter.object_name|lower }}-hideinmenu.svg']
-    );
 });
