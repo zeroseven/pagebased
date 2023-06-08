@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Hooks\IconFactory;
 
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Registration\EventListener\IconRegistryEvent;
 use Zeroseven\Rampage\Utility\ObjectUtility;
 
 class OverrideIconOverlay
@@ -22,7 +23,7 @@ class OverrideIconOverlay
                     return 'overlay-advanced';
                 }
 
-                return 'overlay-list';
+                return IconRegistryEvent::getOverlayIconName($registration);
             }
 
             if (($registration = ObjectUtility::isCategory($uid)) && $category = $registration->getCategory()->getRepositoryClass()->findByUid($uid)) {

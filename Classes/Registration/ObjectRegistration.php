@@ -20,6 +20,7 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     protected array $topicPageIds = [];
     protected array $contactPageIds = [];
     protected bool $relations = false;
+    protected ?string $overlayIconIdentifier = null;
     protected ?string $name = null;
 
     public function getDemandClassName(): string
@@ -158,6 +159,17 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     public function relationsEnabled(): bool
     {
         return $this->relations;
+    }
+
+    public function getOverlayIconIdentifier(): string
+    {
+        return $this->overlayIconIdentifier ?? '';
+    }
+
+    public function setOverlayIconIdentifier(string $overlayIconIdentifier): self
+    {
+        $this->overlayIconIdentifier = $overlayIconIdentifier;
+        return $this;
     }
 
     public function getName(): string
