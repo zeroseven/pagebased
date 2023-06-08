@@ -13,7 +13,7 @@ final class CategoryRegistration extends AbstractRegistrationEntityProperty
 
     public function getIconIdentifier(bool $hideInMenu = null): string
     {
-        return ($this->iconIdentifier ?? 'apps-pagetree-page-content-from-page') . ($hideInMenu === true ? '-hideinmenu' : '');
+        return $this->iconIdentifier . ($hideInMenu === true ? '-hideinmenu' : '');
     }
 
     public function setIconIdentifier(string $iconIdentifier): self

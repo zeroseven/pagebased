@@ -13,8 +13,7 @@ call_user_func(static function () {
 
     $category = \Zeroseven\Rampage\Registration\CategoryRegistration::create('{{ cookiecutter.object_name|capitalize }}-Category')
         ->setClassName(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Model\Category::class)
-        ->setRepositoryClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Repository\CategoryRepository::class)
-        ->setIconIdentifier('apps-pagetree-page-{{ cookiecutter.object_name|lower }}');
+        ->setRepositoryClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Repository\CategoryRepository::class);
 
     $listPlugin = \Zeroseven\Rampage\Registration\ListPluginRegistration::create('{{ cookiecutter.object_name|capitalize }} list')
         ->setDescription('Display object in a list')

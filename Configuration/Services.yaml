@@ -34,6 +34,12 @@ services:
               identifier: 'rampage/registration-check-extension-configuration'
               event: Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent
 
+    Zeroseven\Rampage\Registration\EventListener\IconRegistryEvent:
+        tags:
+            - name: event.listener
+              identifier: 'rampage/registration-icon-registry'
+              event: Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent
+
     Zeroseven\Rampage\Registration\EventListener\AddTSConfigEvent:
         tags:
             - name: event.listener
