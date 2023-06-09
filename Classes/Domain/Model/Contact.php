@@ -23,7 +23,7 @@ class Contact extends AbstractEntity
     protected string $zip;
     protected string $country;
     protected string $description;
-    protected FileReference $image;
+    protected ?FileReference $image = null;
     protected string $page;
     protected string $twitter;
     protected string $facebook;
