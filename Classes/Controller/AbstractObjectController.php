@@ -11,13 +11,16 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Rampage\Domain\Repository\ContactRepository;
 use Zeroseven\Rampage\Domain\Repository\TopicRepository;
 use Zeroseven\Rampage\Event\AssignTemplateVariablesEvent;
+use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\CastUtility;
 use Zeroseven\Rampage\Utility\TagUtility;
 
 abstract class AbstractObjectController extends AbstractController implements ObjectControllerInterface
@@ -26,6 +29,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
     protected ?DemandInterface $demand = null;
     protected array $requestArguments = [];
 
+    /** @throws TypeException */
     public function initializeAction(): void
     {
         parent::initializeAction();
@@ -45,6 +49,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         $this->demand = $this->registration->getObject()->getDemandClass()->setParameterArray($this->settings);
     }
 
+    /** @throws TypeException */
     protected function initializeRequestArguments(): void
     {
         if ($extbaseSetup = $this->request->getAttribute('extbase')) {
@@ -55,6 +60,15 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         }
 
         $this->requestArguments = array_merge($this->request->getArguments(), $arguments);
+
+        // Limit caching on multiple array values
+        foreach ($this->requestArguments as $argument => $value) {
+            $this->demand->hasProperty($argument)
+            && $this->demand->getProperty($argument)->isArray()
+            && count(CastUtility::array($value)) > 1
+            && ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController
+            && $GLOBALS['TSFE']->no_cache = true;
+        }
     }
 
     protected function resolveView(): ViewInterface
