@@ -29,7 +29,6 @@ abstract class AbstractObjectController extends AbstractController implements Ob
     protected ?DemandInterface $demand = null;
     protected array $requestArguments = [];
 
-    /** @throws TypeException */
     public function initializeAction(): void
     {
         parent::initializeAction();
@@ -37,6 +36,11 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         $this->initializeRegistration();
         $this->initializeDemand();
         $this->initializeRequestArguments();
+
+        try {
+            $this->controlCache();
+        } catch (TypeException $e) {
+        }
     }
 
     protected function initializeRegistration(): void
@@ -49,7 +53,6 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         $this->demand = $this->registration->getObject()->getDemandClass()->setParameterArray($this->settings);
     }
 
-    /** @throws TypeException */
     protected function initializeRequestArguments(): void
     {
         if ($extbaseSetup = $this->request->getAttribute('extbase')) {
@@ -60,14 +63,26 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         }
 
         $this->requestArguments = array_merge($this->request->getArguments(), $arguments);
+    }
 
-        // Limit caching on multiple array values
-        foreach ($this->requestArguments as $argument => $value) {
-            $this->demand->hasProperty($argument)
-            && $this->demand->getProperty($argument)->isArray()
-            && count(CastUtility::array($value)) > 1
-            && ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController
-            && $GLOBALS['TSFE']->no_cache = true;
+    /** @throws TypeException */
+    protected function controlCache(): void
+    {
+        if (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController && $GLOBALS['TSFE']->no_cache === false) {
+            $demandArguments = array_filter(array_keys($this->requestArguments), fn(string $argument) => $this->demand->hasProperty($argument));
+
+            // Limit caching on multiple arguments
+            if (count($demandArguments) > 2) {
+                $GLOBALS['TSFE']->no_cache = true;
+            } else {
+
+                // Limit caching on multiple array values
+                foreach ($demandArguments as $argument) {
+                    $this->demand->getProperty($argument)->isArray()
+                    && count(CastUtility::array($this->requestArguments[$argument] ?? null)) > 1
+                    && $GLOBALS['TSFE']->no_cache = true;
+                }
+            }
         }
     }
 
