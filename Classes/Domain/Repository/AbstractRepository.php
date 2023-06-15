@@ -16,7 +16,6 @@ use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Exception\RegistrationException;
 use Zeroseven\Rampage\Exception\TypeException;
@@ -94,6 +93,11 @@ abstract class AbstractRepository extends Repository
         }
 
         return $constraints;
+    }
+
+    public function getDefaultOrderings(): array
+    {
+        return $this->defaultOrderings;
     }
 
     protected function orderByUid(mixed $orderReference, QueryResultInterface $objects): QueryResultInterface

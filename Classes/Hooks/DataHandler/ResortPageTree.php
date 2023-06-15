@@ -55,27 +55,30 @@ class ResortPageTree
     protected function updateSorting(int $parentPageUid, Registration $registration, DataHandler $dataHandler): void
     {
         $repository = $registration->getObject()->getRepositoryClass();
-        $demand = $registration->getObject()->getDemandClass()->setUidList(RootLineUtility::collectPagesBelow($parentPageUid, false, 1));
 
-        $expectedOrdering = $repository->findByDemand($demand);
-        $currentOrdering = $repository->findByDemand($demand->setOrderBy('sorting'));
+        if (array_key_first($repository->getDefaultOrderings()) !== $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby'] ?? null) {
+            $demand = $registration->getObject()->getDemandClass()->setUidList(RootLineUtility::collectPagesBelow($parentPageUid, false, 1));
 
-        if ($expectedOrdering->count() > 1 && $expectedOrdering->count() === $currentOrdering->count()) {
-            $expectedUidList = $this->getUidList($expectedOrdering);
-            $currentUidList = $this->getUidList($currentOrdering);
+            $expectedOrdering = $repository->findByDemand($demand);
+            $currentOrdering = $repository->findByDemand($demand->setOrderBy('sorting'));
 
-            if (implode('', $currentUidList) !== implode('', $expectedUidList)) {
-                $command = [];
+            if ($expectedOrdering->count() > 1 && $expectedOrdering->count() === $currentOrdering->count()) {
+                $expectedUidList = $this->getUidList($expectedOrdering);
+                $currentUidList = $this->getUidList($currentOrdering);
 
-                foreach (array_reverse($expectedUidList) as $uid) {
-                    $command[AbstractPage::TABLE_NAME][$uid]['move'] = $parentPageUid;
+                if (implode('', $currentUidList) !== implode('', $expectedUidList)) {
+                    $command = [];
+
+                    foreach (array_reverse($expectedUidList) as $uid) {
+                        $command[AbstractPage::TABLE_NAME][$uid]['move'] = $parentPageUid;
+                    }
+
+                    $dataHandler->start([], $command);
+                    $dataHandler->process_cmdmap();
+
+                    $this->addNotification($parentPageUid, $registration);
+                    BackendUtility::setUpdateSignal('updatePageTree');
                 }
-
-                $dataHandler->start([], $command);
-                $dataHandler->process_cmdmap();
-
-                $this->addNotification($parentPageUid, $registration);
-                BackendUtility::setUpdateSignal('updatePageTree');
             }
         }
     }
