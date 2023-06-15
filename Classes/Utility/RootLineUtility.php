@@ -62,7 +62,7 @@ class RootLineUtility
         return 0;
     }
 
-    protected static function getParentPage(int $staringPoint = null): int
+    public static function getParentPage(int $staringPoint = null): int
     {
         $staringPoint || $staringPoint = self::getCurrentPage();
 

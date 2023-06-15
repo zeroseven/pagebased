@@ -7,6 +7,7 @@ namespace Zeroseven\Rampage\Domain\Repository;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
@@ -82,7 +83,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         );
 
         // Exclude child objects
-        if ($demand->getExcludeChildObjects()) {
+        if ($demand->getIncludeChildObjects() === false) {
             $constraints[] = $query->logicalNot($query->equals(DetectionUtility::CHILD_OBJECT_FIELD_NAME, 1));
         }
 
@@ -100,10 +101,36 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
 
         try {
             $query->getQuerySettings()->setRespectStoragePage(true)->setStoragePageIds([CastUtility::int($value)]);
-            $demand = $this->initializeDemand()->setExcludeChildObjects(false);
+            $demand = $this->initializeDemand()->setIncludeChildObjects(true);
 
             return $this->findByDemand($demand, $query);
         } catch (RegistrationException | TypeException | AspectNotFoundException | InvalidQueryException | PersistenceException $e) {
+        }
+
+        return null;
+    }
+
+    /** @throws AspectNotFoundException | TypeException | InvalidQueryException | PersistenceException | RegistrationException */
+    public function findParentObject(mixed $value): ?DomainObjectInterface
+    {
+        return ($uid = $value instanceof AbstractPage ? $value->getUid() : CastUtility::int($value))
+        && ($parentPage = RootLineUtility::getParentPage($uid))
+            ? $this->findByUid($parentPage)
+            : null;
+    }
+
+    /** @throws AspectNotFoundException | TypeException | InvalidQueryException | PersistenceException | RegistrationException */
+    public function findByUid(mixed $uid, bool $ignoreRestrictions = null): ?DomainObjectInterface
+    {
+        $uid = CastUtility::int($uid);
+        $query = $this->createQuery();
+
+        if ($ignoreRestrictions === true) {
+            $query->getQuerySettings()->setIgnoreEnableFields(true)->setIncludeDeleted(true)->setRespectStoragePage(false);
+        }
+
+        if ($results = $this->findByDemand($this->initializeDemand()->setUidList([$uid])->setIncludeChildObjects(true), $query)) {
+            return $results->getFirst();
         }
 
         return null;

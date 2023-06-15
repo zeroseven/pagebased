@@ -8,7 +8,7 @@ interface ObjectDemandInterface extends DemandInterface
 {
     public const PROPERTY_CONTENT_ID = '_c';
     public const PROPERTY_TOP_MODE = '_top_mode';
-    public const PROPERTY_EXCLUDE_CHILD_OBJECTS = '_exclude_child_objects';
+    public const PROPERTY_INCLUDE_CHILD_OBJECTS = '_child_objects';
 
     public function getContentId(): int;
 
@@ -18,7 +18,7 @@ interface ObjectDemandInterface extends DemandInterface
 
     public function getTopObjectFirst(): bool;
 
-    public function setExcludeChildObjects(mixed $value): self;
+    public function setIncludeChildObjects(mixed $value): self;
 
-    public function getExcludeChildObjects(): bool;
+    public function getIncludeChildObjects(): bool;
 }

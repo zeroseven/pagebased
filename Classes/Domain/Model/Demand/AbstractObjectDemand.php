@@ -24,7 +24,7 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
 
         $this->addProperty(self::PROPERTY_CONTENT_ID, DemandProperty::TYPE_INTEGER);
         $this->addProperty(self::PROPERTY_TOP_MODE, DemandProperty::TYPE_INTEGER);
-        $this->addProperty(self::PROPERTY_EXCLUDE_CHILD_OBJECTS, DemandProperty::TYPE_BOOLEAN);
+        $this->addProperty(self::PROPERTY_INCLUDE_CHILD_OBJECTS, DemandProperty::TYPE_BOOLEAN);
 
         $this->addProperty('category', DemandProperty::TYPE_INTEGER);
         $this->addProperty('tags', DemandProperty::TYPE_ARRAY, 'tagsString');
@@ -65,16 +65,16 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
     }
 
     /** @throws TypeException | PropertyException */
-    public function setExcludeChildObjects(mixed $value): ObjectDemandInterface
+    public function setIncludeChildObjects(mixed $value): ObjectDemandInterface
     {
-        $this->setProperty(self::PROPERTY_EXCLUDE_CHILD_OBJECTS, $value);
+        $this->setProperty(self::PROPERTY_INCLUDE_CHILD_OBJECTS, $value);
 
         return $this;
     }
 
     /** @throws PropertyException */
-    public function getExcludeChildObjects(): bool
+    public function getIncludeChildObjects(): bool
     {
-        return $this->getProperty(self::PROPERTY_EXCLUDE_CHILD_OBJECTS)->getValue();
+        return $this->getProperty(self::PROPERTY_INCLUDE_CHILD_OBJECTS)->getValue();
     }
 }

@@ -51,7 +51,7 @@ class DisplayObjectInformation
     {
         if (
             ($registration = ObjectUtility::isChildObject($uid))
-            && ($parentObject = $registration->getObject()->getRepositoryClass()->findByUid($uid)->getParentObject())
+            && ($parentObject = $registration->getObject()->getRepositoryClass()->findParentObject($uid))
         ) {
             $this->showMessage($this->translate('notification.objectAffiliation.description', [$registration->getObject()->getName(), $parentObject->getTitle()]), $uid);
             return true;
@@ -78,7 +78,7 @@ class DisplayObjectInformation
     {
         if (($registration = ObjectUtility::isCategory($uid)) && $demand = $registration->getObject()->getDemandClass()) {
             try {
-                $count = $registration->getObject()->getRepositoryClass()->findByDemand($demand->setCategory($uid)->setExcludeChildObjects(true))->count();
+                $count = $registration->getObject()->getRepositoryClass()->findByDemand($demand->setCategory($uid))->count();
             } catch (BadConstraintException $e) {
                 $count = 0;
             }

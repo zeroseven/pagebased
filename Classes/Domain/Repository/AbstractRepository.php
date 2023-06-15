@@ -7,6 +7,7 @@ namespace Zeroseven\Rampage\Domain\Repository;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap;
@@ -161,7 +162,7 @@ abstract class AbstractRepository extends Repository
     }
 
     /** @throws AspectNotFoundException | TypeException | InvalidQueryException | PersistenceException | RegistrationException */
-    public function findByUid(mixed $uid, bool $ignoreRestrictions = null): ?object
+    public function findByUid(mixed $uid, bool $ignoreRestrictions = null): ?DomainObjectInterface
     {
         $uid = CastUtility::int($uid);
         $query = $this->createQuery();

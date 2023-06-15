@@ -139,7 +139,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         }
 
         $repository = $this->registration->getObject()->getRepositoryClass();
-        $objects = $repository->findByDemand($this->demand->setExcludeChildObjects(true));
+        $objects = $repository->findByDemand($this->demand);
 
         if (!$this->demand->getContentId() && $contentId = $this->contentData['uid'] ?? null) {
             $this->demand->setContentId($contentId);
