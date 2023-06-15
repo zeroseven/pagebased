@@ -83,7 +83,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         );
 
         // Exclude child objects
-        if ($demand->getIncludeChildObjects() === false) {
+        if ($demand->getIncludeChildObjects() === false && empty($demand->getUidList())) {
             $constraints[] = $query->logicalNot($query->equals(DetectionUtility::CHILD_OBJECT_FIELD_NAME, 1));
         }
 
@@ -117,22 +117,5 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         && ($parentPage = RootLineUtility::getParentPage($uid))
             ? $this->findByUid($parentPage)
             : null;
-    }
-
-    /** @throws AspectNotFoundException | TypeException | InvalidQueryException | PersistenceException | RegistrationException */
-    public function findByUid(mixed $uid, bool $ignoreRestrictions = null): ?DomainObjectInterface
-    {
-        $uid = CastUtility::int($uid);
-        $query = $this->createQuery();
-
-        if ($ignoreRestrictions === true) {
-            $query->getQuerySettings()->setIgnoreEnableFields(true)->setIncludeDeleted(true)->setRespectStoragePage(false);
-        }
-
-        if ($results = $this->findByDemand($this->initializeDemand()->setUidList([$uid])->setIncludeChildObjects(true), $query)) {
-            return $results->getFirst();
-        }
-
-        return null;
     }
 }
