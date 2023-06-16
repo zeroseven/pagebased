@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Repository\ContactRepository;
 use Zeroseven\Rampage\Domain\Repository\TopicRepository;
+use Zeroseven\Rampage\Exception\ValueException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\DetectionUtility;
@@ -32,8 +33,11 @@ class ItemsProcFunc
 
     protected function getRegistration(array $PA): ?Registration
     {
-        if (($objectIdentifier = $PA['row'][DetectionUtility::REGISTRATION_FIELD_NAME] ?? null) && $registration = RegistrationService::getRegistrationByIdentifier($objectIdentifier)) {
-            return $registration;
+        try {
+            if (($objectIdentifier = $PA['row'][DetectionUtility::REGISTRATION_FIELD_NAME] ?? null) && $registration = RegistrationService::getRegistrationByIdentifier($objectIdentifier)) {
+                return $registration;
+            }
+        } catch (ValueException $e) {
         }
 
         return null;

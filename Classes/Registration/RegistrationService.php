@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Registration;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
+use Zeroseven\Rampage\Exception\ValueException;
 
 class RegistrationService
 {
@@ -76,11 +76,18 @@ class RegistrationService
         return null;
     }
 
-    public static function getRegistrationByIdentifier(string $identifier): ?Registration
+    /** @throws ValueException */
+    public static function getRegistrationByIdentifier(string $identifier): Registration
     {
         $registrations = self::getRegistrations();
 
-        return $registrations[$identifier] ?? null;
+        if (!isset($registrations[$identifier])) {
+            $validIdentifier = array_map(static fn($registration) => '"' . $registration->getIdentifier() . '"', $registrations);
+
+            throw new ValueException(sprintf('Registration "%s" not found. Use one of the following identifier %s', $identifier, implode(', ', $validIdentifier)), 1623157889);
+        }
+
+        return $registrations[$identifier];
     }
 
     public static function extbasePersistenceConfiguration(array $classConfiguration): array

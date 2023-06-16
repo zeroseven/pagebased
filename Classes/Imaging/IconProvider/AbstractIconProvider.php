@@ -7,6 +7,7 @@ namespace Zeroseven\Rampage\Imaging\IconProvider;
 use InvalidArgumentException;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconProviderInterface;
+use Zeroseven\Rampage\Exception\ValueException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 
@@ -21,12 +22,10 @@ abstract class AbstractIconProvider implements IconProviderInterface
 
     public function prepareIconMarkup(Icon $icon, array $options = []): void
     {
-        $registration = RegistrationService::getRegistrationByIdentifier($options['registration'] ?? '');
-
-        if ($registration === null) {
-            $validIdentifier = array_map(static fn($registration) => '"' . $registration->getIdentifier() . '"', RegistrationService::getRegistrations());
-
-            throw new InvalidArgumentException('[' . $icon->getIdentifier() . '] Registration not found. Define the key "registration" in the icon options: ' . implode(', ', $validIdentifier), 1620146667);
+        try {
+            $registration = RegistrationService::getRegistrationByIdentifier($options['registration'] ?? '');
+        } catch (ValueException $e) {
+            throw new InvalidArgumentException('[' . $icon->getIdentifier() . '] Registration not found: ' . $e->getMessage(), 1620146666);
         }
 
         $icon->setMarkup($this->generateMarkup($icon, $options, $registration));

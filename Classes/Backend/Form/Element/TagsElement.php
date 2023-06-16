@@ -7,6 +7,7 @@ namespace Zeroseven\Rampage\Backend\Form\Element;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Zeroseven\Rampage\Exception\ValueException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\DetectionUtility;
@@ -21,6 +22,7 @@ class TagsElement extends AbstractFormElement
     protected ?Registration $registration;
     protected int $languageUid;
 
+    /** @throws ValueException */
     public function __construct(NodeFactory $nodeFactory, array $data)
     {
         parent::__construct($nodeFactory, $data);
