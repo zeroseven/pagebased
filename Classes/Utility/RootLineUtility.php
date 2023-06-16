@@ -39,7 +39,7 @@ class RootLineUtility
         return !self::isFrontendMode();
     }
 
-    protected static function getCurrentPage(): int
+    public static function getCurrentPage(): int
     {
         if (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController) {
             return (int)$GLOBALS['TSFE']->id;

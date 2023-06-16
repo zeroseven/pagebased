@@ -6,33 +6,42 @@ namespace Zeroseven\Rampage\DataProcessing;
 
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Rampage\Utility\CastUtility;
+use Zeroseven\Rampage\Utility\ObjectUtility;
+use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Rampage\Utility\SettingsUtility;
 
 class ObjectProcessor implements DataProcessorInterface
 {
-    /** @throws ValueException */
+    /** @throws ValueException | TypeException */
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData): array
     {
-        $registrationIdentifier = $cObj->stdWrapValue('registration', $processorConfiguration, '');
-        $registration = RegistrationService::getRegistrationByIdentifier($registrationIdentifier);
+        $registrationIdentifiers = CastUtility::array($cObj->stdWrapValue('registration', $processorConfiguration, null) ?? $cObj->stdWrapValue('registration.', $processorConfiguration));
+        $uid = $cObj->stdWrapValue('uid', $processorConfiguration, null) ?? RootLineUtility::getCurrentPage();
 
-        if ($registration === null) {
-            $validIdentifier = array_map(static fn($registration) => '"' . $registration->getIdentifier() . '"', RegistrationService::getRegistrations());
-
-            throw new ValueException(sprintf('Registration not found, or empty "registration" configuration in %s. Use one of the following identifier %s', self::class, implode(', ', $validIdentifier)), 1623157889);
+        if (empty($registrationIdentifiers)) {
+            throw new ValueException('Define one or more registration identifiers.', 1623157649);
         }
 
-        $uid = $cObj->stdWrapValue('uid', $processorConfiguration, null) ??
-            (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController ? $GLOBALS['TSFE']->id : null);
-
-        if ($uid && $object = $registration->getObject()->getRepositoryClass()->findByUid($uid, true)) {
+        if (
+            $uid && ($registration = ObjectUtility::isObject()) && in_array($registration->getIdentifier(), $registrationIdentifiers, true)
+            && ($object = $registration->getObject()->getRepositoryClass()->findByUid($uid, true))
+        ) {
             if ($key = $cObj->stdWrapValue('as', $processorConfiguration, null)) {
                 $processedData[$key] = $object;
             } else {
                 $processedData['object'] = $object;
                 $processedData[strtolower($registration->getObject()->getName())] = $object; // Alias
+            }
+
+            if (!isset($processedData['registration'])) {
+                $processedData['registration'] = $registration;
+            }
+
+            if (!isset($processedData['settings'])) {
+                $processedData['settings'] = SettingsUtility::getPluginConfiguration($registration, 'settings');
             }
         }
 
