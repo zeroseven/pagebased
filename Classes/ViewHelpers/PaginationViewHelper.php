@@ -19,7 +19,7 @@ final class PaginationViewHelper extends AbstractViewHelper
     use CompileWithRenderStatic;
 
     public const PAGINATION_VARIABLE_IDENTIFIER = '🤬-fe7cd4d1bf3fea9a0d921e224b3fa24c'; // md5('pagination');
-    public const REQUEST_PARAMETER = '_stage';
+    public const REQUEST_ARGUMENT = '_stage';
 
     protected $escapeOutput = false;
 
@@ -35,8 +35,8 @@ final class PaginationViewHelper extends AbstractViewHelper
 
     protected static function getSelectedStage(RenderingContextInterface $renderingContext): int
     {
-        if (($request = $renderingContext->getRequest()) instanceof RequestInterface && $request->hasArgument(self::REQUEST_PARAMETER)) {
-            return (int)$request->getArgument(self::REQUEST_PARAMETER);
+        if (($request = $renderingContext->getRequest()) instanceof RequestInterface && $request->hasArgument(self::REQUEST_ARGUMENT)) {
+            return (int)$request->getArgument(self::REQUEST_ARGUMENT);
         }
 
         return 0;

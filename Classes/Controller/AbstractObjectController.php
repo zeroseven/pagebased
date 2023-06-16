@@ -22,6 +22,7 @@ use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\CastUtility;
 use Zeroseven\Rampage\Utility\TagUtility;
+use Zeroseven\Rampage\ViewHelpers\PaginationViewHelper;
 
 abstract class AbstractObjectController extends AbstractController implements ObjectControllerInterface
 {
@@ -74,14 +75,20 @@ abstract class AbstractObjectController extends AbstractController implements Ob
             // Limit caching on multiple arguments
             if (count($demandArguments) > 2) {
                 $GLOBALS['TSFE']->no_cache = true;
-            } else {
+                return;
+            }
 
-                // Limit caching on multiple array values
-                foreach ($demandArguments as $argument) {
-                    $this->demand->getProperty($argument)->isArray()
-                    && count(CastUtility::array($this->requestArguments[$argument] ?? null)) > 1
-                    && $GLOBALS['TSFE']->no_cache = true;
-                }
+            // Limit pagination
+            if ((int)($this->requestArguments[PaginationViewHelper::REQUEST_ARGUMENT] ?? 0) > 3) {
+                $GLOBALS['TSFE']->no_cache = true;
+                return;
+            }
+
+            // Limit caching on multiple array values
+            foreach ($demandArguments as $argument) {
+                $this->demand->getProperty($argument)->isArray()
+                && count(CastUtility::array($this->requestArguments[$argument] ?? null)) > 1
+                && $GLOBALS['TSFE']->no_cache = true;
             }
         }
     }

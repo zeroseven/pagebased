@@ -50,7 +50,7 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
                 }
             }
 
-            $this->arguments['arguments'][PaginationViewHelper::REQUEST_PARAMETER] = $targetStage;
+            $this->arguments['arguments'][PaginationViewHelper::REQUEST_ARGUMENT] = $targetStage;
         } else {
             if ($this->arguments['required'] ?? false) {
                 return '<!-- ' . (new ReflectionClass($this))->getShortName() . ': No target stage -->';
