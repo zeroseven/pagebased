@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Exception\TypeException;
+use Zeroseven\Rampage\Exception\ValueException;
 use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 
@@ -60,8 +61,11 @@ class ObjectUtility
                 $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, implode(',', [$registrationField, $typeField]));
             }
 
-            if (($identifier = $row[$registrationField] ?? null) && !self::isCategory($pageUid, $row) && $registration = RegistrationService::getRegistrationByIdentifier($identifier)) {
-                return self::setObjectCache($pageUid, $registration);
+            try {
+                if (($identifier = $row[$registrationField] ?? null) && !self::isCategory($pageUid, $row) && $registration = RegistrationService::getRegistrationByIdentifier($identifier)) {
+                    return self::setObjectCache($pageUid, $registration);
+                }
+            } catch (ValueException $e) {
             }
         }
 
