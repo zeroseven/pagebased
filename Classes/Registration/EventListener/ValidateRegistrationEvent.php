@@ -68,8 +68,8 @@ class ValidateRegistrationEvent
         }
 
         // Check class inheritance of the controller
-        if ($controllerClassName = $objectRegistration->getControllerClassName()) {
-            if (!is_subclass_of($controllerClassName, ObjectControllerInterface::class)) {
+        if ($className = $objectRegistration->getControllerClassName()) {
+            if (!is_subclass_of($className, ObjectControllerInterface::class)) {
                 throw new RegistrationException(sprintf('The class "%s" must be an instance of "%s". Yau can simply extend the class "%s"', $className, ObjectControllerInterface::class, AbstractObjectController::class), 1680722536);
             }
         } else {
@@ -91,7 +91,7 @@ class ValidateRegistrationEvent
         }
     }
 
-    /** @throws RegistrationException */
+    /** @throws RegistrationException | Exception */
     protected function checkCategoryConfiguration(CategoryRegistration $categoryRegistration): void
     {
         // Check domain model
@@ -130,12 +130,29 @@ class ValidateRegistrationEvent
             }
         }
 
-        // Check the persistence configuration
-        try {
-            if (!GeneralUtility::makeInstance(DataMapper::class)->getDataMap($categoryRegistration->getClassName())->getRecordType()) {
-                throw new RegistrationException(sprintf('The object "%s" requires a "recordType" configuration. See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $categoryRegistration->getTitle()), 1680721463);
+        // Check the persistence configuration and document type
+        $documentType = $categoryRegistration->getDocumentType();
+        $recordType = (int)GeneralUtility::makeInstance(DataMapper::class)->getDataMap($categoryRegistration->getClassName())->getRecordType();
+
+        if (empty($documentType)) {
+            throw new RegistrationException(sprintf('The object "%s" requires a documentType.', $categoryRegistration->getClassName()), 1687555268);
+        }
+
+        if (empty($recordType)) {
+            throw new RegistrationException(sprintf('The object "%s" requires a "recordType" configuration. See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $categoryRegistration->getClassName()), 1680721463);
+        }
+
+        if ($documentType !== $recordType) {
+            throw new RegistrationException(sprintf('The configured recordType of the "%s" extbase configuration is not equal to the registration settings', $categoryRegistration->getTitle()), 1687555363);
+        }
+
+        $documentTypes = array_map(static fn(Registration $registration) => $registration->getCategory()->getDocumentType(), RegistrationService::getRegistrations());
+        $duplicates = array_unique(array_diff_assoc($documentTypes, array_unique($documentTypes)));
+
+        foreach ($duplicates as $duplicate) {
+            if ($duplicate === $documentType) {
+                throw new RegistrationException(sprintf('The documentType "%d" is already registered. Please use another documentType for the category %s.', $documentType, $categoryRegistration->getClassName()), 1687556094);
             }
-        } catch (Exception | LogicException $e) {
         }
     }
 
@@ -148,7 +165,7 @@ class ValidateRegistrationEvent
         }
     }
 
-    /** @throws RegistrationException */
+    /** @throws RegistrationException | Exception */
     protected function checkRegistration(Registration $registration): void
     {
         if ($objectRegistration = $registration->getObject()) {
