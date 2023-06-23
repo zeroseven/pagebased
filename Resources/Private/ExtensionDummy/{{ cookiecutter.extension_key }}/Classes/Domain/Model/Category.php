@@ -8,8 +8,4 @@ use Zeroseven\Rampage\Domain\Model\AbstractCategory;
 
 class Category extends AbstractCategory
 {
-    public static function getType(): int
-    {
-        return {{ cookiecutter.category_doktype }};
-    }
 }
