@@ -104,14 +104,14 @@ This can be useful if you change the identifier of a registration, or you add pa
 
 ### TypoScript
 
-#### User object_
+#### User object
 
 ```typo3_typoscript
 page.1684843032 = USER
 page.1684843032 {
     userFunc = Zeroseven\Rampage\Utility\RenderUtility->renderUserFunc
     file = EXT:my_extension/Resources/Private/Templates/Info.html
-    registration = my_registration_identifier
+    registration = my_registration_identifier, another_registration_identifier
 }
 ```
 

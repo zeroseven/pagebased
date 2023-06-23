@@ -1,5 +1,5 @@
 {
-  "name": "{{ cookiecutter.__namespace_vendor|lower }}/{{ cookiecutter.extension_key.replace('_', '-') }}",
+  "name": "{{ cookiecutter.vendor_name|lower }}/{{ cookiecutter.extension_key.replace('_', '-') }}",
   "license": "GPL-2.0-only",
   "type": "typo3-cms-extension",
   "authors": [

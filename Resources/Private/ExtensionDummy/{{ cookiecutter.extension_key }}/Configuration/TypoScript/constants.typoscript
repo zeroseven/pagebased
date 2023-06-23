@@ -1,2 +1,0 @@
-plugin.tx_{{ cookiecutter.__plugin_key }} {
-}
