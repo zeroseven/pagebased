@@ -177,8 +177,8 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
         return $this->name ?? ($this->name = $this->name = GeneralUtility::makeInstance(ReflectionClass::class, $this->className)->getShortName());
     }
 
-    public static function create(...$arguments): self
+    public static function create(string $title): self
     {
-        return GeneralUtility::makeInstance(self::class, ...$arguments);
+        return GeneralUtility::makeInstance(self::class, $title);
     }
 }

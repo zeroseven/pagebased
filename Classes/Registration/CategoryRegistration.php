@@ -10,6 +10,7 @@ use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 final class CategoryRegistration extends AbstractRegistrationEntityProperty
 {
     protected ?string $iconIdentifier = null;
+    protected int $documentType = 0;
 
     public function getIconIdentifier(bool $hideInMenu = null): string
     {
@@ -29,8 +30,19 @@ final class CategoryRegistration extends AbstractRegistrationEntityProperty
             : 0;
     }
 
-    public static function create(...$arguments): self
+    public function getDocumentType(): int
     {
-        return GeneralUtility::makeInstance(self::class, ...$arguments);
+        return $this->documentType;
+    }
+
+    public function setDocumentType(int $documentType): self
+    {
+        $this->documentType = $documentType;
+        return $this;
+    }
+
+    public static function create(string $title): self
+    {
+        return GeneralUtility::makeInstance(self::class, $title);
     }
 }
