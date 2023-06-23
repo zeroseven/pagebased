@@ -17,6 +17,7 @@ use Zeroseven\Rampage\Controller\ObjectControllerInterface;
 use Zeroseven\Rampage\Domain\Model\AbstractCategory;
 use Zeroseven\Rampage\Domain\Model\AbstractObject;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Domain\Model\CategoryInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -24,7 +25,6 @@ use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericObjectDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Rampage\Domain\Model\ObjectInterface;
-use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Domain\Repository\AbstractCategoryRepository;
 use Zeroseven\Rampage\Domain\Repository\AbstractObjectRepository;
 use Zeroseven\Rampage\Domain\Repository\CategoryRepositoryInterface;
@@ -96,11 +96,11 @@ class ValidateRegistrationEvent
     {
         // Check domain model
         if ($categoryRegistration->getClassName()) {
-            if (!is_subclass_of($categoryRegistration->getClassName(), PageTypeInterface::class)) {
-                throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s".', $categoryRegistration->getClassName(), PageTypeInterface::class, AbstractCategory::class), 1676063874);
+            if (!is_subclass_of($categoryRegistration->getClassName(), CategoryInterface::class)) {
+                throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s".', $categoryRegistration->getClassName(), CategoryInterface::class, AbstractCategory::class), 1676063874);
             }
         } else {
-            throw new RegistrationException(sprintf('The registration requires a category domain model of type "%s". Use "CategoryRegistration::setClassName()" to define a model. You can extend the class "%s".', PageTypeInterface::class, AbstractCategory::class), 1678708348);
+            throw new RegistrationException(sprintf('The registration requires a category domain model of type "%s". Use "CategoryRegistration::setClassName()" to define a model. You can extend the class "%s".', CategoryInterface::class, AbstractCategory::class), 1678708348);
         }
 
         // Check demand class
@@ -169,7 +169,7 @@ class ValidateRegistrationEvent
                 try {
                     $this->checkRegistration($registration);
                 } catch (RegistrationException $e) {
-                    DebugUtility::debug($e->getMessage(),'Error: ' . $e->getCode());
+                    DebugUtility::debug($e->getMessage(), 'Error: ' . $e->getCode());
                 }
             }
         }

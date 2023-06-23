@@ -35,13 +35,13 @@ class TCAUtility
     {
         return ['AND' => [
             sprintf('FIELD:%s:=:%s', DetectionUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier()),
-            sprintf('FIELD:%s:!=:%d', self::getPageTypeField(), $registration->getCategory()->getObjectType())
+            sprintf('FIELD:%s:!=:%d', self::getPageTypeField(), $registration->getCategory()->getDocumentType())
         ]];
     }
 
     public static function getCategoryDisplayCondition(Registration $registration): string
     {
-        return sprintf('FIELD:%s:=:%d', self::getPageTypeField(), $registration->getCategory()->getObjectType());
+        return sprintf('FIELD:%s:=:%d', self::getPageTypeField(), $registration->getCategory()->getDocumentType());
     }
 
     public static function addObjectDisplayCondition(Registration $registration, string $fieldName): void

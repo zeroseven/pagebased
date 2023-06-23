@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 
 final class CategoryRegistration extends AbstractRegistrationEntityProperty
 {
@@ -21,13 +20,6 @@ final class CategoryRegistration extends AbstractRegistrationEntityProperty
     {
         $this->iconIdentifier = $iconIdentifier;
         return $this;
-    }
-
-    public function getObjectType(): int
-    {
-        return is_subclass_of($this->className, PageTypeInterface::class)
-            ? $this->className::getType()
-            : 0;
     }
 
     public function getDocumentType(): int

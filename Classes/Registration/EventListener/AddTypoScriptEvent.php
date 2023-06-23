@@ -31,7 +31,7 @@ class AddTypoScriptEvent
 
             registration {
                 identifier = ' . $registration->getIdentifier() . '
-                category.type = ' . $registration->getCategory()->getObjectType() . '
+                category.type = ' . $registration->getCategory()->getDocumentType() . '
             }
 
             persistence {
