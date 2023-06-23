@@ -189,9 +189,9 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
     {
         if (
             $this->linkedObject === null
-            && $this->getDocumentType() === PageRepository::DOKTYPE_SHORTCUT
             && $this->shortcut > 0
             && $this->shortcutMode === 0
+            && $this->getDocumentType() === PageRepository::DOKTYPE_SHORTCUT
             && ($registration = RegistrationService::getRegistrationByClassName(get_class($this)))
             && ($linkedObject = $registration->getObject()->getRepositoryClass()->findByUid($this->shortcut))
         ) {

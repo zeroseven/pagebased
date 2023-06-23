@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Controller;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
+use PDO;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Service\FlexFormService;
@@ -124,7 +125,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
             $flexForm = $queryBuilder
                 ->select('pi_flexform')
                 ->from('tt_content')
-                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)))
+                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)))
                 ->execute()
                 ->fetchOne();
         } catch (DBALException | Exception $e) {

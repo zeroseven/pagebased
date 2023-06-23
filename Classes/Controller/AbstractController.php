@@ -11,7 +11,7 @@ abstract class AbstractController extends ActionController
 {
     protected ?array $contentData;
 
-    public function initializeAction()
+    public function initializeAction(): void
     {
         parent::initializeAction();
 

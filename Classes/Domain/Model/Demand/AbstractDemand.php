@@ -23,7 +23,7 @@ abstract class AbstractDemand implements DemandInterface
     protected array $properties = [];
     protected ?array $tableDefinition = null;
 
-    /** @throws TypeException | Exception | PropertyException */
+    /** @throws TypeException | PropertyException */
     public function __construct(array $parameterArray = null)
     {
         $this->initProperties();

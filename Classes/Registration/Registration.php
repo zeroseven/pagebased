@@ -32,7 +32,7 @@ final class Registration
 
     public function getIdentifier(): string
     {
-        return $this->identifier ?? $this->identifier = $this->extensionName . '_' . substr(md5($this->object->getClassName()), 0, 7);;
+        return $this->identifier ?? $this->identifier = $this->extensionName . '_' . substr(md5($this->object->getClassName()), 0, 7);
     }
 
     public function setIdentifier(string $identifier): self
