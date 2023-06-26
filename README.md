@@ -141,6 +141,21 @@ page.1686075417 {
 }
 ```
 
+#### Custom content element
+
+Create a custom content element to display the object information:
+
+```typo3_typoscript
+tt_content.my_content_element =< lib.contentElement
+tt_content.my_content_element {
+    templateName = MyContentElement
+    templateRootPaths.1687792159 = EXT:my_extension/Resources/Private/Templates/Content/
+
+    dataProcessing.1687792159 = Zeroseven\Rampage\DataProcessing\ObjectProcessor
+    dataProcessing.1687792159.registration = my_registration_identifier
+}
+```
+
 ## Conditions
 
 ### TypoScript
