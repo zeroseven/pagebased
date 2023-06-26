@@ -53,7 +53,7 @@ class DisplayObjectInformation
             ($registration = ObjectUtility::isChildObject($uid))
             && ($parentObject = $registration->getObject()->getRepositoryClass()->findParentObject($uid))
         ) {
-            $this->showMessage($this->translate('notification.objectAffiliation.description', [$registration->getObject()->getName(), $parentObject->getTitle()]), $uid);
+            $this->showMessage($this->translate('notification.objectAffiliation.description', [$registration->getObject()->getTitle(), $parentObject->getTitle()]), $uid);
             return true;
         }
 
@@ -64,7 +64,7 @@ class DisplayObjectInformation
     {
         if ($registration = ObjectUtility::isObject($uid)) {
             $this->showMessage($this->translate('notification.object.description', [
-                $registration->getObject()->getName(),
+                $registration->getObject()->getTitle(),
                 $this->translate('pages.tab.rampage_settings', null, 'locallang_db.xlf'),
             ]), $uid);
 
@@ -83,7 +83,7 @@ class DisplayObjectInformation
                 $count = 0;
             }
 
-            $this->showMessage($this->translate('notification.category.description', [$count, $registration->getObject()->getName()]), $uid);
+            $this->showMessage($this->translate('notification.category.description', [$count, $registration->getObject()->getTitle()]), $uid);
 
             return true;
         }
