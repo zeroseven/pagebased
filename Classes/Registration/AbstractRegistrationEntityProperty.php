@@ -17,10 +17,9 @@ abstract class AbstractRegistrationEntityProperty implements RegistrationPropert
     protected ?string $repositoryClassName = null;
     protected ?string $demandClassName = null;
 
-    public function __construct(string $title, string $className = null)
+    public function __construct(string $title)
     {
         $this->title = $title;
-        $this->className = $className;
     }
 
     public function getTitle(): string

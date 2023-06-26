@@ -17,6 +17,7 @@ use Zeroseven\Rampage\Controller\ObjectControllerInterface;
 use Zeroseven\Rampage\Domain\Model\AbstractCategory;
 use Zeroseven\Rampage\Domain\Model\AbstractObject;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Rampage\Domain\Model\CategoryInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -24,7 +25,6 @@ use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericObjectDemand;
 use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Rampage\Domain\Model\ObjectInterface;
-use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 use Zeroseven\Rampage\Domain\Repository\AbstractCategoryRepository;
 use Zeroseven\Rampage\Domain\Repository\AbstractObjectRepository;
 use Zeroseven\Rampage\Domain\Repository\CategoryRepositoryInterface;
@@ -68,8 +68,8 @@ class ValidateRegistrationEvent
         }
 
         // Check class inheritance of the controller
-        if ($controllerClassName = $objectRegistration->getControllerClassName()) {
-            if (!is_subclass_of($controllerClassName, ObjectControllerInterface::class)) {
+        if ($className = $objectRegistration->getControllerClassName()) {
+            if (!is_subclass_of($className, ObjectControllerInterface::class)) {
                 throw new RegistrationException(sprintf('The class "%s" must be an instance of "%s". Yau can simply extend the class "%s"', $className, ObjectControllerInterface::class, AbstractObjectController::class), 1680722536);
             }
         } else {
@@ -91,16 +91,16 @@ class ValidateRegistrationEvent
         }
     }
 
-    /** @throws RegistrationException */
+    /** @throws RegistrationException | Exception */
     protected function checkCategoryConfiguration(CategoryRegistration $categoryRegistration): void
     {
         // Check domain model
         if ($categoryRegistration->getClassName()) {
-            if (!is_subclass_of($categoryRegistration->getClassName(), PageTypeInterface::class)) {
-                throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s".', $categoryRegistration->getClassName(), PageTypeInterface::class, AbstractCategory::class), 1676063874);
+            if (!is_subclass_of($categoryRegistration->getClassName(), CategoryInterface::class)) {
+                throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s".', $categoryRegistration->getClassName(), CategoryInterface::class, AbstractCategory::class), 1676063874);
             }
         } else {
-            throw new RegistrationException(sprintf('The registration requires a category domain model of type "%s". Use "CategoryRegistration::setClassName()" to define a model. You can extend the class "%s".', PageTypeInterface::class, AbstractCategory::class), 1678708348);
+            throw new RegistrationException(sprintf('The registration requires a category domain model of type "%s". Use "CategoryRegistration::setClassName()" to define a model. You can extend the class "%s".', CategoryInterface::class, AbstractCategory::class), 1678708348);
         }
 
         // Check demand class
@@ -130,12 +130,29 @@ class ValidateRegistrationEvent
             }
         }
 
-        // Check the persistence configuration
-        try {
-            if (!GeneralUtility::makeInstance(DataMapper::class)->getDataMap($categoryRegistration->getClassName())->getRecordType()) {
-                throw new RegistrationException(sprintf('The object "%s" requires a "recordType" configuration. See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $categoryRegistration->getTitle()), 1680721463);
+        // Check the persistence configuration and document type
+        $documentType = $categoryRegistration->getDocumentType();
+        $recordType = (int)GeneralUtility::makeInstance(DataMapper::class)->getDataMap($categoryRegistration->getClassName())->getRecordType();
+
+        if (empty($documentType)) {
+            throw new RegistrationException(sprintf('The object "%s" requires a documentType.', $categoryRegistration->getClassName()), 1687555268);
+        }
+
+        if (empty($recordType)) {
+            throw new RegistrationException(sprintf('The object "%s" requires a "recordType" configuration. See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $categoryRegistration->getClassName()), 1680721463);
+        }
+
+        if ($documentType !== $recordType) {
+            throw new RegistrationException(sprintf('The configured recordType of the "%s" extbase configuration is not equal to the registration settings', $categoryRegistration->getTitle()), 1687555363);
+        }
+
+        $documentTypes = array_map(static fn(Registration $registration) => $registration->getCategory()->getDocumentType(), RegistrationService::getRegistrations());
+        $duplicates = array_unique(array_diff_assoc($documentTypes, array_unique($documentTypes)));
+
+        foreach ($duplicates as $duplicate) {
+            if ($duplicate === $documentType) {
+                throw new RegistrationException(sprintf('The documentType "%d" is already registered. Please check the documentType on category "%s".', $documentType, $categoryRegistration->getClassName()), 1687556094);
             }
-        } catch (Exception | LogicException $e) {
         }
     }
 
@@ -148,7 +165,7 @@ class ValidateRegistrationEvent
         }
     }
 
-    /** @throws RegistrationException */
+    /** @throws RegistrationException | Exception */
     protected function checkRegistration(Registration $registration): void
     {
         if ($objectRegistration = $registration->getObject()) {
@@ -169,7 +186,7 @@ class ValidateRegistrationEvent
                 try {
                     $this->checkRegistration($registration);
                 } catch (RegistrationException $e) {
-                    DebugUtility::debug($e->getMessage(),'Error: ' . $e->getCode());
+                    DebugUtility::debug($e->getMessage(), 'Error: ' . $e->getCode());
                 }
             }
         }

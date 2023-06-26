@@ -78,7 +78,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         $constraints[] = $query->logicalAnd(
             $query->equals(DetectionUtility::REGISTRATION_FIELD_NAME, $this->registration->getIdentifier()),
             $query->logicalNot(
-                $query->equals($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'], $this->registration->getCategory()->getObjectType())
+                $query->equals($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'], $this->registration->getCategory()->getDocumentType())
             )
         );
 

@@ -76,7 +76,7 @@ class AddTCAEvent
 
     protected function addPageCategory(Registration $registration): void
     {
-        if (($categoryRegistration = $registration->getCategory()) && $pageType = $categoryRegistration->getObjectType()) {
+        if (($categoryRegistration = $registration->getCategory()) && $pageType = $categoryRegistration->getDocumentType()) {
 
             // Add to type list
             if ($tcaTypeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
@@ -119,7 +119,7 @@ class AddTCAEvent
                     'maxitems' => 1,
                     'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
                     'foreign_table' => 'pages',
-                    'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $typeField, $registration->getCategory()->getObjectType()),
+                    'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $typeField, $registration->getCategory()->getDocumentType()),
                     'items' => [
                         ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.no_restrictions', '--div--'],
                         ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.all', 0],

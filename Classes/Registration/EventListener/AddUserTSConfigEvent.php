@@ -14,7 +14,7 @@ class AddUserTSConfigEvent
 
     public function __invoke(AfterStoreRegistrationEvent $event): void
     {
-        if ($type = $event->getRegistration()->getCategory()->getObjectType()) {
+        if ($type = $event->getRegistration()->getCategory()->getDocumentType()) {
             ExtensionManagementUtility::addUserTSConfig("options.pageTree.doktypesToShowInNewPageDragArea := addToList($type)");
         }
     }

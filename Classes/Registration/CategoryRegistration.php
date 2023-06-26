@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
 
 final class CategoryRegistration extends AbstractRegistrationEntityProperty
 {
     protected ?string $iconIdentifier = null;
+    protected int $documentType = 0;
 
     public function getIconIdentifier(bool $hideInMenu = null): string
     {
@@ -22,15 +22,19 @@ final class CategoryRegistration extends AbstractRegistrationEntityProperty
         return $this;
     }
 
-    public function getObjectType(): int
+    public function getDocumentType(): int
     {
-        return is_subclass_of($this->className, PageTypeInterface::class)
-            ? $this->className::getType()
-            : 0;
+        return $this->documentType;
     }
 
-    public static function create(...$arguments): self
+    public function setDocumentType(int $documentType): self
     {
-        return GeneralUtility::makeInstance(self::class, ...$arguments);
+        $this->documentType = $documentType;
+        return $this;
+    }
+
+    public static function create(string $title): self
+    {
+        return GeneralUtility::makeInstance(self::class, $title);
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Registration;
 
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Domain\Model\PageTypeInterface;
+use Zeroseven\Rampage\Domain\Model\CategoryInterface;
 use Zeroseven\Rampage\Exception\ValueException;
 
 class RegistrationService
@@ -65,10 +65,21 @@ class RegistrationService
         return null;
     }
 
+    public static function getRegistrationByCategoryClassName(string $className): ?Registration
+    {
+        foreach (self::getRegistrations() as $registration) {
+            if ($registration->getCategory()->getClassName() === $className) {
+                return $registration;
+            }
+        }
+
+        return null;
+    }
+
     public static function getRegistrationByCategoryDocumentType(int $documentType): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {
-            if ($registration->getCategory()->getObjectType() === $documentType) {
+            if ($registration->getCategory()->getDocumentType() === $documentType) {
                 return $registration;
             }
         }
@@ -101,8 +112,8 @@ class RegistrationService
                 $classConfiguration[$className]['tableName'] = AbstractPage::TABLE_NAME;
             }
 
-            if (!isset($configuration['recordType']) && is_subclass_of($className, PageTypeInterface::class)) {
-                $classConfiguration[$className]['recordType'] = $className::getType();
+            if (!isset($configuration['recordType']) && is_subclass_of($className, CategoryInterface::class) && $registration = self::getRegistrationByCategoryClassName($className)) {
+                $classConfiguration[$className]['recordType'] = $registration->getCategory()->getDocumentType();
             }
         }
 
