@@ -151,7 +151,7 @@ class ValidateRegistrationEvent
 
         foreach ($duplicates as $duplicate) {
             if ($duplicate === $documentType) {
-                throw new RegistrationException(sprintf('The documentType "%d" is already registered. Please use another documentType for the category %s.', $documentType, $categoryRegistration->getClassName()), 1687556094);
+                throw new RegistrationException(sprintf('The documentType "%d" is already registered. Please check the documentType on category "%s".', $documentType, $categoryRegistration->getClassName()), 1687556094);
             }
         }
     }
