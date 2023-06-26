@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Registration;
 
-use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
@@ -21,7 +20,6 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     protected array $contactPageIds = [];
     protected bool $relations = false;
     protected ?string $overlayIconIdentifier = null;
-    protected ?string $name = null;
 
     public function getDemandClassName(): string
     {
@@ -170,11 +168,6 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     {
         $this->overlayIconIdentifier = $overlayIconIdentifier;
         return $this;
-    }
-
-    public function getName(): string
-    {
-        return $this->name ?? ($this->name = $this->name = GeneralUtility::makeInstance(ReflectionClass::class, $this->className)->getShortName());
     }
 
     public static function create(string $title): self

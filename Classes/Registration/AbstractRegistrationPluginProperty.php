@@ -4,28 +4,11 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Registration;
 
-abstract class AbstractRegistrationPluginProperty implements RegistrationPropertyInterface
+abstract class AbstractRegistrationPluginProperty extends AbstractRegistration
 {
     protected string $type;
-    protected ?string $title = null;
     protected ?string $description = null;
     protected ?string $iconIdentifier = null;
-
-    public function __construct(string $title)
-    {
-        $this->title = $title;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-        return $this;
-    }
 
     public function getDescription(): string
     {

@@ -4,35 +4,19 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\Registration;
 
+use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
 use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
 
-abstract class AbstractRegistrationEntityProperty implements RegistrationPropertyInterface
+abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
 {
-    protected string $title;
     protected ?string $className = null;
     protected ?string $repositoryClassName = null;
     protected ?string $demandClassName = null;
-
-    public function __construct(string $title)
-    {
-        $this->title = $title;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
+    protected ?string $name = null;
 
     public function getClassName(): string
     {
@@ -77,5 +61,10 @@ abstract class AbstractRegistrationEntityProperty implements RegistrationPropert
     {
         $this->demandClassName = $demandClassName;
         return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name ?? ($this->name = $this->name = GeneralUtility::makeInstance(ReflectionClass::class, $this->className)->getShortName());
     }
 }
