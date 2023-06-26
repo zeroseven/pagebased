@@ -36,7 +36,7 @@ class ResortPageTree
                 'LLL:EXT:rampage/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.title',
                 'rampage',
                 [0 => $registration->getObject()->getTitle()]
-            ), AbstractMessage::INFO, true
+            ), AbstractMessage::OK, true
         );
 
         $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
