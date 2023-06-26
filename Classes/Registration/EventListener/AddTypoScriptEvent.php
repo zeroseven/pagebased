@@ -31,9 +31,6 @@ class AddTypoScriptEvent
 
             registration {
                 identifier = ' . $registration->getIdentifier() . '
-            }
-
-            settings {
                 category.documentType = ' . $registration->getCategory()->getDocumentType() . '
             }
 
@@ -51,7 +48,13 @@ class AddTypoScriptEvent
 
         // Plugin settings
         ExtensionManagementUtility::addTypoScriptSetup('plugin.' . $pluginKey . '{
-            settings.list.ajaxTypeNum = {$plugin.tx_rampage.settings.list.ajaxTypeNum}
+            settings {
+                list.ajaxTypeNum = {$plugin.tx_rampage.settings.list.ajaxTypeNum}
+                registration {
+                    identifier = {$plugin.' . $pluginKey . '.registration.identifier}
+                    category.documentType = {$plugin.' . $pluginKey . '.registration.category.documentType}
+                }
+            }
             features.skipDefaultArguments = 1
             mvc.callDefaultActionIfActionCantBeResolved = 1
             view {
