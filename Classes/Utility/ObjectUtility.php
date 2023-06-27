@@ -30,16 +30,27 @@ class ObjectUtility
         return $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'];
     }
 
-    public static function isSystemPage(int $pageUid = null, array $row = null): bool
+    protected static function getDocumentType(int $pageUid = null, array $row = null): int
     {
         $typeField = self::getPageTypeField();
 
-        if (empty($documentType = (int)($row[$typeField] ?? 0))) {
-            $uid = $pageUid ?? ($row['uid'] ?? null);
-            $documentType = (int)(BackendUtility::getRecord(AbstractPage::TABLE_NAME, (int)$uid, $typeField)[$typeField] ?? 0);
+        if ($documentType = $row[$typeField] ?? null) {
+            return (int)$documentType;
         }
 
-        return !$documentType || in_array($documentType, [
+        if ($pageUid || ($pageUid = (int)($row['uid'] ?? RootLineUtility::getCurrentPage()))) {
+            $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, (int)$pageUid, $typeField);
+
+            return self::getDocumentType(null, $row);
+        }
+
+        return 0;
+    }
+
+
+    public static function isSystemPage(int $pageUid = null, array $row = null): bool
+    {
+        return ($documentType = self::getDocumentType($pageUid, $row)) && in_array($documentType, [
                 PageRepository::DOKTYPE_BE_USER_SECTION,
                 PageRepository::DOKTYPE_MOUNTPOINT,
                 PageRepository::DOKTYPE_SPACER,
@@ -50,13 +61,8 @@ class ObjectUtility
 
     public static function isCategory(int $pageUid = null, array $row = null): ?Registration
     {
-        if ($pageUid || ($pageUid = (int)($row['uid'] ?? RootLineUtility::getCurrentPage()))) {
-            $typeField = self::getPageTypeField();
-            $documentType = $row[$typeField] ?? (($row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, $typeField))[$typeField] ?? null);
-
-            if ($documentType && !self::isSystemPage($pageUid, $row)) {
-                return RegistrationService::getRegistrationByCategoryDocumentType((int)$documentType);
-            }
+        if (($documentType = self::getDocumentType($pageUid, $row)) && !self::isSystemPage($pageUid, $row)) {
+            return RegistrationService::getRegistrationByCategoryDocumentType($documentType);
         }
 
         return null;
