@@ -181,7 +181,7 @@ class ValidateRegistrationEvent
 
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
-        if (Environment::isCli()) {
+        if (Environment::isCli() && Environment::getContext()->isDevelopment()) {
             foreach (RegistrationService::getRegistrations() as $registration) {
                 try {
                     $this->checkRegistration($registration);

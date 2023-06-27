@@ -20,7 +20,9 @@ class CheckExtensionConfigurationEvent
 
     protected function logOnConsole(string $message): void
     {
-        Environment::isCli() && DebugUtility::debug($message);
+        Environment::isCli()
+        && Environment::getContext()->isDevelopment()
+        && DebugUtility::debug($message);
     }
 
     protected function logRegistrationUpdate(string $property, RegistrationPropertyInterface $registrationProperty): void
