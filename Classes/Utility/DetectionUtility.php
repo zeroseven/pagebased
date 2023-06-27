@@ -33,7 +33,7 @@ class DetectionUtility
 
     public static function getUpdateFields(int $uid): array
     {
-        $registration = ObjectUtility::findCategoryInRootLine($uid);
+        $registration = ObjectUtility::isSystemPage($uid) ? null : ObjectUtility::findCategoryInRootLine($uid);
 
         return [
             self::SITE_FIELD_NAME => $registration ? RootLineUtility::getRootPage($uid) : 0,

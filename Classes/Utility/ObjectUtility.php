@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Utility;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use Zeroseven\Rampage\Domain\Model\AbstractPage;
 use Zeroseven\Rampage\Exception\TypeException;
@@ -29,15 +30,32 @@ class ObjectUtility
         return $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'];
     }
 
+    public static function isSystemPage(int $pageUid = null, array $row = null): bool
+    {
+        $typeField = self::getPageTypeField();
+
+        if (empty($documentType = (int)($row[$typeField] ?? 0))) {
+            $uid = $pageUid ?? ($row['uid'] ?? null);
+            $documentType = (int)(BackendUtility::getRecord(AbstractPage::TABLE_NAME, (int)$uid, $typeField)[$typeField] ?? 0);
+        }
+
+        return !$documentType || in_array($documentType, [
+                PageRepository::DOKTYPE_BE_USER_SECTION,
+                PageRepository::DOKTYPE_MOUNTPOINT,
+                PageRepository::DOKTYPE_SPACER,
+                PageRepository::DOKTYPE_SYSFOLDER,
+                PageRepository::DOKTYPE_RECYCLER
+            ], true);
+    }
+
     public static function isCategory(int $pageUid = null, array $row = null): ?Registration
     {
         if ($pageUid || ($pageUid = (int)($row['uid'] ?? RootLineUtility::getCurrentPage()))) {
             $typeField = self::getPageTypeField();
+            $documentType = $row[$typeField] ?? (($row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, $typeField))[$typeField] ?? null);
 
-            $documentType = $row[$typeField] ?? (BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, $typeField)[$typeField] ?? null);
-
-            if ($documentType && $registration = RegistrationService::getRegistrationByCategoryDocumentType((int)$documentType)) {
-                return $registration;
+            if ($documentType && !self::isSystemPage($pageUid, $row)) {
+                return RegistrationService::getRegistrationByCategoryDocumentType((int)$documentType);
             }
         }
 
@@ -61,7 +79,12 @@ class ObjectUtility
             }
 
             try {
-                if (($identifier = $row[$registrationField] ?? null) && !self::isCategory($pageUid, $row) && $registration = RegistrationService::getRegistrationByIdentifier($identifier)) {
+                if (
+                    ($identifier = $row[$registrationField] ?? null)
+                    && ($registration = RegistrationService::getRegistrationByIdentifier($identifier))
+                    && !self::isSystemPage($pageUid, $row)
+                    && !self::isCategory($pageUid, $row)
+                ) {
                     return self::setObjectCache($pageUid, $registration);
                 }
             } catch (ValueException $e) {
@@ -74,7 +97,7 @@ class ObjectUtility
     public static function isChildObject(mixed $uid): ?Registration
     {
         try {
-            if ($parentPages = RootLineUtility::collectPagesAbove(CastUtility::int($uid), false, 1)) {
+            if (!self::isSystemPage($uid) && $parentPages = RootLineUtility::collectPagesAbove(CastUtility::int($uid), false, 1)) {
                 foreach ($parentPages as $parentPage) {
                     if ($registration = self::isObject(null, $parentPage)) {
                         return $registration;
