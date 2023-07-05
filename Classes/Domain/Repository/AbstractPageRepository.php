@@ -31,13 +31,13 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
         $constraints[] = $query->equals('nav_hide', 0);
 
         // Add language constraints
-        $constraints[] = $query->logicalOr([
+        $constraints[] = $query->logicalOr(
             $query->equals('l18n_cfg', 0),
-            $query->logicalAnd([
+            $query->logicalAnd(
                 $query->greaterThanOrEqual('l18n_cfg', 1),
                 $query->greaterThanOrEqual($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['languageField'], 1)
-            ]),
-        ]);
+            ),
+        );
 
         return $constraints;
     }

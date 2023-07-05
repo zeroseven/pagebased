@@ -141,7 +141,7 @@ abstract class AbstractRepository extends Repository
         // Apply constraints
         if (!empty($constraints = $this->createDemandConstraints($demand, $query))) {
             $query->matching(
-                $query->logicalAnd($constraints)
+                $query->logicalAnd(...$constraints)
             );
         }
 
