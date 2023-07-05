@@ -20,7 +20,7 @@
     "ext-pdo": "*",
     "php": "^8.0 | ^8.1",
     "symfony/property-access": "*",
-    "typo3/cms-core": "^11.5.0"
+    "typo3/cms-core": "^12.4.0"
   },
   "autoload": {
     "psr-4": {
