@@ -84,9 +84,9 @@ class AddTCAEvent
                     AbstractPage::TABLE_NAME,
                     $tcaTypeField,
                     [
-                        $categoryRegistration->getTitle(),
-                        $pageType,
-                        $categoryRegistration->getIconIdentifier()
+                        'label' => $categoryRegistration->getTitle(),
+                        'value' => $pageType,
+                        'icon' => $categoryRegistration->getIconIdentifier()
                     ],
                     '1',
                     'after'
