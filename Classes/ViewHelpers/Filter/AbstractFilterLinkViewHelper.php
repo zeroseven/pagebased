@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Rampage\ViewHelpers\Filter;
 
-use TYPO3\CMS\Fluid\ViewHelpers\Link\ActionViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
@@ -12,8 +11,9 @@ use Zeroseven\Rampage\Registration\Registration;
 use Zeroseven\Rampage\Registration\RegistrationService;
 use Zeroseven\Rampage\Utility\ObjectUtility;
 use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Rampage\ViewHelpers\AbstractLinkViewHelper;
 
-abstract class AbstractLinkViewHelper extends ActionViewHelper
+abstract class AbstractFilterLinkViewHelper extends AbstractLinkViewHelper
 {
     protected ?DemandInterface $demand = null;
 

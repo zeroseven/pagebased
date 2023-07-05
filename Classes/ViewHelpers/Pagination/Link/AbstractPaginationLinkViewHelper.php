@@ -7,15 +7,15 @@ namespace Zeroseven\Rampage\ViewHelpers\Pagination\Link;
 use JsonException;
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\ViewHelpers\Link\ActionViewHelper;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
 use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Pagination\Pagination;
 use Zeroseven\Rampage\Utility\CastUtility;
+use Zeroseven\Rampage\ViewHelpers\AbstractLinkViewHelper;
 use Zeroseven\Rampage\ViewHelpers\PaginationViewHelper;
 
-abstract class AbstractLinkViewHelper extends ActionViewHelper
+abstract class AbstractPaginationLinkViewHelper extends AbstractLinkViewHelper
 {
     public const AJAX_CONTENT_PARAMETER = '_rampage_content';
 

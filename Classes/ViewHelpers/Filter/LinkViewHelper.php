@@ -12,7 +12,7 @@ use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Rampage\Exception\TypeException;
 use Zeroseven\Rampage\Exception\ValueException;
 
-final class LinkViewHelper extends AbstractLinkViewHelper
+final class LinkViewHelper extends AbstractFilterLinkViewHelper
 {
     protected const FILTER_ACTIVE_ATTRIBUTE = 'data-filter-active';
 

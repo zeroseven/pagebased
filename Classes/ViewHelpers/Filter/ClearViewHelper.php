@@ -6,7 +6,7 @@ namespace Zeroseven\Rampage\ViewHelpers\Filter;
 
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 
-final class ClearViewHelper extends AbstractLinkViewHelper
+final class ClearViewHelper extends AbstractFilterLinkViewHelper
 {
     protected ?DemandInterface $demand;
 
