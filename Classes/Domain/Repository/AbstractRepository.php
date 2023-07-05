@@ -10,7 +10,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
-use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap\Relation;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
@@ -75,9 +75,9 @@ abstract class AbstractRepository extends Repository
         foreach ($demand->getProperties() as $property) {
             if (($value = $property->getValue()) && ($propertyName = $property->getExtbasePropertyName()) && $columnMap = $dataMapper->getDataMap($this->objectType)->getColumnMap($propertyName)) {
                 if ($property->isArray()) {
-                    if (in_array($columnMap->getTypeOfRelation(), [ColumnMap::RELATION_HAS_MANY, ColumnMap::RELATION_HAS_AND_BELONGS_TO_MANY], true)) {
+                    if (in_array($columnMap->getTypeOfRelation(), [Relation::HAS_MANY, Relation::HAS_AND_BELONGS_TO_MANY], true)) {
                         $constraints[] = $query->logicalOr(array_map(static fn($v) => $query->contains($propertyName, $v), $value));
-                    } elseif ($columnMap->getTypeOfRelation() === ColumnMap::RELATION_NONE) {
+                    } elseif ($columnMap->getTypeOfRelation() === Relation::NONE) {
                         $constraints[] = $query->logicalOr(array_map(static function ($v) use ($query, $propertyName) {
                             return $query->like($propertyName, '%' . $v . '%');
                         }, $value));
