@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Rampage\Controller;
 
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
+use TYPO3Fluid\Fluid\View\ViewInterface;
 
 abstract class AbstractController extends ActionController
 {
