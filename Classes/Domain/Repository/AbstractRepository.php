@@ -56,7 +56,7 @@ abstract class AbstractRepository extends Repository
     public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = [];
-        $dataMapper = $this->objectManager->get(DataMapper::class);
+        $dataMapper = GeneralUtility::makeInstance(DataMapper::class);
 
         // Search for specific uids
         if ($uidList = $demand->getUidList()) {

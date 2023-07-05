@@ -6,7 +6,6 @@ namespace Zeroseven\Rampage\Registration;
 
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
 use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
@@ -36,7 +35,7 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
 
     public function getRepositoryClass(): RepositoryInterface
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get($this->getRepositoryClassName());
+        return GeneralUtility::makeInstance($this->getRepositoryClassName());
     }
 
     public function setRepositoryClass(string $repositoryClassName): self
