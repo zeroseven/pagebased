@@ -59,7 +59,9 @@ abstract class AbstractObjectController extends AbstractController implements Ob
     {
         if ($extbaseSetup = $this->request->getAttribute('extbase')) {
             $requestKey = strtolower('tx_' . $extbaseSetup->getControllerExtensionName() . '_list');
-            $arguments = GeneralUtility::_GP($requestKey) ?: [];
+            $requestKeyUncached = $requestKey . 'uncached';
+
+            $arguments = GeneralUtility::_GP($requestKey) ?? (GeneralUtility::_GP($requestKeyUncached) ?? []);
         } else {
             $arguments = [];
         }
