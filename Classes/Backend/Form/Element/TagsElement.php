@@ -6,6 +6,7 @@ namespace Zeroseven\Rampage\Backend\Form\Element;
 
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
+use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Rampage\Exception\ValueException;
 use Zeroseven\Rampage\Registration\Registration;
@@ -41,20 +42,18 @@ class TagsElement extends AbstractFormElement
             : RegistrationService::getRegistrationByIdentifier($this->data['databaseRow'][DetectionUtility::REGISTRATION_FIELD_NAME] ?? '');
     }
 
-    protected function renderRequireJsModules(): array
+    protected function getJavaScriptModule(): JavaScriptModuleInstruction
     {
         $tags = ($this->registration === null) ? [] : TagUtility::getTagsByRegistration($this->registration, true, $this->languageUid);
 
-        return [['TYPO3/CMS/Rampage/Backend/Tagify' => 'function(Tagify){
-             new Tagify(document.getElementById("' . $this->id . '"), {
-                whitelist: ' . json_encode($tags) . ',
-                originalInputValueFormat: (function (valuesArr) {
-                  return valuesArr.map(function (item) {
-                    return item.value;
-                  }).join(", ").trim();
-                })
-            })
-        }']];
+        return JavaScriptModuleInstruction::create(
+            '@zeroseven/rampage/backend/TagsElement.js'
+        )->instance($this->id, ...$tags);
+    }
+
+    protected function getStylesheetFile(): string
+    {
+        return 'EXT:rampage/Resources/Public/Css/Backend/Tagin.css';
     }
 
     protected function renderHtml(): string
@@ -80,11 +79,21 @@ class TagsElement extends AbstractFormElement
 
     public function render(): array
     {
-        return [
-            'html' => $this->renderHtml(),
-            'requireJsModules' => $this->renderRequireJsModules(),
-            'stylesheetFiles' => ['EXT:rampage/Resources/Public/Css/Backend/Tagify.css']
-        ];
+        $result = $this->initializeResultArray();
+
+        if ($html = $this->renderHtml()) {
+            $result['html'] = $html;
+        }
+
+        if ($javaScriptModules = $this->getJavaScriptModule()) {
+            $result['javaScriptModules'][] = $javaScriptModules;
+        }
+
+        if ($stylesheetFile = $this->getStylesheetFile()) {
+            $result['stylesheetFiles'][] = $stylesheetFile;
+        }
+
+        return $result;
     }
 
     public static function register(): void
