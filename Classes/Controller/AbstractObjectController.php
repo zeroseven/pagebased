@@ -7,6 +7,7 @@ namespace Zeroseven\Rampage\Controller;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use PDO;
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Service\FlexFormService;
@@ -141,7 +142,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         return null;
     }
 
-    public function listAction(): void
+    public function listAction(): ResponseInterface
     {
         // Apply request arguments
         if (empty($requestID = (int)($this->requestArguments[ObjectDemandInterface::PROPERTY_CONTENT_ID] ?? 0)) || (int)($this->contentData['uid'] ?? 0) === $requestID) {
@@ -162,9 +163,11 @@ abstract class AbstractObjectController extends AbstractController implements Ob
             'registration' => $this->registration,
             $this->pluralizeWord(strtolower($this->registration->getObject()->getName())) => $objects // alias variable
         ], $this->registration, 'list'))->getVariables());
+
+        return $this->htmlResponse();
     }
 
-    public function filterAction(): void
+    public function filterAction(): ResponseInterface
     {
         // Apply filter settings of the linked list plugin
         if (($listID = (int)($this->settings[ObjectDemandInterface::PROPERTY_CONTENT_ID] ?? 0)) && $settings = $this->getPluginSettings($listID)) {
@@ -184,5 +187,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
             'demand' => $this->demand,
             'registration' => $this->registration
         ], $this->registration, 'filter'))->getVariables());
+
+        return $this->htmlResponse();
     }
 }
