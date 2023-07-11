@@ -52,10 +52,10 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
     {
         // Get variables
         $request = $this->getRequest();
-        $action = CastUtility::string($this->arguments['action'] ?? '');
-        $controller = CastUtility::string($this->arguments['controller'] ?? '');
-        $extensionName = CastUtility::string($this->arguments['extensionName'] ?? '');
-        $pluginName = CastUtility::string($this->arguments['pluginName'] ?? '');
+        $action = $this->arguments['action'] ?? null;
+        $controller = $this->arguments['controller'] ?? null;
+        $extensionName = $this->arguments['extensionName'] ?? null;
+        $pluginName = $this->arguments['pluginName'] ?? null;
         $pageUid = CastUtility::int($this->arguments['pageUid'] ?? 0);
         $pageType = CastUtility::int($this->arguments['pageType'] ?? 0);
         $section = CastUtility::string($this->arguments['section'] ?? '');
@@ -67,15 +67,15 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
 
         // Create instance of the uriBuilder
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $uriBuilder->reset()->setRequest($request);
+        $uriBuilder->reset()->setRequest($request)
+            ->setCreateAbsoluteUri($absolute)
+            ->setAddQueryString($addQueryString);
 
         // Apply variables
         empty($pageUid) || $uriBuilder->setTargetPageUid($pageUid);
         empty($pageType) || $uriBuilder->setTargetPageType($pageType);
         empty($section) || $uriBuilder->setSection($section);
         empty($additionalParams) || $uriBuilder->setArguments($additionalParams);
-        empty($absolute) || $uriBuilder->setCreateAbsoluteUri($absolute);
-        empty($addQueryString) || $uriBuilder->setAddQueryString($addQueryString);
         empty($argumentsToBeExcludedFromQueryString) || $uriBuilder->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString);
 
         // Render link
