@@ -2,20 +2,13 @@
   "name": "rampage",
   "private": true,
   "scripts": {
-    "postinstall": "cp node_modules/tagin/dist/tagin.module.min.js Resources/Public/JavaScript/Backend/Tagin.js && cp node_modules/tagin/dist/tagin.min.css Resources/Public/Css/Backend/Tagin.css",
-    "build-dev": "GULP_CONTEXT=development gulp default",
-    "build": "gulp build"
+    "postinstall": "cp node_modules/@yaireo/tagify/dist/tagify.css Resources/Public/Css/Backend/TagsElement.css",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.8",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/preset-env": "^7.22.7",
-    "@babel/register": "^7.22.5",
-    "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-rename": "^2.0.0",
-    "gulp-typescript": "^6.0.0-alpha.1",
-    "gulp-uglify": "^3.0.2",
-    "tagin": "^2.0.2"
+    "@yaireo/tagify": "^4.17.8",
+    "vite": "^4.4.2"
   }
 }

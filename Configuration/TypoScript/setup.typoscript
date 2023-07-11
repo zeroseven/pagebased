@@ -1,7 +1,7 @@
 ##################################################
 # Include sources
 ##################################################
-page.includeJSFooter.rampage_pagination = EXT:rampage/Resources/Public/JavaScript/Pagination.dist.min.js
+page.includeJSFooter.rampage_pagination = EXT:rampage/Resources/Public/JavaScript/Pagination.js
 
 ##################################################
 # Ajax request page

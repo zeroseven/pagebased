@@ -53,7 +53,7 @@ class TagsElement extends AbstractFormElement
 
     protected function getStylesheetFile(): string
     {
-        return 'EXT:rampage/Resources/Public/Css/Backend/Tagin.css';
+        return 'EXT:rampage/Resources/Public/Css/Backend/TagsElement.css';
     }
 
     protected function renderHtml(): string
