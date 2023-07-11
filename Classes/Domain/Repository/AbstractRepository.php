@@ -76,11 +76,9 @@ abstract class AbstractRepository extends Repository
             if (($value = $property->getValue()) && ($propertyName = $property->getExtbasePropertyName()) && $columnMap = $dataMapper->getDataMap($this->objectType)->getColumnMap($propertyName)) {
                 if ($property->isArray()) {
                     if (in_array($columnMap->getTypeOfRelation(), [Relation::HAS_MANY, Relation::HAS_AND_BELONGS_TO_MANY], true)) {
-                        $constraints[] = $query->logicalOr(array_map(static fn($v) => $query->contains($propertyName, $v), $value));
+                        $constraints[] = $query->logicalOr(...array_map(static fn($v) => $query->contains($propertyName, $v), $value));
                     } elseif ($columnMap->getTypeOfRelation() === Relation::NONE) {
-                        $constraints[] = $query->logicalOr(array_map(static function ($v) use ($query, $propertyName) {
-                            return $query->like($propertyName, '%' . $v . '%');
-                        }, $value));
+                        $constraints[] = $query->logicalOr(...array_map(static fn($v) => $query->like($propertyName, '%' . $v . '%'), $value));
                     } else {
                         $constraints[] = $query->contains($propertyName, $value);
                     }
