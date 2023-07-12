@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Backend\Form\Element;
+namespace Zeroseven\Pagebased\Backend\Form\Element;
 
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\DetectionUtility;
-use Zeroseven\Rampage\Utility\TagUtility;
+use Zeroseven\Pagebased\Exception\ValueException;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
+use Zeroseven\Pagebased\Utility\TagUtility;
 
 class TagsElement extends AbstractFormElement
 {
@@ -45,7 +45,7 @@ class TagsElement extends AbstractFormElement
     {
         $tags = ($this->registration === null) ? [] : TagUtility::getTagsByRegistration($this->registration, true, $this->languageUid);
 
-        return [['TYPO3/CMS/Rampage/Backend/Tagify' => 'function(Tagify){
+        return [['TYPO3/CMS/Pagebased/Backend/Tagify' => 'function(Tagify){
              new Tagify(document.getElementById("' . $this->id . '"), {
                 whitelist: ' . json_encode($tags) . ',
                 originalInputValueFormat: (function (valuesArr) {
@@ -83,14 +83,14 @@ class TagsElement extends AbstractFormElement
         return [
             'html' => $this->renderHtml(),
             'requireJsModules' => $this->renderRequireJsModules(),
-            'stylesheetFiles' => ['EXT:rampage/Resources/Public/Css/Backend/Tagify.css']
+            'stylesheetFiles' => ['EXT:pagebased/Resources/Public/Css/Backend/Tagify.css']
         ];
     }
 
     public static function register(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1677874287] = [
-            'nodeName' => 'rampageTags',
+            'nodeName' => 'pagebasedTags',
             'priority' => 100,
             'class' => self::class,
         ];

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Domain\Repository;
+namespace Zeroseven\Pagebased\Domain\Repository;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
-use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
-use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\DetectionUtility;
-use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\GenericDemand;
+use Zeroseven\Pagebased\Domain\Model\Entity\PageObject;
+use Zeroseven\Pagebased\Registration\RegistrationService;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
+use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 abstract class AbstractCategoryRepository extends AbstractPageRepository implements CategoryRepositoryInterface
 {

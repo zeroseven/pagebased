@@ -1,4 +1,4 @@
-# Rampage 🤬
+# Pagebased 📄
 
 **From now on, record-based detail pages will get a good punch in the face!**
 
@@ -13,7 +13,7 @@ Create new registration in your `ext_localconf.php`. Example:
 
 ```php
 call_user_func(static function () {
-    $object = \Zeroseven\Rampage\Registration\ObjectRegistration::create('Job')
+    $object = \Zeroseven\Pagebased\Registration\ObjectRegistration::create('Job')
         ->setClassName(\Vendor\NewExtension\Domain\Model\Job::class)
         ->setControllerClass(\Vendor\NewExtension\Controller\JobController::class)
         ->setRepositoryClass(\Vendor\NewExtension\Domain\Repository\JobRepository::class)
@@ -22,18 +22,18 @@ call_user_func(static function () {
         ->enableTopics(24)   // Enable topics for jobs and give it a pid where to store these
         ->enableContact(24); // Enable responsible contact person for job objects
 
-    $category = \Zeroseven\Rampage\Registration\CategoryRegistration::create('Job-Category')
+    $category = \Zeroseven\Pagebased\Registration\CategoryRegistration::create('Job-Category')
         ->setClassName(\Vendor\NewExtension\Domain\Model\Category::class)
         ->setRepositoryClass(\Vendor\NewExtension\Domain\Repository\CategoryRepository::class)
         ->setDocumentType(44);
 
-    $listPlugin = \Zeroseven\Rampage\Registration\ListPluginRegistration::create('Job list')
+    $listPlugin = \Zeroseven\Pagebased\Registration\ListPluginRegistration::create('Job list')
         ->setDescription('Display jobs in a super nice list');
 
-    $filterPlugin = \Zeroseven\Rampage\Registration\FilterPluginRegistration::create('Job filter')
+    $filterPlugin = \Zeroseven\Pagebased\Registration\FilterPluginRegistration::create('Job filter')
         ->setDescription('Filter jobs');
 
-    \Zeroseven\Rampage\Registration\Registration::create('extension_name')
+    \Zeroseven\Pagebased\Registration\Registration::create('extension_name')
         ->setObject($object)
         ->setCategory($category)
         ->enableListPlugin($listPlugin)
@@ -44,16 +44,16 @@ call_user_func(static function () {
 
 ### Override existing registration
 
-In case you want to override an existing registration the event `BeforeRegistrationEvent` gives you access to all properties, to update them before the rampage extension does the rest.
+In case you want to override an existing registration the event `BeforeRegistrationEvent` gives you access to all properties, to update them before the pagebased extension does the rest.
 
 Alternatively an extension configuration template will be created automatically. Use the settings module of the TYPO3 InstallTool to override the default values.
 
 ## Create your own extension
 
-The fast and easy way to create a new Rampage-Extension is to build it from the extension dummy template.
+The fast and easy way to create a new Pagebased-Extension is to build it from the extension dummy template.
 
 1. Install [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/installation.html#alternate-installations)
-2. Run `cookiecutter rampage/Resources/Private/ExtensionDummy`
+2. Run `cookiecutter pagebased/Resources/Private/ExtensionDummy`
 
 You will be asked for a view variables like extension key, object name, etc.
 After that a new configured extension will be generated for you.
@@ -69,7 +69,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Jobs\EventListener;
 
-use Zeroseven\Rampage\Registration\Event\AddFlexFormEvent;
+use Zeroseven\Pagebased\Registration\Event\AddFlexFormEvent;
 
 class ExtendFlexFormEvent
 {
@@ -89,12 +89,12 @@ class ExtendFlexFormEvent
 
 ## Commands and Tasks
 
-Update registration information of category and object pages with the command `rampage:update`. Example:
+Update registration information of category and object pages with the command `pagebased:update`. Example:
 
 | Command | Description |
 |---------|-------------|
-|`rampage:update 7`| Starting from page uid: `7`. |
-|`rampage:update 7 2`| Starting from page uid: `7` with depth of `2` levels |
+|`pagebased:update 7`| Starting from page uid: `7`. |
+|`pagebased:update 7 2`| Starting from page uid: `7` with depth of `2` levels |
 
 This can be useful if you change the identifier of a registration, or you add pages by API.
 
@@ -107,7 +107,7 @@ This can be useful if you change the identifier of a registration, or you add pa
 ```typo3_typoscript
 page.1684843032 = USER
 page.1684843032 {
-    userFunc = Zeroseven\Rampage\Utility\RenderUtility->renderUserFunc
+    userFunc = Zeroseven\Pagebased\Utility\RenderUtility->renderUserFunc
     file = EXT:my_extension/Resources/Private/Templates/Info.html
     registration = my_registration_identifier, another_registration_identifier
 }
@@ -129,7 +129,7 @@ page.1686075417 {
     stdWrap.cObject {
       file = EXT:zeroseven_projects/Resources/Private/Templates/Info/Next.html
 
-      dataProcessing.10 = Zeroseven\Rampage\DataProcessing\ObjectProcessor
+      dataProcessing.10 = Zeroseven\Pagebased\DataProcessing\ObjectProcessor
       dataProcessing.10 {
         uid.data = field:uid
         registration = my_registration_identifier
@@ -149,7 +149,7 @@ tt_content.my_content_element {
     templateName = MyContentElement
     templateRootPaths.1687792159 = EXT:my_extension/Resources/Private/Templates/Content/
 
-    dataProcessing.1687792159 = Zeroseven\Rampage\DataProcessing\ObjectProcessor
+    dataProcessing.1687792159 = Zeroseven\Pagebased\DataProcessing\ObjectProcessor
     dataProcessing.1687792159.registration = my_registration_identifier
 }
 ```
@@ -170,12 +170,12 @@ page.10.value = This is a category page.
 
 ### Fluid
 ```html
-<html xmlns:rampage="http://typo3.org/ns/Zeroseven/Rampage/ViewHelpers" data-namespace-typo3-fluid="true">
-<rampage:condition.isObject registration="my_registration_identifier">
+<html xmlns:pagebased="http://typo3.org/ns/Zeroseven/Pagebased/ViewHelpers" data-namespace-typo3-fluid="true">
+<pagebased:condition.isObject registration="my_registration_identifier">
     <p>Nice! It's an object.</p>
-</rampage:condition.isObject>
-<rampage:condition.isCategory registration="my_registration_identifier">
+</pagebased:condition.isObject>
+<pagebased:condition.isCategory registration="my_registration_identifier">
     <p>This is a category page.</p>
-</rampage:condition.isCategory>
+</pagebased:condition.isCategory>
 </html>
 ```

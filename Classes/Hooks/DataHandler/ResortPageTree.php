@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Hooks\DataHandler;
+namespace Zeroseven\Pagebased\Hooks\DataHandler;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
@@ -14,10 +14,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Utility\ObjectUtility;
-use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class ResortPageTree
 {
@@ -28,13 +28,13 @@ class ResortPageTree
         $message = GeneralUtility::makeInstance(
             FlashMessage::class,
             LocalizationUtility::translate(
-                'LLL:EXT:rampage/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.description',
-                'rampage',
+                'LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.description',
+                'pagebased',
                 [0 => BackendUtility::getRecordTitle(AbstractPage::TABLE_NAME, $parentPage)]
             ),
             LocalizationUtility::translate(
-                'LLL:EXT:rampage/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.title',
-                'rampage',
+                'LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.title',
+                'pagebased',
                 [0 => $registration->getObject()->getTitle()]
             ), AbstractMessage::OK, true
         );

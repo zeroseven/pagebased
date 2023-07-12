@@ -1,7 +1,7 @@
 <?php
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'Rampage 🤬',
+    'title' => 'Pagebased 📄',
     'description' => 'The ultimate tool to create page based extensions',
     'category' => 'plugin',
     'author' => 'Raphael Thanner',

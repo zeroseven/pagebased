@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\ExpressionLanguage;
+namespace Zeroseven\Pagebased\ExpressionLanguage;
 
 use TYPO3\CMS\Core\ExpressionLanguage\AbstractProvider;
-use Zeroseven\Rampage\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
 
 /**
  * Example:

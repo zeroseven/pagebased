@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration;
+namespace Zeroseven\Pagebased\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\GenericObjectDemand;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Utility\CastUtility;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\GenericObjectDemand;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Utility\CastUtility;
 
 final class ObjectRegistration extends AbstractRegistrationEntityProperty
 {

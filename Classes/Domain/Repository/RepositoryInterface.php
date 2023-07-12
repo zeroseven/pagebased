@@ -1,11 +1,11 @@
 <?php
 
-namespace Zeroseven\Rampage\Domain\Repository;
+namespace Zeroseven\Pagebased\Domain\Repository;
 
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 
 interface RepositoryInterface extends \TYPO3\CMS\Extbase\Persistence\RepositoryInterface
 {

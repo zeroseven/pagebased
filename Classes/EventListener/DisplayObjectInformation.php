@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\EventListener;
+namespace Zeroseven\Pagebased\EventListener;
 
 use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -15,10 +15,10 @@ use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Exception\BadConstraintException;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Utility\DetectionUtility;
-use Zeroseven\Rampage\Utility\ObjectUtility;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\SettingsUtility;
 
 class DisplayObjectInformation
 {
@@ -43,7 +43,7 @@ class DisplayObjectInformation
 
     protected function translate(string $key, array $arguments = null, string $fileName = null): string
     {
-        return LocalizationUtility::translate('LLL:EXT:rampage/Resources/Private/Language/' . ($fileName ?? 'locallang_be.xlf') . ':' . $key,
+        return LocalizationUtility::translate('LLL:EXT:pagebased/Resources/Private/Language/' . ($fileName ?? 'locallang_be.xlf') . ':' . $key,
                 SettingsUtility::EXTENSION_NAME, $arguments ?? []) ?? $key;
     }
 
@@ -65,7 +65,7 @@ class DisplayObjectInformation
         if ($registration = ObjectUtility::isObject($uid)) {
             $this->showMessage($this->translate('notification.object.description', [
                 $registration->getObject()->getTitle(),
-                $this->translate('pages.tab.rampage_settings', null, 'locallang_db.xlf'),
+                $this->translate('pages.tab.pagebased_settings', null, 'locallang_db.xlf'),
             ]), $uid);
 
             return true;

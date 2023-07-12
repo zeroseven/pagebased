@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Backend\TCA;
+namespace Zeroseven\Pagebased\Backend\TCA;
 
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
 
 class GroupFilter
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Event;
+namespace Zeroseven\Pagebased\Event;
 
-use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Pagebased\Registration\Registration;
 
 final class AssignTemplateVariablesEvent
 {

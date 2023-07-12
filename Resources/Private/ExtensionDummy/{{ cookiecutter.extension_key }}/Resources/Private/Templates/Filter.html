@@ -1,42 +1,42 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:rampage="http://typo3.org/ns/Zeroseven/Rampage/ViewHelpers" data-namespace-typo3-fluid="true">
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:pagebased="http://typo3.org/ns/Zeroseven/Pagebased/ViewHelpers" data-namespace-typo3-fluid="true">
     <style type="text/css">[data-filter-active] {
         background: yellow;
         color: #000;
     }</style>
 
     <p>
-        <rampage:filter.clear>reset</rampage:filter.clear>
+        <pagebased:filter.clear>reset</pagebased:filter.clear>
     </p>
 
     <f:if condition="{categories}">
         <h2>Categories</h2>
         <f:for each="{categories}" as="category">
-            <rampage:filter.link demand="{demand}" properties="{category:category}" toggle="1">{category.title}</rampage:filter.link><br>
+            <pagebased:filter.link demand="{demand}" properties="{category:category}" toggle="1">{category.title}</pagebased:filter.link><br>
         </f:for>
     </f:if>
 
     <f:if condition="{topics}">
         <h2>Topics</h2>
         <f:for each="{topics}" as="topic">
-            <rampage:filter.link demand="{demand}" properties="{topics:topic.uid}" toggle="1">{topic.title}</rampage:filter.link><br>
+            <pagebased:filter.link demand="{demand}" properties="{topics:topic.uid}" toggle="1">{topic.title}</pagebased:filter.link><br>
         </f:for>
     </f:if>
 
     <f:if condition="{contacts}">
         <h2>Contact</h2>
         <f:for each="{contacts}" as="contact">
-            <rampage:filter.link demand="{demand}" properties="{contact:contact.uid}" toggle="1">{contact.fullName}</rampage:filter.link><br>
+            <pagebased:filter.link demand="{demand}" properties="{contact:contact.uid}" toggle="1">{contact.fullName}</pagebased:filter.link><br>
         </f:for>
     </f:if>
 
     <f:if condition="{tags}">
         <h2>Tags</h2>
         <f:for each="{tags}" as="tag">
-            <rampage:filter.link demand="{demand}" properties="{tags:tag}" toggle="1">{tag}</rampage:filter.link><br>
+            <pagebased:filter.link demand="{demand}" properties="{tags:tag}" toggle="1">{tag}</pagebased:filter.link><br>
         </f:for>
     </f:if>
 
     <h2>Top</h2>
-    <rampage:filter.link demand="{demand}" properties="{_top_mode:1}" toggle="1">Top only</rampage:filter.link>
-    <rampage:filter.link demand="{demand}" properties="{_top_mode:2}" toggle="1">Top first</rampage:filter.link>
+    <pagebased:filter.link demand="{demand}" properties="{_top_mode:1}" toggle="1">Top only</pagebased:filter.link>
+    <pagebased:filter.link demand="{demand}" properties="{_top_mode:2}" toggle="1">Top first</pagebased:filter.link>
 </html>

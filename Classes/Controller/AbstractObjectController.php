@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Controller;
+namespace Zeroseven\Pagebased\Controller;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
@@ -14,17 +14,17 @@ use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
-use Zeroseven\Rampage\Domain\Repository\ContactRepository;
-use Zeroseven\Rampage\Domain\Repository\TopicRepository;
-use Zeroseven\Rampage\Event\AssignTemplateVariablesEvent;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\CastUtility;
-use Zeroseven\Rampage\Utility\TagUtility;
-use Zeroseven\Rampage\ViewHelpers\PaginationViewHelper;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
+use Zeroseven\Pagebased\Domain\Repository\ContactRepository;
+use Zeroseven\Pagebased\Domain\Repository\TopicRepository;
+use Zeroseven\Pagebased\Event\AssignTemplateVariablesEvent;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
+use Zeroseven\Pagebased\Utility\CastUtility;
+use Zeroseven\Pagebased\Utility\TagUtility;
+use Zeroseven\Pagebased\ViewHelpers\PaginationViewHelper;
 
 abstract class AbstractObjectController extends AbstractController implements ObjectControllerInterface
 {

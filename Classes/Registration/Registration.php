@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration;
+namespace Zeroseven\Pagebased\Registration;
 
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
-use Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent;
+use Zeroseven\Pagebased\Exception\RegistrationException;
+use Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent;
+use Zeroseven\Pagebased\Registration\Event\BeforeStoreRegistrationEvent;
 
 final class Registration
 {

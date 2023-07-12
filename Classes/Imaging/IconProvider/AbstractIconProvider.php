@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Imaging\IconProvider;
+namespace Zeroseven\Pagebased\Imaging\IconProvider;
 
 use InvalidArgumentException;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconProviderInterface;
-use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Pagebased\Exception\ValueException;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
 
 abstract class AbstractIconProvider implements IconProviderInterface
 {

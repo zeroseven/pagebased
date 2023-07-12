@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration\EventListener;
+namespace Zeroseven\Pagebased\Registration\EventListener;
 
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
-use Zeroseven\Rampage\Registration\AbstractRegistrationPluginProperty;
-use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
-use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Pagebased\Registration\AbstractRegistrationPluginProperty;
+use Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent;
+use Zeroseven\Pagebased\Registration\Registration;
 
 class RegisterPluginEvent
 {

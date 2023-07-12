@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration\EventListener;
+namespace Zeroseven\Pagebased\Registration\EventListener;
 
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Imaging\IconProvider\AppIconProvider;
-use Zeroseven\Rampage\Imaging\IconProvider\OverlayIconProvider;
-use Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent;
-use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Pagebased\Imaging\IconProvider\AppIconProvider;
+use Zeroseven\Pagebased\Imaging\IconProvider\OverlayIconProvider;
+use Zeroseven\Pagebased\Registration\Event\BeforeStoreRegistrationEvent;
+use Zeroseven\Pagebased\Registration\Registration;
 
 class IconRegistryEvent
 {

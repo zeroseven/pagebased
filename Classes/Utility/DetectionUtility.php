@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Utility;
+namespace Zeroseven\Pagebased\Utility;
 
 use Doctrine\DBAL\DBALException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 
 class DetectionUtility
 {
-    public const REGISTRATION_FIELD_NAME = '_rampage_registration';
-    public const SITE_FIELD_NAME = '_rampage_site';
-    public const CHILD_OBJECT_FIELD_NAME = '_rampage_child_object';
+    public const REGISTRATION_FIELD_NAME = '_pagebased_registration';
+    public const SITE_FIELD_NAME = '_pagebased_site';
+    public const CHILD_OBJECT_FIELD_NAME = '_pagebased_child_object';
 
     protected static function updatePageRecord(int $uid, array $update): void
     {

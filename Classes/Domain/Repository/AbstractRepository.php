@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Domain\Repository;
+namespace Zeroseven\Pagebased\Domain\Repository;
 
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
@@ -16,10 +16,10 @@ use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Utility\CastUtility;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Exception\RegistrationException;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Utility\CastUtility;
 
 abstract class AbstractRepository extends Repository
 {

@@ -1,7 +1,7 @@
 <?php
 
-defined('TYPO3') || die('🤬 Now there´s trouble!');
+defined('TYPO3') || die('📄');
 
-\Zeroseven\Rampage\Hooks\DataHandler\ResortPageTree::register();
-\Zeroseven\Rampage\Hooks\DataHandler\IdentifierDetection::register();
-\Zeroseven\Rampage\Hooks\IconFactory\OverrideIconOverlay::register();
+\Zeroseven\Pagebased\Hooks\DataHandler\ResortPageTree::register();
+\Zeroseven\Pagebased\Hooks\DataHandler\IdentifierDetection::register();
+\Zeroseven\Pagebased\Hooks\IconFactory\OverrideIconOverlay::register();

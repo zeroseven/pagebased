@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration\FlexForm;
+namespace Zeroseven\Pagebased\Registration\FlexForm;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

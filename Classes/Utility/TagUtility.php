@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Utility;
+namespace Zeroseven\Pagebased\Utility;
 
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
-use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
+use Zeroseven\Pagebased\Domain\Repository\RepositoryInterface;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class TagUtility
 {

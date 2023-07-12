@@ -1,8 +1,8 @@
 <?php
 
-namespace Zeroseven\Rampage\Domain\Repository;
+namespace Zeroseven\Pagebased\Domain\Repository;
 
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 
 interface CategoryRepositoryInterface extends RepositoryInterface
 {

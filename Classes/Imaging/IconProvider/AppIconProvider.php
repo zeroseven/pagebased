@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Imaging\IconProvider;
+namespace Zeroseven\Pagebased\Imaging\IconProvider;
 
 use TYPO3\CMS\Core\Imaging\Icon;
-use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Pagebased\Registration\Registration;
 
 class AppIconProvider extends AbstractIconProvider
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Utility;
+namespace Zeroseven\Pagebased\Utility;
 
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Registration\Registration;
 
 class TCAUtility
 {

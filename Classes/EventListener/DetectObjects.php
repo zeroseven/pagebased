@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\EventListener;
+namespace Zeroseven\Pagebased\EventListener;
 
 use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Utility\DetectionUtility;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
 
 class DetectObjects
 {

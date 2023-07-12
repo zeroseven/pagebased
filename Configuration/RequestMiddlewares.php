@@ -2,14 +2,14 @@
 
 return [
     'frontend' => [
-        'zeroseven/rampage/structured-data' => [
-            'target' => \Zeroseven\Rampage\Middleware\StructuredData::class,
+        'zeroseven/pagebased/structured-data' => [
+            'target' => \Zeroseven\Pagebased\Middleware\StructuredData::class,
             'after' => [
                 'typo3/cms-frontend/prepare-tsfe-rendering'
             ]
         ],
-        'zeroseven/rampage/category-redirect' => [
-            'target' => \Zeroseven\Rampage\Middleware\CategoryRedirect::class,
+        'zeroseven/pagebased/category-redirect' => [
+            'target' => \Zeroseven\Pagebased\Middleware\CategoryRedirect::class,
             'before' => [
                 'typo3/cms-frontend/shortcut-and-mountpoint-redirect'
             ],
