@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Utility;
+namespace Zeroseven\Pagebased\Utility;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
-use Zeroseven\Rampage\Exception\TypeException;
+use Zeroseven\Pagebased\Exception\TypeException;
 
 class CastUtility
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Hooks\IconFactory;
+namespace Zeroseven\Pagebased\Hooks\IconFactory;
 
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Registration\EventListener\IconRegistryEvent;
-use Zeroseven\Rampage\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Registration\EventListener\IconRegistryEvent;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
 
 class OverrideIconOverlay
 {

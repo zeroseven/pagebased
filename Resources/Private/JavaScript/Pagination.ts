@@ -39,7 +39,7 @@ namespace Zeroseven {
 
   const triggerEvent = (action: string, parameter?: any): void => {
     let event;
-    let name = 'rampage:pagination:' + action;
+    let name = 'pagebased:pagination:' + action;
 
     if (typeof window.CustomEvent === 'function') {
       event = new CustomEvent(name, {detail: parameter || {}});
@@ -97,7 +97,7 @@ namespace Zeroseven {
     }
   }
 
-  export var Rampage = {
+  export var Pagebased = {
     Pagination: {load: load}
   };
 }

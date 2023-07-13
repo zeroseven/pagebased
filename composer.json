@@ -1,5 +1,5 @@
 {
-  "name": "zeroseven/rampage",
+  "name": "zeroseven/pagebased",
   "license": "GPL-2.0-only",
   "type": "typo3-cms-extension",
   "description": "The ultimate tool to create page based extensions",
@@ -24,12 +24,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Zeroseven\\Rampage\\": "Classes"
+      "Zeroseven\\Pagebased\\": "Classes"
     }
   },
   "extra": {
     "typo3/cms": {
-      "extension-key": "rampage"
+      "extension-key": "pagebased"
     }
   }
 }

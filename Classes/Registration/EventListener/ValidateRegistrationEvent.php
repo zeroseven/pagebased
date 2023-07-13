@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration\EventListener;
+namespace Zeroseven\Pagebased\Registration\EventListener;
 
 use LogicException;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
@@ -12,30 +12,30 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use Zeroseven\Rampage\Controller\AbstractObjectController;
-use Zeroseven\Rampage\Controller\ObjectControllerInterface;
-use Zeroseven\Rampage\Domain\Model\AbstractCategory;
-use Zeroseven\Rampage\Domain\Model\AbstractObject;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Domain\Model\CategoryInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
-use Zeroseven\Rampage\Domain\Model\Demand\AbstractObjectDemand;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
-use Zeroseven\Rampage\Domain\Model\Demand\GenericObjectDemand;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
-use Zeroseven\Rampage\Domain\Model\ObjectInterface;
-use Zeroseven\Rampage\Domain\Repository\AbstractCategoryRepository;
-use Zeroseven\Rampage\Domain\Repository\AbstractObjectRepository;
-use Zeroseven\Rampage\Domain\Repository\CategoryRepositoryInterface;
-use Zeroseven\Rampage\Domain\Repository\ObjectRepositoryInterface;
-use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Registration\AbstractRegistrationEntityProperty;
-use Zeroseven\Rampage\Registration\AbstractRegistrationPluginProperty;
-use Zeroseven\Rampage\Registration\CategoryRegistration;
-use Zeroseven\Rampage\Registration\ObjectRegistration;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Pagebased\Controller\AbstractObjectController;
+use Zeroseven\Pagebased\Controller\ObjectControllerInterface;
+use Zeroseven\Pagebased\Domain\Model\AbstractCategory;
+use Zeroseven\Pagebased\Domain\Model\AbstractObject;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Domain\Model\CategoryInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\AbstractDemand;
+use Zeroseven\Pagebased\Domain\Model\Demand\AbstractObjectDemand;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\GenericDemand;
+use Zeroseven\Pagebased\Domain\Model\Demand\GenericObjectDemand;
+use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
+use Zeroseven\Pagebased\Domain\Model\ObjectInterface;
+use Zeroseven\Pagebased\Domain\Repository\AbstractCategoryRepository;
+use Zeroseven\Pagebased\Domain\Repository\AbstractObjectRepository;
+use Zeroseven\Pagebased\Domain\Repository\CategoryRepositoryInterface;
+use Zeroseven\Pagebased\Domain\Repository\ObjectRepositoryInterface;
+use Zeroseven\Pagebased\Exception\RegistrationException;
+use Zeroseven\Pagebased\Registration\AbstractRegistrationEntityProperty;
+use Zeroseven\Pagebased\Registration\AbstractRegistrationPluginProperty;
+use Zeroseven\Pagebased\Registration\CategoryRegistration;
+use Zeroseven\Pagebased\Registration\ObjectRegistration;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class ValidateRegistrationEvent
 {

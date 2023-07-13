@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Backend\Form\Wizard;
+namespace Zeroseven\Pagebased\Backend\Form\Wizard;
 
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Form\Wizard\SuggestWizardDefaultReceiver;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Utility\DetectionUtility;
-use Zeroseven\Rampage\Utility\ObjectUtility;
-use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class SuggestRelationReceiver extends SuggestWizardDefaultReceiver
 {

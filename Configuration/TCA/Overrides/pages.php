@@ -1,13 +1,13 @@
 <?php
 
-defined('TYPO3') || die('🤬 F**k off!');
+defined('TYPO3') || die('📄');
 
 call_user_func(static function (string $table) {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [
-        'rampage_top' => [
+        'pagebased_top' => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_top',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_top',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'check',
@@ -17,10 +17,10 @@ call_user_func(static function (string $table) {
                 'default' => 0
             ]
         ],
-        'rampage_date' => [
+        'pagebased_date' => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_date',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_date',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'input',
@@ -30,69 +30,69 @@ call_user_func(static function (string $table) {
                 'default' => time()
             ]
         ],
-        'rampage_tags' => [
+        'pagebased_tags' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_tags',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_tags',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'user',
-                'renderType' => 'rampageTags',
+                'renderType' => 'pagebasedTags',
                 'placeholder' => 'ADD TAGS …',
                 'default' => ''
             ]
         ],
-        'rampage_topics' => [
+        'pagebased_topics' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_topics',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_topics',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectCheckBox',
-                'foreign_table' => 'tx_rampage_domain_model_topic',
-                'MM' => 'tx_rampage_object_topic_mm',
-                'itemsProcFunc' => \Zeroseven\Rampage\Backend\TCA\ItemsProcFunc::class . '->topics',
+                'foreign_table' => 'tx_pagebased_domain_model_topic',
+                'MM' => 'tx_pagebased_object_topic_mm',
+                'itemsProcFunc' => \Zeroseven\Pagebased\Backend\TCA\ItemsProcFunc::class . '->topics',
                 'default' => 0
             ]
         ],
-        'rampage_contact' => [
+        'pagebased_contact' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_contact',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_contact',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
-                'foreign_table' => 'tx_rampage_domain_model_contact',
-                'itemsProcFunc' => \Zeroseven\Rampage\Backend\TCA\ItemsProcFunc::class . '->contacts',
+                'foreign_table' => 'tx_pagebased_domain_model_contact',
+                'itemsProcFunc' => \Zeroseven\Pagebased\Backend\TCA\ItemsProcFunc::class . '->contacts',
                 'default' => 0,
                 'items' => [
-                    ['-', 0, $GLOBALS['TCA']['tx_rampage_domain_model_contact']['ctrl']['typeicon_classes']['default'] ?? ''],
+                    ['-', 0, $GLOBALS['TCA']['tx_pagebased_domain_model_contact']['ctrl']['typeicon_classes']['default'] ?? ''],
                 ]
             ]
         ],
-        'rampage_relations_to' => [
+        'pagebased_relations_to' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_relations_to',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_relations_to',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'group',
                 'internal_type' => 'db',
                 'allowed' => $table,
                 'foreign_table' => $table,
-                'MM_opposite_field' => 'rampage_relations_from',
-                'MM' => 'tx_rampage_relation_mm',
+                'MM_opposite_field' => 'pagebased_relations_from',
+                'MM' => 'tx_pagebased_relation_mm',
                 'size' => 5,
                 'autoSizeMax' => 10,
                 'maxitems' => 99,
                 'filter' => [
                     [
-                        'userFunc' => \Zeroseven\Rampage\Backend\TCA\GroupFilter::class . '->filterObject'
+                        'userFunc' => \Zeroseven\Pagebased\Backend\TCA\GroupFilter::class . '->filterObject'
                     ]
                 ],
                 'suggestOptions' => [
                     'default' => [
-                        'receiverClass' => \Zeroseven\Rampage\Backend\Form\Wizard\SuggestRelationReceiver::class,
+                        'receiverClass' => \Zeroseven\Pagebased\Backend\Form\Wizard\SuggestRelationReceiver::class,
                         'minimumCharacters' => 2,
                         'searchWholePhrase' => true,
                     ],
@@ -105,9 +105,9 @@ call_user_func(static function (string $table) {
                 ]
             ]
         ],
-        'rampage_relations_from' => [
+        'pagebased_relations_from' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_relations_from',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_relations_from',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'group',
@@ -116,15 +116,15 @@ call_user_func(static function (string $table) {
                 'allowed' => $table,
                 'size' => 5,
                 'maxitems' => 100,
-                'MM' => 'tx_rampage_relation_mm',
+                'MM' => 'tx_pagebased_relation_mm',
                 'readOnly' => 1
             ]
         ],
-        'rampage_redirect_category' => [
+        'pagebased_redirect_category' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_redirect_category',
-            'description' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.rampage_redirect_category.description',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_redirect_category',
+            'description' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_redirect_category.description',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'check',
@@ -139,17 +139,17 @@ call_user_func(static function (string $table) {
     // System relevant fields must exist in TCA to map their values to the model
     foreach ([
                  'SYS_LASTCHANGED', 'crdate',
-                 \Zeroseven\Rampage\Utility\DetectionUtility::SITE_FIELD_NAME,
-                 \Zeroseven\Rampage\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
-                 \Zeroseven\Rampage\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME
+                 \Zeroseven\Pagebased\Utility\DetectionUtility::SITE_FIELD_NAME,
+                 \Zeroseven\Pagebased\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
+                 \Zeroseven\Pagebased\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME
              ] as $fieldName) {
         !isset($GLOBALS['TCA'][$table]['columns'][$fieldName])
         || \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [$fieldName => ['config' => ['type' => 'passthrough']]]);
     }
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:pages.tab.rampage_settings, rampage_top, rampage_date, rampage_tags, rampage_topics, rampage_contact, rampage_relations_to, rampage_relations_from, rampage_redirect_category,' . implode(',', [
-            \Zeroseven\Rampage\Utility\DetectionUtility::SITE_FIELD_NAME,
-            \Zeroseven\Rampage\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
-            \Zeroseven\Rampage\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.tab.pagebased_settings, pagebased_top, pagebased_date, pagebased_tags, pagebased_topics, pagebased_contact, pagebased_relations_to, pagebased_relations_from, pagebased_redirect_category,' . implode(',', [
+            \Zeroseven\Pagebased\Utility\DetectionUtility::SITE_FIELD_NAME,
+            \Zeroseven\Pagebased\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
+            \Zeroseven\Pagebased\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME
         ]), '');
 }, 'pages');

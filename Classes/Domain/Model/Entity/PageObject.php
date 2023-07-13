@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Domain\Model\Entity;
+namespace Zeroseven\Pagebased\Domain\Model\Entity;
 
-use Zeroseven\Rampage\Domain\Model\AbstractObject;
+use Zeroseven\Pagebased\Domain\Model\AbstractObject;
 
 class PageObject extends AbstractObject
 {

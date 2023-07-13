@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Backend\TCA;
+namespace Zeroseven\Pagebased\Backend\TCA;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Domain\Repository\ContactRepository;
-use Zeroseven\Rampage\Domain\Repository\TopicRepository;
-use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\DetectionUtility;
-use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Domain\Repository\ContactRepository;
+use Zeroseven\Pagebased\Domain\Repository\TopicRepository;
+use Zeroseven\Pagebased\Exception\ValueException;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
+use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class ItemsProcFunc
 {
@@ -90,7 +90,7 @@ class ItemsProcFunc
 
             // Add closest category
             if ($closestCategoryUid) {
-                array_unshift($PA['items'], ['LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.suggestion', '--div--'], [$localPages[$closestCategoryUid]['title'] ?? '', $closestCategoryUid]);
+                array_unshift($PA['items'], ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.suggestion', '--div--'], [$localPages[$closestCategoryUid]['title'] ?? '', $closestCategoryUid]);
             }
         }
     }

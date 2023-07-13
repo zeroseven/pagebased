@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration;
+namespace Zeroseven\Pagebased\Registration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

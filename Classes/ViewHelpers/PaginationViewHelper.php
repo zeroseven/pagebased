@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\ViewHelpers;
+namespace Zeroseven\Pagebased\ViewHelpers;
 
 use Closure;
 use Traversable;
@@ -12,13 +12,13 @@ use TYPO3\CMS\Install\ViewHelpers\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
-use Zeroseven\Rampage\Pagination\Pagination;
+use Zeroseven\Pagebased\Pagination\Pagination;
 
 final class PaginationViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 
-    public const PAGINATION_VARIABLE_IDENTIFIER = '🤬-fe7cd4d1bf3fea9a0d921e224b3fa24c'; // md5('pagination');
+    public const PAGINATION_VARIABLE_IDENTIFIER = '📄-fe7cd4d1bf3fea9a0d921e224b3fa24c'; // md5('pagination');
     public const REQUEST_ARGUMENT = '_stage';
 
     protected $escapeOutput = false;

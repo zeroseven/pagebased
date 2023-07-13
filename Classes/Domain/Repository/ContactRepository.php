@@ -1,9 +1,9 @@
 <?php
 
-namespace Zeroseven\Rampage\Domain\Repository;
+namespace Zeroseven\Pagebased\Domain\Repository;
 
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Pagebased\Registration\Registration;
 
 class ContactRepository extends AbstractRelationRepository
 {

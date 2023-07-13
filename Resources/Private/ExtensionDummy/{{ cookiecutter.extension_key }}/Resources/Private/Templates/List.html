@@ -1,29 +1,29 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:rampage="http://typo3.org/ns/Zeroseven/Rampage/ViewHelpers" data-namespace-typo3-fluid="true">
-	<rampage:pagination items="{objects}" itemsPerStage="{settings.itemsPerStage}" maxStages="{settings.maxStages}" as="pagination">
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:pagebased="http://typo3.org/ns/Zeroseven/Pagebased/ViewHelpers" data-namespace-typo3-fluid="true">
+	<pagebased:pagination items="{objects}" itemsPerStage="{settings.itemsPerStage}" maxStages="{settings.maxStages}" as="pagination">
 		<div id="id-{{ cookiecutter.extension_key }}-l{data.uid}">
 			<f:if condition="{requestArguments._ajax}">
 				<f:then>
-					<rampage:pagination.eachStage selected="1">
+					<pagebased:pagination.eachStage selected="1">
 						{f:render(section: "Stage", arguments: "{_all}")}
-					</rampage:pagination.eachStage>
+					</pagebased:pagination.eachStage>
 				</f:then>
 				<f:else>
-					<rampage:pagination.eachStage active="1" iteration="i">
+					<pagebased:pagination.eachStage active="1" iteration="i">
 						{f:render(section: "Stage", arguments: "{_all}")}
-					</rampage:pagination.eachStage>
+					</pagebased:pagination.eachStage>
 				</f:else>
 			</f:if>
 		</div>
 
 		<div id="id-{{ cookiecutter.extension_key }}-c{data.uid}">
-			<rampage:pagination.link.next ajaxAppendSelectors="#id-{{ cookiecutter.extension_key }}-l{data.uid}" ajaxReplaceSelectors="#id-{{ cookiecutter.extension_key }}-c{data.uid}" demand="{demand}">
+			<pagebased:pagination.link.next ajaxAppendSelectors="#id-{{ cookiecutter.extension_key }}-l{data.uid}" ajaxReplaceSelectors="#id-{{ cookiecutter.extension_key }}-c{data.uid}" demand="{demand}">
 				Next
-			</rampage:pagination.link.next>
+			</pagebased:pagination.link.next>
 		</div>
-	</rampage:pagination>
+	</pagebased:pagination>
 
 	<f:section name="Stage">
-		<rampage:pagination.eachItem as="object" iteration="i">
+		<pagebased:pagination.eachItem as="object" iteration="i">
 			<div class="item{i.cycle}">
 				<f:link.page pageUid="{object.uid}">
 					<f:if condition="{object.firstImage}">
@@ -32,6 +32,6 @@
 					{object.title} <small>{object.date -> f:format.date(format:"d.m.Y")}</small>
 				</f:link.page>
 			</div>
-		</rampage:pagination.eachItem>
+		</pagebased:pagination.eachItem>
 	</f:section>
 </html>

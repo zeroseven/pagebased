@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\ViewHelpers\Pagination\Link;
+namespace Zeroseven\Pagebased\ViewHelpers\Pagination\Link;
 
 use JsonException;
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\ViewHelpers\Link\ActionViewHelper;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
-use Zeroseven\Rampage\Domain\Model\Demand\AbstractDemand;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Pagination\Pagination;
-use Zeroseven\Rampage\Utility\CastUtility;
-use Zeroseven\Rampage\ViewHelpers\PaginationViewHelper;
+use Zeroseven\Pagebased\Domain\Model\Demand\AbstractDemand;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Pagination\Pagination;
+use Zeroseven\Pagebased\Utility\CastUtility;
+use Zeroseven\Pagebased\ViewHelpers\PaginationViewHelper;
 
 abstract class AbstractLinkViewHelper extends ActionViewHelper
 {
-    public const AJAX_CONTENT_PARAMETER = '_rampage_content';
+    public const AJAX_CONTENT_PARAMETER = '_pagebased_content';
 
     public function initializeArguments(): void
     {
@@ -77,7 +77,7 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
                         '_ajax' => 1
                     ]), $this->arguments['controller'] ?? null, $this->arguments['extensionName'] ?? null, $this->arguments['pluginName'] ?? null);
 
-                $ajaxUrl && $this->tag->addAttribute('onclick', sprintf('Zeroseven.Rampage.Pagination.load(%s,%s,%s,event)', GeneralUtility::quoteJSvalue($ajaxUrl), json_encode($replaceSelectors, JSON_THROW_ON_ERROR), json_encode($appendSelectors, JSON_THROW_ON_ERROR)));
+                $ajaxUrl && $this->tag->addAttribute('onclick', sprintf('Zeroseven.Pagebased.Pagination.load(%s,%s,%s,event)', GeneralUtility::quoteJSvalue($ajaxUrl), json_encode($replaceSelectors, JSON_THROW_ON_ERROR), json_encode($appendSelectors, JSON_THROW_ON_ERROR)));
             } else {
                 throw new Exception('Ajax-Loading failed: Either the content ID of the demand class or the key "list.ajaxTypeNum" is not configured in your plugin settings.', 1677489279);
             }

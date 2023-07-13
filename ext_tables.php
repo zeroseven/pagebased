@@ -1,5 +1,5 @@
 <?php
 
-defined('TYPO3') || die('🤬 Get out of here!');
+defined('TYPO3') || die('📄');
 
-\Zeroseven\Rampage\Backend\Form\Element\TagsElement::register();
+\Zeroseven\Pagebased\Backend\Form\Element\TagsElement::register();

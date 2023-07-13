@@ -1,5 +1,5 @@
 {
-  "name": "rampage",
+  "name": "pagebased",
   "private": true,
   "scripts": {
     "postinstall": "cp node_modules/@yaireo/tagify/dist/tagify.min.js Resources/Public/JavaScript/Backend/Tagify.js && cp node_modules/@yaireo/tagify/dist/tagify.css Resources/Public/Css/Backend/Tagify.css",

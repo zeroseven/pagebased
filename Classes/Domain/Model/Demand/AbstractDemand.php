@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Domain\Model\Demand;
+namespace Zeroseven\Pagebased\Domain\Model\Demand;
 
 use ReflectionClass;
 use ReflectionProperty;
@@ -12,10 +12,10 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use Zeroseven\Rampage\Exception\PropertyException;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Utility\CastUtility;
+use Zeroseven\Pagebased\Exception\PropertyException;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Exception\ValueException;
+use Zeroseven\Pagebased\Utility\CastUtility;
 
 abstract class AbstractDemand implements DemandInterface
 {

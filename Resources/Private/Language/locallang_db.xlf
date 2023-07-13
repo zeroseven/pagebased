@@ -3,37 +3,37 @@
   <file source-language="en" datatype="plaintext" original="messages">
     <header />
     <body>
-	  <trans-unit id="pages.tab.rampage_settings">
+	  <trans-unit id="pages.tab.pagebased_settings">
 	    <source>Settings</source>
 	  </trans-unit>
-	  <trans-unit id="pages.rampage_top">
+	  <trans-unit id="pages.pagebased_top">
 	    <source>Top</source>
 	  </trans-unit>
-	  <trans-unit id="pages.rampage_date">
+	  <trans-unit id="pages.pagebased_date">
 	    <source>Date</source>
 	  </trans-unit>
-	  <trans-unit id="pages.rampage_tags">
+	  <trans-unit id="pages.pagebased_tags">
 	    <source>Tags</source>
 	  </trans-unit>
-	  <trans-unit id="pages.rampage_topics">
+	  <trans-unit id="pages.pagebased_topics">
 	    <source>Topics</source>
 	  </trans-unit>
-	  <trans-unit id="pages.rampage_contact">
+	  <trans-unit id="pages.pagebased_contact">
 	    <source>Contact</source>
 	  </trans-unit>
-	  <trans-unit id="pages.rampage_tags.placeholder">
+	  <trans-unit id="pages.pagebased_tags.placeholder">
 	    <source>Add new tags</source>
 	  </trans-unit>
-	  <trans-unit id="pages.rampage_relations_to">
+	  <trans-unit id="pages.pagebased_relations_to">
 	    <source>Relations to</source>
 	  </trans-unit>
-	  <trans-unit id="pages.rampage_relations_from">
+	  <trans-unit id="pages.pagebased_relations_from">
 	    <source>Relations from</source>
 	  </trans-unit>
-	  <trans-unit id="pages.rampage_redirect_category">
+	  <trans-unit id="pages.pagebased_redirect_category">
 	    <source>Redirect category</source>
 	  </trans-unit>
-	  <trans-unit id="pages.rampage_redirect_category.description">
+	  <trans-unit id="pages.pagebased_redirect_category.description">
 	    <source>Redirects to the next list plugin in the rootline and sets the appropriate category.</source>
 	  </trans-unit>
 
@@ -113,86 +113,86 @@
       	<source>List element</source>
       </trans-unit>
 
-	  <trans-unit id="tx_rampage_domain_model_topic">
+	  <trans-unit id="tx_pagebased_domain_model_topic">
 	  	<source>Topic</source>
 	  </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_topic.title">
+      <trans-unit id="tx_pagebased_domain_model_topic.title">
       	<source>Title</source>
       </trans-unit>
 
-      <trans-unit id="tx_rampage_domain_model_contact">
+      <trans-unit id="tx_pagebased_domain_model_contact">
       	<source>Contact</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.tab.contact">
+      <trans-unit id="tx_pagebased_domain_model_contact.tab.contact">
 		<source>Contact</source>
 	  </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.tab.info">
+      <trans-unit id="tx_pagebased_domain_model_contact.tab.info">
 		<source>Info</source>
 	  </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.tab.social">
+      <trans-unit id="tx_pagebased_domain_model_contact.tab.social">
 		<source>Social</source>
 	  </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.palette.name">
+      <trans-unit id="tx_pagebased_domain_model_contact.palette.name">
       	<source>Name</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.palette.contact">
+      <trans-unit id="tx_pagebased_domain_model_contact.palette.contact">
       	<source>Contact</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.palette.address">
+      <trans-unit id="tx_pagebased_domain_model_contact.palette.address">
       	<source>Address</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.firstname">
+      <trans-unit id="tx_pagebased_domain_model_contact.firstname">
       	<source>First name</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.lastname">
+      <trans-unit id="tx_pagebased_domain_model_contact.lastname">
       	<source>Last name</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.company">
+      <trans-unit id="tx_pagebased_domain_model_contact.company">
       	<source>Company</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.expertise">
+      <trans-unit id="tx_pagebased_domain_model_contact.expertise">
       	<source>Expertise</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.email">
+      <trans-unit id="tx_pagebased_domain_model_contact.email">
       	<source>Email</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.phone">
+      <trans-unit id="tx_pagebased_domain_model_contact.phone">
       	<source>Phone</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.website">
+      <trans-unit id="tx_pagebased_domain_model_contact.website">
       	<source>Website</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.address">
+      <trans-unit id="tx_pagebased_domain_model_contact.address">
       	<source>Address</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.city">
+      <trans-unit id="tx_pagebased_domain_model_contact.city">
       	<source>City</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.zip">
+      <trans-unit id="tx_pagebased_domain_model_contact.zip">
       	<source>Zip</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.country">
+      <trans-unit id="tx_pagebased_domain_model_contact.country">
       	<source>Country</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.description">
+      <trans-unit id="tx_pagebased_domain_model_contact.description">
       	<source>Description</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.image">
+      <trans-unit id="tx_pagebased_domain_model_contact.image">
       	<source>Image</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.page">
+      <trans-unit id="tx_pagebased_domain_model_contact.page">
       	<source>Page</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.twitter">
+      <trans-unit id="tx_pagebased_domain_model_contact.twitter">
       	<source>Twitter</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.facebook">
+      <trans-unit id="tx_pagebased_domain_model_contact.facebook">
       	<source>Facebook</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.linkedin">
+      <trans-unit id="tx_pagebased_domain_model_contact.linkedin">
       	<source>Linkedin</source>
       </trans-unit>
-      <trans-unit id="tx_rampage_domain_model_contact.xing">
+      <trans-unit id="tx_pagebased_domain_model_contact.xing">
       	<source>Xing</source>
       </trans-unit>
     </body>

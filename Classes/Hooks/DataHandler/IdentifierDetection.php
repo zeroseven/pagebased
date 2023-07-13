@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Hooks\DataHandler;
+namespace Zeroseven\Pagebased\Hooks\DataHandler;
 
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Utility\DetectionUtility;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
 
 class IdentifierDetection
 {

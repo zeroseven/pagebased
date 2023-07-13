@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration\Event;
+namespace Zeroseven\Pagebased\Registration\Event;
 
-use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Pagebased\Registration\Registration;
 
 final class BeforeStoreRegistrationEvent
 {

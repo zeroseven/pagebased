@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\ViewHelpers\Condition;
+namespace Zeroseven\Pagebased\ViewHelpers\Condition;
 
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
 
 class IsObjectViewHelper extends AbstractConditionViewHelper
 {

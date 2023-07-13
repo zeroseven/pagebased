@@ -1,4 +1,4 @@
-plugin.tx_rampage {
+plugin.tx_pagebased {
   settings {
     # customsubcategory=list=Object list settings
     list {

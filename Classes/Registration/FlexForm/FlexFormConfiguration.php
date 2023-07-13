@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration\FlexForm;
+namespace Zeroseven\Pagebased\Registration\FlexForm;
 
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Type\Exception;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Registration\Event\AddFlexFormEvent;
-use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
+use Zeroseven\Pagebased\Registration\Event\AddFlexFormEvent;
+use Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent;
 
 class FlexFormConfiguration
 {

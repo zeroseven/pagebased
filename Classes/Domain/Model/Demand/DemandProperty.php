@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Domain\Model\Demand;
+namespace Zeroseven\Pagebased\Domain\Model\Demand;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Utility\CastUtility;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Utility\CastUtility;
 
 class DemandProperty
 {

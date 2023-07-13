@@ -4,80 +4,80 @@ services:
         autoconfigure: true
         public: false
 
-    Zeroseven\Rampage\:
+    Zeroseven\Pagebased\:
         resource: '../Classes/*'
 
-    Zeroseven\Rampage\Command\DetectionCommand:
+    Zeroseven\Pagebased\Command\DetectionCommand:
         tags:
             -   name: console.command
-                command: 'rampage:detection'
+                command: 'pagebased:detection'
                 description: 'Detect objects and categories'
                 hidden: false
                 schedulable: true
 
-    Zeroseven\Rampage\Registration\EventListener\ValidateRegistrationEvent:
+    Zeroseven\Pagebased\Registration\EventListener\ValidateRegistrationEvent:
         tags:
             - name: event.listener
-              identifier: 'rampage/registration-validation'
+              identifier: 'pagebased/registration-validation'
               event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
 
-    Zeroseven\Rampage\Registration\EventListener\AddTCAEvent:
+    Zeroseven\Pagebased\Registration\EventListener\AddTCAEvent:
         tags:
             - name: event.listener
-              identifier: 'rampage/registration-add-tca'
-              after: 'rampage/registration-validation'
+              identifier: 'pagebased/registration-add-tca'
+              after: 'pagebased/registration-validation'
               event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
 
-    Zeroseven\Rampage\Registration\EventListener\CheckExtensionConfigurationEvent:
+    Zeroseven\Pagebased\Registration\EventListener\CheckExtensionConfigurationEvent:
         tags:
             - name: event.listener
-              identifier: 'rampage/registration-check-extension-configuration'
-              event: Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent
+              identifier: 'pagebased/registration-check-extension-configuration'
+              event: Zeroseven\Pagebased\Registration\Event\BeforeStoreRegistrationEvent
 
-    Zeroseven\Rampage\Registration\EventListener\IconRegistryEvent:
+    Zeroseven\Pagebased\Registration\EventListener\IconRegistryEvent:
         tags:
             - name: event.listener
-              identifier: 'rampage/registration-icon-registry'
-              event: Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent
+              identifier: 'pagebased/registration-icon-registry'
+              event: Zeroseven\Pagebased\Registration\Event\BeforeStoreRegistrationEvent
 
-    Zeroseven\Rampage\Registration\EventListener\AddTSConfigEvent:
+    Zeroseven\Pagebased\Registration\EventListener\AddTSConfigEvent:
         tags:
             - name: event.listener
-              identifier: 'rampage/registration-add-tsconfig'
-              event: Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent
+              identifier: 'pagebased/registration-add-tsconfig'
+              event: Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent
 
-    Zeroseven\Rampage\Registration\EventListener\AddUserTSConfigEvent:
+    Zeroseven\Pagebased\Registration\EventListener\AddUserTSConfigEvent:
         tags:
             - name: event.listener
-              identifier: 'rampage/registration-add-usertsconfig'
-              event: Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent
+              identifier: 'pagebased/registration-add-usertsconfig'
+              event: Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent
 
-    Zeroseven\Rampage\Registration\EventListener\AddTypoScriptEvent:
+    Zeroseven\Pagebased\Registration\EventListener\AddTypoScriptEvent:
         tags:
             - name: event.listener
-              identifier: 'rampage/registration-add-typoscript'
-              event: Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent
+              identifier: 'pagebased/registration-add-typoscript'
+              event: Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent
 
-    Zeroseven\Rampage\Registration\EventListener\RegisterPluginEvent:
+    Zeroseven\Pagebased\Registration\EventListener\RegisterPluginEvent:
         tags:
             - name: event.listener
-              identifier: 'rampage/registration-plugin'
-              event: Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent
+              identifier: 'pagebased/registration-plugin'
+              event: Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent
 
-    Zeroseven\Rampage\EventListener\DetectObjects:
+    Zeroseven\Pagebased\EventListener\DetectObjects:
         tags:
             - name: event.listener
-              identifier: 'rampage/detect-registration'
+              identifier: 'pagebased/detect-registration'
               event: TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent
 
-    Zeroseven\Rampage\EventListener\DisplayObjectRelations:
+    Zeroseven\Pagebased\EventListener\DisplayObjectRelations:
         tags:
             - name: event.listener
-              identifier: 'rampage/display-object-relations'
+              identifier: 'pagebased/display-object-relations'
               event: TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent
 
-    Zeroseven\Rampage\EventListener\DisplayObjectInformation:
+    Zeroseven\Pagebased\EventListener\DisplayObjectInformation:
         tags:
             - name: event.listener
-              identifier: 'rampage/display-object-affiliation'
+              identifier: 'pagebased/display-object-affiliation'
               event: TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent

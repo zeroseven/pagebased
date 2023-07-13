@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration\EventListener;
+namespace Zeroseven\Pagebased\Registration\EventListener;
 
 use ReflectionClass;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationPropertyInterface;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Pagebased\Registration\Event\BeforeStoreRegistrationEvent;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationPropertyInterface;
+use Zeroseven\Pagebased\Utility\SettingsUtility;
 
 class CheckExtensionConfigurationEvent
 {

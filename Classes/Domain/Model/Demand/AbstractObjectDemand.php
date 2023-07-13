@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Domain\Model\Demand;
+namespace Zeroseven\Pagebased\Domain\Model\Demand;
 
-use Zeroseven\Rampage\Exception\PropertyException;
-use Zeroseven\Rampage\Exception\TypeException;
+use Zeroseven\Pagebased\Exception\PropertyException;
+use Zeroseven\Pagebased\Exception\TypeException;
 
 /**
  * @method setCategory(mixed $value): self

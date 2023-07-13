@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration;
+namespace Zeroseven\Pagebased\Registration;
 
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Domain\Model\CategoryInterface;
-use Zeroseven\Rampage\Exception\ValueException;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Domain\Model\CategoryInterface;
+use Zeroseven\Pagebased\Exception\ValueException;
 
 class RegistrationService
 {
     /** @return Registration[] */
     public static function getRegistrations(): array
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['registrations'] ?? [];
+        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['registrations'] ?? [];
     }
 
     public static function addRegistration(Registration $registration): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['registrations'][$registration->getIdentifier()] = $registration;
+        $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['registrations'][$registration->getIdentifier()] = $registration;
     }
 
     public static function getRegistrationByClassName(string $className): ?Registration

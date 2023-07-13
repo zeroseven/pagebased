@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Middleware;
+namespace Zeroseven\Pagebased\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,10 +13,10 @@ use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Utility\ObjectUtility;
-use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class CategoryRedirect implements MiddlewareInterface
 {
@@ -39,7 +39,7 @@ class CategoryRedirect implements MiddlewareInterface
 
             $uri = $uriBuilder->uriFor('List', $controllerArguments, $controllerName, $registration->getExtensionName(), 'List');
 
-            return GeneralUtility::makeInstance(RedirectResponse::class, $uri, 307, ['X-Redirect-By' => 'rampage']);
+            return GeneralUtility::makeInstance(RedirectResponse::class, $uri, 307, ['X-Redirect-By' => 'pagebased']);
         }
 
         return null;
@@ -51,7 +51,7 @@ class CategoryRedirect implements MiddlewareInterface
             empty($request->getQueryParams()[self::REDIRECT_PARAMETER] ?? null) // Reduce multiple redirects
             && ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController
             && ($row = $GLOBALS['TSFE']->page ?? null)
-            && ($row['rampage_redirect_category'] ?? null)
+            && ($row['pagebased_redirect_category'] ?? null)
             && ($uid = $GLOBALS['TSFE']->id ?? $row['uid'] ?? null)
             && ($registration = ObjectUtility::isCategory($uid, $row))
             && ($redirectResponse = $this->buildRedirectResponse($uid, $registration))

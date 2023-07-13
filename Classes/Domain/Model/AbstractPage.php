@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Domain\Model;
+namespace Zeroseven\Pagebased\Domain\Model;
 
 use DateTime;
 use TYPO3\CMS\Core\Context\Context;

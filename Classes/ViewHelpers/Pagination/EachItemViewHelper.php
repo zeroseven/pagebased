@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\ViewHelpers\Pagination;
+namespace Zeroseven\Pagebased\ViewHelpers\Pagination;
 
 use Closure;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -10,8 +10,8 @@ use TYPO3\CMS\Install\ViewHelpers\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
-use Zeroseven\Rampage\Pagination\Iterator;
-use Zeroseven\Rampage\ViewHelpers\PaginationViewHelper;
+use Zeroseven\Pagebased\Pagination\Iterator;
+use Zeroseven\Pagebased\ViewHelpers\PaginationViewHelper;
 
 final class EachItemViewHelper extends AbstractViewHelper
 {
