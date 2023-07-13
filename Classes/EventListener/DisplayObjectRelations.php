@@ -44,7 +44,7 @@ class DisplayObjectRelations
     protected function showMessage(array $objects): void
     {
         $message = LocalizationUtility::translate('LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.objectRelations.description',
-            SettingsUtility::EXTENSION_NAME, [implode(', ', $objects)]);
+            'pagebased', [implode(', ', $objects)]);
 
         $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, '', AbstractMessage::INFO);
 

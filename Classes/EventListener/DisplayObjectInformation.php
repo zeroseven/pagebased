@@ -44,7 +44,7 @@ class DisplayObjectInformation
     protected function translate(string $key, array $arguments = null, string $fileName = null): string
     {
         return LocalizationUtility::translate('LLL:EXT:pagebased/Resources/Private/Language/' . ($fileName ?? 'locallang_be.xlf') . ':' . $key,
-                SettingsUtility::EXTENSION_NAME, $arguments ?? []) ?? $key;
+            'pagebased', $arguments ?? []) ?? $key;
     }
 
     protected function isChildObject(int $uid): bool

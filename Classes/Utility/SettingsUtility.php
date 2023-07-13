@@ -17,8 +17,6 @@ use Zeroseven\Pagebased\Registration\Registration;
 
 class SettingsUtility
 {
-    public const EXTENSION_NAME = 'pagebased';
-
     public static function getExtensionConfiguration(Registration $registration, string $propertyPath = null): mixed
     {
         $extensionName = $registration->getExtensionName();
