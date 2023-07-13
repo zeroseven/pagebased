@@ -19,11 +19,10 @@ call_user_func(static function () {
         ->setDocumentType({{ cookiecutter.category_doktype }});
 
     $listPlugin = \Zeroseven\Pagebased\Registration\ListPluginRegistration::create('{{ cookiecutter.object_name|capitalize }} list')
-        ->setDescription('Display object in a list')
-        ->setIconIdentifier('content-bullets');
+        ->setDescription('Display objects of type "{{ cookiecutter.object_name|lower }}" in a list');
 
     $filterPlugin = \Zeroseven\Pagebased\Registration\FilterPluginRegistration::create('{{ cookiecutter.object_name|capitalize }} filter')
-        ->setDescription('Filter objects');
+        ->setDescription('Filter "{{ cookiecutter.object_name|lower }}" objects');
 
     \Zeroseven\Pagebased\Registration\Registration::create('{{ cookiecutter.extension_key }}')
         ->setObject($object)
