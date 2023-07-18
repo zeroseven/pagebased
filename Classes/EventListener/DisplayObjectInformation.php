@@ -26,8 +26,7 @@ class DisplayObjectInformation
     {
         try {
             $uid && GeneralUtility::makeInstance(Context::class)->getAspect('backend.user')->isAdmin()
-            && ($fieldName = DetectionUtility::REGISTRATION_FIELD_NAME)
-            && ($registrationIdentifier = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, $fieldName)[$fieldName] ?? null)
+            && ($registrationIdentifier = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, DetectionUtility::REGISTRATION_FIELD_NAME)[DetectionUtility::REGISTRATION_FIELD_NAME] ?? null)
             && $message .= ' [identifier: ' . $registrationIdentifier . ']';
         } catch (AspectNotFoundException $e) {
         }
@@ -76,7 +75,9 @@ class DisplayObjectInformation
 
     protected function isCategory(int $uid): bool
     {
-        if (($registration = ObjectUtility::isCategory($uid)) && $demand = $registration->getObject()->getDemandClass()) {
+        if ($registration = ObjectUtility::isCategory($uid)) {
+            $demand = $registration->getObject()->getDemandClass();
+
             try {
                 $count = $registration->getObject()->getRepositoryClass()->findByDemand($demand->setCategory($uid))->count();
             } catch (BadConstraintException $e) {

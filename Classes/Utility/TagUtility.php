@@ -15,7 +15,7 @@ class TagUtility
     public static function collectTagsFromQueryResult(QueryResultInterface $objects): array
     {
         $tags = [];
-        foreach ($objects->toArray() ?? [] as $object) {
+        foreach ($objects->toArray() as $object) {
             foreach ($object->getTags() ?? [] as $tag) {
                 if (!in_array($tag, $tags, true)) {
                     $tags[] = $tag;

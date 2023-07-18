@@ -87,11 +87,10 @@ class ObjectUtility
             try {
                 if (
                     ($identifier = $row[$registrationField] ?? null)
-                    && ($registration = RegistrationService::getRegistrationByIdentifier($identifier))
                     && !self::isSystemPage($pageUid, $row)
                     && !self::isCategory($pageUid, $row)
                 ) {
-                    return self::setObjectCache($pageUid, $registration);
+                    return self::setObjectCache($pageUid, RegistrationService::getRegistrationByIdentifier($identifier));
                 }
             } catch (ValueException $e) {
             }

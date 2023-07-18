@@ -118,7 +118,9 @@ class ValidateRegistrationEvent
         }
 
         // Check page icons
-        if (($iconRegistry = GeneralUtility::makeInstance(IconRegistry::class)) && $iconIdentifier = $categoryRegistration->getIconIdentifier()) {
+        if ($iconIdentifier = $categoryRegistration->getIconIdentifier()) {
+            $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+
             if (!$iconRegistry->isRegistered($iconIdentifier)) {
                 throw new RegistrationException(sprintf('The icon "%s" for the page type "%s" is not registered. More information: https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Icon/Index.html#registration', $iconIdentifier, $categoryRegistration->getTitle()), 1676552125);
             }
@@ -168,15 +170,14 @@ class ValidateRegistrationEvent
     /** @throws RegistrationException | Exception */
     protected function checkRegistration(Registration $registration): void
     {
-        if ($objectRegistration = $registration->getObject()) {
-            $this->checkPageObjectRegistration($objectRegistration);
-            $this->checkPageEntityConfiguration($objectRegistration);
-        }
+        $objectRegistration = $registration->getObject();
+        $categoryRegistration = $registration->getCategory()
 
-        if ($categoryRegistration = $registration->getCategory()) {
-            $this->checkCategoryConfiguration($categoryRegistration);
-            $this->checkPageEntityConfiguration($categoryRegistration);
-        }
+        $this->checkPageObjectRegistration($objectRegistration);
+        $this->checkPageEntityConfiguration($objectRegistration);
+
+        $this->checkCategoryConfiguration($categoryRegistration);
+        $this->checkPageEntityConfiguration($categoryRegistration);
     }
 
     public function __invoke(AfterTcaCompilationEvent $event): void
