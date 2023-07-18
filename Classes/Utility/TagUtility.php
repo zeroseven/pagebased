@@ -49,10 +49,10 @@ class TagUtility
         return null;
     }
 
-    public static function getTagsByDemand(ObjectDemandInterface $demand, int $rootPageUid = null, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
+    public static function getTagsByDemand(ObjectDemandInterface $demand, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
-        if (($registration = RegistrationService::getRegistrationByDemandClass($demand)) && ($repository = $registration->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
-            return self::getTags($demand, $repository, $rootPageUid, $ignoreTagsFromDemand, $languageUid);
+        if (($registration = RegistrationService::getRegistrationByDemandClass(get_class($demand))) && ($repository = $registration->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
+            return self::getTags($demand, $repository, $ignoreTagsFromDemand, $languageUid);
         }
 
         return null;

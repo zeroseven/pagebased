@@ -22,14 +22,8 @@ abstract class AbstractRegistration implements RegistrationPropertyInterface
 
     public function getTitle(): string
     {
-        if (str_starts_with($this->title, 'LLL:')) {
-            if ($languageService = $this->getLanguageService()) {
-                return $languageService->sL($this->title);
-            }
-
-            if (method_exists(get_class($this), 'getName')) {
-                return $this->getName();
-            }
+        if (str_starts_with($this->title, 'LLL:') && $languageService = $this->getLanguageService()) {
+            return $languageService->sL($this->title);
         }
 
         return $this->title;

@@ -71,7 +71,7 @@ registration {
 
     protected function overrideProperties(RegistrationPropertyInterface $registrationProperty, array $configuration): void
     {
-        foreach ($configuration ?? [] as $key => $value) {
+        foreach ($configuration as $key => $value) {
             if ($value !== '' || (is_array($value) && count($value))) {
                 foreach (['set' . ucfirst($key), 'add' . ucfirst($key)] as $method) {
                     if (method_exists($registrationProperty, $method)) {
