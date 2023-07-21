@@ -1,18 +1,18 @@
 # Pagebased
 
-Manage objects like news, events, blog posts, jobs, etc. in the TYPO3 backend as a “normal” TYPO3 page easily. This
+Manage objects like news, events, blog posts, jobs, etc. in the TYPO3 backend as a "normal" TYPO3 page easily. This
 extension provides you with the necessary plugins and filters, categories, tags, and other useful functions.
 
 ## Pages vs. records
 
-Instead of rendering records as a page, this extension uses the full TYPO3 bandwidth to display
+Instead of displaying records in a complicated way like a page, this extension uses the full TYPO3 bandwidth to display
 content using existing content elements. Besides the additional functions of the pagebased extension, all known TYPO3
 features like metadata, translation handling, caching, sitemaps, and URLs are available without any configuration.
 
 ![Example of a page object](./Resources/Public/Images/Documentation/Screenshot1.png)
 
 ## Get there fast with little code
-From news to blog posts, a job offer, or an event, page objects usually have a lot in
+From news to [blog posts](https://github.com/zeroseven/pagebased_blog), a job offer, or an event, page objects usually have a lot in
 common. [Using a configuration](#object-registration), you can activate or deactivate individual functions for each page object as needed:
 
 * list plugin
@@ -77,15 +77,15 @@ call_user_func(static function () {
 
 ### Override existing registration
 
-In case you want to override an existing registration the event `BeforeRegistrationEvent` gives you access to all
-properties, to update them before the pagebased extension does the rest.
+In case you want to override an existing registration, the event [`BeforeRegistrationEvent`](Classes/Registration/Event/BeforeStoreRegistrationEvent.php) gives you access to all
+properties to update them before the pagebased extension does the rest.
 
 Alternatively an extension configuration template will be created automatically. Use the settings module of the TYPO3
 InstallTool to override the default values.
 
 ### Extend plugin flexForm
 
-Use the `AddFlexFormEvent` to extend the flexForm of a plugin. Example:
+Use the [`AddFlexFormEvent`](Classes/Registration/Event/AddFlexFormEvent.php) to extend the flexForm of a plugin. Example:
 
 ```php
 <?php
