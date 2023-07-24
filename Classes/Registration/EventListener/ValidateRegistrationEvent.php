@@ -171,7 +171,7 @@ class ValidateRegistrationEvent
     protected function checkRegistration(Registration $registration): void
     {
         $objectRegistration = $registration->getObject();
-        $categoryRegistration = $registration->getCategory()
+        $categoryRegistration = $registration->getCategory();
 
         $this->checkPageObjectRegistration($objectRegistration);
         $this->checkPageEntityConfiguration($objectRegistration);
