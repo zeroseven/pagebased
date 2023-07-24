@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Backend\Form\Element;
+namespace Zeroseven\Pagebased\Backend\Form\Element;
 
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\DetectionUtility;
-use Zeroseven\Rampage\Utility\TagUtility;
+use Zeroseven\Pagebased\Exception\ValueException;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
+use Zeroseven\Pagebased\Utility\TagUtility;
 
 class TagsElement extends AbstractFormElement
 {
@@ -47,13 +47,13 @@ class TagsElement extends AbstractFormElement
         $tags = ($this->registration === null) ? [] : TagUtility::getTagsByRegistration($this->registration, true, $this->languageUid);
 
         return JavaScriptModuleInstruction::create(
-            '@zeroseven/rampage/backend/TagsElement.js'
+            '@zeroseven/pagebased/backend/TagsElement.js'
         )->instance($this->id, ...$tags);
     }
 
     protected function getStylesheetFile(): string
     {
-        return 'EXT:rampage/Resources/Public/Css/Backend/TagsElement.css';
+        return 'EXT:pagebased/Resources/Public/Css/Backend/TagsElement.css';
     }
 
     protected function renderHtml(): string
@@ -99,7 +99,7 @@ class TagsElement extends AbstractFormElement
     public static function register(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1677874287] = [
-            'nodeName' => 'rampageTags',
+            'nodeName' => 'pagebasedTags',
             'priority' => 100,
             'class' => self::class,
         ];

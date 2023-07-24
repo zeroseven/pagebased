@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\ViewHelpers\Condition;
+namespace Zeroseven\Pagebased\ViewHelpers\Condition;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Pagebased\Exception\ValueException;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
 
 abstract class AbstractConditionViewHelper extends AbstractViewHelper
 {

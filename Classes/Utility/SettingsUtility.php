@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Utility;
+namespace Zeroseven\Pagebased\Utility;
 
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
@@ -12,20 +12,18 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException;
-use Zeroseven\Rampage\Registration\EventListener\AddTypoScriptEvent;
-use Zeroseven\Rampage\Registration\Registration;
+use Zeroseven\Pagebased\Registration\EventListener\AddTypoScriptEvent;
+use Zeroseven\Pagebased\Registration\Registration;
 
 class SettingsUtility
 {
-    public const EXTENSION_NAME = 'rampage';
-
     public static function getExtensionConfiguration(Registration $registration, string $propertyPath = null): mixed
     {
         $extensionName = $registration->getExtensionName();
 
-        if (empty($configuration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['configuration'][$extensionName] ?? null)) {
+        if (empty($configuration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['configuration'][$extensionName] ?? null)) {
             try {
-                $configuration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['configuration'][$extensionName] = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get($extensionName);
+                $configuration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['configuration'][$extensionName] = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get($extensionName);
             } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException $e) {
             }
         }
@@ -37,7 +35,7 @@ class SettingsUtility
     {
         $extensionName = $registration->getExtensionName();
 
-        $pluginConfiguration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['plugin-settings'][$extensionName] ?? call_user_func(static function () use ($registration, $extensionName) {
+        $pluginConfiguration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['plugin-settings'][$extensionName] ?? call_user_func(static function () use ($registration, $extensionName) {
                 $pluginKey = AddTypoScriptEvent::getTypoScriptPluginKey($registration);
                 try {
                     $pluginConfiguration = GeneralUtility::makeInstance(ConfigurationManager::class)
@@ -46,7 +44,7 @@ class SettingsUtility
                     $pluginConfiguration = [];
                 }
 
-                return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['plugin-settings'][$extensionName]
+                return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['plugin-settings'][$extensionName]
                     = GeneralUtility::makeInstance(TypoScriptService::class)->convertTypoScriptArrayToPlainArray($pluginConfiguration);
             });
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\ViewHelpers\Filter;
+namespace Zeroseven\Pagebased\ViewHelpers\Filter;
 
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 
 final class ClearViewHelper extends AbstractFilterLinkViewHelper
 {

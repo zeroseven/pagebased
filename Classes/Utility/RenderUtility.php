@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Utility;
+namespace Zeroseven\Pagebased\Utility;
 
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
@@ -13,12 +13,12 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
-use Zeroseven\Rampage\Domain\Model\ObjectInterface;
-use Zeroseven\Rampage\Event\AssignTemplateVariablesEvent;
-use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Pagebased\Domain\Model\ObjectInterface;
+use Zeroseven\Pagebased\Event\AssignTemplateVariablesEvent;
+use Zeroseven\Pagebased\Exception\RegistrationException;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class RenderUtility
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration;
+namespace Zeroseven\Pagebased\Registration;
 
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\GenericDemand;
-use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\GenericDemand;
+use Zeroseven\Pagebased\Domain\Repository\RepositoryInterface;
 
 abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
 {

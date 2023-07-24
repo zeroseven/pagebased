@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Utility;
+namespace Zeroseven\Pagebased\Utility;
 
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
-use Zeroseven\Rampage\Domain\Repository\RepositoryInterface;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
+use Zeroseven\Pagebased\Domain\Repository\RepositoryInterface;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class TagUtility
 {
     public static function collectTagsFromQueryResult(QueryResultInterface $objects): array
     {
         $tags = [];
-        foreach ($objects->toArray() ?? [] as $object) {
+        foreach ($objects->toArray() as $object) {
             foreach ($object->getTags() ?? [] as $tag) {
                 if (!in_array($tag, $tags, true)) {
                     $tags[] = $tag;
@@ -49,10 +49,10 @@ class TagUtility
         return null;
     }
 
-    public static function getTagsByDemand(ObjectDemandInterface $demand, int $rootPageUid = null, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
+    public static function getTagsByDemand(ObjectDemandInterface $demand, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
-        if (($registration = RegistrationService::getRegistrationByDemandClass($demand)) && ($repository = $registration->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
-            return self::getTags($demand, $repository, $rootPageUid, $ignoreTagsFromDemand, $languageUid);
+        if (($registration = RegistrationService::getRegistrationByDemandClass(get_class($demand))) && ($repository = $registration->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
+            return self::getTags($demand, $repository, $ignoreTagsFromDemand, $languageUid);
         }
 
         return null;

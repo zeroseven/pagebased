@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\ViewHelpers\Filter;
+namespace Zeroseven\Pagebased\ViewHelpers\Filter;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use Zeroseven\Rampage\Domain\Model\Demand\DemandInterface;
-use Zeroseven\Rampage\Domain\Model\Demand\ObjectDemandInterface;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\ObjectUtility;
-use Zeroseven\Rampage\Utility\RootLineUtility;
-use Zeroseven\Rampage\ViewHelpers\AbstractLinkViewHelper;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\RootLineUtility;
+use Zeroseven\Pagebased\ViewHelpers\AbstractLinkViewHelper;
 
 abstract class AbstractFilterLinkViewHelper extends AbstractLinkViewHelper
 {
@@ -57,10 +57,10 @@ abstract class AbstractFilterLinkViewHelper extends AbstractLinkViewHelper
     protected function overridePageUid(): void
     {
         if ($this->arguments['findList'] ?? false) {
-            $listPlugin = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['listPlugin'] ?? null;
+            $listPlugin = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['cache']['listPlugin'] ?? null;
 
             if (empty($listPlugin) && ($registration = $this->getRegistration() ?? RegistrationService::getRegistrationByDemandClass(get_class($this->demand)))) {
-                $listPlugin = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['listPlugin'] = RootLineUtility::findListPlugin($registration, null, true);
+                $listPlugin = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['cache']['listPlugin'] = RootLineUtility::findListPlugin($registration, null, true);
             }
 
             if (($uid = (int)($listPlugin['uid'] ?? 0)) && $pid = (int)($listPlugin['pid'] ?? 0)) {

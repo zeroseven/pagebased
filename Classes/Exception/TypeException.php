@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Exception;
+namespace Zeroseven\Pagebased\Exception;
 
 use Exception;
 

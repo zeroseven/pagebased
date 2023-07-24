@@ -2,7 +2,7 @@
 
 return [
     'ctrl' => [
-        'title' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact',
+        'title' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact',
         'label' => 'firstname',
         'label_alt' => 'lastname',
         'label_alt_force' => true,
@@ -23,24 +23,24 @@ return [
     ],
     'palettes' => [
         'name' => [
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.palette.name',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.palette.name',
             'showitem' => 'firstname, lastname'
         ],
         'contact' => [
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.palette.contact',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.palette.contact',
             'showitem' => 'email, phone, website'
         ],
         'address' => [
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.palette.address',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.palette.address',
             'showitem' => 'address, --linebreak--, city, zip, country'
         ]
     ],
     'types' => [
         '1' => [
             'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, --palette--;;name, company, expertise, image,
-                --div--;LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.tab.contact, --palette--;;address, --palette--;;contact,
-                --div--;LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.tab.info, description, page,
-                --div--;LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.tab.social, twitter, facebook, linkedin, xing'
+                --div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.tab.contact, --palette--;;address, --palette--;;contact,
+                --div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.tab.info, description, page,
+                --div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.tab.social, twitter, facebook, linkedin, xing'
         ]
     ],
     'columns' => [
@@ -61,8 +61,8 @@ return [
                 'items' => [
                     ['', 0]
                 ],
-                'foreign_table' => 'tx_rampage_domain_model_contact',
-                'foreign_table_where' => 'AND tx_rampage_domain_model_contact.pid=###CURRENT_PID### AND tx_rampage_domain_model_contact.sys_language_uid IN (-1,0)'
+                'foreign_table' => 'tx_pagebased_domain_model_contact',
+                'foreign_table_where' => 'AND tx_pagebased_domain_model_contact.pid=###CURRENT_PID### AND tx_pagebased_domain_model_contact.sys_language_uid IN (-1,0)'
             ]
         ],
         'l10n_diffsource' => [
@@ -83,7 +83,7 @@ return [
         'firstname' => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.firstname',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.firstname',
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
@@ -93,7 +93,7 @@ return [
         'lastname' => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.lastname',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.lastname',
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
@@ -102,7 +102,7 @@ return [
         ],
         'company' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.company',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.company',
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
@@ -111,7 +111,7 @@ return [
         ],
         'expertise' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.expertise',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.expertise',
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
@@ -121,7 +121,7 @@ return [
         'email' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.email',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.email',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputLink',
@@ -139,7 +139,7 @@ return [
         'phone' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.phone',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.phone',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputLink',
@@ -156,7 +156,7 @@ return [
         ],
         'website' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.website',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.website',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputLink',
@@ -174,7 +174,7 @@ return [
         'address' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.address',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.address',
             'config' => [
                 'type' => 'text',
                 'cols' => 40,
@@ -186,7 +186,7 @@ return [
         'city' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.city',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.city',
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
@@ -196,7 +196,7 @@ return [
         'zip' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.zip',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.zip',
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
@@ -206,7 +206,7 @@ return [
         'country' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.country',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.country',
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
@@ -216,7 +216,7 @@ return [
         'description' => [
             'exclude' => true,
             'l10n_mode' => 'prefixLangTitle',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.description',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.description',
             'config' => [
                 'type' => 'text',
                 'cols' => 40,
@@ -229,7 +229,7 @@ return [
         'image' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.image',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.image',
             'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
                 'image',
                 [
@@ -250,7 +250,7 @@ return [
         'page' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.page',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.page',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputLink',
@@ -268,7 +268,7 @@ return [
         'twitter' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.twitter',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.twitter',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputLink',
@@ -286,7 +286,7 @@ return [
         'facebook' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.facebook',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.facebook',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputLink',
@@ -304,7 +304,7 @@ return [
         'linkedin' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.linkedin',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.linkedin',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputLink',
@@ -322,7 +322,7 @@ return [
         'xing' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_contact.xing',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.xing',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputLink',

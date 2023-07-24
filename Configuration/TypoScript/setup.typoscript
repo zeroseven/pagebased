@@ -1,19 +1,19 @@
 ##################################################
 # Include sources
 ##################################################
-page.includeJSFooter.rampage_pagination = EXT:rampage/Resources/Public/JavaScript/Pagination.js
+page.includeJSFooter.pagebased_pagination = EXT:pagebased/Resources/Public/JavaScript/Pagination.js
 
 ##################################################
 # Ajax request page
 ##################################################
-rampgePaginationRequest = PAGE
-rampgePaginationRequest {
+pagebasedPaginationRequest = PAGE
+pagebasedPaginationRequest {
 
   # Wrap page
   wrap = <!DOCTYPE html><html><head><title>Ajax-Request</title><meta name="robots" content="noindex, follow"></head><body>|</body></html>
 
   # Configure page
-  typeNum = {$plugin.tx_rampage.settings.list.ajaxTypeNum}
+  typeNum = {$plugin.tx_pagebased.settings.list.ajaxTypeNum}
   config {
     disableAllHeaderCode = 1
     xhtml_cleaning = 0
@@ -24,7 +24,7 @@ rampgePaginationRequest {
     index_enable = 0
     additionalHeaders {
       10.header = X-Robots-Tag:noindex
-      20.header = X-TYPO3-Extension:rampage
+      20.header = X-TYPO3-Extension:pagebased
     }
   }
 
@@ -33,7 +33,7 @@ rampgePaginationRequest {
   10 {
     tables = tt_content
     source {
-      data = gp:_rampage_content
+      data = gp:_pagebased_content
       prioriCalc = intval
     }
 

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\DataProcessing;
+namespace Zeroseven\Pagebased\DataProcessing;
 
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Utility\CastUtility;
-use Zeroseven\Rampage\Utility\ObjectUtility;
-use Zeroseven\Rampage\Utility\RootLineUtility;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Exception\ValueException;
+use Zeroseven\Pagebased\Utility\CastUtility;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\RootLineUtility;
+use Zeroseven\Pagebased\Utility\SettingsUtility;
 
 class ObjectProcessor implements DataProcessorInterface
 {

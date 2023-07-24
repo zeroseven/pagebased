@@ -1,7 +1,7 @@
 <?php
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'Rampage 🤬',
+    'title' => 'Pagebased',
     'description' => 'The ultimate tool to create page based extensions',
     'category' => 'plugin',
     'author' => 'Raphael Thanner',
@@ -11,6 +11,11 @@ $EM_CONF[$_EXTKEY] = [
     'clearCacheOnLoad' => 1,
     'version' => '1.1.0-dev',
     'constraints' => [
-        'typo3' => '12.4.0-12.4.99'
+        'depends' => [
+            'typo3' => '12.4.0-12.4.99'
+        ],
+        'suggests' => [
+            'pagebased_blog' => ''
+        ]
     ]
 ];

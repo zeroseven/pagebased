@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\ViewHelpers\Pagination\Link;
+namespace Zeroseven\Pagebased\ViewHelpers\Pagination\Link;
 
-use Zeroseven\Rampage\Pagination\Pagination;
+use Zeroseven\Pagebased\Pagination\Pagination;
 
 final class NextViewHelper extends AbstractPaginationLinkViewHelper
 {

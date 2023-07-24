@@ -1,6 +1,6 @@
 # {{ cookiecutter.object_name|upper }}-EXTENSION
 
-This extension is based on the **[rampage](../rampage/README.md)** extension to create {{ cookiecutter.object_name|lower }} objects that can be managed in TYPO3 with all the advantages and functions of normal pages
+This extension is based on the **[pagebased](../pagebased/README.md)** extension to create {{ cookiecutter.object_name|lower }} objects that can be managed in TYPO3 with all the advantages and functions of normal pages
 
 ## Quick installation
 
@@ -13,7 +13,7 @@ This extension is based on the **[rampage](../rampage/README.md)** extension to 
 ```typo3_typoscript
 page.16848430{{ cookiecutter.category_doktype }} = USER
 page.16848430{{ cookiecutter.category_doktype }} {
-  userFunc = Zeroseven\Rampage\Utility\RenderUtility->renderUserFunc
+  userFunc = Zeroseven\Pagebased\Utility\RenderUtility->renderUserFunc
   file = EXT:{{ cookiecutter.extension_key }}/Resources/Private/Templates/Info.html
   registration = {{ cookiecutter.extension_key }}
 }
@@ -21,4 +21,4 @@ page.16848430{{ cookiecutter.category_doktype }} {
 
 ## More information
 
-Check out the **[rampage](../rampage/README.md)** extension for more information about the configuration and usage of this extension.
+Check out the **[pagebased](../pagebased/README.md)** extension for more information about the configuration and usage of this extension.

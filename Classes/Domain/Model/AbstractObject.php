@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Domain\Model;
+namespace Zeroseven\Pagebased\Domain\Model;
 
 use DateTime;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use Zeroseven\Rampage\Domain\Model\Entity\PageObject;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Registration\RegistrationService;
-use Zeroseven\Rampage\Utility\CastUtility;
-use Zeroseven\Rampage\Utility\ObjectUtility;
-use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Pagebased\Domain\Model\Entity\PageObject;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Registration\RegistrationService;
+use Zeroseven\Pagebased\Utility\CastUtility;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 abstract class AbstractObject extends AbstractPage implements ObjectInterface
 {

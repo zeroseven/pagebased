@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\EventListener;
+namespace Zeroseven\Pagebased\EventListener;
 
 use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -15,10 +15,10 @@ use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Exception\BadConstraintException;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Utility\DetectionUtility;
-use Zeroseven\Rampage\Utility\ObjectUtility;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
+use Zeroseven\Pagebased\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\SettingsUtility;
 
 class DisplayObjectInformation
 {
@@ -26,8 +26,7 @@ class DisplayObjectInformation
     {
         try {
             $uid && GeneralUtility::makeInstance(Context::class)->getAspect('backend.user')->isAdmin()
-            && ($fieldName = DetectionUtility::REGISTRATION_FIELD_NAME)
-            && ($registrationIdentifier = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, $fieldName)[$fieldName] ?? null)
+            && ($registrationIdentifier = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, DetectionUtility::REGISTRATION_FIELD_NAME)[DetectionUtility::REGISTRATION_FIELD_NAME] ?? null)
             && $message .= ' [identifier: ' . $registrationIdentifier . ']';
         } catch (AspectNotFoundException $e) {
         }
@@ -43,8 +42,8 @@ class DisplayObjectInformation
 
     protected function translate(string $key, array $arguments = null, string $fileName = null): string
     {
-        return LocalizationUtility::translate('LLL:EXT:rampage/Resources/Private/Language/' . ($fileName ?? 'locallang_be.xlf') . ':' . $key,
-                SettingsUtility::EXTENSION_NAME, $arguments ?? []) ?? $key;
+        return LocalizationUtility::translate('LLL:EXT:pagebased/Resources/Private/Language/' . ($fileName ?? 'locallang_be.xlf') . ':' . $key,
+            'pagebased', $arguments ?? []) ?? $key;
     }
 
     protected function isChildObject(int $uid): bool
@@ -65,7 +64,7 @@ class DisplayObjectInformation
         if ($registration = ObjectUtility::isObject($uid)) {
             $this->showMessage($this->translate('notification.object.description', [
                 $registration->getObject()->getTitle(),
-                $this->translate('pages.tab.rampage_settings', null, 'locallang_db.xlf'),
+                $this->translate('pages.tab.pagebased_settings', null, 'locallang_db.xlf'),
             ]), $uid);
 
             return true;
@@ -76,7 +75,9 @@ class DisplayObjectInformation
 
     protected function isCategory(int $uid): bool
     {
-        if (($registration = ObjectUtility::isCategory($uid)) && $demand = $registration->getObject()->getDemandClass()) {
+        if ($registration = ObjectUtility::isCategory($uid)) {
+            $demand = $registration->getObject()->getDemandClass();
+
             try {
                 $count = $registration->getObject()->getRepositoryClass()->findByDemand($demand->setCategory($uid))->count();
             } catch (BadConstraintException $e) {

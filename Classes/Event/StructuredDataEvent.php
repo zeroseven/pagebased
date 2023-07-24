@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Event;
+namespace Zeroseven\Pagebased\Event;
 
 use JsonException;
 use TYPO3\CMS\Core\Resource\FileReference;
@@ -10,8 +10,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference as ExtbaseFileReference;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Utility\ArrayPathUtility;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Utility\ArrayPathUtility;
 
 final class StructuredDataEvent
 {

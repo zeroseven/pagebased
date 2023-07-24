@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Utility;
+namespace Zeroseven\Pagebased\Utility;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use Zeroseven\Rampage\Domain\Model\AbstractPage;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Exception\ValueException;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationService;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Exception\ValueException;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class ObjectUtility
 {
     protected static function getObjectCache(int $uid): ?Registration
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['object'][$uid] ?? null;
+        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['cache']['object'][$uid] ?? null;
     }
 
     protected static function setObjectCache(int $uid, ?Registration $registration = null): ?Registration
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/rampage']['cache']['object'][$uid] = $registration;
+        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['cache']['object'][$uid] = $registration;
     }
 
     protected static function getPageTypeField(): string
@@ -87,11 +87,10 @@ class ObjectUtility
             try {
                 if (
                     ($identifier = $row[$registrationField] ?? null)
-                    && ($registration = RegistrationService::getRegistrationByIdentifier($identifier))
                     && !self::isSystemPage($pageUid, $row)
                     && !self::isCategory($pageUid, $row)
                 ) {
-                    return self::setObjectCache($pageUid, $registration);
+                    return self::setObjectCache($pageUid, RegistrationService::getRegistrationByIdentifier($identifier));
                 }
             } catch (ValueException $e) {
             }

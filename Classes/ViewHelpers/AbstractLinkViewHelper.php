@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\ViewHelpers;
+namespace Zeroseven\Pagebased\ViewHelpers;
 
 use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
-use Zeroseven\Rampage\Exception\TypeException;
-use Zeroseven\Rampage\Utility\CastUtility;
+use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Utility\CastUtility;
 
 abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
 {

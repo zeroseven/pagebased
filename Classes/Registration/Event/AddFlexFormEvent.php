@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration\Event;
+namespace Zeroseven\Pagebased\Registration\Event;
 
-use Zeroseven\Rampage\Registration\FlexForm\FlexFormConfiguration;
+use Zeroseven\Pagebased\Registration\FlexForm\FlexFormConfiguration;
 
 final class AddFlexFormEvent
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration\EventListener;
+namespace Zeroseven\Pagebased\Registration\EventListener;
 
 use BadFunctionCallException;
 use ReflectionClass;
@@ -11,10 +11,10 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent;
-use Zeroseven\Rampage\Registration\Registration;
-use Zeroseven\Rampage\Registration\RegistrationPropertyInterface;
-use Zeroseven\Rampage\Utility\SettingsUtility;
+use Zeroseven\Pagebased\Registration\Event\BeforeStoreRegistrationEvent;
+use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationPropertyInterface;
+use Zeroseven\Pagebased\Utility\SettingsUtility;
 
 class CheckExtensionConfigurationEvent
 {
@@ -74,7 +74,7 @@ registration {
 
     protected function overrideProperties(RegistrationPropertyInterface $registrationProperty, array $configuration): void
     {
-        foreach ($configuration ?? [] as $key => $value) {
+        foreach ($configuration as $key => $value) {
             if ($value !== '' || (is_array($value) && count($value))) {
                 foreach (['set' . ucfirst($key), 'add' . ucfirst($key)] as $method) {
                     if (method_exists($registrationProperty, $method)) {

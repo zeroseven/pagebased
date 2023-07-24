@@ -2,7 +2,7 @@
 
 return [
     'ctrl' => [
-        'title' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_topic',
+        'title' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_topic',
         'label' => 'title',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
@@ -41,8 +41,8 @@ return [
                 'items' => [
                     ['', 0]
                 ],
-                'foreign_table' => 'tx_rampage_domain_model_topic',
-                'foreign_table_where' => 'AND tx_rampage_domain_model_topic.pid=###CURRENT_PID### AND tx_rampage_domain_model_topic.sys_language_uid IN (-1,0)'
+                'foreign_table' => 'tx_pagebased_domain_model_topic',
+                'foreign_table_where' => 'AND tx_pagebased_domain_model_topic.pid=###CURRENT_PID### AND tx_pagebased_domain_model_topic.sys_language_uid IN (-1,0)'
             ]
         ],
         'l10n_diffsource' => [
@@ -71,7 +71,7 @@ return [
         'title' => [
             'exclude' => false,
             'l10n_mode' => 'prefixLangTitle',
-            'label' => 'LLL:EXT:rampage/Resources/Private/Language/locallang_db.xlf:tx_rampage_domain_model_topic.title',
+            'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_topic.title',
             'config' => [
                 'type' => 'input',
                 'required' => true,

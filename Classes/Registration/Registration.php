@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Registration;
+namespace Zeroseven\Pagebased\Registration;
 
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Zeroseven\Rampage\Exception\RegistrationException;
-use Zeroseven\Rampage\Registration\Event\AfterStoreRegistrationEvent;
-use Zeroseven\Rampage\Registration\Event\BeforeStoreRegistrationEvent;
+use Zeroseven\Pagebased\Exception\RegistrationException;
+use Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent;
+use Zeroseven\Pagebased\Registration\Event\BeforeStoreRegistrationEvent;
 
 final class Registration
 {
@@ -22,7 +22,7 @@ final class Registration
     public function __construct(string $extensionName, ?string $identifier = null)
     {
         $this->extensionName = $extensionName;
-        $this->identifier = $identifier ?? $extensionName;
+        $this->identifier = $identifier;
     }
 
     public function getExtensionName(): string
@@ -32,10 +32,10 @@ final class Registration
 
     public function getIdentifier(): string
     {
-        return $this->identifier ?? $this->identifier = $this->extensionName . '_' . substr(md5($this->object->getClassName()), 0, 7);
+        return $this->identifier ?? $this->extensionName;
     }
 
-    public function setIdentifier(string $identifier): self
+    public function setIdentifier(string $identifier = null): self
     {
         $this->identifier = $identifier;
 

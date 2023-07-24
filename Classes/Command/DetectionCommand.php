@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Rampage\Command;
+namespace Zeroseven\Pagebased\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use Zeroseven\Rampage\Utility\DetectionUtility;
-use Zeroseven\Rampage\Utility\RootLineUtility;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
+use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class DetectionCommand extends Command
 {

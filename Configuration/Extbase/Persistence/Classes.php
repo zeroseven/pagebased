@@ -1,11 +1,11 @@
 <?php
 
 return [
-    \Zeroseven\Rampage\Domain\Model\Entity\PageObject::class => [
-        'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
+    \Zeroseven\Pagebased\Domain\Model\Entity\PageObject::class => [
+        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
     ],
-    \Zeroseven\Rampage\Domain\Model\AbstractPage::class => [
-        'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
+    \Zeroseven\Pagebased\Domain\Model\AbstractPage::class => [
+        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
         'properties' => [
             'fileReferences' => [
                 'fieldName' => 'media'
@@ -30,37 +30,37 @@ return [
             ]
         ]
     ],
-    \Zeroseven\Rampage\Domain\Model\AbstractObject::class => [
-        'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
+    \Zeroseven\Pagebased\Domain\Model\AbstractObject::class => [
+        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
         'properties' => [
             'top' => [
-                'fieldName' => 'rampage_top'
+                'fieldName' => 'pagebased_top'
             ],
             'date' => [
-                'fieldName' => 'rampage_date'
+                'fieldName' => 'pagebased_date'
             ],
             'tagsString' => [
-                'fieldName' => 'rampage_tags'
+                'fieldName' => 'pagebased_tags'
             ],
             'topics' => [
-                'fieldName' => 'rampage_topics'
+                'fieldName' => 'pagebased_topics'
             ],
             'contact' => [
-                'fieldName' => 'rampage_contact'
+                'fieldName' => 'pagebased_contact'
             ],
             'relationsTo' => [
-                'fieldName' => 'rampage_relations_to'
+                'fieldName' => 'pagebased_relations_to'
             ],
             'relationsFrom' => [
-                'fieldName' => 'rampage_relations_from'
+                'fieldName' => 'pagebased_relations_from'
             ]
         ]
     ],
-    \Zeroseven\Rampage\Domain\Model\AbstractCategory::class => [
-        'tableName' => \Zeroseven\Rampage\Domain\Model\AbstractPage::TABLE_NAME,
+    \Zeroseven\Pagebased\Domain\Model\AbstractCategory::class => [
+        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
         'properties' => [
             'redirectCategory' => [
-                'fieldName' => 'rampage_redirect_category'
+                'fieldName' => 'pagebased_redirect_category'
             ]
         ]
     ]
