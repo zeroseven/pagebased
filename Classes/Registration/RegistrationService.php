@@ -21,55 +21,78 @@ class RegistrationService
         $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['registrations'][$registration->getIdentifier()] = $registration;
     }
 
-    public static function getRegistrationByClassName(string $className): ?Registration
+    protected static function getClassName(mixed $value): ?string
     {
-        foreach (self::getRegistrations() as $registration) {
-            if ($registration->getObject()->getClassName() === $className) {
-                return $registration;
+        if (is_object($value)) {
+            return get_class($value);
+        }
+
+        if (is_string($value) && class_exists($value)) {
+            return $value;
+        }
+
+        return null;
+    }
+
+    public static function getRegistrationByObjectClass(mixed $object): ?Registration
+    {
+        if ($className = self::getClassName($object)) {
+            foreach (self::getRegistrations() as $registration) {
+                if ($registration->getObject()->getClassName() === $className) {
+                    return $registration;
+                }
             }
         }
 
         return null;
     }
 
-    public static function getRegistrationByController(string $className): ?Registration
+    public static function getRegistrationByController(mixed $controller): ?Registration
     {
-        foreach (self::getRegistrations() as $registration) {
-            if ($registration->getObject()->getControllerClassName() === $className) {
-                return $registration;
+        if ($className = self::getClassName($controller)) {
+            foreach (self::getRegistrations() as $registration) {
+                if ($registration->getObject()->getControllerClassName() === $className) {
+                    return $registration;
+                }
             }
         }
 
         return null;
     }
 
-    public static function getRegistrationByRepository(string $className): ?Registration
+    public static function getRegistrationByRepository(mixed $repository): ?Registration
     {
-        foreach (self::getRegistrations() as $registration) {
-            if ($registration->getObject()->getRepositoryClassName() === $className) {
-                return $registration;
+        if ($className = self::getClassName($repository)) {
+            foreach (self::getRegistrations() as $registration) {
+                if ($registration->getObject()->getRepositoryClassName() === $className) {
+                    return $registration;
+                }
             }
         }
 
         return null;
     }
 
-    public static function getRegistrationByDemandClass(string $className): ?Registration
+    public static function getRegistrationByDemand(mixed $demand): ?Registration
     {
-        foreach (self::getRegistrations() as $registration) {
-            if ($registration->getObject()->getDemandClassName() === $className) {
-                return $registration;
+        if ($className = self::getClassName($demand)) {
+            foreach (self::getRegistrations() as $registration) {
+                if ($registration->getObject()->getDemandClassName() === $className) {
+                    return $registration;
+                }
             }
         }
 
         return null;
     }
 
-    public static function getRegistrationByCategoryClassName(string $className): ?Registration
+    public static function getRegistrationByCategoryClass(mixed $category): ?Registration
     {
-        foreach (self::getRegistrations() as $registration) {
-            if ($registration->getCategory()->getClassName() === $className) {
-                return $registration;
+        if ($className = self::getClassName($category)) {
+            foreach (self::getRegistrations() as $registration) {
+                if ($registration->getCategory()->getClassName() === $className) {
+                    return $registration;
+                }
             }
         }
 
@@ -112,7 +135,7 @@ class RegistrationService
                 $classConfiguration[$className]['tableName'] = AbstractPage::TABLE_NAME;
             }
 
-            if (!isset($configuration['recordType']) && is_subclass_of($className, CategoryInterface::class) && $registration = self::getRegistrationByCategoryClassName($className)) {
+            if (!isset($configuration['recordType']) && is_subclass_of($className, CategoryInterface::class) && $registration = self::getRegistrationByCategoryClass($className)) {
                 $classConfiguration[$className]['recordType'] = $registration->getCategory()->getDocumentType();
             }
         }

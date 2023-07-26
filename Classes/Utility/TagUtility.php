@@ -51,7 +51,7 @@ class TagUtility
 
     public static function getTagsByDemand(ObjectDemandInterface $demand, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
-        if (($registration = RegistrationService::getRegistrationByDemandClass(get_class($demand))) && ($repository = $registration->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
+        if (($registration = RegistrationService::getRegistrationByDemand($demand)) && ($repository = $registration->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
             return self::getTags($demand, $repository, $ignoreTagsFromDemand, $languageUid);
         }
 
