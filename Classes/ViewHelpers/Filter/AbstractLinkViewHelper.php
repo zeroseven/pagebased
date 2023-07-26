@@ -101,6 +101,18 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
             $this->arguments['pluginName'] = 'List';
         }
 
+        // Set controller name
+        if ($this->renderingContext->getControllerName() === 'Standard') {
+            $controllerName = GeneralUtility::makeInstance(ReflectionClass::class, $this->registration->getObject()->getClassName())->getShortName();
+            $this->renderingContext->setControllerName($controllerName);
+        }
+
+        // Set extension name
+        if (empty($this->renderingContext->getRequest()->getControllerExtensionName())) {
+            $controllerExtensionName = GeneralUtility::underscoredToLowerCamelCase($this->registration->getExtensionName());
+            $this->renderingContext->getRequest()->setControllerExtensionName($controllerExtensionName);
+        }
+
         return parent::render();
     }
 }
