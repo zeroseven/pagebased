@@ -4,17 +4,8 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\ViewHelpers\Filter;
 
-use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
-
-final class ClearViewHelper extends AbstractLinkViewHelper
+final class ClearViewHelper extends AbstractFilterLinkViewHelper
 {
-    protected ?DemandInterface $demand;
-
-    public function initializeArguments(): void
-    {
-        parent::initializeArguments();
-    }
-
     protected function overrideDemandProperties(): void
     {
         $this->demand->clear();

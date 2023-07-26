@@ -6,7 +6,7 @@ namespace Zeroseven\Pagebased\ViewHelpers\Pagination\Link;
 
 use Zeroseven\Pagebased\Pagination\Pagination;
 
-final class PrevViewHelper extends AbstractLinkViewHelper
+final class PrevViewHelper extends AbstractPaginationLinkViewHelper
 {
     protected function getTargetStage(Pagination $pagination): ?int
     {

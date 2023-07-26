@@ -7,12 +7,11 @@ namespace Zeroseven\Pagebased\ViewHelpers\Filter;
 use ReflectionClass;
 use ReflectionException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Exception\ValueException;
 
-final class LinkViewHelper extends AbstractLinkViewHelper
+final class LinkViewHelper extends AbstractFilterLinkViewHelper
 {
     protected const FILTER_ACTIVE_ATTRIBUTE = 'data-filter-active';
 

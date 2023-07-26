@@ -7,15 +7,15 @@ namespace Zeroseven\Pagebased\ViewHelpers\Pagination\Link;
 use JsonException;
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\ViewHelpers\Link\ActionViewHelper;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
 use Zeroseven\Pagebased\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Pagination\Pagination;
 use Zeroseven\Pagebased\Utility\CastUtility;
+use Zeroseven\Pagebased\ViewHelpers\AbstractLinkViewHelper;
 use Zeroseven\Pagebased\ViewHelpers\PaginationViewHelper;
 
-abstract class AbstractLinkViewHelper extends ActionViewHelper
+abstract class AbstractPaginationLinkViewHelper extends AbstractLinkViewHelper
 {
     public const AJAX_CONTENT_PARAMETER = '_pagebased_content';
 
@@ -24,7 +24,6 @@ abstract class AbstractLinkViewHelper extends ActionViewHelper
         parent::initializeArguments();
 
         // Register demand argument
-        $this->registerArgument('demand', 'object', 'The demand object', false);
         $this->registerArgument('required', 'bool', 'Hide link-tag if target page is not available.', false, true);
         $this->registerArgument('ajaxReplaceSelectors', 'string|array', 'One or more selectors that need to be replaced in an Ajax request.');
         $this->registerArgument('ajaxAppendSelectors', 'string|array', 'One or more selectors that content from the Ajax request will be appended.');
