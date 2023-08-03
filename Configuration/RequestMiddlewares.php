@@ -16,6 +16,12 @@ return [
             'after' => [
                 'typo3/cms-frontend/prepare-tsfe-rendering'
             ]
+        ],
+        'zeroseven/pagebased/rss-feed' => [
+            'target' => \Zeroseven\Pagebased\Middleware\RssFeed::class,
+            'before' => [
+                'typo3/cms-frontend/page-resolver'
+            ]
         ]
     ]
 ];
