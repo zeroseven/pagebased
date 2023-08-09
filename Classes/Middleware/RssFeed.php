@@ -11,12 +11,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Routing\RouteNotFoundException;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use Zeroseven\Pagebased\Event\Rss\RssFeedEvent;
 use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Registration\RegistrationService;
 
@@ -100,7 +102,13 @@ class RssFeed implements MiddlewareInterface
                     && ($settings = $this->getPluginSettings($content))
                     && ($objects = $this->getObjects($registration, $settings))
                 ) {
-                    return GeneralUtility::makeInstance(HtmlResponse::class, (string)$objects->count());
+                    $rssFeed = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssFeedEvent($registration, $request, $settings, $objects))->render();
+
+                    return GeneralUtility::makeInstance(HtmlResponse::class, trim('<?xml version="1.0" encoding="utf-8"?>' . $rssFeed), 200, [
+                        'Content-Type' => 'application/rss+xml; charset=utf-8',
+                        'X-Robots-Tag' => 'noindex',
+                        'X-TYPO3-Extension' => 'pagebased'
+                    ]);
                 }
             } catch (DBALException|Exception $e) {
             }
