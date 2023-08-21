@@ -32,7 +32,7 @@ final class RssItemEvent extends AbstractRssObject
 
     public function render(string $prepend = null, string $append = null): string
     {
-        $this->setIfEmpty('guid', md5($this->registration->getIdentifier() . $this->object->getUid()), ['isPermaLink' => 'true']);
+        $this->setIfEmpty('guid', md5($this->registration->getIdentifier() . $this->object->getUid()), ['isPermaLink' => 'false']);
         $this->setIfEmpty('title', $this->object->getTitle());
         $this->setIfEmpty('description', $this->object->getDescription());
         $this->setIfEmpty('pubDate', date('r', $this->object->getCreateDate()));
@@ -43,15 +43,16 @@ final class RssItemEvent extends AbstractRssObject
         $this->setIfEmpty('tags', implode(', ', $this->object->getTags()));
 
         if ($this->empty('link')) {
-            $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class)
+            $uri = GeneralUtility::makeInstance(UriBuilder::class)
                 ->setCreateAbsoluteUri(true)
-                ->setTargetPageUid($this->object->getUid());
+                ->setTargetPageUid($this->object->getUid())
+                ->build();
 
-            $this->set('link', $uriBuilder->build());
+            $this->set('link', $uri);
         }
 
         if ($this->empty('content.encoded') && $content = $this->object->getDescription()) {
-            $this->set('content.encoded', '<![CDATA[<p>' . nl2br($content) . '</p>]]>');
+            $this->set('content.encoded', '<p>' . nl2br($content) . '</p>', null, true);
         }
 
         if ($this->empty('enclosure')) {

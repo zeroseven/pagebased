@@ -55,9 +55,10 @@ abstract class AbstractRssObject
         return $this->properties[$tagName] ?? null;
     }
 
-    public function set(string $tagName, string $value = null, array $attributes = null): self
+    public function set(string $tagName, string $value = null, array $attributes = null, bool $cdata = null): self
     {
-        $this->properties[$tagName] = GeneralUtility::makeInstance(TagBuilder::class, $tagName, $value);
+        $content = $value && $cdata ? '<![CDATA[' . $value . ']]>' : htmlspecialchars(strip_tags($value ?? ''));
+        $this->properties[$tagName] = GeneralUtility::makeInstance(TagBuilder::class, $tagName, $content);
 
         if ($attributes) {
             $this->properties[$tagName]->addAttributes($attributes);
@@ -66,9 +67,9 @@ abstract class AbstractRssObject
         return $this;
     }
 
-    public function setIfEmpty(string $tagName, string $value = null, array $attributes = null): self
+    public function setIfEmpty(string $tagName, string $value = null, array $attributes = null, bool $cdata = null): self
     {
-        $this->empty($tagName) && $this->set($tagName, $value, $attributes);
+        $this->empty($tagName) && $this->set($tagName, $value, $attributes, $cdata);
 
         return $this;
     }
