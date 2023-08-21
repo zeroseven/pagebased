@@ -35,9 +35,14 @@ final class RssChanelEvent extends AbstractRssObject
     {
         $this->setIfEmpty('title', $this->settings['header'] ?? '');
         $this->setIfEmpty('generator', 'TYPO3 (powered by pagebased)');
-        $this->setIfEmpty('link', (string)$this->request->getUri());
+        $this->setIfEmpty('link', (string)$this->request->getUri()->withQuery(''));
+        $this->setIfEmpty('atom:link', null, ['href' => (string)$this->request->getUri()->withQuery(''), 'rel' => 'self', 'type' => 'application/rss+xml']);
         $this->setIfEmpty('pubDate', date('r', $this->settings['crdate'] ?? time()));
         $this->setIfEmpty('lastBuildDate', date('r'));
+
+        if ($this->empty('language') && $siteLanguage = $this->request->getAttribute('language')) {
+            $this->set('language', $siteLanguage->getHreflang());
+        }
 
         $items = implode('', array_map(function (AbstractObject $object) {
             return GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssItemEvent($this->registration, $this->request, $this->settings, $object))->render();

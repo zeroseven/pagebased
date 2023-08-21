@@ -41,7 +41,7 @@ final class RssItemEvent extends AbstractRssObject
         $this->setIfEmpty('pubDate', date('r', $this->object->getCreateDate()));
         $this->setIfEmpty('lastBuildDate', date('r', $this->object->getLastChangeDate()));
         $this->setIfEmpty('category', $this->object->getCategory()?->getTitle());
-        $this->setIfEmpty('contact', $this->object->getContact()?->getFullName());
+        $this->setIfEmpty('author', $this->object->getContact()?->getFullName());
         $this->setIfEmpty('topics', implode(', ', array_map(static fn(Topic $topic) => $topic->getTitle(), ($topics = $this->object->getTopics()) === null ? [] : $topics->toArray())));
         $this->setIfEmpty('tags', implode(', ', $this->object->getTags()));
 
