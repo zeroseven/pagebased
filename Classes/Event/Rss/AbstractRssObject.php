@@ -15,6 +15,7 @@ abstract class AbstractRssObject
     protected Registration $registration;
     protected ServerRequestInterface $request;
     protected array $settings;
+    protected int $indentionLevel = 0;
 
     /** @var TagBuilder[] */
     protected array $properties = [];
@@ -57,7 +58,7 @@ abstract class AbstractRssObject
 
     public function set(string $tagName, string $value = null, array $attributes = null, bool $cdata = null): self
     {
-        $content = $value && $cdata ? '<![CDATA[' . $value . ']]>' : htmlspecialchars(strip_tags($value ?? ''));
+        $content = $value ? ($cdata ? '<![CDATA[' . $value . ']]>' : htmlspecialchars(strip_tags(trim($value)))) : $value;
         $this->properties[$tagName] = GeneralUtility::makeInstance(TagBuilder::class, $tagName, $content);
 
         if ($attributes) {
@@ -85,20 +86,23 @@ abstract class AbstractRssObject
 
     public function render(string $prepend = null, string $append = null): string
     {
+        $properties = '';
+
         if ($this->tag) {
-            $properties = '';
+            $indention = "\t";
+            $newLinePrefix = "\n" . str_repeat($indention, $this->indentionLevel);
 
             foreach ($this->properties as $property) {
                 if (!$this->empty($property->getTagName())) {
-                    $properties .= "\n" . $property->render();
+                    $properties .= $newLinePrefix . $indention . trim($property->render());
                 }
             }
 
-            $this->tag->setContent($prepend . $properties . $append);
+            $this->tag->setContent($prepend . $properties . $append . $newLinePrefix);
 
-            return $this->tag->render();
+            return $newLinePrefix . $this->tag->render();
         }
 
-        return '';
+        return $properties;
     }
 }

@@ -14,7 +14,8 @@ use Zeroseven\Pagebased\Registration\Registration;
 
 final class RssChanelEvent extends AbstractRssObject
 {
-    private ?QueryResultInterface $objects;
+    protected ?QueryResultInterface $objects;
+    protected int $indentionLevel = 1;
 
     public function __construct(Registration $registration, ServerRequestInterface $request, array $settings, QueryResultInterface $objects = null)
     {
@@ -38,7 +39,7 @@ final class RssChanelEvent extends AbstractRssObject
         $this->setIfEmpty('pubDate', date('r', $this->settings['crdate'] ?? time()));
         $this->setIfEmpty('lastBuildDate', date('r'));
 
-        $items = implode("\n", array_map(function (AbstractObject $object) {
+        $items = implode('', array_map(function (AbstractObject $object) {
             return GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssItemEvent($this->registration, $this->request, $this->settings, $object))->render();
         }, $this->objects->toArray()));
 

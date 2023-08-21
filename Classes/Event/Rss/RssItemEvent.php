@@ -15,6 +15,7 @@ use Zeroseven\Pagebased\Registration\Registration;
 final class RssItemEvent extends AbstractRssObject
 {
     protected AbstractObject $object;
+    protected int $indentionLevel = 2;
 
     public function __construct(Registration $registration, ServerRequestInterface $request, array $settings, AbstractObject $object)
     {
