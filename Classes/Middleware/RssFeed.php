@@ -104,7 +104,7 @@ class RssFeed implements MiddlewareInterface
                 ) {
                     $rssFeed = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssFeedEvent($registration, $request, $settings, $objects))->render();
 
-                    return GeneralUtility::makeInstance(HtmlResponse::class, trim('<?xml version="1.0" encoding="utf-8"?>' . $rssFeed), 200, [
+                    return GeneralUtility::makeInstance(HtmlResponse::class, trim('<?xml version="1.1" encoding="utf-8"?>' . $rssFeed), 200, [
                         'Content-Type' => 'application/rss+xml; charset=utf-8',
                         'X-Robots-Tag' => 'noindex',
                         'X-TYPO3-Extension' => 'pagebased'

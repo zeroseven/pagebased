@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Event\Rss;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 use Zeroseven\Pagebased\Domain\Model\AbstractObject;
 use Zeroseven\Pagebased\Domain\Model\Topic;
@@ -49,21 +51,30 @@ final class RssItemEvent extends AbstractRssObject
                 ->setTargetPageUid($this->object->getUid())
                 ->build();
 
-            $this->set('link', $uri);
+            $uri && $this->set('link', $uri);
         }
 
         if ($this->empty('content.encoded') && $content = $this->object->getDescription()) {
             $this->set('content.encoded', '<p>' . nl2br($content) . '</p>', null, true);
         }
 
-        if ($this->empty('enclosure')) {
-            $image = null; // Todo!
-
-            $image && $this->set('enclosure', '', [
-                'url' => $image->getOriginalResource()->getPublicUrl(),
-                'length' => $image->getOriginalResource()->getSize(),
-                'type' => $image->getMimeType()
+        if ($this->empty('enclosure') && $image = $this->object->getFirstImage()) {
+            $imageService = GeneralUtility::makeInstance(ImageService::class);
+            $processedImage = $imageService->applyProcessingInstructions($image, [
+                'maxWidth' => 1680,
+                'maxHeight' => 1680,
+                'extension' => 'web',
+                'absolute' => true,
             ]);
+
+            try {
+                $processedImage && $this->set('enclosure', '', [
+                    'url' => $imageService->getImageUri($processedImage, true),
+                    'length' => $processedImage->getSize(),
+                    'type' => $processedImage->getMimeType()
+                ]);
+            } catch (InvalidArgumentException $e) {
+            }
         }
 
         return parent::render($prepend, $append);
