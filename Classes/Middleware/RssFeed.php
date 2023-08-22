@@ -15,7 +15,9 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Routing\RouteNotFoundException;
+use TYPO3\CMS\Core\Routing\RouteResultInterface;
 use TYPO3\CMS\Core\Service\FlexFormService;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Pagebased\Event\Rss\RssFeedEvent;
@@ -47,20 +49,24 @@ class RssFeed implements MiddlewareInterface
         return [];
     }
 
-    protected function getObjects(Registration $registration, array $settings): ?QueryResultInterface
+    protected function getObjects(Registration $registration, array $settings, SiteLanguage $language): ?QueryResultInterface
     {
         $demand = $registration->getObject()->getDemandClass()->setParameterArray($settings);
+        $repository = $registration->getObject()->getRepositoryClass();
 
-        return $registration->getObject()->getRepositoryClass()->findByDemand($demand);
+        if ($languageId = $language->getLanguageId()) {
+            $querySettings = $repository->getDefaultQuerySettings();
+            $querySettings->setLanguageUid($languageId);
+            $repository->setDefaultQuerySettings($querySettings);
+        }
+
+        return $repository->findByDemand($demand);
     }
 
-    protected function getPid(ServerRequestInterface $request): ?int
+    protected function getPid(ServerRequestInterface $request, RouteResultInterface $routing): ?int
     {
-        $site = $request->getAttribute('site', null);
-        $routing = $request->getAttribute('routing', null);
-
-        if ($site && $routing) {
-            $path = str_replace(self::URL_SUFFIX, '/', $request->getUri()->getPath());
+        if ($site = $request->getAttribute('site')) {
+            $path = str_replace(self::URL_SUFFIX, '/', $routing->offsetGet('tail'));
             $routing->offsetSet('tail', $path);
 
             try {
@@ -76,7 +82,12 @@ class RssFeed implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (str_ends_with($request->getUri()->getPath(), self::URL_SUFFIX) && $pid = $this->getPid($request)) {
+        if (
+            str_ends_with($request->getUri()->getPath(), self::URL_SUFFIX)
+            && ($routing = $request->getAttribute('routing')) instanceof RouteResultInterface
+            && ($language = $routing->getLanguage()) instanceof SiteLanguage
+            && ($pid = $this->getPid($request, $routing))
+        ) {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
 
             $CTypes = array_filter(array_map(static function (Registration $registration) use ($queryBuilder) {
@@ -88,7 +99,8 @@ class RssFeed implements MiddlewareInterface
                     ->from(self::TABLE_NAME)
                     ->where(
                         $queryBuilder->expr()->in($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['type'], $CTypes),
-                        $queryBuilder->expr()->eq('pid', $pid)
+                        $queryBuilder->expr()->in($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['languageField'], [-1, $language->getLanguageId()]),
+                        $queryBuilder->expr()->eq('pid', $pid),
                     )
                     ->orderBy($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['sortby'])
                     ->setMaxResults(1)
@@ -100,7 +112,7 @@ class RssFeed implements MiddlewareInterface
                     && ($CType = $content[$GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['type'] ?? ''])
                     && ($registration = $this->getRegistrationByCType($CType))
                     && ($settings = $this->getPluginSettings($content))
-                    && ($objects = $this->getObjects($registration, $settings))
+                    && ($objects = $this->getObjects($registration, $settings, $language))
                 ) {
                     $rssFeed = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssFeedEvent($registration, $request, $settings, $objects))->render();
 
