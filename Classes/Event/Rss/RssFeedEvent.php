@@ -62,7 +62,7 @@ final class RssFeedEvent extends AbstractRssObject
 
     public function render(string $append = null): string
     {
-        $channel = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssChanelEvent($this))->render();
+        $channel = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssChannelEvent($this))->render();
 
         return parent::render($channel);
     }

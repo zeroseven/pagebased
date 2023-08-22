@@ -66,7 +66,8 @@ class RssFeed implements MiddlewareInterface
     protected function getPid(ServerRequestInterface $request, RouteResultInterface $routing): ?int
     {
         if ($site = $request->getAttribute('site')) {
-            $path = str_replace(self::URL_SUFFIX, '/', $routing->offsetGet('tail'));
+            $path = $request->getUri()->getPath() === self::URL_SUFFIX ? '/'
+                : str_replace(self::URL_SUFFIX, '/', $routing->offsetGet('tail'));
             $routing->offsetSet('tail', $path);
 
             try {

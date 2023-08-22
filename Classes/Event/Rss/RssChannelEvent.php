@@ -9,7 +9,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 use Zeroseven\Pagebased\Domain\Model\AbstractObject;
 
-final class RssChanelEvent extends AbstractRssObject
+final class RssChannelEvent extends AbstractRssObject
 {
     protected int $indentionLevel = 1;
     protected RssFeedEvent $feed;

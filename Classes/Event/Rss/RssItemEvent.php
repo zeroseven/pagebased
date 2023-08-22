@@ -16,10 +16,10 @@ final class RssItemEvent extends AbstractRssObject
 {
     protected int $indentionLevel = 2;
     protected RssFeedEvent $feed;
-    protected RssChanelEvent $channel;
+    protected RssChannelEvent $channel;
     protected AbstractObject $object;
 
-    public function __construct(RssChanelEvent $channel, AbstractObject $object)
+    public function __construct(RssChannelEvent $channel, AbstractObject $object)
     {
         $this->tag = GeneralUtility::makeInstance(TagBuilder::class, 'item');
         $this->feed = $channel->getFeed();
@@ -32,7 +32,7 @@ final class RssItemEvent extends AbstractRssObject
         return $this->feed;
     }
 
-    public function getChannel(): RssChanelEvent
+    public function getChannel(): RssChannelEvent
     {
         return $this->channel;
     }
