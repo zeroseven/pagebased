@@ -13,9 +13,13 @@ use Zeroseven\Pagebased\Registration\Registration;
 
 final class RssFeedEvent extends AbstractRssObject
 {
+    protected Registration $registration;
+    protected ServerRequestInterface $request;
+    protected array $settings;
+    protected array $content;
     private ?QueryResultInterface $objects;
 
-    public function __construct(Registration $registration, ServerRequestInterface $request, array $settings, QueryResultInterface $objects = null)
+    public function __construct(Registration $registration, ServerRequestInterface $request, array $settings, array $content = [], QueryResultInterface $objects = null)
     {
         $this->tag = GeneralUtility::makeInstance(TagBuilder::class, 'rss');
         $this->tag->addAttributes([
@@ -27,7 +31,28 @@ final class RssFeedEvent extends AbstractRssObject
         $this->registration = $registration;
         $this->request = $request;
         $this->settings = $settings;
+        $this->content = $content;
         $this->objects = $objects;
+    }
+
+    public function getRegistration(): Registration
+    {
+        return $this->registration;
+    }
+
+    public function getRequest(): ServerRequestInterface
+    {
+        return $this->request;
+    }
+
+    public function getSettings(): array
+    {
+        return $this->settings;
+    }
+
+    public function getContent(): array
+    {
+        return $this->content;
     }
 
     public function getObjects(): ?QueryResultInterface
@@ -37,7 +62,7 @@ final class RssFeedEvent extends AbstractRssObject
 
     public function render(string $append = null): string
     {
-        $channel = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssChanelEvent($this->registration, $this->request, $this->settings, $this->objects))->render();
+        $channel = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssChanelEvent($this))->render();
 
         return parent::render($channel);
     }

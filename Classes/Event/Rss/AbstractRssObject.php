@@ -12,9 +12,6 @@ use Zeroseven\Pagebased\Registration\Registration;
 abstract class AbstractRssObject
 {
     protected ?TagBuilder $tag = null;
-    protected Registration $registration;
-    protected ServerRequestInterface $request;
-    protected array $settings;
     protected int $indentionLevel = 0;
 
     /** @var TagBuilder[] */
@@ -23,21 +20,6 @@ abstract class AbstractRssObject
     public function getTag(): ?TagBuilder
     {
         return $this->tag;
-    }
-
-    public function getRegistration(): Registration
-    {
-        return $this->registration;
-    }
-
-    public function getRequest(): ServerRequestInterface
-    {
-        return $this->request;
-    }
-
-    public function getSettings(): array
-    {
-        return $this->settings;
     }
 
     public function has(string $tagName): bool

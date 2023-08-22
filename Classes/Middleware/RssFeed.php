@@ -114,12 +114,14 @@ class RssFeed implements MiddlewareInterface
                     && ($settings = $this->getPluginSettings($content))
                     && ($objects = $this->getObjects($registration, $settings, $language))
                 ) {
-                    $rssFeed = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssFeedEvent($registration, $request, $settings, $objects))->render();
+                    $rssFeed = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssFeedEvent($registration, $request, $settings, $content, $objects))->render();
 
                     return GeneralUtility::makeInstance(HtmlResponse::class, trim('<?xml version="1.1" encoding="utf-8"?>' . $rssFeed), 200, [
                         'Content-Type' => 'application/rss+xml; charset=utf-8',
                         'X-Robots-Tag' => 'noindex',
-                        'X-TYPO3-Extension' => 'pagebased'
+                        'X-Typo3-Extension' => 'pagebased',
+                        'X-Xml-Identifier' => md5($registration->getIdentifier() . ($content['uid'] ?? '')),
+                        'X-Xml-Items' => $objects->count()
                     ]);
                 }
             } catch (DBALException|Exception $e) {

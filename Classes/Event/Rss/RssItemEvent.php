@@ -5,27 +5,36 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Event\Rss;
 
 use InvalidArgumentException;
-use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 use Zeroseven\Pagebased\Domain\Model\AbstractObject;
 use Zeroseven\Pagebased\Domain\Model\Topic;
-use Zeroseven\Pagebased\Registration\Registration;
 
 final class RssItemEvent extends AbstractRssObject
 {
-    protected AbstractObject $object;
     protected int $indentionLevel = 2;
+    protected RssFeedEvent $feed;
+    protected RssChanelEvent $channel;
+    protected AbstractObject $object;
 
-    public function __construct(Registration $registration, ServerRequestInterface $request, array $settings, AbstractObject $object)
+    public function __construct(RssChanelEvent $channel, AbstractObject $object)
     {
         $this->tag = GeneralUtility::makeInstance(TagBuilder::class, 'item');
-        $this->registration = $registration;
-        $this->request = $request;
-        $this->settings = $settings;
+        $this->feed = $channel->getFeed();
+        $this->channel = $channel;
         $this->object = $object;
+    }
+
+    public function getFeed(): RssFeedEvent
+    {
+        return $this->feed;
+    }
+
+    public function getChannel(): RssChanelEvent
+    {
+        return $this->channel;
     }
 
     public function getObject(): AbstractObject
@@ -35,7 +44,7 @@ final class RssItemEvent extends AbstractRssObject
 
     public function render(string $append = null): string
     {
-        $this->setIfEmpty('guid', md5($this->registration->getIdentifier() . $this->object->getUid()), ['isPermaLink' => 'false']);
+        $this->setIfEmpty('guid', md5($this->feed->getRegistration()->getIdentifier() . $this->object->getUid()), ['isPermaLink' => 'false']);
         $this->setIfEmpty('title', $this->object->getTitle());
         $this->setIfEmpty('description', $this->object->getDescription());
         $this->setIfEmpty('pubDate', date('r', $this->object->getCreateDate()));
