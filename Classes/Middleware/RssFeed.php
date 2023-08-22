@@ -15,7 +15,6 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\HtmlResponse;
-use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Routing\RouteNotFoundException;
 use TYPO3\CMS\Core\Routing\RouteResultInterface;
 use TYPO3\CMS\Core\Service\FlexFormService;
@@ -135,7 +134,7 @@ class RssFeed implements MiddlewareInterface
                         && ($CType = $content[$GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['type'] ?? ''])
                         && ($registration = $this->getRegistrationByCType($CType))
                     ) {
-                        $identifier = md5($registration->getIdentifier() . ($content['uid'] ?? ''));
+                        $identifier = md5($registration->getIdentifier() . ($content['uid'] ?? '') . $language->getLanguageId());
 
                         if (empty($rssFeed = $this->cache->get($identifier))) {
                             $settings = $this->getPluginSettings($content);

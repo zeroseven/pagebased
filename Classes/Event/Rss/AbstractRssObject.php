@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Event\Rss;
 
-use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
-use Zeroseven\Pagebased\Registration\Registration;
 
 abstract class AbstractRssObject
 {
