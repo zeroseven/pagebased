@@ -33,7 +33,7 @@ final class RssItemEvent extends AbstractRssObject
         return $this->object;
     }
 
-    public function render(string $prepend = null, string $append = null): string
+    public function render(string $append = null): string
     {
         $this->setIfEmpty('guid', md5($this->registration->getIdentifier() . $this->object->getUid()), ['isPermaLink' => 'false']);
         $this->setIfEmpty('title', $this->object->getTitle());
@@ -77,6 +77,6 @@ final class RssItemEvent extends AbstractRssObject
             }
         }
 
-        return parent::render($prepend, $append);
+        return parent::render($append);
     }
 }

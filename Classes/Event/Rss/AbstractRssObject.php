@@ -84,7 +84,7 @@ abstract class AbstractRssObject
         return $this;
     }
 
-    public function render(string $prepend = null, string $append = null): string
+    public function render(string $append = null): string
     {
         $properties = '';
 
@@ -98,7 +98,7 @@ abstract class AbstractRssObject
                 }
             }
 
-            $this->tag->setContent($prepend . $properties . $append . $newLinePrefix);
+            $this->tag->setContent($properties . $append . $newLinePrefix);
 
             return $newLinePrefix . $this->tag->render();
         }

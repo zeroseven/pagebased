@@ -31,7 +31,7 @@ final class RssChanelEvent extends AbstractRssObject
         return $this->objects;
     }
 
-    public function render(string $prepend = null, string $append = null): string
+    public function render(string $append = null): string
     {
         $this->setIfEmpty('title', $this->settings['header'] ?? '');
         $this->setIfEmpty('generator', 'TYPO3 (powered by pagebased)');
@@ -48,6 +48,6 @@ final class RssChanelEvent extends AbstractRssObject
             return GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssItemEvent($this->registration, $this->request, $this->settings, $object))->render();
         }, $this->objects->toArray()));
 
-        return parent::render($prepend, $append . $items);
+        return parent::render( $append . $items);
     }
 }
