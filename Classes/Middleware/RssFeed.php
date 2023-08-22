@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\HtmlResponse;
@@ -26,8 +27,16 @@ use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class RssFeed implements MiddlewareInterface
 {
+    private const CACHE_KEY = 'pagebased_rss_feed';
     private const URL_SUFFIX = '/-/rss.xml';
     private const TABLE_NAME = 'tt_content';
+
+    private FrontendInterface $cache;
+
+    public function __construct(FrontendInterface $cache)
+    {
+        $this->cache = $cache;
+    }
 
     protected function getRegistrationByCType(string $CType): ?Registration
     {
@@ -81,6 +90,14 @@ class RssFeed implements MiddlewareInterface
         return null;
     }
 
+    public static function registerCache(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][self::CACHE_KEY] ??= [
+            'options' => [
+                'defaultLifetime' => 18000 // 5 hours
+            ]
+        ];
+    }
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (
@@ -115,13 +132,19 @@ class RssFeed implements MiddlewareInterface
                     && ($settings = $this->getPluginSettings($content))
                     && ($objects = $this->getObjects($registration, $settings, $language))
                 ) {
-                    $rssFeed = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssFeedEvent($registration, $request, $settings, $content, $objects))->render();
+                    $identifier = md5($registration->getIdentifier() . ($content['uid'] ?? ''));
+
+                    if (empty($rssFeed = $this->cache->get($identifier))) {
+                        $rssFeed = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssFeedEvent($registration, $request, $settings, $content, $objects))->render();
+
+                        $this->cache->set($identifier, $rssFeed);
+                    }
 
                     return GeneralUtility::makeInstance(HtmlResponse::class, trim('<?xml version="1.1" encoding="utf-8"?>' . $rssFeed), 200, [
                         'Content-Type' => 'application/rss+xml; charset=utf-8',
                         'X-Robots-Tag' => 'noindex',
                         'X-Typo3-Extension' => 'pagebased',
-                        'X-Xml-Identifier' => md5($registration->getIdentifier() . ($content['uid'] ?? '')),
+                        'X-Xml-Identifier' => $identifier,
                         'X-Xml-Items' => $objects->count()
                     ]);
                 }
