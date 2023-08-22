@@ -7,6 +7,15 @@ services:
     Zeroseven\Pagebased\:
         resource: '../Classes/*'
 
+    Zeroseven\Pagebased\Middleware\RssFeed:
+        arguments:
+            $cache: '@cache.pagebased_rss_feed'
+
+    cache.pagebased_rss_feed:
+        class: TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
+        factory: [ '@TYPO3\CMS\Core\Cache\CacheManager', 'getCache' ]
+        arguments: [ 'pagebased_rss_feed' ]
+
     Zeroseven\Pagebased\Command\DetectionCommand:
         tags:
             -   name: console.command

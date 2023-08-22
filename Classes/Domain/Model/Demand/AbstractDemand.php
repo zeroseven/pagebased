@@ -37,6 +37,7 @@ abstract class AbstractDemand implements DemandInterface
     {
         $this->addProperty(self::PROPERTY_UID_LIST, DemandProperty::TYPE_ARRAY);
         $this->addProperty(self::PROPERTY_ORDER_BY, DemandProperty::TYPE_STRING);
+        $this->addProperty(self::PROPERTY_MAX_ITEMS, DemandProperty::TYPE_INTEGER);
     }
 
     protected function getType(ReflectionProperty $reflection, array $tableDefinition, ColumnMap $columnMap, string $tableName): ?string
@@ -301,6 +302,20 @@ abstract class AbstractDemand implements DemandInterface
     public function setOrderBy(mixed $value): self
     {
         $this->setProperty(self::PROPERTY_ORDER_BY, $value);
+
+        return $this;
+    }
+
+    /** @throws PropertyException */
+    public function getMaxItems(): int
+    {
+        return $this->getProperty(self::PROPERTY_MAX_ITEMS)->getValue();
+    }
+
+    /** @throws TypeException | PropertyException */
+    public function setMaxItems(mixed $value): self
+    {
+        $this->setProperty(self::PROPERTY_MAX_ITEMS, $value);
 
         return $this;
     }
