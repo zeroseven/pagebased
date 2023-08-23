@@ -49,7 +49,9 @@ class AddTCAEvent
         if ($objectRegistration = $registration->getObject()) {
             $displayCondition = TCAUtility::getObjectDisplayCondition($registration);
 
-            TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'pagebased_date', $displayCondition);
+            if ($objectRegistration->dateEnabled()) {
+                TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'pagebased_date', $displayCondition);
+            }
 
             if ($objectRegistration->topEnabled()) {
                 TCAUtility::addDisplayCondition(AbstractPage::TABLE_NAME, 'pagebased_top', $displayCondition);
@@ -182,13 +184,14 @@ class AddTCAEvent
                 'renderType' => 'selectSingle',
                 'minitems' => 1,
                 'maxitems' => 1,
-                'items' => [
+                'items' => array_merge([
                     ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.default', ''],
-                    ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.date_desc', 'date_desc'],
-                    ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.date_asc', 'date_asc'],
                     ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.title_asc', 'title_asc'],
                     ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.title_desc', 'title_desc']
-                ]
+                ], $registration->getObject()->dateEnabled() ? [
+                    ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.date_desc', 'date_desc'],
+                    ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.date_asc', 'date_asc']
+                ] : [])
             ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting');
 
             $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.layout')
