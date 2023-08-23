@@ -31,7 +31,7 @@ final class RssChannelEvent extends AbstractRssObject
         $this->setIfEmpty('generator', 'TYPO3 (powered by pagebased)');
         $this->setIfEmpty('link', (string)$this->feed->getRequest()->getUri()->withQuery(''));
         $this->setIfEmpty('atom:link', null, ['href' => (string)$this->feed->getRequest()->getUri()->withQuery(''), 'rel' => 'self', 'type' => 'application/rss+xml']);
-        $this->setIfEmpty('pubDate', date('r', $this->feed->getSettings()['crdate'] ?? time()));
+        $this->setIfEmpty('pubDate', date('r', $this->feed->getContent()['crdate'] ?? time()));
         $this->setIfEmpty('lastBuildDate', date('r'));
 
         if ($this->empty('language') && $siteLanguage = $this->feed->getRequest()->getAttribute('language')) {
