@@ -99,6 +99,19 @@ class RegistrationService
         return null;
     }
 
+    public static function getRegistrationByCategoryRepository(mixed $repository): ?Registration
+    {
+        if ($className = self::getClassName($repository)) {
+            foreach (self::getRegistrations() as $registration) {
+                if ($registration->getCategory()->getRepositoryClassName() === $className) {
+                    return $registration;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static function getRegistrationByCategoryDocumentType(int $documentType): ?Registration
     {
         foreach (self::getRegistrations() as $registration) {

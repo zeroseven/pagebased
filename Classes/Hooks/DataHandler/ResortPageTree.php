@@ -56,11 +56,11 @@ class ResortPageTree
     {
         $repository = $registration->getObject()->getRepositoryClass();
 
-        if (array_key_first($repository->getDefaultOrderings()) !== ($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby'] ?? null)) {
+        if (array_key_first($registration->getObject()->getSorting()) !== $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby']) {
             $demand = $registration->getObject()->getDemandClass()->setUidList(RootLineUtility::collectPagesBelow($parentPageUid, false, 1));
 
             $expectedOrdering = $repository->findByDemand($demand);
-            $currentOrdering = $repository->findByDemand($demand->setOrderBy('sorting'));
+            $currentOrdering = $repository->findByDemand($demand->setOrderBy($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby']));
 
             if ($expectedOrdering->count() > 1 && $expectedOrdering->count() === $currentOrdering->count()) {
                 $expectedUidList = $this->getUidList($expectedOrdering);

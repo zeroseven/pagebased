@@ -7,6 +7,7 @@ namespace Zeroseven\Pagebased\Registration;
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\GenericDemand;
 use Zeroseven\Pagebased\Domain\Repository\RepositoryInterface;
@@ -17,6 +18,8 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
     protected ?string $repositoryClassName = null;
     protected ?string $demandClassName = null;
     protected ?string $name = null;
+    protected ?string $sortingField = null;
+    protected ?bool $sortingDirectionAscending = null;
 
     public function getClassName(): string
     {
@@ -65,6 +68,29 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
 
     public function getName(): string
     {
-        return $this->name ?? ($this->name = $this->name = GeneralUtility::makeInstance(ReflectionClass::class, $this->className)->getShortName());
+        return $this->name ?? ($this->name = GeneralUtility::makeInstance(ReflectionClass::class, $this->className)->getShortName());
+    }
+
+    public function setSorting(string $field, bool $descending = null): self
+    {
+        $this->sortingField = $field;
+        $this->sortingDirectionAscending = !$descending;
+
+        return $this;
+    }
+
+    public function getSortingField(): string
+    {
+        return $this->sortingField ?? $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby'];
+    }
+
+    public function isSortingAscending(): bool
+    {
+        return $this->sortingDirectionAscending ?? true;
+    }
+
+    public function isSortingDescending(): bool
+    {
+        return !$this->isSortingAscending();
     }
 }
