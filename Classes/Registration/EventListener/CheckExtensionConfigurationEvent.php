@@ -39,17 +39,19 @@ class CheckExtensionConfigurationEvent
 # Auto generated file. ( ' . self::class . ' )
 registration {
     object {
-        # cat=object/enable/10; type=options[default=,enable=1,disable=0]; label=Enable/disable Tags for objects
+        # cat=object/enable/10; type=options[default=,enable=1,disable=0]; label=Enable/disable object date
+        date =
+        # cat=object/enable/20; type=options[default=,enable=1,disable=0]; label=Enable/disable Tags for objects
         tags =
-        # cat=object/enable/20; type=options[default=,enable=1,disable=0]; label=Enable/disable Top for objects
+        # cat=object/enable/30; type=options[default=,enable=1,disable=0]; label=Enable/disable Top for objects
         top =
-        # cat=object/enable/30; type=options[default=,enable=1,disable=0]; label=Enable/disable relations between objects
+        # cat=object/enable/40; type=options[default=,enable=1,disable=0]; label=Enable/disable relations between objects
         relations =
-        # cat=object/enable/40; type=string; label=Topics;Comma separated list of topic storage page ids
+        # cat=object/enable/50; type=string; label=Topics;Comma separated list of topic storage page ids
         topicPageIds =
-        # cat=object/enable/50; type=string; label=Contacts;Comma separated list of contact storage page ids
+        # cat=object/enable/60; type=string; label=Contacts;Comma separated list of contact storage page ids
         contactPageIds =
-        # cat=object/enable/60; type=string; label=Object overlay icon identifier
+        # cat=object/enable/70; type=string; label=Object overlay icon identifier
         overlayIconIdentifier =
     }
     category {
@@ -99,7 +101,7 @@ registration {
         }
     }
 
-    public function __invoke(BeforeStoreRegistrationEvent $event)
+    public function __invoke(BeforeStoreRegistrationEvent $event): void
     {
         $this->registration = $event->getRegistration();
         $this->createExtensionConfigurationTemplate();

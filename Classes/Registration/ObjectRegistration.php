@@ -14,6 +14,7 @@ use Zeroseven\Pagebased\Utility\CastUtility;
 final class ObjectRegistration extends AbstractRegistrationEntityProperty
 {
     protected ?string $controllerClassName = null;
+    protected bool $date = false;
     protected bool $tags = false;
     protected bool $top = false;
     protected array $topicPageIds = [];
@@ -42,6 +43,23 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     {
         $this->controllerClassName = $controllerClassName;
         return $this;
+    }
+
+    public function enableDate(): self
+    {
+        $this->date = true;
+        return $this;
+    }
+
+    public function disableDate(): self
+    {
+        $this->date = false;
+        return $this;
+    }
+
+    public function dateEnabled(): bool
+    {
+        return $this->date;
     }
 
     public function enableTags(): self
