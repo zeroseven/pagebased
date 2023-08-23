@@ -49,7 +49,7 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     {
         $this->date = true;
 
-        $sortByDate && $this->setSorting('pagebased_date', false);
+        $sortByDate && $this->setSorting('pagebased_date', true);
 
         return $this;
     }
