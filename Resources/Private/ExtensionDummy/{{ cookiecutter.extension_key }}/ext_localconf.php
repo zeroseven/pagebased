@@ -7,8 +7,9 @@ call_user_func(static function () {
         ->setClassName(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Model\{{ cookiecutter.__object_class_name }}::class)
         ->setControllerClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Controller\{{ cookiecutter.__object_class_name }}Controller::class)
         ->setRepositoryClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Repository\{{ cookiecutter.__object_class_name }}Repository::class)
-        ->enableTopics(1)
-        ->enableContact(1)
+        ->enableDate(true)
+//      ->enableTopics(1)
+//      ->enableContact(1)
         ->enableRelations()
         ->enableTop()
         ->enableTags();
@@ -16,6 +17,7 @@ call_user_func(static function () {
     $category = \Zeroseven\Pagebased\Registration\CategoryRegistration::create('{{ cookiecutter.object_name|capitalize }}-Category')
         ->setClassName(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Model\Category::class)
         ->setRepositoryClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Repository\CategoryRepository::class)
+        ->setSorting('title')
         ->setDocumentType({{ cookiecutter.category_doktype }});
 
     $listPlugin = \Zeroseven\Pagebased\Registration\ListPluginRegistration::create('{{ cookiecutter.object_name|capitalize }} list')

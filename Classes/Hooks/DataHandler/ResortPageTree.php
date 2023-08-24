@@ -15,13 +15,14 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Registration\AbstractRegistrationEntityProperty;
 use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
 use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class ResortPageTree
 {
-    protected function addNotification(int $parentPageUid, Registration $registration): void
+    protected function addNotification(int $parentPageUid, AbstractRegistrationEntityProperty $registrationEntityProperty): void
     {
         $parentPage = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $parentPageUid);
 
@@ -35,7 +36,7 @@ class ResortPageTree
             LocalizationUtility::translate(
                 'LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.title',
                 'pagebased',
-                [0 => $registration->getObject()->getTitle()]
+                [0 => $registrationEntityProperty->getTitle()]
             ), AbstractMessage::OK, true
         );
 
@@ -52,15 +53,15 @@ class ResortPageTree
         return array_map(static fn($object) => $object->getUid(), $result->toArray());
     }
 
-    protected function updateSorting(int $parentPageUid, Registration $registration, DataHandler $dataHandler): void
+    protected function updateSorting(int $parentPageUid, AbstractRegistrationEntityProperty $registrationEntityProperty, DataHandler $dataHandler): void
     {
-        $repository = $registration->getObject()->getRepositoryClass();
+        $repository = $registrationEntityProperty->getRepositoryClass();
 
-        if (array_key_first($repository->getDefaultOrderings()) !== ($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby'] ?? null)) {
-            $demand = $registration->getObject()->getDemandClass()->setUidList(RootLineUtility::collectPagesBelow($parentPageUid, false, 1));
+        if ($registrationEntityProperty->getSortingField() !== $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby']) {
+            $demand = $registrationEntityProperty->getDemandClass()->setUidList(array_keys(RootLineUtility::collectPagesBelow($parentPageUid, false, 1)));
 
             $expectedOrdering = $repository->findByDemand($demand);
-            $currentOrdering = $repository->findByDemand($demand->setOrderBy('sorting'));
+            $currentOrdering = $repository->findByDemand($demand->setOrderBy($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby']));
 
             if ($expectedOrdering->count() > 1 && $expectedOrdering->count() === $currentOrdering->count()) {
                 $expectedUidList = $this->getUidList($expectedOrdering);
@@ -76,14 +77,13 @@ class ResortPageTree
                     $dataHandler->start([], $command);
                     $dataHandler->process_cmdmap();
 
-                    $this->addNotification($parentPageUid, $registration);
+                    $this->addNotification($parentPageUid, $registrationEntityProperty);
                     BackendUtility::setUpdateSignal('updatePageTree');
                 }
             }
         }
     }
 
-    /** @throws Exception */
     public function processDatamap_afterAllOperations(DataHandler $dataHandler): void
     {
         foreach ($dataHandler->datamap as $table => $uids) {
@@ -91,14 +91,24 @@ class ResortPageTree
                 $pidList = [];
 
                 foreach ($uids as $uid => $data) {
-                    MathUtility::canBeInterpretedAsInteger($uid)
-                    && ($registration = ObjectUtility::isObject($uid, $data))
-                    && ($pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']))
-                    && ($pidList[$pid] = $registration);
+                    if (
+                        MathUtility::canBeInterpretedAsInteger($uid)
+                        && ($pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']))
+                        && empty($pidList[$pid])
+                    ) {
+                        if ($registration = ObjectUtility::isObject($uid, $data)) {
+                            $pidList[$pid] = $registration->getObject();
+                        } else {
+                            ($registration = ObjectUtility::isCategory($uid, $data))
+                            && ($parentRegistration = ObjectUtility::isCategory($pid))
+                            && ($parentRegistration->getIdentifier() === $registration->getIdentifier())
+                            && ($pidList[$pid] = $registration->getCategory());
+                        }
+                    }
                 }
 
-                foreach ($pidList as $pid => $registration) {
-                    $this->updateSorting($pid, $registration, $dataHandler);
+                foreach ($pidList as $pid => $registrationEntity) {
+                    $this->updateSorting($pid, $registrationEntity, $dataHandler);
                 }
             }
         }

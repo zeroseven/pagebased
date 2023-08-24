@@ -28,21 +28,23 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
 {
     protected Registration $registration;
 
-    protected $defaultOrderings = [
-        'pagebased_date' => QueryInterface::ORDER_DESCENDING,
-        'uid' => QueryInterface::ORDER_ASCENDING
-    ];
-
     public function __construct(ObjectManagerInterface $objectManager)
     {
         parent::__construct($objectManager);
 
         $this->registration = RegistrationService::getRegistrationByRepository(get_class($this));
+
+        $this->defaultOrderings = [
+            $this->registration->getObject()->getSortingField() =>
+                $this->registration->getObject()->isSortingAscending()
+                    ? QueryInterface::ORDER_ASCENDING
+                    : QueryInterface::ORDER_DESCENDING
+        ];
     }
 
     public function initializeDemand(): DemandInterface
     {
-        return RegistrationService::getRegistrationByRepository(get_class($this))->getObject()->getDemandClass();
+        return RegistrationService::getRegistrationByRepository(get_class($this))?->getObject()->getDemandClass();
     }
 
     /** @throws PersistenceException */
@@ -104,7 +106,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
             $demand = $this->initializeDemand()->setIncludeChildObjects(true);
 
             return $this->findByDemand($demand, $query);
-        } catch (RegistrationException | TypeException | AspectNotFoundException | InvalidQueryException | PersistenceException $e) {
+        } catch (RegistrationException|TypeException|AspectNotFoundException|InvalidQueryException|PersistenceException $e) {
         }
 
         return null;
