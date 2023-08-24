@@ -79,6 +79,24 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
         return $this;
     }
 
+    public function setSortingField(string $field): self
+    {
+        $this->sortingField = $field;
+        return $this;
+    }
+
+    public function enableSortingDirectionAscending(): self
+    {
+        $this->sortingDirectionAscending = true;
+        return $this;
+    }
+
+    public function disableSortingDirectionAscending(): self
+    {
+        $this->sortingDirectionAscending = false;
+        return $this;
+    }
+
     public function getSortingField(): string
     {
         return $this->sortingField ?? $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby'];
