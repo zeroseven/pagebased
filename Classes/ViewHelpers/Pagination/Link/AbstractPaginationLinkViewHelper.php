@@ -24,7 +24,6 @@ abstract class AbstractPaginationLinkViewHelper extends AbstractLinkViewHelper
         parent::initializeArguments();
 
         // Register demand argument
-        $this->registerArgument('demand', 'object', 'The demand object', false);
         $this->registerArgument('required', 'bool', 'Hide link-tag if target page is not available.', false, true);
         $this->registerArgument('ajaxReplaceSelectors', 'string|array', 'One or more selectors that need to be replaced in an Ajax request.');
         $this->registerArgument('ajaxAppendSelectors', 'string|array', 'One or more selectors that content from the Ajax request will be appended.');

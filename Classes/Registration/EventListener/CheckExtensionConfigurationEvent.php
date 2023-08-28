@@ -42,29 +42,39 @@ class CheckExtensionConfigurationEvent
 # Auto generated file. ( ' . self::class . ' )
 registration {
     object {
-        # cat=object/enable/10; type=options[default=,enable=1,disable=0]; label=Enable/disable Tags for objects
+        # cat=object/enable/110; type=options[default=,enable=1,disable=0]; label=Enable/disable object date
+        date =
+        # cat=object/enable/120; type=options[default=,enable=1,disable=0]; label=Enable/disable Tags for objects
         tags =
-        # cat=object/enable/20; type=options[default=,enable=1,disable=0]; label=Enable/disable Top for objects
+        # cat=object/enable/130; type=options[default=,enable=1,disable=0]; label=Enable/disable Top for objects
         top =
-        # cat=object/enable/30; type=options[default=,enable=1,disable=0]; label=Enable/disable relations between objects
+        # cat=object/enable/140; type=options[default=,enable=1,disable=0]; label=Enable/disable relations between objects
         relations =
-        # cat=object/enable/40; type=string; label=Topics;Comma separated list of topic storage page ids
+        # cat=object/enable/150; type=string; label=Topics;Comma separated list of topic storage page ids
         topicPageIds =
-        # cat=object/enable/50; type=string; label=Contacts;Comma separated list of contact storage page ids
+        # cat=object/enable/160; type=string; label=Contacts;Comma separated list of contact storage page ids
         contactPageIds =
-        # cat=object/enable/60; type=string; label=Object overlay icon identifier
+        # cat=object/enable/170; type=string; label=Object overlay icon identifier
         overlayIconIdentifier =
+        # cat=object/enable/180; type=string; label=Override sorting field
+        sortingField =
+        # cat=object/enable/190; type=options[default=,ascending=1,descending=0]; label=Override sorting direction
+        sortingDirectionAscending =
     }
     category {
-        # cat=category/enable/20; type=string; label=Category icon identifier
+        # cat=category/enable/210; type=string; label=Category icon identifier
         iconIdentifier =
+        # cat=category/enable/220; type=string; label=Override sorting field
+        sortingField =
+        # cat=category/enable/230; type=options[default=,ascending=1,descending=0]; label=Override sorting direction
+        sortingDirectionAscending =
     }
     listPlugin {
-        # cat=listPlugin/enable/20; type=string; label=List icon identifier
+        # cat=listPlugin/enable/310; type=string; label=List icon identifier
         iconIdentifier =
     }
     filterPlugin {
-        # cat=filterPlugin/enable/20; type=string; label=Filter icon identifier
+        # cat=filterPlugin/enable/410; type=string; label=Filter icon identifier
         iconIdentifier =
     }
 }
@@ -102,7 +112,7 @@ registration {
         }
     }
 
-    public function __invoke(BeforeStoreRegistrationEvent $event)
+    public function __invoke(BeforeStoreRegistrationEvent $event): void
     {
         $this->registration = $event->getRegistration();
         $this->createExtensionConfigurationTemplate();

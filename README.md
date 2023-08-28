@@ -21,6 +21,7 @@ common. [Using a configuration](#object-registration), you can activate or deact
 * categories
 * contacts
 * relations
+* rss feed
 
 Furthermore, the entire logic and functionality for the individual page objects lie within the pagebased extension
 itself. This way, the controller, repository, pagination, etc. are centrally controlled and can be updated easily.
@@ -207,6 +208,12 @@ Update registration information of category and object pages with the command `p
 |`pagebased:detection 7 2`| Starting from page uid: `7` with depth of `2` levels |
 
 This can be useful if you change the identifier of a registration, or you add pages by API.
+
+## RSS Feed
+
+Every used pagebased list plugin can simultaneously also be reached as a RSS feed. To achieve this, it's enough to append `/-/rss.xml` (example: `https://www.example.com/news/-/rss.xml`) to the URL and there you go! You have your RSS feed with all the settings from the corresponding list plugin.
+
+*Note: When a page contains multiple list plugins, the first one will be used.*
 
 ## FAQ
 

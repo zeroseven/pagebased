@@ -15,6 +15,10 @@ use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 
 abstract class AbstractPageRepository extends AbstractRepository implements RepositoryInterface
 {
+    protected $defaultOrderings = [
+        'sorting' => QueryInterface::ORDER_ASCENDING
+    ];
+
     public function initializeObject(): void
     {
         $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);

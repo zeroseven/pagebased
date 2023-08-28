@@ -192,7 +192,7 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
             && $this->shortcut > 0
             && $this->shortcutMode === 0
             && $this->getDocumentType() === PageRepository::DOKTYPE_SHORTCUT
-            && ($registration = RegistrationService::getRegistrationByClassName(get_class($this)))
+            && ($registration = RegistrationService::getRegistrationByObjectClass($this))
             && ($linkedObject = $registration->getObject()->getRepositoryClass()->findByUid($this->shortcut))
         ) {
             return $this->linkedObject = $linkedObject;
@@ -206,7 +206,7 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
         if (
             $this->parentObject === null
             && count($parentPages = RootLineUtility::collectPagesAbove($this->uid, false, 1))
-            && ($registration = RegistrationService::getRegistrationByClassName(get_class($this)))
+            && ($registration = RegistrationService::getRegistrationByObjectClass($this))
         ) {
             return $this->parentObject = $registration->getObject()->getRepositoryClass()->findByUid(array_key_first($parentPages));
         }
@@ -216,7 +216,7 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
 
     public function getChildObjects(): ?QueryResultInterface
     {
-        if ($this->childObjects === null && $registration = RegistrationService::getRegistrationByClassName(get_class($this))) {
+        if ($this->childObjects === null && $registration = RegistrationService::getRegistrationByObjectClass($this)) {
             return $this->childObjects = $registration->getObject()->getRepositoryClass()->findChildObjects($this);
         }
 

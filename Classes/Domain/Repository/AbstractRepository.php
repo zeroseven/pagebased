@@ -143,6 +143,9 @@ abstract class AbstractRepository extends Repository
             );
         }
 
+        // Set limit
+        $query->setLimit(($maxItems = $demand->getMaxItems()) === 0 ? 1000 : $maxItems);
+
         // Execute
         if ($demand->getOrderBy() === 'manual' && $uidList = $demand->getUidList()) {
             return $this->orderByUid($uidList, $query->execute());

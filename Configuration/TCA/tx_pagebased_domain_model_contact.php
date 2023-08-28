@@ -124,15 +124,7 @@ return [
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.email',
             'config' => [
                 'type' => 'input',
-                'renderType' => 'inputLink',
-                'fieldControl' => [
-                    'linkPopup' => [
-                        'options' => [
-                            'blindLinkOptions' => 'file, spec, folder, telephone, page, url'
-                        ]
-                    ]
-                ],
-                'eval' => 'trim',
+                'eval' => 'trim,email',
                 'default' => ''
             ]
         ],
@@ -142,15 +134,8 @@ return [
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.phone',
             'config' => [
                 'type' => 'input',
-                'renderType' => 'inputLink',
-                'fieldControl' => [
-                    'linkPopup' => [
-                        'options' => [
-                            'blindLinkOptions' => 'file, mail, spec, folder, page, url'
-                        ]
-                    ]
-                ],
-                'eval' => 'trim',
+                'eval' => 'trim,is_in',
+                'is_in' => '0123456789 -+',
                 'default' => ''
             ]
         ],
@@ -178,7 +163,7 @@ return [
             'config' => [
                 'type' => 'text',
                 'cols' => 40,
-                'rows' => 5,
+                'rows' => 3,
                 'eval' => 'trim',
                 'default' => ''
             ]

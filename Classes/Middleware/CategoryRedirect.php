@@ -29,6 +29,7 @@ class CategoryRedirect implements MiddlewareInterface
             $uid = (int)($listPlugin['uid'] ?? 0);
             $controllerName = str_replace('Controller', '', GeneralUtility::makeInstance(ReflectionClass::class, $registration->getObject()->getControllerClassName())->getShortName());
             $controllerArguments = ['category' => $startPage, ObjectDemandInterface::PROPERTY_CONTENT_ID => $uid];
+            $extensionName = GeneralUtility::underscoredToUpperCamelCase($registration->getExtensionName());
 
             $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
             $uriBuilder->reset()
@@ -37,7 +38,7 @@ class CategoryRedirect implements MiddlewareInterface
                 ->setCreateAbsoluteUri(true)
                 ->setArguments([self::REDIRECT_PARAMETER => 1]);
 
-            $uri = $uriBuilder->uriFor('List', $controllerArguments, $controllerName, $registration->getExtensionName(), 'List');
+            $uri = $uriBuilder->uriFor('List', $controllerArguments, $controllerName, $extensionName, 'List');
 
             return GeneralUtility::makeInstance(RedirectResponse::class, $uri, 307, ['X-Redirect-By' => 'pagebased']);
         }
