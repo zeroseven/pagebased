@@ -46,7 +46,7 @@ final class RssItemEvent extends AbstractRssObject
     {
         $this->setIfEmpty('guid', md5($this->feed->getRegistration()->getIdentifier() . $this->object->getUid()), ['isPermaLink' => 'false']);
         $this->setIfEmpty('title', $this->object->getTitle());
-        $this->setIfEmpty('description', $this->object->getDescription());
+        $this->setIfEmpty('description', $this->object->getAbstract() ?: $this->object->getDescription());
         $this->setIfEmpty('pubDate', $this->object->getCreateDate()?->format('r') ?? date('r'));
         $this->setIfEmpty('lastBuildDate', $this->object->getLastChangeDate()?->format('r') ?? date('r'));
         $this->setIfEmpty('category', $this->object->getCategory()?->getTitle());
@@ -63,7 +63,7 @@ final class RssItemEvent extends AbstractRssObject
             $uri && $this->set('link', $uri);
         }
 
-        if ($this->empty('content.encoded') && $content = $this->object->getDescription()) {
+        if ($this->empty('content.encoded') && $content = ($this->object->getAbstract() ?: $this->object->getDescription())) {
             $this->set('content.encoded', '<p>' . nl2br($content) . '</p>', null, true);
         }
 
