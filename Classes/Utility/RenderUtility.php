@@ -43,7 +43,7 @@ class RenderUtility
     }
 
     /** @throws TypeException */
-    public function render(string $templateNameAndFilePath, mixed $registrationIdentifiers, int $pageUid = null, array $settings = null, ObjectInterface $object = null): string
+    public function render(string $templateNameAndFilePath, mixed $registrationIdentifiers, int $pageUid = null, array $settings = null, DomainObjectInterface $object = null): string
     {
         $pageUid || $pageUid = RootLineUtility::getCurrentPage();
 
@@ -53,12 +53,12 @@ class RenderUtility
 
             try {
                 $object || $object = $registration->getObject()->getRepositoryClass()->findByUid($pageUid);
-            } catch (AspectNotFoundException | TypeException | InvalidQueryException | PersistenceException | RegistrationException $e) {
+            } catch (AspectNotFoundException|TypeException|InvalidQueryException|PersistenceException|RegistrationException $e) {
                 return '';
             }
 
             $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templateNameAndFilePath));
-            $view->assignMultiple(GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new AssignTemplateVariablesEvent([
+            $view->assignMultiple(GeneralUtility::makeInstance(EventDispatcher::class)?->dispatch(new AssignTemplateVariablesEvent([
                 'object' => $object,
                 'demand' => $registration->getObject()->getDemandClass(),
                 'settings' => array_merge($pluginConfiguration['settings'] ?? [], $settings ?? []),

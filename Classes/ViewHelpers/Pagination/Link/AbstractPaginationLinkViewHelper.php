@@ -7,6 +7,7 @@ namespace Zeroseven\Pagebased\ViewHelpers\Pagination\Link;
 use JsonException;
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
 use Zeroseven\Pagebased\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Pagebased\Exception\TypeException;
@@ -66,7 +67,7 @@ abstract class AbstractPaginationLinkViewHelper extends AbstractLinkViewHelper
             $variableProvider = $this->renderingContext->getVariableProvider();
 
             if ($demand && $demand->getContentId() && ($ajaxTypeNum = (int)($variableProvider->get('settings.list.ajaxTypeNum') ?? 0))) {
-                $ajaxUrl = $this->renderingContext->getControllerContext()->getUriBuilder()->reset()
+                $ajaxUrl = GeneralUtility::makeInstance(UriBuilder::class)->reset()->setRequest($this->getRequest())
                     ->setCreateAbsoluteUri(true)
                     ->setTargetPageType($ajaxTypeNum)
                     ->setArguments((array)($this->arguments['arguments'] ?? []))

@@ -9,11 +9,14 @@ use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Pagebased\Exception\TypeException;
+use Zeroseven\Pagebased\Exception\ValueException;
 use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Registration\RegistrationService;
 use Zeroseven\Pagebased\Utility\CastUtility;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
 
@@ -52,9 +55,8 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
     protected function getRequest(): RequestInterface
     {
         $this->request === null
-        && ($renderingContext = $this->renderingContext)
-        && ($request = $renderingContext->getRequest())
-        && ($request instanceof RequestInterface)
+        && ($renderingContext = $this->renderingContext) instanceof RenderingContextInterface
+        && ($request = $renderingContext->getRequest()) instanceof RequestInterface
         && ($this->request = $request);
 
         if ($this->request === null) {
@@ -64,9 +66,11 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
         return $this->request;
     }
 
+    /** @throws ValueException */
     public function validateArguments(): void
     {
         parent::validateArguments();
+
         $this->initializeRegistration();
     }
 
@@ -107,7 +111,6 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
     public function render(): string
     {
         // Get variables
-        $request = $this->getRequest();
         $action = $this->arguments['action'] ?? null;
         $controller = $this->arguments['controller'] ?? null;
         $extensionName = $this->arguments['extensionName'] ?? null;
@@ -136,7 +139,7 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
 
         // Create instance of the uriBuilder
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $uriBuilder->reset()->setRequest($request)
+        $uriBuilder->reset()->setRequest($this->getRequest())
             ->setCreateAbsoluteUri($absolute)
             ->setAddQueryString($addQueryString);
 
