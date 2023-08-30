@@ -32,8 +32,6 @@ class RenderUtility
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
 
-        $view->getRequest()->setControllerExtensionName(GeneralUtility::underscoredToLowerCamelCase($registration->getExtensionName()));
-        $view->getRequest()->setControllerName($registration->getObject()->getName());
         $view->setTemplateRootPaths($pluginConfiguration['view']['templateRootPaths'] ?? []);
         $view->setPartialRootPaths($pluginConfiguration['view']['partialRootPaths'] ?? []);
         $view->setLayoutRootPaths($pluginConfiguration['view']['layoutRootPaths'] ?? []);
