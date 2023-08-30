@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\ViewHelpers;
 
-use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Core\Bootstrap;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use TYPO3\CMS\Extbase\Mvc\Web\RequestBuilder;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
@@ -22,6 +19,8 @@ use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Registration\RegistrationService;
 use Zeroseven\Pagebased\Utility\CastUtility;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\RenderUtility;
+use Zeroseven\Pagebased\Utility\RequestUtility;
 
 abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
 {
@@ -64,29 +63,15 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
     protected function getRequest(): RequestInterface
     {
         if ($this->request === null) {
-            if (
-                ($renderingContext = $this->renderingContext) instanceof RenderingContextInterface
-                && ($request = $renderingContext->getRequest()) instanceof RequestInterface
-            ) {
+            if (($renderingContext = $this->renderingContext) instanceof RenderingContextInterface && ($request = $renderingContext->getRequest()) instanceof RequestInterface) {
                 return $this->request = $request;
             }
 
-            if (
-                ($serverRequest = $GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface
-                && $pluginName = $this->registration->getListPlugin()?->getType() ?? $this->registration->getFilterPlugin()?->getType()
-            ) {
-                $bootstrapInitialization = GeneralUtility::makeInstance(Bootstrap::class)?->initialize([
-                    'extensionName' => GeneralUtility::underscoredToUpperCamelCase($this->registration->getExtensionName()),
-                    'pluginName' => ucfirst($pluginName),
-                    'vendorName' => strtok($this->registration->getObject()->getClassName(), '\\'),
-                ], $serverRequest);
-
-                if (($request = GeneralUtility::makeInstance(RequestBuilder::class)?->build($bootstrapInitialization)) instanceof RequestInterface) {
-                    return $this->request = $request;
-                }
+            if ($request = RequestUtility::getExtbaseRequest($this->registration)) {
+                return $this->request = $request;
             }
 
-            throw new RuntimeException('ViewHelper "' . self::class . '" can be used only in extbase context and needs a request implementing extbase RequestInterface.', 1688559410);
+            throw new RuntimeException(sprintf('ViewHelper "%s" needs a request implementing "%s". You can either create an extbase plugin or use the "%s"', get_class($this), RequestInterface::class, RenderUtility::class), 1688559410);
         }
 
         return $this->request;
