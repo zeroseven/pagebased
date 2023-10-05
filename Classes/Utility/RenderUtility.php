@@ -90,6 +90,6 @@ class RenderUtility
             throw new ContentRenderingException('Configuration "registration" (the identifier of a registration) is not set or empty.' . (count($validIdentifier) ? ' Valid identifiers are ' . implode(',', $validIdentifier) . '.' : ''), 1685960418);
         }
 
-        return $content . $this->render($file, $registrationIdentifiers, $settings);
+        return $content . $this->render($file, $registrationIdentifiers, null, $settings);
     }
 }
