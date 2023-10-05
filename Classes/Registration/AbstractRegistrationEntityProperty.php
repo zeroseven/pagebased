@@ -41,9 +41,9 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
         return GeneralUtility::makeInstance($this->getRepositoryClassName());
     }
 
-    public function setRepositoryClass(string $repositoryClassName): self
+    public function setRepositoryClass(string $className): self
     {
-        $this->repositoryClassName = $repositoryClassName;
+        $this->repositoryClassName = $className;
         return $this;
     }
 
@@ -59,9 +59,9 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
             : GeneralUtility::makeInstance($demandClass);
     }
 
-    public function setDemandClassName(string $demandClassName): self
+    public function setDemandClass(string $className): self
     {
-        $this->demandClassName = $demandClassName;
+        $this->demandClassName = $className;
         return $this;
     }
 
