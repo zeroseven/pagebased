@@ -216,6 +216,19 @@ class AddTCAEvent
                     ]
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.maxStages');
 
+            if (count($layouts = $registration->getListPlugin()->getLayouts())) {
+                $layoutSheet->addField('settings.layout', [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'minitems' => 1,
+                    'maxitems' => 1,
+                    'items' => array_merge(
+                        [['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout.0', '']],
+                        array_map(static fn($label, $value) => [$label, $value], $layouts, array_keys($layouts))
+                    )
+                ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout');
+            }
+
             FlexFormConfiguration::makeInstance('tt_content', $cType, 'pi_flexform', 'after:header')
                 ->addSheet($filterSheet)
                 ->addSheet($optionsSheet)
@@ -258,6 +271,19 @@ class AddTCAEvent
                             ]
                         ]
                     ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.contentId');
+
+                if (count($layouts = $registration->getFilterPlugin()->getLayouts())) {
+                    $generalSheet->addField('settings.layout', [
+                        'type' => 'select',
+                        'renderType' => 'selectSingle',
+                        'minitems' => 1,
+                        'maxitems' => 1,
+                        'items' => array_merge(
+                            [['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout.0', '']],
+                            array_map(static fn($label, $value) => [$label, $value], $layouts, array_keys($layouts))
+                        )
+                    ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout');
+                }
 
                 FlexFormConfiguration::makeInstance($table, $cType, 'pi_flexform', 'after:header')
                     ->addSheet($generalSheet)
