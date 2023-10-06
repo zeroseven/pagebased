@@ -17,9 +17,9 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
     protected ?string $className = null;
     protected ?string $repositoryClassName = null;
     protected ?string $demandClassName = null;
-    protected ?string $name = null;
     protected ?string $sortingField = null;
     protected ?bool $sortingDirectionAscending = null;
+    protected ?string $name = null;
 
     public function getClassName(): string
     {
@@ -66,11 +66,6 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
         return $this;
     }
 
-    public function getName(): string
-    {
-        return $this->name ?? ($this->name = GeneralUtility::makeInstance(ReflectionClass::class, $this->className)->getShortName());
-    }
-
     public function setSorting(string $field, bool $descending = null): self
     {
         $this->sortingField = $field;
@@ -110,5 +105,10 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
     public function isSortingDescending(): bool
     {
         return !$this->isSortingAscending();
+    }
+
+    public function getName(): string
+    {
+        return $this->name ?? ($this->name = GeneralUtility::makeInstance(ReflectionClass::class, $this->className)->getShortName());
     }
 }

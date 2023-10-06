@@ -17,26 +17,25 @@ abstract class AbstractRegistration implements RegistrationPropertyInterface, Ar
 
     public function __construct(string $title)
     {
-        $this->title = $title;
+        $this->setTitle($title);
     }
 
-    protected function getLanguageService(): ?LanguageService
+    protected function translate(string $string): string
     {
-        return $GLOBALS['LANG'] ?? null;
+        return str_starts_with($string, 'LLL:')
+        && ($GLOBALS['LANG'] ?? null) instanceof LanguageService
+            ? $GLOBALS['LANG']->sL($string)
+            : $string;
     }
 
     public function getTitle(): string
     {
-        if (str_starts_with($this->title, 'LLL:') && $languageService = $this->getLanguageService()) {
-            return $languageService->sL($this->title);
-        }
-
         return $this->title;
     }
 
     public function setTitle(string $title): RegistrationPropertyInterface
     {
-        $this->title = trim($title);
+        $this->title = $this->translate(trim($title));
 
         return $this;
     }
