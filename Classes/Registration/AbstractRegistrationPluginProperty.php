@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Registration;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use Zeroseven\Pagebased\Exception\RegistrationException;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Utility\CastUtility;
 
@@ -43,17 +43,22 @@ abstract class AbstractRegistrationPluginProperty extends AbstractRegistration
         return $this;
     }
 
+    /** @throws RegistrationException */
     public function addLayout(string $layout, string $label = null): self
     {
-        $this->layouts[$layout] = $label === null ? $layout : $this->translate($label);
+        if (empty($layout)) {
+            throw new RegistrationException('The layout identifier must not be empty.', 1602685723);
+        }
+
+        $this->layouts[preg_replace('/\s/', '', $layout)] = empty($label) ? $layout : $this->translate($label);
         return $this;
     }
 
-    /** @throws TypeException */
+    /** @throws RegistrationException | TypeException */
     public function addLayouts(mixed $input): self
     {
         foreach (CastUtility::array($input) as $layout => $label) {
-            $this->addLayout(MathUtility::canBeInterpretedAsInteger($layout) ? $label : $layout, $label);
+            $this->addLayout(MathUtility::canBeInterpretedAsInteger($layout) ? $label : $layout, (string)$label);
         }
 
         return $this;
