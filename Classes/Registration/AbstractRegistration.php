@@ -17,7 +17,7 @@ abstract class AbstractRegistration implements RegistrationPropertyInterface, Ar
 
     public function __construct(string $title)
     {
-        $this->setTitle($title);
+        $this->title = $title;
     }
 
     protected function translate(string $string): string
@@ -30,12 +30,12 @@ abstract class AbstractRegistration implements RegistrationPropertyInterface, Ar
 
     public function getTitle(): string
     {
-        return $this->title;
+        return $this->translate($this->title);
     }
 
     public function setTitle(string $title): RegistrationPropertyInterface
     {
-        $this->title = $this->translate(trim($title));
+        $this->title = $title;
 
         return $this;
     }

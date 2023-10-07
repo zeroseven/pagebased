@@ -23,12 +23,12 @@ abstract class AbstractRegistrationPluginProperty extends AbstractRegistration
 
     public function getDescription(): string
     {
-        return $this->description;
+        return $this->translate($this->description);
     }
 
     public function setDescription(string $description): self
     {
-        $this->description = $this->translate(trim($description));
+        $this->description = $description;
         return $this;
     }
 
