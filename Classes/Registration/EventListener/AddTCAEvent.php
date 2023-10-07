@@ -11,9 +11,9 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use Zeroseven\Pagebased\Backend\TCA\GroupFilter;
 use Zeroseven\Pagebased\Backend\TCA\ItemsProcFunc;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
-use Zeroseven\Pagebased\Domain\Model\Demand\AbstractDemand;
 use Zeroseven\Pagebased\Domain\Model\Demand\AbstractObjectDemand;
-use Zeroseven\Pagebased\Exception\RegistrationException;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Registration\AbstractRegistrationPluginProperty;
 use Zeroseven\Pagebased\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Pagebased\Registration\FlexForm\FlexFormSheetConfiguration;
@@ -166,7 +166,7 @@ class AddTCAEvent
             $optionsSheet = FlexFormSheetConfiguration::makeInstance('options', 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.options');
 
             if ($registration->getObject()->topEnabled()) {
-                $optionsSheet->addField('settings.' . AbstractObjectDemand::PROPERTY_TOP_MODE, [
+                $optionsSheet->addField('settings.' . ObjectDemandInterface::PROPERTY_TOP_MODE, [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'minitems' => 1,
@@ -179,7 +179,7 @@ class AddTCAEvent
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode');
             }
 
-            $optionsSheet->addField('settings.' . AbstractDemand::PROPERTY_ORDER_BY, [
+            $optionsSheet->addField('settings.' . DemandInterface::PROPERTY_ORDER_BY, [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'minitems' => 1,
@@ -249,7 +249,7 @@ class AddTCAEvent
                 $table = 'tt_content';
 
                 $generalSheet = FlexFormSheetConfiguration::makeInstance('general', 'General setttings')
-                    ->addField('settings.' . AbstractObjectDemand::PROPERTY_CONTENT_ID, [
+                    ->addField('settings.' . ObjectDemandInterface::PROPERTY_CONTENT_ID, [
                         'type' => 'group',
                         'internal_type' => 'db',
                         'foreign_table' => $table,
@@ -292,7 +292,7 @@ class AddTCAEvent
         }
     }
 
-    /** @throws RegistrationException | TypeException */
+    /** @throws TypeException */
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
         foreach (RegistrationService::getRegistrations() as $registration) {
