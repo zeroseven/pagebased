@@ -69,10 +69,14 @@ registration {
     listPlugin {
         # cat=listPlugin/enable/310; type=string; label=List icon identifier
         iconIdentifier =
+        # cat=listPlugin/enable/320; type=string; label=Layout options:Comma separated list
+        layouts =
     }
     filterPlugin {
         # cat=filterPlugin/enable/410; type=string; label=Filter icon identifier
         iconIdentifier =
+        # cat=filterPlugin/enable/420; type=string; label=Layout options:Comma separated list
+        layouts =
     }
 }
             '));
