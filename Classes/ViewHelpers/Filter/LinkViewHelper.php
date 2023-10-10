@@ -83,6 +83,7 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
 
         if (empty($this->arguments['section']) && $listUid = $this->demand->getProperty(ObjectDemandInterface::PROPERTY_CONTENT_ID)->getValue()) {
             $this->arguments['section'] = 'c' . $listUid;
+        }
         if ($this->arguments['optionTag']) {
             $this->arguments['optionTag'] = TRUE;
         }
