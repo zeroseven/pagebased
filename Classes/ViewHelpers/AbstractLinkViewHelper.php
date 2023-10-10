@@ -48,6 +48,7 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
         $this->registerUniversalTagAttributes();
         $this->registerTagAttribute('rel', 'string', 'Specifies the relationship between the current document and the linked document');
         $this->registerTagAttribute('target', 'string', 'Specifies where to open the linked document');
+        $this->registerTagAttribute('optionTag', 'bool', 'If set, the tag will be "option" for dropdown select', false, false);
     }
 
     protected function getRequest(): RequestInterface
@@ -150,9 +151,15 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
 
         // Render link
         if ($uri = $uriBuilder->uriFor($action, $arguments, $controller, $extensionName, $pluginName)) {
-            $this->tag->addAttribute('href', $uri);
-            $this->tag->setContent($this->renderChildren());
+            if (!$this->arguments['optionTag']) {
+                $this->tag->addAttribute('href', $uri);
+            } else {
+                $this->tag->addAttribute('value', $uri);
+                $this->tag->setTagName('option');
+            }
             $this->tag->forceClosingTag(true);
+            $this->tag->setContent($this->renderChildren());
+
             return $this->tag->render();
         }
 

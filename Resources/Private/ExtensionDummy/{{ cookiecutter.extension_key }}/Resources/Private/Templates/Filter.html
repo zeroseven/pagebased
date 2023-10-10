@@ -15,6 +15,16 @@
         </f:for>
     </f:if>
 
+    <f:if condition="{categories}">
+        <h2>Categories Dropdown</h2>
+        <select onChange="window.location.href=this.value">
+            <pagebased:filter.clear optionTag="1">-- Select --</pagebased:filter.clear>
+            <f:for each="{categories}" as="category">
+                <pagebased:filter.link demand="{demand}" properties="{category:category}" toggle="1" optionTag="1">{category.title}</pagebased:filter.link>
+            </f:for>
+        </select>
+    </f:if>
+
     <f:if condition="{topics}">
         <h2>Topics</h2>
         <f:for each="{topics}" as="topic">

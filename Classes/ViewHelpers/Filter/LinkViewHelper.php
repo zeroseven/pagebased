@@ -71,6 +71,7 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
             // Set data attributes
             if ($matches > 0) {
                 $this->tag->addAttribute(self::FILTER_ACTIVE_ATTRIBUTE, 'true');
+                $this->tag->addAttribute('selected', 'selected');
             }
         }
     }
@@ -82,6 +83,8 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
 
         if (empty($this->arguments['section']) && $listUid = $this->demand->getProperty(ObjectDemandInterface::PROPERTY_CONTENT_ID)->getValue()) {
             $this->arguments['section'] = 'c' . $listUid;
+        if ($this->arguments['optionTag']) {
+            $this->arguments['optionTag'] = TRUE;
         }
 
         return parent::render();
