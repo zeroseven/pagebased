@@ -7,7 +7,7 @@ call_user_func(static function () {
         ->setClassName(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Model\{{ cookiecutter.__object_class_name }}::class)
         ->setControllerClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Controller\{{ cookiecutter.__object_class_name }}Controller::class)
         ->setRepositoryClass(\{{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\Domain\Repository\{{ cookiecutter.__object_class_name }}Repository::class)
-        ->enableDate(true)
+//      ->enableDate(true)
 //      ->enableTopics(1)
 //      ->enableContact(1)
         ->enableRelations()

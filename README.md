@@ -51,19 +51,22 @@ call_user_func(static function () {
         ->setClassName(\Vendor\NewExtension\Domain\Model\Job::class)
         ->setControllerClass(\Vendor\NewExtension\Controller\JobController::class)
         ->setRepositoryClass(\Vendor\NewExtension\Domain\Repository\JobRepository::class)
-        ->enableTop()        // Enable top job feature for job objects
-        ->enableTags()       // Enable tag feature for job objects, so tagging and filtering tags is possible
-        ->enableTopics(24)   // Enable topics for jobs and give it a pid where to store these
-        ->enableContact(24); // Enable responsible contact person for job objects
+        ->setSorting('title') // Sort jobs by their title (backend and frontend)
+        ->enableDate()        // Enable date field for job objects
+        ->enableTop()         // Enable top feature for job objects
+        ->enableTags()        // Enable tag feature for job objects, so tagging and filtering tags is possible
+        ->enableTopics(24)    // Enable topics for jobs and give it a pid where to store these
+        ->enableContact(24);  // Enable responsible contact person for job objects
 
     $category = \Zeroseven\Pagebased\Registration\CategoryRegistration::create('Job-Category')
         ->setClassName(\Vendor\NewExtension\Domain\Model\Category::class)
         ->setRepositoryClass(\Vendor\NewExtension\Domain\Repository\CategoryRepository::class)
-        ->setDocumentType(44);
+        ->setDocumentType(44)  // Set document type for category pages (required!)
+        ->setSorting('title'); // Set default sorting for category pages
 
     $listPlugin = \Zeroseven\Pagebased\Registration\ListPluginRegistration::create('Job list')
         ->setDescription('Display jobs in a super nice list')
-        ->addLayout('two-columns', 'Two columns'); // Adds an additional layout option that can be checked with "{settings.layout}"
+        ->addLayout('two-columns', 'Two columns'); // Additional layout option for the fluid template (available via "{settings.layout}")
 
     $filterPlugin = \Zeroseven\Pagebased\Registration\FilterPluginRegistration::create('Job filter')
         ->setDescription('Filter jobs');
