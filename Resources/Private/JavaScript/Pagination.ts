@@ -22,7 +22,7 @@ namespace Zeroseven {
       }
     }).then((markup: string) => getMap(replaceSelectors, appendSelectors, (new DOMParser()).parseFromString(markup, 'text/html')));
 
-  const replaceHistory = (url: string): void => url && window.history.replaceState(null, null, url);
+  const replaceHistory = (url: string): any => url && window.history.replaceState(null, '', url);
 
   const disableLink = (link: HTMLAnchorElement | HTMLButtonElement): void => {
     'disabled' in link && (link.disabled = true);
