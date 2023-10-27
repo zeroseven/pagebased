@@ -62,7 +62,8 @@ call_user_func(static function () {
         ->setDocumentType(44);
 
     $listPlugin = \Zeroseven\Pagebased\Registration\ListPluginRegistration::create('Job list')
-        ->setDescription('Display jobs in a super nice list');
+        ->setDescription('Display jobs in a super nice list')
+        ->addLayout('two-columns', 'Two columns'); // Adds an additional layout option that can be checked with "{settings.layout}"
 
     $filterPlugin = \Zeroseven\Pagebased\Registration\FilterPluginRegistration::create('Job filter')
         ->setDescription('Filter jobs');

@@ -39,14 +39,13 @@ class ObjectUtility
         }
 
         if ($pageUid || ($pageUid = (int)($row['uid'] ?? RootLineUtility::getCurrentPage()))) {
-            $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, (int)$pageUid, $typeField);
+            $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, $typeField);
 
-            return self::getDocumentType(null, $row);
+            return (int)($row[$typeField] ?? 0);
         }
 
         return 0;
     }
-
 
     public static function isSystemPage(int $pageUid = null, array $row = null): bool
     {

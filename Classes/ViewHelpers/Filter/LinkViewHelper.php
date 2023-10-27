@@ -8,6 +8,7 @@ use ReflectionClass;
 use ReflectionException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use Zeroseven\Pagebased\Domain\Model\Demand\AbstractObjectDemand;
+use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Exception\ValueException;
 
@@ -78,6 +79,10 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
     public function render(): string
     {
         $this->setDataAttributes();
+
+        if (empty($this->arguments['section']) && $listUid = $this->demand->getProperty(ObjectDemandInterface::PROPERTY_CONTENT_ID)->getValue()) {
+            $this->arguments['section'] = 'c' . $listUid;
+        }
 
         return parent::render();
     }

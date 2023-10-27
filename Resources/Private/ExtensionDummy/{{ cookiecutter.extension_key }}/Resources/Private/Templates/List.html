@@ -1,6 +1,6 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:pagebased="http://typo3.org/ns/Zeroseven/Pagebased/ViewHelpers" data-namespace-typo3-fluid="true">
 	<pagebased:pagination items="{objects}" itemsPerStage="{settings.itemsPerStage}" maxStages="{settings.maxStages}" as="pagination">
-		<div id="id-{{ cookiecutter.extension_key }}-l{data.uid}">
+		<div class="object-list{f:if(condition:settings.layout, then:'--{settings.layout}')}" id="id-{{ cookiecutter.extension_key }}-l{data.uid}">
 			<f:if condition="{requestArguments._ajax}">
 				<f:then>
 					<pagebased:pagination.eachStage selected="1">
@@ -24,12 +24,17 @@
 
 	<f:section name="Stage">
 		<pagebased:pagination.eachItem as="object" iteration="i">
-			<div class="item{i.cycle}">
+			<div class="object-item">
 				<f:link.page pageUid="{object.uid}">
 					<f:if condition="{object.firstImage}">
 							<f:image image="{object.firstImage}" width="200" /><br>
 					</f:if>
-					{object.title} <small>{object.date -> f:format.date(format:"d.m.Y")}</small>
+
+					{object.title}
+
+					<f:if condition="{registration.object.date}">
+						<small>{object.date -> f:format.date(format:"d.m.Y")}</small>
+					</f:if>
 				</f:link.page>
 			</div>
 		</pagebased:pagination.eachItem>

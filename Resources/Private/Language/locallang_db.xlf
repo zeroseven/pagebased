@@ -1,199 +1,205 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="messages">
-    <header />
+    <header/>
     <body>
-	  <trans-unit id="pages.tab.pagebased_settings">
-	    <source>Settings</source>
-	  </trans-unit>
-	  <trans-unit id="pages.pagebased_top">
-	    <source>Top</source>
-	  </trans-unit>
-	  <trans-unit id="pages.pagebased_date">
-	    <source>Date</source>
-	  </trans-unit>
-	  <trans-unit id="pages.pagebased_tags">
-	    <source>Tags</source>
-	  </trans-unit>
-	  <trans-unit id="pages.pagebased_topics">
-	    <source>Topics</source>
-	  </trans-unit>
-	  <trans-unit id="pages.pagebased_contact">
-	    <source>Contact</source>
-	  </trans-unit>
-	  <trans-unit id="pages.pagebased_tags.placeholder">
-	    <source>Add new tags</source>
-	  </trans-unit>
-	  <trans-unit id="pages.pagebased_relations_to">
-	    <source>Relations to</source>
-	  </trans-unit>
-	  <trans-unit id="pages.pagebased_relations_from">
-	    <source>Relations from</source>
-	  </trans-unit>
-	  <trans-unit id="pages.pagebased_redirect_category">
-	    <source>Redirect category</source>
-	  </trans-unit>
-	  <trans-unit id="pages.pagebased_redirect_category.description">
-	    <source>Redirects to the next list plugin in the rootline and sets the appropriate category.</source>
-	  </trans-unit>
+      <trans-unit id="pages.tab.pagebased_settings">
+        <source>Settings</source>
+      </trans-unit>
+      <trans-unit id="pages.pagebased_top">
+        <source>Top</source>
+      </trans-unit>
+      <trans-unit id="pages.pagebased_date">
+        <source>Date</source>
+      </trans-unit>
+      <trans-unit id="pages.pagebased_tags">
+        <source>Tags</source>
+      </trans-unit>
+      <trans-unit id="pages.pagebased_topics">
+        <source>Topics</source>
+      </trans-unit>
+      <trans-unit id="pages.pagebased_contact">
+        <source>Contact</source>
+      </trans-unit>
+      <trans-unit id="pages.pagebased_tags.placeholder">
+        <source>Add new tags</source>
+      </trans-unit>
+      <trans-unit id="pages.pagebased_relations_to">
+        <source>Relations to</source>
+      </trans-unit>
+      <trans-unit id="pages.pagebased_relations_from">
+        <source>Relations from</source>
+      </trans-unit>
+      <trans-unit id="pages.pagebased_redirect_category">
+        <source>Redirect category</source>
+      </trans-unit>
+      <trans-unit id="pages.pagebased_redirect_category.description">
+        <source>Redirects to the next list plugin in the rootline and sets the appropriate category.</source>
+      </trans-unit>
 
-	  <trans-unit id="tt_content.pi_flexform.tab.filter">
-	  	<source>Filter</source>
-	  </trans-unit>
-	  <trans-unit id="tt_content.pi_flexform.tab.options">
-	  	<source>Options</source>
-	  </trans-unit>
-	  <trans-unit id="tt_content.pi_flexform.tab.layout">
-	  	<source>Layout</source>
-	  </trans-unit>
-	  <trans-unit id="tt_content.pi_flexform.category">
-	  	<source>Category</source>
+      <trans-unit id="tt_content.pi_flexform.tab.filter">
+        <source>Filter</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.tab.options">
+        <source>Options</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.tab.layout">
+        <source>Layout</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.category">
+        <source>Category</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.category.div.suggestion">
-      	<source>Suggested category</source>
+        <source>Suggested category</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.category.div.no_restrictions">
-      	<source>No restrictions</source>
+        <source>No restrictions</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.category.div.available">
-      	<source>Available categories</source>
+        <source>Available categories</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.category.all">
-      	<source>All</source>
+        <source>All</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.tags">
-      	<source>Tags</source>
+        <source>Tags</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.topics">
-      	<source>Topics</source>
+        <source>Topics</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.contact">
-      	<source>Contact</source>
+        <source>Contact</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.topMode">
-      	<source>Top</source>
+        <source>Top</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.topMode.0">
-      	<source>Default</source>
+        <source>Default</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.topMode.1">
-      	<source>Top first</source>
+        <source>Top first</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.topMode.2">
-      	<source>Top only</source>
+        <source>Top only</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.sorting">
-      	<source>Sorting</source>
+        <source>Sorting</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.sorting.default">
-      	<source>Default</source>
-	  </trans-unit>
+        <source>Default</source>
+      </trans-unit>
       <trans-unit id="tt_content.pi_flexform.sorting.date_desc">
-      	<source>Date (newest first)</source>
-	  </trans-unit>
+        <source>Date (newest first)</source>
+      </trans-unit>
       <trans-unit id="tt_content.pi_flexform.sorting.date_asc">
-      	<source>Date (oldest first)</source>
-	  </trans-unit>
+        <source>Date (oldest first)</source>
+      </trans-unit>
       <trans-unit id="tt_content.pi_flexform.sorting.title_asc">
-      	<source>Title (A-Z)</source>
-	  </trans-unit>
+        <source>Title (A-Z)</source>
+      </trans-unit>
       <trans-unit id="tt_content.pi_flexform.sorting.title_desc">
-      	<source>Title (Z-A)</source>
-	  </trans-unit>
+        <source>Title (Z-A)</source>
+      </trans-unit>
       <trans-unit id="tt_content.pi_flexform.itemsPerStage">
-      	<source>Items per stage</source>
+        <source>Items per stage</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.maxStages">
-      	<source>Maximum stages</source>
+        <source>Maximum stages</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.maxStages.0">
-      	<source>Unlimited</source>
+        <source>Unlimited</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.layout">
+        <source>Layout</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.layout.0">
+        <source>Default</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.contentId">
-      	<source>List element</source>
+        <source>List element</source>
       </trans-unit>
 
-	  <trans-unit id="tx_pagebased_domain_model_topic">
-	  	<source>Topic</source>
-	  </trans-unit>
+      <trans-unit id="tx_pagebased_domain_model_topic">
+        <source>Topic</source>
+      </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_topic.title">
-      	<source>Title</source>
+        <source>Title</source>
       </trans-unit>
 
       <trans-unit id="tx_pagebased_domain_model_contact">
-      	<source>Contact</source>
+        <source>Contact</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.tab.contact">
-		<source>Contact</source>
-	  </trans-unit>
+        <source>Contact</source>
+      </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.tab.info">
-		<source>Info</source>
-	  </trans-unit>
+        <source>Info</source>
+      </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.tab.social">
-		<source>Social</source>
-	  </trans-unit>
+        <source>Social</source>
+      </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.palette.name">
-      	<source>Name</source>
+        <source>Name</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.palette.contact">
-      	<source>Contact</source>
+        <source>Contact</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.palette.address">
-      	<source>Address</source>
+        <source>Address</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.firstname">
-      	<source>First name</source>
+        <source>First name</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.lastname">
-      	<source>Last name</source>
+        <source>Last name</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.company">
-      	<source>Company</source>
+        <source>Company</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.expertise">
-      	<source>Expertise</source>
+        <source>Expertise</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.email">
-      	<source>Email</source>
+        <source>Email</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.phone">
-      	<source>Phone</source>
+        <source>Phone</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.website">
-      	<source>Website</source>
+        <source>Website</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.address">
-      	<source>Address</source>
+        <source>Address</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.city">
-      	<source>City</source>
+        <source>City</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.zip">
-      	<source>Zip</source>
+        <source>Zip</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.country">
-      	<source>Country</source>
+        <source>Country</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.description">
-      	<source>Description</source>
+        <source>Description</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.image">
-      	<source>Image</source>
+        <source>Image</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.page">
-      	<source>Page</source>
+        <source>Page</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.twitter">
-      	<source>Twitter</source>
+        <source>Twitter</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.facebook">
-      	<source>Facebook</source>
+        <source>Facebook</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.linkedin">
-      	<source>Linkedin</source>
+        <source>Linkedin</source>
       </trans-unit>
       <trans-unit id="tx_pagebased_domain_model_contact.xing">
-      	<source>Xing</source>
+        <source>Xing</source>
       </trans-unit>
     </body>
   </file>
