@@ -7,7 +7,7 @@ namespace Zeroseven\Pagebased\EventListener;
 use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Exception;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -46,7 +46,7 @@ class DisplayObjectRelations
         $message = LocalizationUtility::translate('LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.objectRelations.description',
             'pagebased', [implode(', ', $objects)]);
 
-        $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, '', AbstractMessage::INFO);
+        $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, '', Status::INFO);
 
         try {
             $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
