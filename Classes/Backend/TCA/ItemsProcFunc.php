@@ -49,7 +49,11 @@ class ItemsProcFunc
             $PA['items'] = array_filter($PA['items'] ?? [], static fn($item) => empty($item[1]));
 
             foreach ($topics->toArray() as $topic) {
-                $PA['items'][] = [$topic->getTitle(), $topic->getUid(), 'actions-tag'];
+                $PA['items'][] = [
+                    'label' => $topic->getTitle(),
+                    'value' => $topic->getUid(),
+                    'icon' => 'actions-tag'
+                ];
             }
         }
     }
@@ -60,7 +64,11 @@ class ItemsProcFunc
             $PA['items'] = array_filter($PA['items'] ?? [], static fn($item) => empty($item[1]));
 
             foreach ($contacts->toArray() as $contact) {
-                $PA['items'][] = [$contact->getFullName(), $contact->getUid(), 'actions-user'];
+                $PA['items'][] = [
+                    'label' => $contact->getFullName(),
+                    'value' => $contact->getUid(),
+                    'icon' => 'actions-user'
+                ];
             }
         }
     }
@@ -83,7 +91,7 @@ class ItemsProcFunc
             // Remove categories of other page trees or the closest category page
             $localPageIds = array_keys($localPages);
             foreach ($PA['items'] ?? [] as $key => $item) {
-                if ((int)($value = $item[1] ?? 0) && $value !== '--div--' && (!in_array($value, $localPageIds, true) || $value === $closestCategoryUid)) {
+                if ((int)($value = $item['value'] ?? ($item[1] ?? 0)) && $value !== '--div--' && (!in_array($value, $localPageIds, true) || $value === $closestCategoryUid)) {
                     unset($PA['items'][$key]);
                 }
             }

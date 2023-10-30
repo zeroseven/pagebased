@@ -8,7 +8,6 @@ return [
         'label_alt_force' => true,
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'languageField' => 'sys_language_uid',
         'transOrigPointerField' => 'l10n_parent',
         'transOrigDiffSourceField' => 'l10n_diffsource',
@@ -59,7 +58,7 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['', 0]
+                    ['label' => '', 'value' => 0]
                 ],
                 'foreign_table' => 'tx_pagebased_domain_model_contact',
                 'foreign_table_where' => 'AND tx_pagebased_domain_model_contact.pid=###CURRENT_PID### AND tx_pagebased_domain_model_contact.sys_language_uid IN (-1,0)'
@@ -76,7 +75,7 @@ return [
             'config' => [
                 'type' => 'check',
                 'items' => [
-                    ['LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled', 1]
+                    ['label' => 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled', 'value' => 1]
                 ]
             ]
         ],
@@ -123,8 +122,7 @@ return [
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.email',
             'config' => [
-                'type' => 'input',
-                'eval' => 'trim,email',
+                'type' => 'email',
                 'default' => ''
             ]
         ],
@@ -143,16 +141,8 @@ return [
             'exclude' => true,
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.website',
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputLink',
-                'fieldControl' => [
-                    'linkPopup' => [
-                        'options' => [
-                            'blindLinkOptions' => 'file, mail, spec, folder, page, telephone'
-                        ]
-                    ]
-                ],
-                'eval' => 'trim',
+                'type' => 'link',
+                'allowedTypes' => ['url'],
                 'default' => ''
             ]
         ],
@@ -215,38 +205,25 @@ return [
             'exclude' => true,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.image',
-            'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                'image',
-                [
-                    'appearance' => [
-                        'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference'
-                    ],
-                    'overrideChildTca' => [
-                        'types' => [
-                            '0' => ['showitem' => '--palette--;;filePalette'],
-                            \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_IMAGE => ['showitem' => '--palette--;;filePalette']
-                        ]
-                    ],
-                    'maxitems' => 1
+            'config' => [
+                'type' => 'file',
+                'maxitems' => 1,
+                'overrideChildTca' => [
+                    'types' => [
+                        '0' => ['showitem' => '--palette--;;filePalette'],
+                        \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_IMAGE => ['showitem' => '--palette--;;filePalette']
+                    ]
                 ],
-                $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
-            )
+                'allowed' => 'common-image-types'
+            ]
         ],
         'page' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.page',
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputLink',
-                'fieldControl' => [
-                    'linkPopup' => [
-                        'options' => [
-                            'blindLinkOptions' => 'file, spec, folder, mail, telephone'
-                        ]
-                    ]
-                ],
-                'eval' => 'trim',
+                'type' => 'link',
+                'allowedTypes' => ['page', 'url'],
                 'default' => ''
             ]
         ],
@@ -255,16 +232,8 @@ return [
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.twitter',
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputLink',
-                'fieldControl' => [
-                    'linkPopup' => [
-                        'options' => [
-                            'blindLinkOptions' => 'file, page, spec, folder, mail, telephone'
-                        ]
-                    ]
-                ],
-                'eval' => 'trim',
+                'type' => 'link',
+                'allowedTypes' => ['url'],
                 'default' => ''
             ]
         ],
@@ -273,16 +242,8 @@ return [
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.facebook',
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputLink',
-                'fieldControl' => [
-                    'linkPopup' => [
-                        'options' => [
-                            'blindLinkOptions' => 'file, page, spec, folder, mail, telephone'
-                        ]
-                    ]
-                ],
-                'eval' => 'trim',
+                'type' => 'link',
+                'allowedTypes' => ['url'],
                 'default' => ''
             ]
         ],
@@ -291,16 +252,8 @@ return [
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.linkedin',
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputLink',
-                'fieldControl' => [
-                    'linkPopup' => [
-                        'options' => [
-                            'blindLinkOptions' => 'file, page, spec, folder, mail, telephone'
-                        ]
-                    ]
-                ],
-                'eval' => 'trim',
+                'type' => 'link',
+                'allowedTypes' => ['url'],
                 'default' => ''
             ]
         ],
@@ -309,16 +262,8 @@ return [
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.xing',
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputLink',
-                'fieldControl' => [
-                    'linkPopup' => [
-                        'options' => [
-                            'blindLinkOptions' => 'file, page, spec, folder, mail, telephone'
-                        ]
-                    ]
-                ],
-                'eval' => 'trim',
+                'type' => 'link',
+                'allowedTypes' => ['url'],
                 'default' => ''
             ]
         ]

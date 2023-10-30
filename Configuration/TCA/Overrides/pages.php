@@ -11,9 +11,10 @@ call_user_func(static function (string $table) {
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'check',
-                'items' => [
-                    ['LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled', 1]
-                ],
+                'items' => [[
+                    'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled',
+                    'value' => 1
+                ]],
                 'default' => 0
             ]
         ],
@@ -23,10 +24,9 @@ call_user_func(static function (string $table) {
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_date',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'size' => 10,
-                'eval' => 'date,required',
+                'type' => 'datetime',
+                'format' => 'date',
+                'required' => true,
                 'default' => time()
             ]
         ],
@@ -66,9 +66,11 @@ call_user_func(static function (string $table) {
                 'foreign_table' => 'tx_pagebased_domain_model_contact',
                 'itemsProcFunc' => \Zeroseven\Pagebased\Backend\TCA\ItemsProcFunc::class . '->contacts',
                 'default' => 0,
-                'items' => [
-                    ['-', 0, $GLOBALS['TCA']['tx_pagebased_domain_model_contact']['ctrl']['typeicon_classes']['default'] ?? ''],
-                ]
+                'items' => [[
+                    'label' => '-',
+                    'value' => 0,
+                    'icon' => $GLOBALS['TCA']['tx_pagebased_domain_model_contact']['ctrl']['typeicon_classes']['default'] ?? ''
+                ]]
             ]
         ],
         'pagebased_relations_to' => [
@@ -77,7 +79,6 @@ call_user_func(static function (string $table) {
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'group',
-                'internal_type' => 'db',
                 'allowed' => $table,
                 'foreign_table' => $table,
                 'MM_opposite_field' => 'pagebased_relations_from',
@@ -85,11 +86,9 @@ call_user_func(static function (string $table) {
                 'size' => 5,
                 'autoSizeMax' => 10,
                 'maxitems' => 99,
-                'filter' => [
-                    [
-                        'userFunc' => \Zeroseven\Pagebased\Backend\TCA\GroupFilter::class . '->filterObject'
-                    ]
-                ],
+                'filter' => [[
+                    'userFunc' => \Zeroseven\Pagebased\Backend\TCA\GroupFilter::class . '->filterObject'
+                ]],
                 'suggestOptions' => [
                     'default' => [
                         'receiverClass' => \Zeroseven\Pagebased\Backend\Form\Wizard\SuggestRelationReceiver::class,
@@ -111,7 +110,6 @@ call_user_func(static function (string $table) {
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'group',
-                'internal_type' => 'db',
                 'foreign_table' => $table,
                 'allowed' => $table,
                 'size' => 5,
@@ -128,9 +126,10 @@ call_user_func(static function (string $table) {
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
                 'type' => 'check',
-                'items' => [
-                    ['LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled', 1]
-                ],
+                'items' => [[
+                    'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled',
+                    'value' => 1
+                ]],
                 'default' => 0
             ]
         ]
