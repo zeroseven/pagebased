@@ -45,7 +45,7 @@ class RootLineUtility
             return (int)$GLOBALS['TSFE']->id;
         }
 
-        if ($id = GeneralUtility::_GP('id')) {
+        if ($id = $_GET['id'] ?? null) {
             return (int)$id;
         }
 

@@ -19,7 +19,7 @@ class ItemsProcFunc
 {
     protected function getPageUid(array $config): int
     {
-        return GeneralUtility::_GP('id') ?: $config['flexParentDatabaseRow']['pid'] ?? 0;
+        return (int)($_GET['id'] ?? $config['flexParentDatabaseRow']['pid'] ?? 0);
     }
 
     protected function getRootPageUid(array $config): int
