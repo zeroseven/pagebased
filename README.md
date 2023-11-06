@@ -12,8 +12,9 @@ features like metadata, translation handling, caching, sitemaps, and URLs are av
 ![Example of a page object](./Resources/Public/Images/Documentation/Screenshot1.png)
 
 ## Get there fast with little code
-From news to [blog posts](https://github.com/zeroseven/pagebased_blog), a job offer, or an event, page objects usually have a lot in
-common. [Using a configuration](#object-registration), you can activate or deactivate individual functions for each page object as needed:
+From [news](https://github.com/zeroseven/pagebased_news) to [blog posts](https://github.com/zeroseven/pagebased_blog), 
+a job offer, or an event, page objects usually have a lot in common. [Using a configuration](#object-registration), 
+you can activate or deactivate individual functions for each page object as needed:
 
 * list plugin
 * filter plugin
