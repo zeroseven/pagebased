@@ -10,6 +10,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap\Relation;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use Zeroseven\Pagebased\Exception\PropertyException;
@@ -79,7 +80,7 @@ abstract class AbstractDemand implements DemandInterface
         }
 
         // Get type by column map
-        if (in_array($columnMap->getTypeOfRelation(), [ColumnMap::RELATION_HAS_MANY, ColumnMap::RELATION_HAS_AND_BELONGS_TO_MANY], true)) {
+        if (in_array($columnMap->getTypeOfRelation(), [Relation::HAS_MANY, Relation::HAS_AND_BELONGS_TO_MANY], true)) {
             return DemandProperty::TYPE_ARRAY;
         }
 

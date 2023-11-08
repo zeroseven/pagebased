@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
-use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
@@ -28,9 +27,9 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
 {
     protected Registration $registration;
 
-    public function __construct(ObjectManagerInterface $objectManager)
+    public function __construct()
     {
-        parent::__construct($objectManager);
+        parent::__construct();
 
         $this->registration = RegistrationService::getRegistrationByRepository(get_class($this));
 

@@ -12,8 +12,8 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3Fluid\Fluid\View\ViewInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Domain\Repository\ContactRepository;
@@ -62,7 +62,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
             $requestKey = strtolower('tx_' . $extbaseSetup->getControllerExtensionName() . '_list');
             $requestKeyUncached = $requestKey . 'uncached';
 
-            $arguments = GeneralUtility::_GP($requestKey) ?? (GeneralUtility::_GP($requestKeyUncached) ?? []);
+            $arguments = $_POST[$requestKey] ?? $_GET[$requestKey] ?? $_POST[$requestKeyUncached] ?? $_GET[$requestKeyUncached] ?? [];
         } else {
             $arguments = [];
         }

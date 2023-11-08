@@ -1,7 +1,7 @@
 ##################################################
 # Include sources
 ##################################################
-page.includeJSFooter.pagebased_pagination = EXT:pagebased/Resources/Public/JavaScript/Pagination.dist.min.js
+page.includeJSFooter.pagebased_pagination = EXT:pagebased/Resources/Public/JavaScript/Pagination.js
 
 ##################################################
 # Ajax request page

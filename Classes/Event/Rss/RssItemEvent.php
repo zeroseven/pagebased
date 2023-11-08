@@ -6,8 +6,8 @@ namespace Zeroseven\Pagebased\Event\Rss;
 
 use InvalidArgumentException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Service\ImageService;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 use Zeroseven\Pagebased\Domain\Model\AbstractObject;
 use Zeroseven\Pagebased\Domain\Model\Topic;
@@ -55,10 +55,13 @@ final class RssItemEvent extends AbstractRssObject
         $this->setIfEmpty('tags', implode(', ', $this->object->getTags()));
 
         if ($this->empty('link')) {
-            $uri = GeneralUtility::makeInstance(UriBuilder::class)
-                ->setCreateAbsoluteUri(true)
-                ->setTargetPageUid($this->object->getUid())
-                ->build();
+            $contentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+            $contentObjectRenderer->setRequest($this->feed->getRequest());
+
+            $uri = $contentObjectRenderer->createUrl([
+                'parameter' => $this->object->getUid(),
+                'forceAbsoluteUrl' => true
+            ]);
 
             $uri && $this->set('link', $uri);
         }

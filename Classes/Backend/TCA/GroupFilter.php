@@ -18,7 +18,6 @@ class GroupFilter
         if ($parent instanceof DataHandler) {
             $uid = (int)array_key_first($parent->datamap[$table] ?? []);
             $registration = ObjectUtility::isObject($uid);
-
             if ($registration && $values) {
                 $newValues = [];
 

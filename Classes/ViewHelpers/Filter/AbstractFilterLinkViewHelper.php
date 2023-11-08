@@ -29,10 +29,7 @@ abstract class AbstractFilterLinkViewHelper extends AbstractLinkViewHelper
             if (($uid = (int)($listPlugin['uid'] ?? 0)) && $pid = (int)($listPlugin['pid'] ?? 0)) {
                 $this->arguments['arguments'][ObjectDemandInterface::PROPERTY_CONTENT_ID] = $uid;
                 $this->arguments['pageUid'] = $pid;
-
-                if (empty($this->arguments['section'])) {
-                    $this->arguments['section'] = 'c' . $uid;
-                }
+                $this->arguments['section'] ?? $this->arguments['section'] = 'c' . $uid;
             }
         }
     }

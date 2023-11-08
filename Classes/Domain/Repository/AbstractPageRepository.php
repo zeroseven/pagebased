@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Domain\Repository;
 
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
@@ -20,7 +21,7 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
 
     public function initializeObject(): void
     {
-        $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
+        $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
         $querySettings->setRespectStoragePage(false);
         $this->setDefaultQuerySettings($querySettings);
     }
@@ -34,13 +35,13 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
         $constraints[] = $query->equals('nav_hide', 0);
 
         // Add language constraints
-        $constraints[] = $query->logicalOr([
+        $constraints[] = $query->logicalOr(
             $query->equals('l18n_cfg', 0),
-            $query->logicalAnd([
+            $query->logicalAnd(
                 $query->greaterThanOrEqual('l18n_cfg', 1),
                 $query->greaterThanOrEqual($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['languageField'], 1)
-            ]),
-        ]);
+            ),
+        );
 
         return $constraints;
     }

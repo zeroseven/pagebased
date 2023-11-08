@@ -9,12 +9,12 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Exception;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Exception\BadConstraintException;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Reports\Status;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Utility\DetectionUtility;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
@@ -31,7 +31,7 @@ class DisplayObjectInformation
         } catch (AspectNotFoundException $e) {
         }
 
-        $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title ?? '', AbstractMessage::INFO);
+        $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title ?? '', Status::INFO);
 
         try {
             $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();

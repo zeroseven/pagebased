@@ -6,7 +6,6 @@ return [
         'label' => 'title',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'languageField' => 'sys_language_uid',
         'transOrigPointerField' => 'l10n_parent',
         'transOrigDiffSourceField' => 'l10n_diffsource',
@@ -39,7 +38,7 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['', 0]
+                    ['label' => '', 'value' => 0]
                 ],
                 'foreign_table' => 'tx_pagebased_domain_model_topic',
                 'foreign_table_where' => 'AND tx_pagebased_domain_model_topic.pid=###CURRENT_PID### AND tx_pagebased_domain_model_topic.sys_language_uid IN (-1,0)'
@@ -64,7 +63,7 @@ return [
             'config' => [
                 'type' => 'check',
                 'items' => [
-                    ['LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled', 1]
+                    ['label' => 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled', 'value' => 1]
                 ]
             ]
         ],

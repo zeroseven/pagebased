@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Registration\EventListener;
 
 use LogicException;
-use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+use TYPO3\CMS\Core\Core\Event\BootCompletedEvent;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\DebugUtility;
@@ -180,7 +180,7 @@ class ValidateRegistrationEvent
         $this->checkPageEntityConfiguration($categoryRegistration);
     }
 
-    public function __invoke(AfterTcaCompilationEvent $event): void
+    public function __invoke(BootCompletedEvent $event): void
     {
         if (Environment::isCli() && Environment::getContext()->isDevelopment()) {
             foreach (RegistrationService::getRegistrations() as $registration) {

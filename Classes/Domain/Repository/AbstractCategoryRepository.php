@@ -15,9 +15,9 @@ use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 abstract class AbstractCategoryRepository extends AbstractPageRepository implements CategoryRepositoryInterface
 {
-    public function __construct(ObjectManagerInterface $objectManager)
+    public function __construct()
     {
-        parent::__construct($objectManager);
+        parent::__construct();
 
         if ($registration = RegistrationService::getRegistrationByCategoryRepository(get_class($this))) {
             $this->defaultOrderings = [

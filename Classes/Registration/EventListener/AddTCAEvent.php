@@ -86,9 +86,9 @@ class AddTCAEvent
                     AbstractPage::TABLE_NAME,
                     $tcaTypeField,
                     [
-                        $categoryRegistration->getTitle(),
-                        $pageType,
-                        $categoryRegistration->getIconIdentifier()
+                        'label' => $categoryRegistration->getTitle(),
+                        'value' => $pageType,
+                        'icon' => $categoryRegistration->getIconIdentifier()
                     ],
                     '1',
                     'after'
@@ -123,9 +123,9 @@ class AddTCAEvent
                     'foreign_table' => 'pages',
                     'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $typeField, $registration->getCategory()->getDocumentType()),
                     'items' => [
-                        ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.no_restrictions', '--div--'],
-                        ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.all', 0],
-                        ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.available', '--div--'],
+                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.no_restrictions', 'value' => '--div--'],
+                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.all', 'value' => 0],
+                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.available', 'value' => '--div--']
                     ]
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category');
             }

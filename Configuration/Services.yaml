@@ -28,7 +28,7 @@ services:
         tags:
             - name: event.listener
               identifier: 'pagebased/registration-validation'
-              event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
+              event: TYPO3\CMS\Core\Core\Event\BootCompletedEvent
 
     Zeroseven\Pagebased\Registration\EventListener\AddTCAEvent:
         tags:

@@ -9,6 +9,7 @@ use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
@@ -18,13 +19,23 @@ use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Registration\RegistrationService;
 use Zeroseven\Pagebased\Utility\CastUtility;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
+use Zeroseven\Pagebased\Utility\RenderUtility;
+use Zeroseven\Pagebased\Utility\RequestUtility;
 
 abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
 {
     protected $tagName = 'a';
+
     private ?RequestInterface $request = null;
     protected ?DemandInterface $demand = null;
     protected ?Registration $registration = null;
+
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->tag->forceClosingTag(true);
+    }
 
     public function initializeArguments(): void
     {
@@ -34,7 +45,6 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
         $this->registerArgument('registration', 'string', 'The registration identifier');
         $this->registerArgument('action', 'string', 'Target action');
         $this->registerArgument('controller', 'string', 'Target controller. If NULL current controllerName is used');
-        $this->registerArgument('extensionName', 'string', 'Target Extension Name (without `tx_` prefix and no underscores). If NULL the current extension name is used');
         $this->registerArgument('pluginName', 'string', 'Target plugin. If empty, the current plugin name is used');
         $this->registerArgument('pageUid', 'int', 'Target page. See TypoLink destination');
         $this->registerArgument('pageType', 'int', 'Type of the target page. See typolink.parameter');
@@ -52,22 +62,26 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
 
     protected function getRequest(): RequestInterface
     {
-        $this->request === null
-        && ($renderingContext = $this->renderingContext)
-        && ($request = $renderingContext->getRequest())
-        && ($request instanceof RequestInterface)
-        && ($this->request = $request);
-
         if ($this->request === null) {
-            throw new RuntimeException('ViewHelper "' . self::class . '" can be used only in extbase context and needs a request implementing extbase RequestInterface.', 1688559410);
+            if (($renderingContext = $this->renderingContext) instanceof RenderingContextInterface && ($request = $renderingContext->getRequest()) instanceof RequestInterface) {
+                return $this->request = $request;
+            }
+
+            if ($request = RequestUtility::getExtbaseRequest($this->registration)) {
+                return $this->request = $request;
+            }
+
+            throw new RuntimeException(sprintf('ViewHelper "%s" needs a request implementing "%s". You can either create an extbase plugin or use the "%s"', get_class($this), RequestInterface::class, RenderUtility::class), 1688559410);
         }
 
         return $this->request;
     }
 
+    /** @throws ValueException */
     public function validateArguments(): void
     {
         parent::validateArguments();
+
         $this->initializeRegistration();
     }
 
@@ -105,13 +119,11 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
     }
 
     /** @throws TypeException */
-    public function render(): string
+    protected function createUri(): string
     {
         // Get variables
-        $request = $this->getRequest();
         $action = $this->arguments['action'] ?? null;
         $controller = $this->arguments['controller'] ?? null;
-        $extensionName = $this->arguments['extensionName'] ?? null;
         $pluginName = $this->arguments['pluginName'] ?? null;
         $pageUid = CastUtility::int($this->arguments['pageUid'] ?? 0);
         $pageType = CastUtility::int($this->arguments['pageType'] ?? 0);
@@ -130,14 +142,9 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
             $controller = GeneralUtility::makeInstance(ReflectionClass::class, $this->registration->getObject()->getClassName())->getShortName();
         }
 
-        // Set extension name
-        if (empty($extensionName)) {
-            $extensionName = GeneralUtility::underscoredToLowerCamelCase($this->registration->getExtensionName());
-        }
-
         // Create instance of the uriBuilder
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $uriBuilder->reset()->setRequest($request)
+        $uriBuilder->reset()->setRequest($this->getRequest())
             ->setCreateAbsoluteUri($absolute)
             ->setAddQueryString($addQueryString);
 
@@ -148,11 +155,20 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
         empty($additionalParams) || $uriBuilder->setArguments($additionalParams);
         empty($argumentsToBeExcludedFromQueryString) || $uriBuilder->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString);
 
+        // Set extension name
+        $extensionName = GeneralUtility::underscoredToLowerCamelCase($this->registration->getExtensionName());
+
+        return $uriBuilder->uriFor($action, $arguments, $controller, $extensionName, $pluginName);
+    }
+
+    /** @throws TypeException */
+    public function render(): string
+    {
         // Render link
-        if ($uri = $uriBuilder->uriFor($action, $arguments, $controller, $extensionName, $pluginName)) {
+        if ($uri = $this->createUri()) {
             $this->tag->addAttribute('href', $uri);
             $this->tag->setContent($this->renderChildren());
-            $this->tag->forceClosingTag(true);
+
             return $this->tag->render();
         }
 

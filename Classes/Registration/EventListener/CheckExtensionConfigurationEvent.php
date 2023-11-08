@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Registration\EventListener;
 
+use BadFunctionCallException;
 use ReflectionClass;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\DebugUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use Zeroseven\Pagebased\Registration\Event\BeforeStoreRegistrationEvent;
@@ -30,9 +32,10 @@ class CheckExtensionConfigurationEvent
         $this->logOnConsole(sprintf('Override property "%s" in "%s" for extension "%s".', $property, (new ReflectionClass($registrationProperty))->getShortName(), $this->registration->getExtensionName()));
     }
 
+    /** @throws BadFunctionCallException */
     protected function createExtensionConfigurationTemplate(): void
     {
-        $path = sprintf('%s/%s/ext_conf_template.txt', Environment::getExtensionsPath(), $this->registration->getExtensionName());
+        $path = ExtensionManagementUtility::extPath($this->registration->getExtensionName(), 'ext_conf_template.txt');
 
         if (!@file_exists($path)) {
             GeneralUtility::writeFile($path, trim('

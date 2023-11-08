@@ -6,6 +6,7 @@ namespace Zeroseven\Pagebased\Pagination;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Exception\BadConstraintException;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Utility\CastUtility;
 
@@ -63,7 +64,11 @@ class Pagination
     /** @throws TypeException */
     public function setItems(mixed $items, bool $updatePagination = null): self
     {
-        $this->items = CastUtility::array($items);
+        try {
+            $this->items = CastUtility::array($items);
+        } catch (BadConstraintException $exception) {
+            $this->items = [];
+        }
 
         if ($updatePagination !== false) {
             $this->update();

@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  {{ cookiecutter.__namespace_vendor }}\{{ cookiecutter.__namespace_extension }}\:
+    resource: '../Classes/*'

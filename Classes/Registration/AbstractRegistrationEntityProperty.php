@@ -6,7 +6,6 @@ namespace Zeroseven\Pagebased\Registration;
 
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\GenericDemand;
@@ -39,12 +38,12 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
 
     public function getRepositoryClass(): RepositoryInterface
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get($this->getRepositoryClassName());
+        return GeneralUtility::makeInstance($this->getRepositoryClassName());
     }
 
-    public function setRepositoryClass(string $repositoryClassName): self
+    public function setRepositoryClass(string $className): self
     {
-        $this->repositoryClassName = $repositoryClassName;
+        $this->repositoryClassName = $className;
         return $this;
     }
 
@@ -60,9 +59,9 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
             : GeneralUtility::makeInstance($demandClass);
     }
 
-    public function setDemandClassName(string $demandClassName): self
+    public function setDemandClass(string $className): self
     {
-        $this->demandClassName = $demandClassName;
+        $this->demandClassName = $className;
         return $this;
     }
 
