@@ -144,9 +144,8 @@ class AddTCAEvent
                     'type' => 'select',
                     'renderType' => 'selectCheckBox',
                     'foreign_table' => 'tx_pagebased_domain_model_topic',
-                    'MM' => 'tx_pagebased_object_topic_mm',
-                    'default' => 0,
                     'foreign_table_where' => sprintf(' AND {#tx_pagebased_domain_model_topic}.{#pid} IN(%s) AND {#tx_pagebased_domain_model_topic}.{#%s} < 1', implode(',', $topicPageIds), $GLOBALS['TCA']['tx_pagebased_domain_model_topic']['ctrl']['languageField']),
+                    'default' => 0,
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topics');
             }
 
@@ -155,8 +154,8 @@ class AddTCAEvent
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'foreign_table' => 'tx_pagebased_domain_model_contact',
-                    'default' => 0,
                     'foreign_table_where' => sprintf(' AND {#tx_pagebased_domain_model_contact}.{#pid} IN(%s) AND {#tx_pagebased_domain_model_contact}.{#%s} < 1', implode(',', $contactPageIds), $GLOBALS['TCA']['tx_pagebased_domain_model_contact']['ctrl']['languageField']),
+                    'default' => 0,
                     'items' => [
                         ['-', 0, 'actions-user']
                     ]
