@@ -11,6 +11,20 @@ services:
         arguments:
             $cache: '@cache.pagebased_rss_feed'
 
+    dashboard.widget.pagebasedObjects:
+        class: 'TYPO3\CMS\Dashboard\Widgets\DoughnutChartWidget'
+        arguments:
+            $view: '@dashboard.views.widget'
+            $dataProvider: '@Zeroseven\Pagebased\Widgets\Provider\ObjectsDataProvider'
+        tags:
+            -   name: dashboard.widget
+                identifier: 'pagebasedObjects'
+                groupNames: 'systemInfo'
+                title: 'LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:widget.pagebasedObjects.title'
+                description: 'LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:widget.pagebasedObjects.description'
+                iconIdentifier: 'content-widget-chart-pie'
+                height: 'medium'
+
     cache.pagebased_rss_feed:
         class: TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
         factory: [ '@TYPO3\CMS\Core\Cache\CacheManager', 'getCache' ]

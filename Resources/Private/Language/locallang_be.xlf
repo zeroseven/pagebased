@@ -23,6 +23,13 @@
 			<trans-unit id="notification.category.description">
 				<source>This page is a category containing %d objects of type "%s".</source>
 			</trans-unit>
+
+      <trans-unit id="widget.pagebasedObjects.title">
+        <source>Page objects</source>
+      </trans-unit>
+      <trans-unit id="widget.pagebasedObjects.description">
+        <source>Display the number of objects in a diagram</source>
+      </trans-unit>
 		</body>
 	</file>
 </xliff>
