@@ -7,7 +7,6 @@ namespace Zeroseven\Pagebased\ViewHelpers\Filter;
 use ReflectionClass;
 use ReflectionException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use Zeroseven\Pagebased\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Exception\ValueException;
@@ -25,7 +24,7 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
         $this->registerArgument('dataAttributes', 'bool', 'Set data attributes, if the filter is enabled', false, true);
     }
 
-    /** @throws Exception | ReflectionException */
+    /** @throws Exception | ReflectionException | ValueException */
     public function validateArguments(): void
     {
         parent::validateArguments();
@@ -52,30 +51,27 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
 
     protected function overrideArguments(): void
     {
-        $overrides = $this->demand->getParameterDiff($this->templateVariableContainer->get('settings'), [AbstractObjectDemand::PROPERTY_CONTENT_ID]);
+        $overrides = $this->demand->getParameterDiff($this->templateVariableContainer->get('settings'), [ObjectDemandInterface::PROPERTY_CONTENT_ID]);
         $this->arguments['arguments'] = array_merge((array)$this->arguments['arguments'], $overrides);
     }
 
-    /** @throws TypeException | ValueException */
+    /** @throws TypeException */
     protected function setDataAttributes(): void
     {
         if ($this->arguments['dataAttributes'] ?? null) {
-            $matches = 0;
 
+            // Stop if one the properties is not active
             foreach ($this->arguments['properties'] ?? [] as $key => $value) {
-                if ($this->demand->hasProperty($key) && $this->demand->getProperty($key)->isActive($value)) {
-                    ++$matches;
+                if ($this->demand->hasProperty($key) && !$this->demand->getProperty($key)->isActive($value)) {
+                    return;
                 }
             }
 
-            // Set data attributes
-            if ($matches > 0) {
-                $this->tag->addAttribute(self::FILTER_ACTIVE_ATTRIBUTE, 'true');
-            }
+            $this->tag->addAttribute(self::FILTER_ACTIVE_ATTRIBUTE, 'true');
         }
     }
 
-    /** @throws TypeException | ValueException */
+    /** @throws TypeException */
     public function render(): string
     {
         $this->setDataAttributes();
