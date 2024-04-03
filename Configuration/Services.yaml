@@ -90,3 +90,9 @@ services:
             - name: event.listener
               identifier: 'pagebased/display-object-affiliation'
               event: TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent
+
+    Zeroseven\Pagebased\EventListener\HideObjectsInMenu:
+        tags:
+            - name: event.listener
+              identifier: 'pagebased/hide-objects-in-menu'
+              event: TYPO3\CMS\Frontend\Event\FilterMenuItemsEvent
