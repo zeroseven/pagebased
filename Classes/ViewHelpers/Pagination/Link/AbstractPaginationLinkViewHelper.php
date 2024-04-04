@@ -9,7 +9,7 @@ use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
-use Zeroseven\Pagebased\Domain\Model\Demand\AbstractDemand;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Pagination\Pagination;
 use Zeroseven\Pagebased\Utility\CastUtility;
@@ -43,7 +43,7 @@ abstract class AbstractPaginationLinkViewHelper extends AbstractLinkViewHelper
 
         if (($targetStage = $this->getTargetStage($this->templateVariableContainer->get(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER))) !== null) {
             if ($demand) {
-                $overrides = $demand->getParameterDiff($this->templateVariableContainer->get('settings'), [AbstractDemand::PROPERTY_UID_LIST]);
+                $overrides = $demand->getParameterDiff($this->templateVariableContainer->get('settings'), [DemandInterface::PROPERTY_UID_LIST]);
 
                 foreach ($overrides as $key => $value) {
                     $this->arguments['arguments'][$key] = $value;
