@@ -74,7 +74,7 @@ return [
             'config' => [
                 'type' => 'input',
                 'required' => true,
-                'eval' => 'trim,uniqueInPid',
+                'eval' => 'trim',
                 'default' => ''
             ]
         ]
