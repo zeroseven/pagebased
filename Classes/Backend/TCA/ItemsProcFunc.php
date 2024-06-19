@@ -91,7 +91,7 @@ class ItemsProcFunc
             // Remove categories of other page trees or the closest category page
             $localPageIds = array_keys($localPages);
             foreach ($PA['items'] ?? [] as $key => $item) {
-                if ((int)($value = $item['value'] ?? ($item[1] ?? 0)) && $value !== '--div--' && (!in_array($value, $localPageIds, true) || $value === $closestCategoryUid)) {
+                if ((int)($value = $item['value'] ?? ($item[1] ?? 0)) > 0 && $value !== '--div--' && (!in_array($value, $localPageIds, true) || $value === $closestCategoryUid)) {
                     unset($PA['items'][$key]);
                 }
             }

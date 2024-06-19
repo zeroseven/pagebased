@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Registration\EventListener;
 
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\Exception as TypeException;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use Zeroseven\Pagebased\Backend\TCA\GroupFilter;
 use Zeroseven\Pagebased\Backend\TCA\ItemsProcFunc;
@@ -122,11 +124,15 @@ class AddTCAEvent
                     'itemsProcFunc' => ItemsProcFunc::class . '->filterCategories',
                     'foreign_table' => 'pages',
                     'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $typeField, $registration->getCategory()->getDocumentType()),
-                    'items' => [
+                    'items' => array_merge([
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.no_restrictions', 'value' => '--div--'],
-                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.all', 'value' => 0],
+                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.all', 'value' => 0]
+                    ], count(GeneralUtility::makeInstance(SiteFinder::class)?->getAllSites()) <= 1 ? [] : [
+                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.allInstances', 'value' => '--div--'],
+                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.allGlobal', 'value' => -1],
+                    ], [
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.available', 'value' => '--div--']
-                    ]
+                    ])
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category');
             }
 
