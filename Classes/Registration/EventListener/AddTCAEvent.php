@@ -144,7 +144,7 @@ class AddTCAEvent
                     'type' => 'select',
                     'renderType' => 'selectCheckBox',
                     'foreign_table' => 'tx_pagebased_domain_model_topic',
-                    'foreign_table_where' => sprintf(' AND {#tx_pagebased_domain_model_topic}.{#pid} IN(%s) AND {#tx_pagebased_domain_model_topic}.{#%s} < 1', implode(',', $topicPageIds), $GLOBALS['TCA']['tx_pagebased_domain_model_topic']['ctrl']['languageField']),
+                    'foreign_table_where' => sprintf(' AND {#tx_pagebased_domain_model_topic}.{#pid} IN(%s) AND {#tx_pagebased_domain_model_topic}.{#%s} < 1 ORDER BY title ASC', implode(',', $topicPageIds), $GLOBALS['TCA']['tx_pagebased_domain_model_topic']['ctrl']['languageField']),
                     'default' => 0,
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topics');
             }
