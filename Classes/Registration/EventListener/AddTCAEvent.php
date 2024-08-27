@@ -8,6 +8,7 @@ use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Type\Exception as TypeException;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use Zeroseven\Pagebased\Backend\TCA\DisplayCondition;
 use Zeroseven\Pagebased\Backend\TCA\GroupFilter;
 use Zeroseven\Pagebased\Backend\TCA\ItemsProcFunc;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
@@ -202,7 +203,9 @@ class AddTCAEvent
                     ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.child_objects.0', 0],
                     ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.child_objects.1', 1],
                 ]
-            ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.child_objects');
+            ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.child_objects', [
+                'displayCond' => 'USER:' . DisplayCondition::class . '->hasChildRecords:' . $registration->getIdentifier()
+            ]);
 
             $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.layout')
                 ->addField('settings.itemsPerStage', [
