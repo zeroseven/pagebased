@@ -201,6 +201,12 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
         return $this->linkedObject;
     }
 
+    public function isChildObject(): bool
+    {
+        // Todo get field "_pagebased_childe_object" from database
+        return !($this->getParentObject() === null);
+    }
+
     public function getParentObject(): ?ObjectInterface
     {
         if (
