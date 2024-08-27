@@ -100,6 +100,15 @@
       <trans-unit id="tt_content.pi_flexform.sorting.title_desc">
         <source>Title (Z-A)</source>
       </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.child_objects">
+        <source>Child objects</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.child_objects.0">
+        <source>Hide child objects</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.child_objects.1">
+        <source>Show child objects</source>
+      </trans-unit>
       <trans-unit id="tt_content.pi_flexform.itemsPerStage">
         <source>Items per stage</source>
       </trans-unit>

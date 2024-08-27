@@ -193,6 +193,17 @@ class AddTCAEvent
                 ] : [])
             ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting');
 
+            $optionsSheet->addField('settings.' . ObjectDemandInterface::PROPERTY_INCLUDE_CHILD_OBJECTS, [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'minitems' => 1,
+                'maxitems' => 1,
+                'items' => [
+                    ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.child_objects.0', 0],
+                    ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.child_objects.1', 1],
+                ]
+            ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.child_objects');
+
             $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.layout')
                 ->addField('settings.itemsPerStage', [
                     'placeholder' => '6',
