@@ -53,6 +53,9 @@ return [
             ],
             'relationsFrom' => [
                 'fieldName' => 'pagebased_relations_from'
+            ],
+            'childObject' => [
+                'fieldName' => '_pagebased_child_object'
             ]
         ]
     ],

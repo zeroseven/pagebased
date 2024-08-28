@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Backend\TCA;
 
 use Zeroseven\Pagebased\Domain\Model\AbstractObject;
+use Zeroseven\Pagebased\Exception\ValueException;
 use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class DisplayCondition
 {
+    /** @throws ValueException */
     public function hasChildRecords(array $params): bool
     {
         if (
