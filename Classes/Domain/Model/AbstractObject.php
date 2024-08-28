@@ -26,6 +26,7 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
     protected array $tags = [];
     protected ?Contact $contact = null;
     protected ?ObjectStorage $relations = null;
+    protected bool $childObject;
 
     /**
      * @var ObjectStorage<Topic> | null
@@ -151,6 +152,11 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
         return $this->relations;
     }
 
+    public function isChildObject(): bool
+    {
+        return $this->childObject;
+    }
+
     public function addTopic(Topic $topic): void
     {
         $this->topics->attach($topic);
@@ -205,6 +211,7 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
     {
         if (
             $this->parentObject === null
+            && $this->isChildObject()
             && count($parentPages = RootLineUtility::collectPagesAbove($this->uid, false, 1))
             && ($registration = RegistrationService::getRegistrationByObjectClass($this))
         ) {

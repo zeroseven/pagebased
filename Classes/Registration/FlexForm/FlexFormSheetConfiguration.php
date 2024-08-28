@@ -38,12 +38,12 @@ class FlexFormSheetConfiguration
         return $this->fields;
     }
 
-    public function addField(string $fieldKey, array $fieldConfig, string $fieldTitle = null): self
+    public function addField(string $fieldKey, array $fieldConfig, string $fieldTitle = null, array $options = null): self
     {
-        $this->fields[$fieldKey] = [
+        $this->fields[$fieldKey] = array_merge($options ?? [], [
             'label' => $fieldTitle ?? $fieldKey,
             'config' => $fieldConfig
-        ];
+        ]);
 
         return $this;
     }

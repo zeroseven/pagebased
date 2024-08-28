@@ -142,7 +142,7 @@ call_user_func(static function (string $table) {
                  \Zeroseven\Pagebased\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
                  \Zeroseven\Pagebased\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME
              ] as $fieldName) {
-        !isset($GLOBALS['TCA'][$table]['columns'][$fieldName])
+        isset($GLOBALS['TCA'][$table]['columns'][$fieldName])
         || \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [$fieldName => ['config' => ['type' => 'passthrough']]]);
     }
 
