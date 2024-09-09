@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Domain\Model\Demand;
 
+use Doctrine\DBAL\Types\SmallIntType;
 use ReflectionClass;
 use ReflectionProperty;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -89,7 +90,7 @@ abstract class AbstractDemand implements DemandInterface
 
         // Check table definition
         if (($column = $tableDefinition[$columnMap->getColumnName()] ?? null) && $type = $column->getType()) {
-            if ($type->getName() === 'smallint') {
+            if ($type instanceof SmallIntType) {
                 return DemandProperty::TYPE_BOOLEAN;
             }
 
