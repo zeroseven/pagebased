@@ -211,7 +211,7 @@ return [
                 'overrideChildTca' => [
                     'types' => [
                         '0' => ['showitem' => '--palette--;;filePalette'],
-                        \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_IMAGE => ['showitem' => '--palette--;;filePalette']
+                        \TYPO3\CMS\Core\Resource\FileType::IMAGE->value => ['showitem' => '--palette--;;filePalette']
                     ]
                 ],
                 'allowed' => 'common-image-types'

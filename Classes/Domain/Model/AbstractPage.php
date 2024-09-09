@@ -6,8 +6,8 @@ namespace Zeroseven\Pagebased\Domain\Model;
 
 use DateTime;
 use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Resource\AbstractFile;
 use TYPO3\CMS\Core\Resource\FileReference;
+use TYPO3\CMS\Core\Resource\FileType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -215,7 +215,7 @@ abstract class AbstractPage extends AbstractEntity
     {
         if ($this->firstImage === null && $media = $this->getMedia()) {
             foreach ($media->toArray() ?? [] as $asset) {
-                if ($asset->getType() === AbstractFile::FILETYPE_IMAGE) {
+                if ($asset->getType() === FileType::IMAGE->value) {
                     return $this->firstImage = $asset;
                 }
             }
