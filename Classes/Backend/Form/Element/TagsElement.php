@@ -6,6 +6,7 @@ namespace Zeroseven\Pagebased\Backend\Form\Element;
 
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Pagebased\Exception\ValueException;
@@ -23,10 +24,14 @@ class TagsElement extends AbstractFormElement
     protected ?Registration $registration;
     protected int $languageUid;
 
-    /** @throws ValueException */
-    public function __construct(NodeFactory $nodeFactory, array $data)
+    public function __construct(
+        private readonly IconFactory $iconFactory
+    ) {
+    }
+
+    public function setData(array $data): void
     {
-        parent::__construct($nodeFactory, $data);
+        $this->data = $data;
 
         $parameterArray = $this->data['parameterArray'] ?? [];
         $placeholder = $parameterArray['fieldConf']['config']['placeholder'] ?? '';
