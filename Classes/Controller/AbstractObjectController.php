@@ -12,6 +12,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Cache\CacheInstruction;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3Fluid\Fluid\View\ViewInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
@@ -73,18 +74,21 @@ abstract class AbstractObjectController extends AbstractController implements Ob
     /** @throws TypeException */
     protected function controlCache(): void
     {
-        if (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController && $GLOBALS['TSFE']->no_cache === false) {
+        /** @var CacheInstruction */
+        $cacheInstruction = $this->request->getAttribute('frontend.cache.instruction');
+
+        if (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController && $cacheInstruction->isCachingAllowed()) {
             $demandArguments = array_filter(array_keys($this->requestArguments), fn(string $argument) => $this->demand->hasProperty($argument));
 
             // Limit caching on multiple arguments
             if (count($demandArguments) > 2) {
-                $GLOBALS['TSFE']->no_cache = true;
+                $this->disableCache($cacheInstruction, 'Limit caching on multiple arguments');
                 return;
             }
 
             // Limit pagination
             if ((int)($this->requestArguments[PaginationViewHelper::REQUEST_ARGUMENT] ?? 0) > 3) {
-                $GLOBALS['TSFE']->no_cache = true;
+                $this->disableCache($cacheInstruction, 'Limit pagination');
                 return;
             }
 
@@ -92,9 +96,15 @@ abstract class AbstractObjectController extends AbstractController implements Ob
             foreach ($demandArguments as $argument) {
                 $this->demand->getProperty($argument)->isArray()
                 && count(CastUtility::array($this->requestArguments[$argument] ?? null)) > 1
-                && $GLOBALS['TSFE']->no_cache = true;
+                && $this->disableCache($cacheInstruction, 'Limit caching on multiple array values');
             }
         }
+    }
+
+    protected function disableCache(CacheInstruction $cacheInstruction, string $reason)
+    {
+        $cacheInstruction->disableCache('Limit caching on multiple arguments');
+        $this->request = $this->request->withAttribute('frontend.cache.instruction', $cacheInstruction);
     }
 
     protected function resolveView(): ViewInterface
