@@ -65,6 +65,7 @@ class RssFeed implements MiddlewareInterface
         $demand = $registration->getObject()->getDemandClass()->setParameterArray($settings);
         $repository = $registration->getObject()->getRepositoryClass();
 
+        // @extensionScannerIgnoreLine
         if ($languageId = $language->getLanguageId()) {
             $querySettings = $repository->getDefaultQuerySettings();
             $querySettings->setLanguageUid($languageId);
@@ -121,6 +122,7 @@ class RssFeed implements MiddlewareInterface
                         ->from(self::TABLE_NAME)
                         ->where(
                             $queryBuilder->expr()->in($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['type'], $CTypes),
+                            // @extensionScannerIgnoreLine
                             $queryBuilder->expr()->in($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['languageField'], [-1, $language->getLanguageId()]),
                             $queryBuilder->expr()->eq('pid', $pid),
                         )
@@ -134,6 +136,7 @@ class RssFeed implements MiddlewareInterface
                         && ($CType = $content[$GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['type'] ?? ''])
                         && ($registration = $this->getRegistrationByCType($CType))
                     ) {
+                        // @extensionScannerIgnoreLine
                         $identifier = md5($registration->getIdentifier() . ($content['uid'] ?? '') . $language->getLanguageId());
 
                         if (empty($rssFeed = $this->cache->get($identifier))) {

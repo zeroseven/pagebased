@@ -22,11 +22,16 @@ class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterfa
     {
         parent::initProperties();
 
+        // @extensionScannerIgnoreLine
         $this->addProperty(self::PROPERTY_CONTENT_ID, DemandProperty::TYPE_INTEGER);
+        // @extensionScannerIgnoreLine
         $this->addProperty(self::PROPERTY_TOP_MODE, DemandProperty::TYPE_INTEGER);
+        // @extensionScannerIgnoreLine
         $this->addProperty(self::PROPERTY_INCLUDE_CHILD_OBJECTS, DemandProperty::TYPE_BOOLEAN);
 
+        // @extensionScannerIgnoreLine
         $this->addProperty('category', DemandProperty::TYPE_INTEGER);
+        // @extensionScannerIgnoreLine
         $this->addProperty('tags', DemandProperty::TYPE_ARRAY, 'tagsString');
     }
 

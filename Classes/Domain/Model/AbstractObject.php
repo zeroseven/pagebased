@@ -210,14 +210,17 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
     public function getParentObject(): ?ObjectInterface
     {
         if (
+            // @extensionScannerIgnoreLine
             $this->parentObject === null
             && $this->isChildObject()
             && count($parentPages = RootLineUtility::collectPagesAbove($this->uid, false, 1))
             && ($registration = RegistrationService::getRegistrationByObjectClass($this))
         ) {
+            // @extensionScannerIgnoreLine
             return $this->parentObject = $registration->getObject()->getRepositoryClass()->findByUid(array_key_first($parentPages));
         }
 
+        // @extensionScannerIgnoreLine
         return $this->parentObject;
     }
 

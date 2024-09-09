@@ -31,6 +31,7 @@ final class RssFeedEvent extends AbstractRssObject
         $this->registration = $registration;
         $this->request = $request;
         $this->settings = $settings;
+        // @extensionScannerIgnoreLine
         $this->content = $content;
         $this->objects = $objects;
     }
@@ -52,6 +53,7 @@ final class RssFeedEvent extends AbstractRssObject
 
     public function getContent(): array
     {
+        // @extensionScannerIgnoreLine
         return $this->content;
     }
 

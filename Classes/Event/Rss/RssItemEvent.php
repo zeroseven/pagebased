@@ -82,6 +82,7 @@ final class RssItemEvent extends AbstractRssObject
             try {
                 $processedImage && $this->set('enclosure', '', [
                     'url' => $imageService->getImageUri($processedImage, true),
+                    // @extensionScannerIgnoreLine
                     'length' => $processedImage->getSize(),
                     'type' => $processedImage->getMimeType()
                 ]);

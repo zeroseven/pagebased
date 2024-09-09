@@ -109,8 +109,10 @@ class DemandProperty
     public function toggleValue(mixed $value): void
     {
         if ($this->isArray()) {
+            // @extensionScannerIgnoreLine
             $this->isActive($value) ? $this->removeFromList($value) : $this->addToList($value);
         } else {
+            // @extensionScannerIgnoreLine
             $this->isActive($value) ? $this->clear() : $this->setValue($value);
         }
     }

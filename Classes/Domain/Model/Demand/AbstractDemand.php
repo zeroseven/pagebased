@@ -36,8 +36,11 @@ abstract class AbstractDemand implements DemandInterface
 
     protected function initProperties(): void
     {
+        // @extensionScannerIgnoreLine
         $this->addProperty(self::PROPERTY_UID_LIST, DemandProperty::TYPE_ARRAY);
+        // @extensionScannerIgnoreLine
         $this->addProperty(self::PROPERTY_ORDER_BY, DemandProperty::TYPE_STRING);
+        // @extensionScannerIgnoreLine
         $this->addProperty(self::PROPERTY_MAX_ITEMS, DemandProperty::TYPE_INTEGER);
     }
 
@@ -120,6 +123,7 @@ abstract class AbstractDemand implements DemandInterface
 
                     // Check if the property exists in the database and the type can be handled
                     if (!$this->hasProperty($name) && ($columnMap = $dataMap->getColumnMap($name)) && $type = $this->getType($reflection, $tableDefinition, $columnMap, $dataMap->getTableName())) {
+                        // @extensionScannerIgnoreLine
                         $this->addProperty($name, $type);
                     }
                 }
@@ -270,6 +274,7 @@ abstract class AbstractDemand implements DemandInterface
 
         foreach ($this->properties as $property) {
             if (!$clone->hasProperty($property->getName())) {
+                // @extensionScannerIgnoreLine
                 $clone->addProperty($property->getName(), $property->getType(), $property->getExtbasePropertyName());
             }
         }

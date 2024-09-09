@@ -62,6 +62,7 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
 
             // Stop if one the properties is not active
             foreach ($this->arguments['properties'] ?? [] as $key => $value) {
+                // @extensionScannerIgnoreLine
                 if ($this->demand->hasProperty($key) && !$this->demand->getProperty($key)->isActive($value)) {
                     return;
                 }

@@ -33,6 +33,7 @@ class TagsElement extends AbstractFormElement
         $sysLanguageUid = $this->data['databaseRow']['sys_language_uid'] ?? 0;
 
         $this->name = $parameterArray['itemFormElName'] ?? '';
+        // @extensionScannerIgnoreLine
         $this->id = $parameterArray['itemFormElID'] ?? '';
         $this->value = $parameterArray['itemFormElValue'] ?? '';
         $this->placeholder = str_starts_with($placeholder, 'LLL') ? $this->getLanguageService()->sL($placeholder) : $placeholder;
@@ -46,9 +47,8 @@ class TagsElement extends AbstractFormElement
     {
         $tags = ($this->registration === null) ? [] : TagUtility::getTagsByRegistration($this->registration, true, $this->languageUid);
 
-        return JavaScriptModuleInstruction::create(
-            '@zeroseven/pagebased/backend/TagsElement.js'
-        )->instance($this->id, ...$tags);
+        // @extensionScannerIgnoreLine
+        return JavaScriptModuleInstruction::create('@zeroseven/pagebased/backend/TagsElement.js')->instance($this->id, ...$tags);
     }
 
     protected function getStylesheetFile(): string
@@ -62,6 +62,7 @@ class TagsElement extends AbstractFormElement
         $formField = '<input type="text" ' . GeneralUtility::implodeAttributes([
                 'name' => $this->name,
                 'value' => $this->value,
+                // @extensionScannerIgnoreLine
                 'id' => $this->id,
                 'placeholder' => $this->placeholder,
                 'class' => 'form-control form-control--tags'

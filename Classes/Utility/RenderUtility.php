@@ -65,6 +65,7 @@ class RenderUtility
                 'object' => $object,
                 'demand' => $registration->getObject()->getDemandClass(),
                 'settings' => array_merge($pluginConfiguration['settings'] ?? [], $settings ?? []),
+                // @extensionScannerIgnoreLine
                 'data' => $this->cObj->data ?? [],
                 'registration' => $registration,
                 strtolower($registration->getObject()->getName()) => $object // alias variable
