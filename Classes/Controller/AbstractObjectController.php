@@ -139,7 +139,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
                 ->select('pi_flexform')
                 ->from('tt_content')
                 ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)))
-                ->execute()
+                ->executeQuery()
                 ->fetchOne();
         } catch (DBALException | Exception $e) {
             return null;

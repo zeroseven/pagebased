@@ -126,7 +126,7 @@ class RssFeed implements MiddlewareInterface
                         )
                         ->orderBy($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['sortby'])
                         ->setMaxResults(1)
-                        ->execute()
+                        ->executeQuery()
                         ->fetchAllAssociative()[0] ?? null;
 
                     if (
