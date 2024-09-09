@@ -54,7 +54,6 @@ class ObjectUtility
                 PageRepository::DOKTYPE_MOUNTPOINT,
                 PageRepository::DOKTYPE_SPACER,
                 PageRepository::DOKTYPE_SYSFOLDER,
-                PageRepository::DOKTYPE_RECYCLER
             ], true);
     }
 
