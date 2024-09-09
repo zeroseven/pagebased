@@ -118,7 +118,7 @@ abstract class AbstractDemand implements DemandInterface
         if ($dataMap) {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($dataMap->getTableName());
 
-            if (($schemaManager = $queryBuilder->getSchemaManager()) && $tableDefinition = $schemaManager->listTableColumns($dataMap->getTableName())) {
+            if (($schemaManager = $queryBuilder->createSchemaManager()) && $tableDefinition = $schemaManager->listTableColumns($dataMap->getTableName())) {
                 foreach (GeneralUtility::makeInstance(ReflectionClass::class, $dataMap->getClassName())->getProperties() ?? [] as $reflection) {
                     $name = $reflection->getName();
 
