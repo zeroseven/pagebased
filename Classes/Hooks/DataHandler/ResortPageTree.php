@@ -9,11 +9,11 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use TYPO3\CMS\Reports\Status;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Registration\AbstractRegistrationEntityProperty;
 use Zeroseven\Pagebased\Registration\Registration;
@@ -37,7 +37,7 @@ class ResortPageTree
                 'LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.title',
                 'pagebased',
                 [0 => $registrationEntityProperty->getTitle()]
-            ), Status::OK, true
+            ), ContextualFeedbackSeverity::OK, true
         );
 
         $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
