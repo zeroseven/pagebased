@@ -2,44 +2,48 @@
 
 declare(strict_types=1);
 
-namespace Zeroseven\Pagebased\Hooks\IconFactory;
+namespace Zeroseven\Pagebased\EventListener;
 
-use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
+use TYPO3\CMS\Core\Imaging\Event\ModifyRecordOverlayIconIdentifierEvent;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Registration\EventListener\IconRegistryEvent;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
 
+
 class OverrideIconOverlay
 {
-    public function postOverlayPriorityLookup(string $table, array $row, array $status, string $iconName = null): ?string
+    #[AsEventListener('pagebased/override-icon-overlay')]
+    public function __invoke(ModifyRecordOverlayIconIdentifierEvent $event): void
     {
+        $table = $event->getTable();
+        $row = $event->getRow();
+        $status = $event->getStatus();
+        $iconName = $event->getOverlayIconIdentifier();
+
         if ($table === AbstractPage::TABLE_NAME && empty($iconName) && $uid = (int)($row['uid'] ?? 0)) {
             if ($registration = ObjectUtility::isObject($uid)) {
                 if ($object = $registration->getObject()->getRepositoryClass()->findByUid($uid)) {
                     if ($object->isTop()) {
-                        return 'overlay-approved';
+                        $event->setOverlayIconIdentifier('overlay-approved');
+                        return;
                     }
 
                     if ($object->getParentObject()) {
-                        return 'overlay-advanced';
+                        $event->setOverlayIconIdentifier('overlay-advanced');
+                        return;
                     }
                 }
 
-                return IconRegistryEvent::getOverlayIconName($registration);
+                $event->setOverlayIconIdentifier(IconRegistryEvent::getOverlayIconName($registration));
+                return;
             }
 
             if (($registration = ObjectUtility::isCategory($uid)) && $category = $registration->getCategory()->getRepositoryClass()->findByUid($uid)) {
                 if ($category->getRedirectCategory()) {
-                    return 'overlay-shortcut';
+                    $event->setOverlayIconIdentifier('overlay-shortcut');
                 }
             }
         }
-
-        return $iconName;
-    }
-
-    public static function register(): void
-    {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][IconFactory::class]['overrideIconOverlay'][] = self::class;
     }
 }
