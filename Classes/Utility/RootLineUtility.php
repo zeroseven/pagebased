@@ -42,6 +42,7 @@ class RootLineUtility
     public static function getCurrentPage(): int
     {
         if (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController) {
+            // @extensionScannerIgnoreLine
             return (int)$GLOBALS['TSFE']->id;
         }
 

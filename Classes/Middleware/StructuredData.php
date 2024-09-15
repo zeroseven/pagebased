@@ -21,6 +21,7 @@ class StructuredData implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // @extensionScannerIgnoreLine
         ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController
         && ($uid = $GLOBALS['TSFE']->id ?? 0)
         && ($row = $GLOBALS['TSFE']->page ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid))

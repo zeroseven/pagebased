@@ -18,6 +18,9 @@ class AddTSConfigEvent
         if ($plugin && $this->registration) {
             $cType = $plugin->getCType($this->registration);
 
+            // ExtensionManagementUtility::addPageTSConfig()
+            // deprecated in TYPO3 v13 and will be removed with TYPO3 v14. - https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/13.0/Deprecation-101799-ExtensionManagementUtilityaddPageTSConfig.html
+            // @extensionScannerIgnoreLine
             ExtensionManagementUtility::addPageTSConfig(sprintf("mod.wizards.newContentElement.wizardItems.special {\n
                 elements.%s {\n
                     iconIdentifier = %s\n

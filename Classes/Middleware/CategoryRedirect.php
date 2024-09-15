@@ -48,6 +48,7 @@ class CategoryRedirect implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // @extensionScannerIgnoreLine
         return
             empty($request->getQueryParams()[self::REDIRECT_PARAMETER] ?? null) // Reduce multiple redirects
             && ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController
