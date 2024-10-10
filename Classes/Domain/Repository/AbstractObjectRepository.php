@@ -62,12 +62,12 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         $constraints = parent::createDemandConstraints($demand, $query);
 
         // Stay in the hood
-        if ($query->getQuerySettings()->getRespectStoragePage() === false && $startPageId = RootLineUtility::getRootPage()) {
+        if ($query->getQuerySettings()->getRespectStoragePage() === false && $demand->getCategory() >= 0 && $startPageId = RootLineUtility::getRootPage()) {
             $constraints[] = $query->equals(DetectionUtility::SITE_FIELD_NAME, $startPageId);
         }
 
         // Search in category
-        if (empty($demand->getUidList()) && $categoryUid = $demand->getCategory()) {
+        if (empty($demand->getUidList()) && ($categoryUid = $demand->getCategory()) > 0) {
             $treeTableField = (int)GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', 0) > 0
                 ? $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['transOrigPointerField']
                 : 'uid';

@@ -59,7 +59,13 @@
         <source>Available categories</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.category.all">
-        <source>All</source>
+        <source>All categories</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.category.div.allInstances">
+        <source>From all sites</source>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.category.allGlobal">
+        <source>All categories from all instances</source>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.tags">
         <source>Tags</source>

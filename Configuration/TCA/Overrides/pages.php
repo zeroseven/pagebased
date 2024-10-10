@@ -117,6 +117,7 @@ call_user_func(static function (string $table) {
                 'size' => 5,
                 'maxitems' => 100,
                 'MM' => 'tx_pagebased_relation_mm',
+                'readOnly' => true
             ]
         ],
         'pagebased_redirect_category' => [
