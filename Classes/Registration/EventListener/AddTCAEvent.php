@@ -127,10 +127,10 @@ class AddTCAEvent
                     'items' => array_merge([
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.no_restrictions', 'value' => '--div--'],
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.all', 'value' => 0]
-                    ], count(GeneralUtility::makeInstance(SiteFinder::class)?->getAllSites()) <= 1 ? [] : [
+                    ], count(GeneralUtility::makeInstance(SiteFinder::class)?->getAllSites()) > 1 ? [
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.allInstances', 'value' => '--div--'],
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.allGlobal', 'value' => -1],
-                    ], [
+                    ] : [], [
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.available', 'value' => '--div--']
                     ])
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category');
