@@ -75,6 +75,7 @@ call_user_func(static function (string $table) {
         ],
         'pagebased_relations_to' => [
             'exclude' => true,
+            'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_relations_to',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
@@ -106,6 +107,7 @@ call_user_func(static function (string $table) {
         ],
         'pagebased_relations_from' => [
             'exclude' => true,
+            'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.pagebased_relations_from',
             'displayCond' => 'FIELD:uid:REQ:false', // Hide field by default
             'config' => [
@@ -115,7 +117,7 @@ call_user_func(static function (string $table) {
                 'size' => 5,
                 'maxitems' => 100,
                 'MM' => 'tx_pagebased_relation_mm',
-                'readOnly' => 1
+                'readOnly' => true
             ]
         ],
         'pagebased_redirect_category' => [
