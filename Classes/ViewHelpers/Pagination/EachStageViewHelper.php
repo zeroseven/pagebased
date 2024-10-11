@@ -39,7 +39,7 @@ final class EachStageViewHelper extends AbstractViewHelper
         $selected = (bool)($arguments['selected'] ?? false);
         $active = (bool)($arguments['active'] ?? false);
         $inactive = (bool)($arguments['inactive'] ?? false);
-        $as = (empty($as = $arguments['as'] ?? null) || $as === self::STAGE_VARIABLE_IDENTIFIER) ? null : $as;
+        $as = $arguments['as'] ?? self::STAGE_VARIABLE_IDENTIFIER;
         $iteration = $arguments['iteration'] ?? 'stageIteration';
 
         if (((int)$selected + (int)$active + (int)$inactive) > 1) {
