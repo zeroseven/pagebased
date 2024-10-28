@@ -9,6 +9,7 @@ use ReflectionClass;
 use ReflectionProperty;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\ColumnMap\Relation;
@@ -80,6 +81,10 @@ abstract class AbstractDemand implements DemandInterface
 
             if ($reflectionType->getName() === ObjectStorage::class) {
                 return DemandProperty::TYPE_ARRAY;
+            }
+
+            if ((new ReflectionClass($reflectionType->getName()))->implementsInterface(DomainObjectInterface::class)) {
+                return DemandProperty::TYPE_INTEGER;
             }
         }
 
