@@ -83,12 +83,10 @@ abstract class AbstractDemand implements DemandInterface
                 return DemandProperty::TYPE_ARRAY;
             }
 
-            if (GeneralUtility::makeInstance(ReflectionClass::class, $reflectionType->getName())->newInstance() instanceof DomainObjectInterface) {
+            if ((new ReflectionClass($reflectionType->getName()))->implementsInterface(DomainObjectInterface::class)) {
                 return DemandProperty::TYPE_INTEGER;
             }
         }
-
-
 
         // Get type by column map
         if (in_array($columnMap->getTypeOfRelation(), [Relation::HAS_MANY, Relation::HAS_AND_BELONGS_TO_MANY], true)) {

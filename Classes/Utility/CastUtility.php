@@ -6,7 +6,7 @@ namespace Zeroseven\Pagebased\Utility;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
+use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use Zeroseven\Pagebased\Exception\TypeException;
 
 class CastUtility
@@ -20,7 +20,7 @@ class CastUtility
     /** @throws TypeException */
     public static function int(mixed $value): int
     {
-        if ($value instanceof AbstractDomainObject) {
+        if ($value instanceof DomainObjectInterface) {
             return $value->getUid();
         }
 
