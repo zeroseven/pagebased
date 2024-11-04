@@ -116,6 +116,12 @@ class AddTCAEvent
         if ($registration->getListPlugin() && $cType = $this->createPlugin($registration, $registration->getListPlugin())) {
             $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.filter');
 
+            try {
+                $multiSite = count(GeneralUtility::makeInstance(SiteFinder::class)?->getAllSites()) > 1;
+            } catch (\Exception) {
+                $multiSite = false;
+            }
+
             if ($typeField = $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'] ?? null) {
                 $filterSheet->addField('settings.category', [
                     'type' => 'select',
@@ -128,7 +134,7 @@ class AddTCAEvent
                     'items' => array_merge([
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.no_restrictions', 'value' => '--div--'],
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.all', 'value' => '']
-                    ], count(GeneralUtility::makeInstance(SiteFinder::class)?->getAllSites()) > 1 ? [
+                    ], $multiSite ? [
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.allInstances', 'value' => '--div--'],
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.allGlobal', 'value' => -1],
                     ] : [], [
