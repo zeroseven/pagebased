@@ -69,13 +69,17 @@ final class EachStageViewHelper extends AbstractViewHelper
         $output = '';
         foreach ($stages as $stage) {
             $templateVariableContainer->add($iteration, $iterator);
-            $templateVariableContainer->add($as, $stage);
+            if ($as) {
+                $templateVariableContainer->add($as, $stage);
+            }
             $templateVariableContainer->add(self::STAGE_VARIABLE_IDENTIFIER, $stage);
 
             $output .= $renderChildrenClosure();
 
             $templateVariableContainer->remove($iteration);
-            $templateVariableContainer->remove($as);
+            if ($as) {
+                $templateVariableContainer->remove($as);
+            }
             $templateVariableContainer->remove(self::STAGE_VARIABLE_IDENTIFIER);
 
             $iterator->count();
