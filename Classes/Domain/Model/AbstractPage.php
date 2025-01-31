@@ -59,6 +59,11 @@ abstract class AbstractPage extends AbstractEntity
         return (int)$this->uid;
     }
 
+    public function getLanguageUid(): int
+    {
+        return (int)$this->_languageUid;
+    }
+
     public function getDocumentType(): int
     {
         return (int)$this->documentType;
