@@ -232,12 +232,10 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
 
     public function getRelationsTo(): ObjectStorage
     {
-        $relations = $this->relationsTo;
+        $relations = GeneralUtility::makeInstance(ObjectStorage::class);
 
-        foreach ($relations as $relation) {
-            if ($relation->getLanguageUid() !== $this->getLanguageUid()) {
-                $relations->detach($relation);
-            }
+        foreach ($this->relationsTo as $relation) {
+            $relation->getLanguageUid() === $this->getLanguageUid() && $relations->attach($relation);
         }
 
         return $relations;
@@ -253,12 +251,10 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
 
     public function getRelationsFrom(): ObjectStorage
     {
-        $relations = $this->relationsFrom;
+        $relations = GeneralUtility::makeInstance(ObjectStorage::class);
 
-        foreach ($relations as $relation) {
-            if ($relation->getLanguageUid() !== $this->getLanguageUid()) {
-                $relations->detach($relation);
-            }
+        foreach ($this->relationsFrom as $relation) {
+            $relation->getLanguageUid() === $this->getLanguageUid() && $relations->attach($relation);
         }
 
         return $relations;
