@@ -1,8 +1,1 @@
-plugin.tx_pagebased {
-  settings {
-    # customsubcategory=list=Object list settings
-    list {
-      ajaxTypeNum = 1677526705
-    }
-  }
-}
+@import 'EXT:pagebased/Configuration/Sets/Pagebased/constants.typoscript'

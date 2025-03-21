@@ -1,0 +1,42 @@
+##################################################
+# Include sources
+##################################################
+page.includeJSFooter.pagebased_pagination = EXT:pagebased/Resources/Public/JavaScript/Pagination.js
+
+##################################################
+# Ajax request page
+##################################################
+pagebasedPaginationRequest = PAGE
+pagebasedPaginationRequest {
+
+  # Wrap page
+  wrap = <!DOCTYPE html><html><head><title>Ajax-Request</title><meta name="robots" content="noindex, follow"></head><body>|</body></html>
+
+  # Configure page
+  typeNum = {$plugin.tx_pagebased.settings.list.ajaxTypeNum}
+  config {
+    disableAllHeaderCode = 1
+    xhtml_cleaning = 0
+    admPanel = 0
+    debug = 0
+    disablePrefixComment = 1
+    metaCharset = utf-8
+    index_enable = 0
+    additionalHeaders {
+      10.header = X-Robots-Tag:noindex
+      20.header = X-TYPO3-Extension:pagebased
+    }
+  }
+
+  # Load content
+  10 = RECORDS
+  10 {
+    tables = tt_content
+    source {
+      data = gp:_pagebased_content
+      prioriCalc = intval
+    }
+
+    stdWrap.if.isTrue < .source
+  }
+}

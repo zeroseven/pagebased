@@ -39,7 +39,7 @@ class TagsElement extends AbstractFormElement
 
         $this->name = $parameterArray['itemFormElName'] ?? '';
         // @extensionScannerIgnoreLine
-        $this->id = $parameterArray['itemFormElID'] ?? '';
+        $this->id = (string)$data["effectivePid"] ?? '';
         $this->value = $parameterArray['itemFormElValue'] ?? '';
         $this->placeholder = str_starts_with($placeholder, 'LLL') ? $this->getLanguageService()->sL($placeholder) : $placeholder;
         $this->languageUid = (int)($sysLanguageUid[0] ?? $sysLanguageUid);

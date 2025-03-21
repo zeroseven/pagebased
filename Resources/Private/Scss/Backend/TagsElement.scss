@@ -1,0 +1,32 @@
+// Import original tagify styles
+@import "@yaireo/tagify/dist/tagify.css";
+
+body {
+  --input-color: var(--typo3-text-color-base, inherit);
+  --tagify-dd-text-color: var(--typo3-text-color-base, inherit);
+  --tagify-dd-bg-color: var(--typo3-input-bg, inherit);
+  --tagify-dd-border-color: var(--typo3-input-border-color, inherit);
+}
+
+.tagify {
+  --placeholder-color: var(--typo3-text-color-variant, inherit);
+  --placeholder-color-focus: var(--typo3-text-color-base, inherit);
+  --tags-border-color: var(--typo3-input-border-color, inherit);
+  --tag-inset-shadow-size: 1.5rem;
+  --tag-hover: var(--tag-bg, inherit);
+  --tag-remove-bg: var(--bs-danger, inherit);
+  --tag-remove-btn-bg--hover: var(--bs-black, inherit);
+
+  .tagify__tag__removeBtn:hover + div .tagify__tag-text {
+    color: var(--bs-white, inherit);
+    opacity: 1;
+  }
+}
+
+.tagify__input::after {
+  color: var(--typo3-text-color-variant, inherit) !important;
+}
+
+.form-control:read-only {
+  --typo3-form-control-bg: var(--typo3-input-bg, inherit);
+}
