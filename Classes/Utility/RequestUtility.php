@@ -9,6 +9,7 @@ use TYPO3\CMS\Extbase\Core\Bootstrap;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface as ExtbaseRequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\RequestBuilder;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use Zeroseven\Pagebased\Registration\Registration;
 
 class RequestUtility
@@ -42,6 +43,10 @@ class RequestUtility
             ], $serverRequest);
 
             if (($request = GeneralUtility::makeInstance(RequestBuilder::class)?->build($bootstrapInitialization)) instanceof ExtbaseRequestInterface) {
+                if ($request->getAttribute('currentContentObject') === null) {
+                    $request = $request->withAttribute('currentContentObject', GeneralUtility::makeInstance(ContentObjectRenderer::class));
+                }
+
                 return self::setExtbaseRequestCache($registration, $request);
             }
         }
