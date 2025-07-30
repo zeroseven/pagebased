@@ -28,7 +28,7 @@ class TagUtility
         return $tags;
     }
 
-    public static function getTags(ObjectDemandInterface $demand, RepositoryInterface $repository, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
+        public static function getTags(ObjectDemandInterface $demand, RepositoryInterface $repository, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
         // Ensure the demand is filtered by the current blog instance (category)
         if (!$demand->{'getCategory'}()) {
@@ -70,15 +70,7 @@ class TagUtility
 
         return null;
     }
-
-        // Find objects and return their tags
-        if ($objects = $repository->findByDemand($ignoreTagsFromDemand === true ? $demand->setTags(null) : $demand)) {
-            return self::collectTagsFromQueryResult($objects);
-        }
-
-        return null;
-    }
-
+    
     public static function getTagsByDemand(ObjectDemandInterface $demand, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
         if (($registration = RegistrationService::getRegistrationByDemand($demand)) && ($repository = $registration->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
