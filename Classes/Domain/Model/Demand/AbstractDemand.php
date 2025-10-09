@@ -86,7 +86,7 @@ abstract class AbstractDemand implements DemandInterface
 
         // Check table definition
         if (($column = $tableDefinition[$columnMap->getColumnName()] ?? null) && $type = $column->getType()) {
-            $typeName = method_exists($type, 'getName') ? $type->getName() : $type::class;
+            $typeName = $type->getName();
             if (str_contains($typeName, 'SmallInt') || $typeName === 'smallint') {
                 return DemandProperty::TYPE_BOOLEAN;
             }
