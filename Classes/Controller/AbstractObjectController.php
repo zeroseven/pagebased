@@ -73,26 +73,27 @@ abstract class AbstractObjectController extends AbstractController implements Ob
     /** @throws TypeException */
     protected function controlCache(): void
     {
-        if (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController && $GLOBALS['TSFE']->no_cache === false) {
+        if (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController) {
             $demandArguments = array_filter(array_keys($this->requestArguments), fn(string $argument) => $this->demand->hasProperty($argument));
 
             // Limit caching on multiple arguments
             if (count($demandArguments) > 2) {
-                $GLOBALS['TSFE']->no_cache = true;
+                $GLOBALS['TSFE']->set_no_cache();
                 return;
             }
 
             // Limit pagination
             if ((int)($this->requestArguments[PaginationViewHelper::REQUEST_ARGUMENT] ?? 0) > 3) {
-                $GLOBALS['TSFE']->no_cache = true;
+                $GLOBALS['TSFE']->set_no_cache();
                 return;
             }
 
             // Limit caching on multiple array values
             foreach ($demandArguments as $argument) {
-                $this->demand->getProperty($argument)->isArray()
-                && count(CastUtility::array($this->requestArguments[$argument] ?? null)) > 1
-                && $GLOBALS['TSFE']->no_cache = true;
+                if ($this->demand->getProperty($argument)->isArray()
+                    && count(CastUtility::array($this->requestArguments[$argument] ?? null)) > 1) {
+                    $GLOBALS['TSFE']->set_no_cache();
+                }
             }
         }
     }
@@ -129,7 +130,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
                 ->select('pi_flexform')
                 ->from('tt_content')
                 ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)))
-                ->execute()
+                ->executeQuery()
                 ->fetchOne();
         } catch (DBALException | Exception $e) {
             return null;
