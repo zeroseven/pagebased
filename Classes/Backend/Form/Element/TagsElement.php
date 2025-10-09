@@ -8,6 +8,7 @@ use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\StringUtility;
 use Zeroseven\Pagebased\Exception\ValueException;
 use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Registration\RegistrationService;
@@ -16,24 +17,21 @@ use Zeroseven\Pagebased\Utility\TagUtility;
 
 class TagsElement extends AbstractFormElement
 {
-    protected string $name;
-    protected string $id;
-    protected string $value;
-    protected string $placeholder;
-    protected ?Registration $registration;
-    protected int $languageUid;
+    protected string $name = '';
+    protected string $id = '';
+    protected string $value = '';
+    protected string $placeholder = '';
+    protected ?Registration $registration = null;
+    protected int $languageUid = 0;
 
-    /** @throws ValueException */
-    public function __construct(NodeFactory $nodeFactory, array $data)
+    private function initializeFromData(): void
     {
-        parent::__construct($nodeFactory, $data);
-
         $parameterArray = $this->data['parameterArray'] ?? [];
         $placeholder = $parameterArray['fieldConf']['config']['placeholder'] ?? '';
         $sysLanguageUid = $this->data['databaseRow']['sys_language_uid'] ?? 0;
 
         $this->name = $parameterArray['itemFormElName'] ?? '';
-        $this->id = $parameterArray['itemFormElID'] ?? '';
+        $this->id = StringUtility::getUniqueId('pagebased-tags');
         $this->value = $parameterArray['itemFormElValue'] ?? '';
         $this->placeholder = str_starts_with($placeholder, 'LLL') ? $this->getLanguageService()->sL($placeholder) : $placeholder;
         $this->languageUid = (int)($sysLanguageUid[0] ?? $sysLanguageUid);
@@ -79,6 +77,8 @@ class TagsElement extends AbstractFormElement
 
     public function render(): array
     {
+        $this->initializeFromData();
+
         $result = $this->initializeResultArray();
 
         if ($html = $this->renderHtml()) {

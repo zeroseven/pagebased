@@ -86,7 +86,8 @@ abstract class AbstractDemand implements DemandInterface
 
         // Check table definition
         if (($column = $tableDefinition[$columnMap->getColumnName()] ?? null) && $type = $column->getType()) {
-            if ($type->getName() === 'smallint') {
+            $typeName = method_exists($type, 'getName') ? $type->getName() : $type::class;
+            if (str_contains($typeName, 'SmallInt') || $typeName === 'smallint') {
                 return DemandProperty::TYPE_BOOLEAN;
             }
 
@@ -114,7 +115,7 @@ abstract class AbstractDemand implements DemandInterface
         if ($dataMap) {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($dataMap->getTableName());
 
-            if (($schemaManager = $queryBuilder->getSchemaManager()) && $tableDefinition = $schemaManager->listTableColumns($dataMap->getTableName())) {
+            if (($schemaManager = $queryBuilder->createSchemaManager()) && $tableDefinition = $schemaManager->listTableColumns($dataMap->getTableName())) {
                 foreach (GeneralUtility::makeInstance(ReflectionClass::class, $dataMap->getClassName())->getProperties() ?? [] as $reflection) {
                     $name = $reflection->getName();
 

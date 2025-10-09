@@ -130,7 +130,7 @@ class RootLineUtility
         $queryBuilder->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($startingPoint, Connection::PARAM_INT)))
             ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($startingPoint, Connection::PARAM_INT)));
 
-        foreach ($queryBuilder->execute()->fetchAllAssociative() as $row) {
+        foreach ($queryBuilder->executeQuery()->fetchAllAssociative() as $row) {
             if ($uid = (int)($row['uid'] ?? 0)) {
                 $list[$uid] = $row;
             }
@@ -143,7 +143,7 @@ class RootLineUtility
         if ($pid > 0 && $looped <= $depth) {
             $queryBuilder->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
 
-            $statement = $queryBuilder->execute();
+            $statement = $queryBuilder->executeQuery();
             while ($row = $statement->fetchAssociative()) {
                 if ($uid = (int)($row['uid'] ?? 0)) {
                     if ($looped) {
@@ -164,7 +164,7 @@ class RootLineUtility
         if ($looped < $depth) {
             $queryBuilder->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
 
-            $statement = $queryBuilder->execute();
+            $statement = $queryBuilder->executeQuery();
             while ($row = $statement->fetchAssociative()) {
                 if ($uid = (int)($row['uid'] ?? 0)) {
                     $list[$uid] = $row;
@@ -196,7 +196,7 @@ class RootLineUtility
             $queryBuilder->andWhere(...$constraints);
 
             // An element with the same CType can be found on the given pid
-            if (count($result = $queryBuilder->execute()->fetchAllAssociative())) {
+            if (count($result = $queryBuilder->executeQuery()->fetchAllAssociative())) {
                 return $result[0];
             }
 
