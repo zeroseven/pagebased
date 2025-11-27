@@ -44,7 +44,7 @@ class TagsElement extends AbstractFormElement
 
     protected function getJavaScriptModule(): JavaScriptModuleInstruction
     {
-        $tags = ($this->registration === null) ? [] : TagUtility::getTagsByRegistration($this->registration, true, $this->languageUid);
+        $tags = ($this->registration === null) ? [] : (TagUtility::getTagsByRegistration($this->registration, true, $this->languageUid) ?? []);
 
         return JavaScriptModuleInstruction::create(
             '@zeroseven/pagebased/backend/TagsElement.js'
