@@ -16,9 +16,9 @@
     }
   ],
   "require": {
+    "php": "^8.3",
     "ext-json": "*",
     "ext-pdo": "*",
-    "php": "^8.3",
     "symfony/property-access": "*",
     "typo3/cms-core": "^12.4.0"
   },
@@ -30,7 +30,8 @@
     "phpmd/phpmd": "^2.13",
     "phpunit/phpcov": "^9.0",
     "phpunit/phpunit": "^10.1",
-    "ssch/typo3-rector": "^3.6",
+    "ssch/typo3-rector": "2.15 || ^3.6",
+    "typo3/cms-install": "^12.4",
     "typo3/coding-standards": "^0.8.0",
     "typo3/testing-framework": "^8.0"
   },
