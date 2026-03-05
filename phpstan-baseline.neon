@@ -126,11 +126,6 @@ parameters:
 			path: Classes/Controller/AbstractObjectController.php
 
 		-
-			message: "#^Cannot call method fetchOne\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
-			count: 1
-			path: Classes/Controller/AbstractObjectController.php
-
-		-
 			message: "#^Cannot call method getCategory\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
 			count: 1
 			path: Classes/Controller/AbstractObjectController.php
@@ -1141,11 +1136,6 @@ parameters:
 			path: Classes/Middleware/RssFeed.php
 
 		-
-			message: "#^Cannot call method fetchAllAssociative\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
-			count: 1
-			path: Classes/Middleware/RssFeed.php
-
-		-
 			message: "#^Cannot call method getCType\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\ListPluginRegistration\\|null\\.$#"
 			count: 2
 			path: Classes/Middleware/RssFeed.php
@@ -1659,16 +1649,6 @@ parameters:
 			message: "#^Using nullsafe method call on non\\-nullable type TYPO3\\\\CMS\\\\Extbase\\\\Mvc\\\\Web\\\\RequestBuilder\\. Use \\-\\> instead\\.$#"
 			count: 1
 			path: Classes/Utility/RequestUtility.php
-
-		-
-			message: "#^Cannot call method fetchAllAssociative\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
-			count: 2
-			path: Classes/Utility/RootLineUtility.php
-
-		-
-			message: "#^Cannot call method fetchAssociative\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
-			count: 2
-			path: Classes/Utility/RootLineUtility.php
 
 		-
 			message: "#^Cannot call method getCType\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\ListPluginRegistration\\|null\\.$#"
