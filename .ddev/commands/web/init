@@ -123,20 +123,18 @@ info "Running TYPO3 setup wizard..."
 ok "TYPO3 setup complete"
 
 # ─── Step 4: Extensions & Schema ─────────────────────────────────────────────
-header "Step 4: Extensions & DB Schema"
-"$TYPO3_BIN" extension:setup
-ok "Extensions configured and schema applied"
+header "Step 4: Extensions & Schema"
+# extension:setup is not available in composer mode (calls extension:dumpclassloadinginformation
+# which is disabled). typo3 setup already handles schema + extension activation.
+"$TYPO3_BIN" cache:flush
+ok "Extensions ready (schema applied by setup, caches flushed)"
 
 # ─── Step 5: Seed data ────────────────────────────────────────────────────────
 if [ "$SKIP_SEED" = false ]; then
     header "Step 5: Seed Data"
     /var/www/html/.ddev/commands/web/seed --force
+    "$TYPO3_BIN" cache:flush
 fi
-
-# ─── Step 6: Cache flush ──────────────────────────────────────────────────────
-header "Step 6: Cache"
-"$TYPO3_BIN" cache:flush
-ok "Caches flushed"
 
 # ─── Optional snapshot ────────────────────────────────────────────────────────
 if [ "$CREATE_SNAPSHOT" = true ]; then
