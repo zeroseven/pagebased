@@ -1,0 +1,144 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 1.4.0). Leave empty to auto-detect from commits.'
+        required: false
+        type: string
+      dry_run:
+        description: 'Dry run (do not create tag or release)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install git-cliff
+        uses: taiki-e/install-action@v2
+        with:
+          tool: git-cliff
+
+      - name: Get latest tag
+        id: latest_tag
+        run: |
+          LATEST=$(git tag --list 'v*' --sort=-version:refname | head -1)
+          echo "tag=${LATEST:-v0.0.0}" >> $GITHUB_OUTPUT
+          echo "Latest tag: ${LATEST:-v0.0.0}"
+
+      - name: Auto-detect version bump
+        id: version_bump
+        if: ${{ !inputs.version }}
+        run: |
+          LATEST="${{ steps.latest_tag.outputs.tag }}"
+          MAJOR=$(echo $LATEST | sed 's/v//' | cut -d. -f1)
+          MINOR=$(echo $LATEST | sed 's/v//' | cut -d. -f2)
+          PATCH=$(echo $LATEST | sed 's/v//' | cut -d. -f3)
+
+          # Check commits since last tag for breaking changes or features
+          COMMITS=$(git log ${LATEST}..HEAD --pretty=format:"%s")
+          echo "Commits since $LATEST:"
+          echo "$COMMITS"
+
+          if echo "$COMMITS" | grep -qE '^\[!!!\]'; then
+            NEXT="$((MAJOR + 1)).0.0"
+            BUMP="major"
+          elif echo "$COMMITS" | grep -qE '^\[FEATURE\]'; then
+            NEXT="${MAJOR}.$((MINOR + 1)).0"
+            BUMP="minor"
+          else
+            NEXT="${MAJOR}.${MINOR}.$((PATCH + 1))"
+            BUMP="patch"
+          fi
+
+          echo "version=${NEXT}" >> $GITHUB_OUTPUT
+          echo "bump=${BUMP}" >> $GITHUB_OUTPUT
+          echo "Auto-detected bump: $BUMP → v$NEXT"
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${{ steps.version_bump.outputs.version }}"
+          fi
+          # Strip leading 'v' for normalization, then re-add
+          VERSION="${VERSION#v}"
+          echo "version=v${VERSION}" >> $GITHUB_OUTPUT
+          echo "version_plain=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Release version: v${VERSION}"
+
+      - name: Check tag does not exist
+        run: |
+          if git rev-parse "${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
+            echo "Tag ${{ steps.version.outputs.version }} already exists!"
+            exit 1
+          fi
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          LATEST="${{ steps.latest_tag.outputs.tag }}"
+          # Generate changelog for this release only (since last tag)
+          git cliff ${LATEST}..HEAD \
+            --config cliff.toml \
+            --tag "${{ steps.version.outputs.version }}" \
+            --output RELEASE_NOTES.md
+          cat RELEASE_NOTES.md
+
+          # Also update the full CHANGELOG.md
+          if [ -f CHANGELOG.md ]; then
+            git cliff --config cliff.toml \
+              --tag "${{ steps.version.outputs.version }}" \
+              --output CHANGELOG.md
+          else
+            git cliff --config cliff.toml \
+              --tag "${{ steps.version.outputs.version }}" \
+              --output CHANGELOG.md
+          fi
+
+      - name: Show release summary (dry run)
+        if: ${{ inputs.dry_run }}
+        run: |
+          echo "=== DRY RUN ==="
+          echo "Would create tag: ${{ steps.version.outputs.version }}"
+          echo ""
+          cat RELEASE_NOTES.md
+
+      - name: Commit CHANGELOG.md
+        if: ${{ !inputs.dry_run }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git diff --staged --quiet || git commit -m "[TASK] Update CHANGELOG.md for ${{ steps.version.outputs.version }}"
+
+      - name: Create tag
+        if: ${{ !inputs.dry_run }}
+        run: |
+          git tag -a "${{ steps.version.outputs.version }}" \
+            -m "Release ${{ steps.version.outputs.version }}"
+          git push origin HEAD
+          git push origin "${{ steps.version.outputs.version }}"
+
+      - name: Create GitHub Release
+        if: ${{ !inputs.dry_run }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: ${{ steps.version.outputs.version }}
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: false
