@@ -11,10 +11,10 @@ jobs:
     name: Lint & Static Analysis
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.composer/cache
           key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
@@ -48,10 +48,10 @@ jobs:
         test-type: ['unit', 'functional']
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.composer/cache
           key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
