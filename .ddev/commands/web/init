@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+
+## Description: Initialize TYPO3 dev instance for pagebased development
+## Usage: init [flags]
+## Example: "ddev init" or "ddev init --force" or "ddev init --skip-seed"
+## Flags: [{"Name":"force","Shorthand":"f","Usage":"Force reinit even if TYPO3 is already configured"},{"Name":"skip-seed","Shorthand":"s","Usage":"Skip importing example seed data"},{"Name":"snapshot","Usage":"Create a DB snapshot after successful init"}]
+
+set -Eeuo pipefail
+
+# Auto-proxy into DDEV if running outside the container
+if [ -z "${IS_DDEV_PROJECT:-}" ]; then
+    if command -v ddev >/dev/null 2>&1 && [ -d ".ddev" ]; then
+        ddev exec bash -lc "/var/www/html/.ddev/commands/web/init $*"
+        exit $?
+    fi
+fi
+
+GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; BLUE='\033[0;34m'; NC='\033[0m'
+info()   { echo -e "${YELLOW}$*${NC}"; }
+ok()     { echo -e "${GREEN}✓ $*${NC}"; }
+err()    { echo -e "${RED}✗ $*${NC}"; }
+header() { echo -e "\n${BLUE}━━━ $* ━━━${NC}"; }
+
+FORCE=false; SKIP_SEED=false; CREATE_SNAPSHOT=false
+
+for arg in "$@"; do
+    case $arg in
+        --force|-f)     FORCE=true ;;
+        --skip-seed|-s) SKIP_SEED=true ;;
+        --snapshot)     CREATE_SNAPSHOT=true ;;
+        --help|-h)
+            echo "Usage: ddev init [flags]"
+            echo ""
+            echo "Sets up a local TYPO3 instance for pagebased development."
+            echo ""
+            echo "Flags:"
+            echo "  -f, --force        Reinitialize even if TYPO3 is already configured"
+            echo "  -s, --skip-seed    Skip importing example pagebased pages"
+            echo "      --snapshot     Create a DB snapshot after successful init"
+            echo ""
+            echo "Examples:"
+            echo "  ddev init                  # First-time setup"
+            echo "  ddev init --force          # Wipe and reinitialize"
+            echo "  ddev init --skip-seed      # Setup without example data"
+            exit 0
+            ;;
+    esac
+done
+
+TYPO3_BIN="/var/www/html/.build/bin/typo3"
+SETTINGS_PHP="/var/www/html/.build/config/system/settings.php"
+
+echo ""
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BLUE}  pagebased TYPO3 Initialization${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+# ─── Guard: already configured ───────────────────────────────────────────────
+if [ -f "$SETTINGS_PHP" ] && [ "$FORCE" = false ]; then
+    info "TYPO3 is already configured ($SETTINGS_PHP exists)."
+    echo ""
+    echo "Options:"
+    echo "  ddev init --force          # Wipe and reinitialize"
+    echo "  ddev snapshot restore      # Restore a previous snapshot"
+    exit 0
+fi
+
+if [ "$FORCE" = true ] && [ -f "$SETTINGS_PHP" ]; then
+    header "Cleanup"
+    info "Removing existing TYPO3 configuration..."
+    rm -rf /var/www/html/.build/config /var/www/html/.build/public/typo3conf /var/www/html/.build/var
+    ok "Existing configuration removed"
+fi
+
+# ─── Step 1: Dependencies ─────────────────────────────────────────────────────
+header "Step 1: Dependencies"
+if [ ! -f "/var/www/html/.build/vendor/autoload.php" ]; then
+    info "Running composer install..."
+    cd /var/www/html && composer install --no-interaction --no-progress
+    ok "Dependencies installed"
+else
+    ok "Dependencies already installed"
+fi
+
+# ─── Step 2: Database ─────────────────────────────────────────────────────────
+header "Step 2: Database"
+info "Waiting for database..."
+for i in $(seq 1 15); do
+    mysqladmin ping -h db -u root -proot --silent 2>/dev/null && break
+    sleep 2
+done
+
+TABLE_COUNT=$(mysql -h db -u root -proot db -ss \
+    -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'db';" 2>/dev/null || echo "0")
+
+if [ "$TABLE_COUNT" -gt 0 ]; then
+    info "Found $TABLE_COUNT existing tables — dropping for clean init..."
+    DROPS=$(mysql -h db -u root -proot db -ss \
+        -e "SELECT CONCAT('DROP TABLE IF EXISTS \`', table_name, '\`;') FROM information_schema.tables WHERE table_schema='db';" 2>/dev/null)
+    mysql -h db -u root -proot db -e "SET FOREIGN_KEY_CHECKS=0; $DROPS SET FOREIGN_KEY_CHECKS=1;" 2>/dev/null
+    ok "Database cleaned"
+else
+    ok "Database is empty"
+fi
+
+# ─── Step 3: TYPO3 Setup ──────────────────────────────────────────────────────
+header "Step 3: TYPO3 Setup"
+info "Running TYPO3 setup wizard..."
+"$TYPO3_BIN" setup \
+    --no-interaction \
+    --driver=mysqli \
+    --host=db \
+    --port=3306 \
+    --dbname=db \
+    --username=root \
+    --password=root \
+    --admin-username=admin \
+    --admin-user-password=Admin1234! \
+    --admin-email=admin@example.com \
+    --project-name="pagebased Development" \
+    --server-type=other \
+    --force
+ok "TYPO3 setup complete"
+
+# ─── Step 4: Extensions & Schema ─────────────────────────────────────────────
+header "Step 4: Extensions & DB Schema"
+"$TYPO3_BIN" extension:setup
+ok "Extensions configured and schema applied"
+
+# ─── Step 5: Seed data ────────────────────────────────────────────────────────
+if [ "$SKIP_SEED" = false ]; then
+    header "Step 5: Seed Data"
+    /var/www/html/.ddev/commands/web/seed --force
+fi
+
+# ─── Step 6: Cache flush ──────────────────────────────────────────────────────
+header "Step 6: Cache"
+"$TYPO3_BIN" cache:flush
+ok "Caches flushed"
+
+# ─── Optional snapshot ────────────────────────────────────────────────────────
+if [ "$CREATE_SNAPSHOT" = true ]; then
+    header "Snapshot"
+    ddev snapshot --name=initial-setup
+    ok "Snapshot 'initial-setup' created"
+fi
+
+# ─── Done ─────────────────────────────────────────────────────────────────────
+echo ""
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${GREEN}✓ Initialization complete!${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+echo "  TYPO3 Backend: https://pagebased.ddev.site/typo3"
+echo "  Username:      admin"
+echo "  Password:      Admin1234!"
+echo ""
+echo "  ddev test              # Run tests"
+echo "  ddev seed --force      # Reimport seed data"
+echo "  ddev snapshot          # Create DB snapshot"
+echo ""
