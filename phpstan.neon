@@ -1,0 +1,16 @@
+parameters:
+    level: 8
+    paths:
+        - Classes
+
+    excludePaths:
+        - .build
+        - Tests
+
+    reportAlwaysTrueInLastCondition: true
+    reportStaticMethodSignatures: true
+    treatPhpDocTypesAsCertain: false
+
+    parallel:
+        maximumNumberOfProcesses: 4
+        minimumNumberOfJobsPerProcess: 2
