@@ -58,7 +58,7 @@ class AbstractObjectRepositoryTest extends FunctionalTestCase
 
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Database/pages_objects.csv');
 
-        $this->repository = new TestObjectRepository();
+        $this->repository = $this->get(TestObjectRepository::class);
     }
 
     private function bootstrapTestRegistration(): void
