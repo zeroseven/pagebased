@@ -34,7 +34,7 @@ jobs:
         id: latest_tag
         run: |
           LATEST=$(git tag --list 'v*' --sort=-version:refname | head -1)
-          echo "tag=${LATEST:-v0.0.0}" >> $GITHUB_OUTPUT
+          echo "tag=${LATEST:-v0.0.0}" >> "$GITHUB_OUTPUT"
           echo "Latest tag: ${LATEST:-v0.0.0}"
 
       - name: Auto-detect version bump
@@ -42,12 +42,12 @@ jobs:
         if: ${{ !inputs.version }}
         run: |
           LATEST="${{ steps.latest_tag.outputs.tag }}"
-          MAJOR=$(echo $LATEST | sed 's/v//' | cut -d. -f1)
-          MINOR=$(echo $LATEST | sed 's/v//' | cut -d. -f2)
-          PATCH=$(echo $LATEST | sed 's/v//' | cut -d. -f3)
+          MAJOR=$(echo "$LATEST" | sed 's/v//' | cut -d. -f1)
+          MINOR=$(echo "$LATEST" | sed 's/v//' | cut -d. -f2)
+          PATCH=$(echo "$LATEST" | sed 's/v//' | cut -d. -f3)
 
           # Check commits since last tag for breaking changes or features
-          COMMITS=$(git log ${LATEST}..HEAD --pretty=format:"%s")
+          COMMITS=$(git log "${LATEST}..HEAD" --pretty=format:"%s")
           echo "Commits since $LATEST:"
           echo "$COMMITS"
 
@@ -62,8 +62,8 @@ jobs:
             BUMP="patch"
           fi
 
-          echo "version=${NEXT}" >> $GITHUB_OUTPUT
-          echo "bump=${BUMP}" >> $GITHUB_OUTPUT
+          echo "version=${NEXT}" >> "$GITHUB_OUTPUT"
+          echo "bump=${BUMP}" >> "$GITHUB_OUTPUT"
           echo "Auto-detected bump: $BUMP → v$NEXT"
 
       - name: Resolve version
@@ -76,8 +76,8 @@ jobs:
           fi
           # Strip leading 'v' for normalization, then re-add
           VERSION="${VERSION#v}"
-          echo "version=v${VERSION}" >> $GITHUB_OUTPUT
-          echo "version_plain=${VERSION}" >> $GITHUB_OUTPUT
+          echo "version=v${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "version_plain=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "Release version: v${VERSION}"
 
       - name: Check tag does not exist

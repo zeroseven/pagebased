@@ -43,7 +43,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set PHP version
-        run: sed -i "s/^php_version:.*/php_version: ${{ matrix.php-version }}/" .ddev/config.yaml
+        env:
+          PHP_VERSION: ${{ matrix.php-version }}
+        run: |
+          sed -i "s/^php_version:.*/php_version: ${PHP_VERSION}/" .ddev/config.yaml
 
       - name: Setup DDEV
         uses: ddev/github-action-setup-ddev@v1
