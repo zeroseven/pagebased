@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Domain\Repository;
 
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -123,14 +125,26 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
 
     /**
      * Fetches only the raw tag CSV strings from the pages table for this registration,
-     * bypassing full Extbase object hydration. This is significantly cheaper than
-     * loading complete page objects just to collect tag values.
+     * bypassing full Extbase object hydration. Results are cached in TYPO3's data
+     * cache and automatically invalidated when pages are modified.
      *
      * @param ObjectDemandInterface $demand Used for optional category-tree filtering.
      * @return string[] Raw comma-separated tag strings, one entry per page row.
      */
     public function findTagStrings(ObjectDemandInterface $demand): array
     {
+        $categoryUid = $demand->getCategory();
+        $languageUid = (int)GeneralUtility::makeInstance(Context::class)
+            ->getPropertyFromAspect('language', 'id', 0);
+        $cacheKey = 'pagebased_tags_' . md5(
+            $this->registration->getIdentifier() . '_' . $categoryUid . '_' . $languageUid
+        );
+
+        $cache = $this->getTagsCache();
+        if ($cache !== null && ($cached = $cache->get($cacheKey)) !== false) {
+            return $cached;
+        }
+
         $qb = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(AbstractPage::TABLE_NAME);
 
@@ -148,7 +162,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
                 $qb->expr()->neq('pagebased_tags', $qb->createNamedParameter(''))
             );
 
-        if (($categoryUid = $demand->getCategory()) > 0) {
+        if ($categoryUid > 0) {
             $pageIds = array_keys(RootLineUtility::collectPagesBelow($categoryUid));
             if (!empty($pageIds)) {
                 $qb->andWhere($qb->expr()->in('uid', $pageIds));
@@ -157,7 +171,20 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
             }
         }
 
-        return array_column($qb->executeQuery()->fetchAllAssociative(), 'pagebased_tags');
+        $result = array_column($qb->executeQuery()->fetchAllAssociative(), 'pagebased_tags');
+
+        $cache?->set($cacheKey, $result, ['pageId_1']);
+
+        return $result;
+    }
+
+    private function getTagsCache(): ?FrontendInterface
+    {
+        try {
+            return GeneralUtility::makeInstance(CacheManager::class)->getCache('pagebased_tags');
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     public function findChildObjects(mixed $value): ?QueryResultInterface
