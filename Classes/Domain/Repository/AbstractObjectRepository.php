@@ -96,6 +96,29 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         return $constraints;
     }
 
+    /** @throws TypeException|InvalidQueryException */
+    public function findByUid(mixed $uid, bool $ignoreRestrictions = null): ?DomainObjectInterface
+    {
+        $uid = CastUtility::int($uid);
+        if ($uid <= 0) {
+            return null;
+        }
+
+        $query = $this->createQuery();
+
+        if ($ignoreRestrictions === true) {
+            $query->getQuerySettings()->setIgnoreEnableFields(true)->setIncludeDeleted(true)->setRespectStoragePage(false);
+        }
+
+        $query->matching($query->logicalAnd(
+            $query->equals('uid', $uid),
+            $query->equals(DetectionUtility::REGISTRATION_FIELD_NAME, $this->registration->getIdentifier())
+        ));
+        $query->setLimit(1);
+
+        return $query->execute()->getFirst();
+    }
+
     public function findChildObjects(mixed $value): ?QueryResultInterface
     {
         $query = $this->createQuery();

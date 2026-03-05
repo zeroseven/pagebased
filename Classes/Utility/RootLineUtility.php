@@ -24,6 +24,8 @@ use Zeroseven\Pagebased\Registration\Registration;
 
 class RootLineUtility
 {
+    /** @var array<string, array<int, array<string, mixed>>> */
+    private static array $cache = [];
     protected static function getRequest(): ?ServerRequestInterface
     {
         return ($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface ? $GLOBALS['TYPO3_REQUEST'] : null;
@@ -212,6 +214,12 @@ class RootLineUtility
     public static function collectPagesAbove(?int $startingPoint = null, ?bool $includingStartingPoint = null, ?int $depth = null): array
     {
         $startingPoint || $startingPoint = self::getCurrentPage();
+        $cacheKey = 'above_' . $startingPoint . '_' . (int)$includingStartingPoint . '_' . ($depth ?? 'null');
+
+        if (isset(self::$cache[$cacheKey])) {
+            return self::$cache[$cacheKey];
+        }
+
         $list = [];
         $queryBuilder = self::getTreeCollectQueryBuilder();
 
@@ -224,12 +232,18 @@ class RootLineUtility
         } catch (DBALException | DriverException $e) {
         }
 
-        return $list;
+        return self::$cache[$cacheKey] = $list;
     }
 
     public static function collectPagesBelow(?int $startingPoint = null, ?bool $includingStartingPoint = null, ?int $depth = null): array
     {
         $startingPoint || $startingPoint = self::getCurrentPage();
+        $cacheKey = 'below_' . $startingPoint . '_' . (int)$includingStartingPoint . '_' . ($depth ?? 'null');
+
+        if (isset(self::$cache[$cacheKey])) {
+            return self::$cache[$cacheKey];
+        }
+
         $list = [];
         $queryBuilder = self::getTreeCollectQueryBuilder();
 
@@ -242,7 +256,7 @@ class RootLineUtility
         } catch (DBALException | DriverException $e) {
         }
 
-        return $list;
+        return self::$cache[$cacheKey] = $list;
     }
 
     public static function findListPlugin(Registration $registration, ?int $startingPoint = null, ?bool $includingStartingPoint = null): ?array
