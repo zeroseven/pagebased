@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint & Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@v1
+
+      - name: Install dependencies
+        run: ddev composer install
+
+      - name: Lint composer
+        run: ddev composer lint:composer
+
+      - name: Lint EditorConfig
+        run: ddev composer lint:editorconfig
+
+      - name: Lint PHP (php-cs-fixer)
+        run: ddev composer lint:php
+
+      - name: Static analysis (PHPStan)
+        run: ddev composer sca:php
+
+  tests:
+    name: Tests (PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.3', '8.4']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set PHP version
+        run: sed -i "s/^php_version:.*/php_version: ${{ matrix.php-version }}/" .ddev/config.yaml
+
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@v1
+
+      - name: Install dependencies
+        run: ddev composer install
+
+      - name: Unit tests
+        run: ddev composer test:unit
+
+      - name: Functional tests
+        run: ddev composer test:functional
