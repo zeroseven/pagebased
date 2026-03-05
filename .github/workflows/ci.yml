@@ -13,6 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
       - name: Setup DDEV
         uses: ddev/github-action-setup-ddev@v1
 
@@ -32,15 +39,23 @@ jobs:
         run: ddev composer sca:php
 
   tests:
-    name: Tests (PHP ${{ matrix.php-version }})
+    name: Tests (PHP ${{ matrix.php-version }}, ${{ matrix.test-type }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         php-version: ['8.3', '8.4']
+        test-type: ['unit', 'functional']
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
 
       - name: Set PHP version
         env:
@@ -54,8 +69,5 @@ jobs:
       - name: Install dependencies
         run: ddev composer install
 
-      - name: Unit tests
-        run: ddev composer test:unit
-
-      - name: Functional tests
-        run: ddev composer test:functional
+      - name: Run tests
+        run: ddev composer test:${{ matrix.test-type }}

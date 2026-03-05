@@ -99,15 +99,9 @@ jobs:
           cat RELEASE_NOTES.md
 
           # Also update the full CHANGELOG.md
-          if [ -f CHANGELOG.md ]; then
-            git cliff --config cliff.toml \
-              --tag "${{ steps.version.outputs.version }}" \
-              --output CHANGELOG.md
-          else
-            git cliff --config cliff.toml \
-              --tag "${{ steps.version.outputs.version }}" \
-              --output CHANGELOG.md
-          fi
+          git cliff --config cliff.toml \
+            --tag "${{ steps.version.outputs.version }}" \
+            --output CHANGELOG.md
 
       - name: Show release summary (dry run)
         if: ${{ inputs.dry_run }}
@@ -130,8 +124,7 @@ jobs:
         run: |
           git tag -a "${{ steps.version.outputs.version }}" \
             -m "Release ${{ steps.version.outputs.version }}"
-          git push origin HEAD
-          git push origin "${{ steps.version.outputs.version }}"
+          git push origin HEAD "${{ steps.version.outputs.version }}"
 
       - name: Create GitHub Release
         if: ${{ !inputs.dry_run }}
