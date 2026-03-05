@@ -14,15 +14,14 @@ class TagUtility
 {
     public static function collectTagsFromQueryResult(QueryResultInterface $objects): array
     {
-        $tags = [];
+        $tagMap = [];
         foreach ($objects->toArray() as $object) {
             foreach ($object->getTags() ?? [] as $tag) {
-                if (!in_array($tag, $tags, true)) {
-                    $tags[] = $tag;
-                }
+                $tagMap[$tag] = true;
             }
         }
 
+        $tags = array_keys($tagMap);
         sort($tags, SORT_STRING);
 
         return $tags;
