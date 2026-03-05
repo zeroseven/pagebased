@@ -142,7 +142,7 @@ jobs:
     if: ${{ !inputs.dry_run }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Publish to TYPO3 TER
         uses: tomasnorre/typo3-upload-ter@v2
