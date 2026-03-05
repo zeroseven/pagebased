@@ -1,0 +1,13 @@
+uid,pid,title,doktype,sorting,deleted,hidden,nav_hide,sys_language_uid,l10n_parent,_pagebased_registration,_pagebased_site,_pagebased_child_object
+1,0,Site Root,1,256,0,0,0,0,0,,1,0
+10,1,Category Page,199,256,0,0,0,0,0,,1,0
+20,10,News Article 1,1,128,0,0,0,0,0,test_news,1,0
+21,10,News Article 2,1,256,0,0,0,0,0,test_news,1,0
+22,10,News Article 3,1,384,0,0,0,0,0,test_news,1,0
+23,10,Hidden Article,1,512,0,1,0,0,0,test_news,1,0
+24,10,Nav Hidden Article,1,640,0,0,1,0,0,test_news,1,0
+25,10,Child Article,1,768,0,0,0,0,0,test_news,1,1
+30,1,Other Category,199,256,0,0,0,0,0,,1,0
+31,30,Other News,1,256,0,0,0,0,0,test_news,1,0
+50,1,Different Site Category,199,256,0,0,0,0,0,,2,0
+51,50,Different Site News,1,256,0,0,0,0,0,test_news,2,0
