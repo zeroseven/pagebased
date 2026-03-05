@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Event\Rss;
 
-use InvalidArgumentException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -60,7 +59,7 @@ final class RssItemEvent extends AbstractRssObject
 
             $uri = $contentObjectRenderer->createUrl([
                 'parameter' => $this->object->getUid(),
-                'forceAbsoluteUrl' => true
+                'forceAbsoluteUrl' => true,
             ]);
 
             $uri && $this->set('link', $uri);
@@ -83,9 +82,9 @@ final class RssItemEvent extends AbstractRssObject
                 $processedImage && $this->set('enclosure', '', [
                     'url' => $imageService->getImageUri($processedImage, true),
                     'length' => $processedImage->getSize(),
-                    'type' => $processedImage->getMimeType()
+                    'type' => $processedImage->getMimeType(),
                 ]);
-            } catch (InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException $e) {
             }
         }
 

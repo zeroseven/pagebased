@@ -30,12 +30,12 @@ class IconRegistryEvent
 
         if (empty($registration->getCategory()->getIconIdentifier())) {
             $iconRegistry->registerIcon(self::getIconName($registration), AppIconProvider::class, [
-                'registration' => $registration->getIdentifier()
+                'registration' => $registration->getIdentifier(),
             ]);
 
             $iconRegistry->registerIcon(self::getIconName($registration, true), AppIconProvider::class, [
                 'registration' => $registration->getIdentifier(),
-                'hideInMenu' => true
+                'hideInMenu' => true,
             ]);
 
             $registration->getCategory()->setIconIdentifier(self::getIconName($registration));
@@ -43,7 +43,7 @@ class IconRegistryEvent
 
         if (empty($registration->getObject()->getOverlayIconIdentifier())) {
             $iconRegistry->registerIcon(self::getOverlayIconName($registration), OverlayIconProvider::class, [
-                'registration' => $registration->getIdentifier()
+                'registration' => $registration->getIdentifier(),
             ]);
 
             $registration->getObject()->setOverlayIconIdentifier(self::getIconName($registration));

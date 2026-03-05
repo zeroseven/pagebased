@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Utility;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Core\Bootstrap;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface as ExtbaseRequestInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\RequestBuilder;
 use Zeroseven\Pagebased\Registration\Registration;
 

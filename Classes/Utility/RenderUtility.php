@@ -67,7 +67,7 @@ class RenderUtility
                 'settings' => array_merge($pluginConfiguration['settings'] ?? [], $settings ?? []),
                 'data' => $this->cObj->data ?? [],
                 'registration' => $registration,
-                strtolower($registration->getObject()->getName()) => $object // alias variable
+                strtolower($registration->getObject()->getName()) => $object, // alias variable
             ], $registration, 'info'))->getVariables());
 
             return $view->render();
@@ -76,7 +76,7 @@ class RenderUtility
         return '';
     }
 
-    /** @throws ContentRenderingException | TypeException */
+    /** @throws ContentRenderingException|TypeException */
     public function renderUserFunc(string $content, array $conf, ServerRequestInterface $request): string
     {
         $file = $conf['file'] ?? null;

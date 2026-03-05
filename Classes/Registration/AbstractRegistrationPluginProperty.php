@@ -54,7 +54,7 @@ abstract class AbstractRegistrationPluginProperty extends AbstractRegistration
         return $this;
     }
 
-    /** @throws RegistrationException | TypeException */
+    /** @throws RegistrationException|TypeException */
     public function addLayouts(mixed $input): self
     {
         foreach (CastUtility::array($input) as $layout => $label) {

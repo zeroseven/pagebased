@@ -9,6 +9,4 @@ use Zeroseven\Pagebased\Domain\Model\AbstractObject;
 /**
  * Minimal test object – used to verify repository query constraints.
  */
-class TestObject extends AbstractObject
-{
-}
+class TestObject extends AbstractObject {}

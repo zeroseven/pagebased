@@ -31,19 +31,19 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     {
         parent::__construct();
 
-        $this->registration = RegistrationService::getRegistrationByRepository(get_class($this));
+        $this->registration = RegistrationService::getRegistrationByRepository(static::class);
 
         $this->defaultOrderings = [
             $this->registration->getObject()->getSortingField() =>
                 $this->registration->getObject()->isSortingAscending()
                     ? QueryInterface::ORDER_ASCENDING
-                    : QueryInterface::ORDER_DESCENDING
+                    : QueryInterface::ORDER_DESCENDING,
         ];
     }
 
     public function initializeDemand(): DemandInterface
     {
-        return RegistrationService::getRegistrationByRepository(get_class($this))?->getObject()->getDemandClass();
+        return RegistrationService::getRegistrationByRepository(static::class)?->getObject()->getDemandClass();
     }
 
     /** @throws PersistenceException */
@@ -56,7 +56,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         }
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
+    /** @throws AspectNotFoundException|InvalidQueryException|PersistenceException */
     public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = parent::createDemandConstraints($demand, $query);
@@ -111,7 +111,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         return null;
     }
 
-    /** @throws AspectNotFoundException | TypeException | InvalidQueryException | PersistenceException | RegistrationException */
+    /** @throws AspectNotFoundException|TypeException|InvalidQueryException|PersistenceException|RegistrationException */
     public function findParentObject(mixed $value): ?DomainObjectInterface
     {
         return ($uid = $value instanceof AbstractPage ? $value->getUid() : CastUtility::int($value))

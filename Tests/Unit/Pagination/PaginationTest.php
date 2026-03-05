@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Tests\Unit\Pagination;
 
+use stdClass;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Zeroseven\Pagebased\Pagination\Pagination;
 use Zeroseven\Pagebased\Pagination\Stage;
@@ -14,10 +15,19 @@ use Zeroseven\Pagebased\Pagination\Stage;
  * These tests verify the core pagination logic: stage calculation, item distribution,
  * indicator generation and next/previous stage navigation.
  * This is critical to verify before optimising the "load all items into memory" pattern.
+ *
+ * NOTE: Stage/Stages extend ObjectStorage which requires actual objects. All item
+ * arrays therefore contain stdClass instances, not scalars.
  */
 class PaginationTest extends UnitTestCase
 {
     protected bool $resetSingletonInstances = true;
+
+    /** Creates N distinct stdClass objects for use as pagination items. */
+    private function makeItems(int $count): array
+    {
+        return array_map(static fn() => new \stdClass(), range(1, $count));
+    }
 
     // ---------------------------------------------------------------------------
     // Items
@@ -26,7 +36,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function itemsAreStoredCorrectly(): void
     {
-        $items = ['a', 'b', 'c'];
+        $items = $this->makeItems(3);
         $pagination = new Pagination($items, 0);
 
         self::assertSame($items, $pagination->getItems());
@@ -47,7 +57,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function selectedStageDefaultsToZero(): void
     {
-        $pagination = new Pagination(['a', 'b'], 0);
+        $pagination = new Pagination($this->makeItems(2), 0);
 
         self::assertSame(0, $pagination->getSelectedStage());
     }
@@ -55,7 +65,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function selectedStageIsStoredCorrectly(): void
     {
-        $pagination = new Pagination(range(1, 20), 2, 6);
+        $pagination = new Pagination($this->makeItems(20), 2, 6);
 
         self::assertSame(2, $pagination->getSelectedStage());
     }
@@ -67,8 +77,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function uniformItemsPerStageDistributesEvenly(): void
     {
-        $items = range(1, 12);
-        $pagination = new Pagination($items, 0, 4);
+        $pagination = new Pagination($this->makeItems(12), 0, 4);
         $stages = $pagination->getStages()->toArray();
 
         self::assertCount(3, $stages);
@@ -81,8 +90,7 @@ class PaginationTest extends UnitTestCase
     public function commaSeparatedItemsPerStageUsesProgressiveLengths(): void
     {
         // First stage: 3 items, second: 6, then 12 for remaining stages
-        $items = range(1, 30);
-        $pagination = new Pagination($items, 0, '3,6,12');
+        $pagination = new Pagination($this->makeItems(30), 0, '3,6,12');
         $stages = $pagination->getStages()->toArray();
 
         self::assertCount(4, $stages); // 3 + 6 + 12 + 9 remaining (≤12) = 4 stages
@@ -95,8 +103,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function lastValueInCommaSeparatedListFillsRemainingStages(): void
     {
-        $items = range(1, 10);
-        $pagination = new Pagination($items, 0, '4,3');
+        $pagination = new Pagination($this->makeItems(10), 0, '4,3');
         $stageLengths = $pagination->getStageLengths();
 
         // From the second position on, all entries should be 3
@@ -120,7 +127,9 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function maxStagesMinimumIsOne(): void
     {
-        $pagination = new Pagination([], 0, 6, 0);
+        // Constructor treats 0 as "use default (100)", so test the setter directly.
+        $pagination = new Pagination([], 0, 6);
+        $pagination->setMaxStages(0);
 
         self::assertSame(1, $pagination->getMaxStages());
     }
@@ -128,8 +137,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function maxStagesLimitsNumberOfStages(): void
     {
-        $items = range(1, 100);
-        $pagination = new Pagination($items, 0, 6, 3);
+        $pagination = new Pagination($this->makeItems(100), 0, 6, 3);
 
         self::assertLessThanOrEqual(3, count($pagination->getStages()->toArray()));
     }
@@ -141,8 +149,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function getIndicatorsReturnsOneEntryPerStageWhenAllFilled(): void
     {
-        $items = range(1, 12);
-        $pagination = new Pagination($items, 0, 4);
+        $pagination = new Pagination($this->makeItems(12), 0, 4);
 
         // 12 items / 4 per stage = 3 stages → 3 indicators
         self::assertCount(3, $pagination->getIndicators());
@@ -152,8 +159,7 @@ class PaginationTest extends UnitTestCase
     public function getIndicatorsStopsBeforePartialLastStage(): void
     {
         // 10 items, 4 per stage: stage 0=4, stage 1=4, stage 2=2 (partial)
-        $items = range(1, 10);
-        $pagination = new Pagination($items, 0, 4);
+        $pagination = new Pagination($this->makeItems(10), 0, 4);
         $indicators = $pagination->getIndicators();
 
         // Only stages where count >= stageLength get an indicator
@@ -175,8 +181,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function getNextStageReturnsIncrementedIndexWhenMoreItemsExist(): void
     {
-        $items = range(1, 20);
-        $pagination = new Pagination($items, 0, 6);
+        $pagination = new Pagination($this->makeItems(20), 0, 6);
 
         self::assertSame(1, $pagination->getNextStage());
     }
@@ -184,8 +189,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function getNextStageReturnsNullWhenAllItemsShown(): void
     {
-        $items = range(1, 6);
-        $pagination = new Pagination($items, 0, 6);
+        $pagination = new Pagination($this->makeItems(6), 0, 6);
 
         self::assertNull($pagination->getNextStage());
     }
@@ -193,8 +197,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function getNextStageReturnsNullAtMaxStageLimit(): void
     {
-        $items = range(1, 100);
-        $pagination = new Pagination($items, 99, 1, 100);
+        $pagination = new Pagination($this->makeItems(100), 99, 1, 100);
 
         self::assertNull($pagination->getNextStage());
     }
@@ -202,7 +205,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function getPreviousStageReturnsNullOnFirstStage(): void
     {
-        $pagination = new Pagination(range(1, 10), 0, 5);
+        $pagination = new Pagination($this->makeItems(10), 0, 5);
 
         self::assertNull($pagination->getPreviousStage());
     }
@@ -210,7 +213,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function getPreviousStageReturnsDecrementedIndex(): void
     {
-        $pagination = new Pagination(range(1, 20), 2, 5);
+        $pagination = new Pagination($this->makeItems(20), 2, 5);
 
         self::assertSame(1, $pagination->getPreviousStage());
     }
@@ -222,7 +225,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function selectedStageIsMarkedAsSelected(): void
     {
-        $pagination = new Pagination(range(1, 12), 1, 4);
+        $pagination = new Pagination($this->makeItems(12), 1, 4);
         $stages = $pagination->getStages()->toArray();
 
         self::assertFalse($stages[0]->isSelected());
@@ -233,7 +236,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function allStagesUpToSelectedAreActive(): void
     {
-        $pagination = new Pagination(range(1, 12), 1, 4);
+        $pagination = new Pagination($this->makeItems(12), 1, 4);
         $stages = $pagination->getStages()->toArray();
 
         self::assertTrue($stages[0]->isActive());
@@ -248,7 +251,7 @@ class PaginationTest extends UnitTestCase
     /** @test */
     public function stageRangeCalculatesCorrectFromAndTo(): void
     {
-        $pagination = new Pagination(range(1, 12), 0, 4);
+        $pagination = new Pagination($this->makeItems(12), 0, 4);
         /** @var Stage $stage1 */
         $stage1 = $pagination->getStages()->toArray()[1];
         $range = $stage1->getRange();

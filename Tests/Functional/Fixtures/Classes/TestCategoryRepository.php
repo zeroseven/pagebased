@@ -9,6 +9,4 @@ use Zeroseven\Pagebased\Domain\Repository\AbstractCategoryRepository;
 /**
  * Minimal test category repository.
  */
-class TestCategoryRepository extends AbstractCategoryRepository
-{
-}
+class TestCategoryRepository extends AbstractCategoryRepository {}

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Event;
 
-use JsonException;
 use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference as ExtbaseFileReference;
@@ -88,15 +87,15 @@ final class StructuredDataEvent
         $imageService = GeneralUtility::makeInstance(ImageService::class);
         $processedImage = $imageService->applyProcessingInstructions($media, [
             'width' => '1920m',
-            'height' => '1080m'
+            'height' => '1080m',
         ]);
 
         return array_merge([
             '@type' => 'ImageObject',
-            'url' => $imageService->getImageUri($processedImage, true)
+            'url' => $imageService->getImageUri($processedImage, true),
         ], ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController && ($lastImageInfo = $GLOBALS['TSFE']->lastImageInfo ?? null) ? [
             'width' => $lastImageInfo[0],
-            'height' => $lastImageInfo[1]
+            'height' => $lastImageInfo[1],
         ] : []);
     }
 
@@ -134,7 +133,7 @@ final class StructuredDataEvent
         if (!$this->properties->isEmpty()) {
             try {
                 return json_encode($this->parseProperties($this->properties->toArray()), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            } catch (JsonException $e) {
+            } catch (\JsonException $e) {
             }
         }
 

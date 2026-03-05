@@ -9,6 +9,4 @@ use Zeroseven\Pagebased\Domain\Model\AbstractCategory;
 /**
  * Minimal test category – used to verify repository query constraints.
  */
-class TestCategory extends AbstractCategory
-{
-}
+class TestCategory extends AbstractCategory {}

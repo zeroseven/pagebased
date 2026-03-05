@@ -9,6 +9,4 @@ use Zeroseven\Pagebased\Domain\Repository\AbstractObjectRepository;
 /**
  * Minimal test object repository – registered in test setUp() via RegistrationService.
  */
-class TestObjectRepository extends AbstractObjectRepository
-{
-}
+class TestObjectRepository extends AbstractObjectRepository {}

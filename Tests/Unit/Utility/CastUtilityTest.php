@@ -142,7 +142,7 @@ class CastUtilityTest extends UnitTestCase
     /** @test */
     public function arrayCallsToArrayOnObjectWithMethod(): void
     {
-        $object = new class {
+        $object = new class () {
             public function toArray(): array
             {
                 return ['x', 'y'];

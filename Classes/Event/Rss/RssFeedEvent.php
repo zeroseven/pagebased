@@ -25,7 +25,7 @@ final class RssFeedEvent extends AbstractRssObject
         $this->tag->addAttributes([
             'version' => '2.0',
             'xmlns:content' => 'http://purl.org/rss/1.0/modules/content/',
-            'xmlns:atom' => 'http://www.w3.org/2005/Atom'
+            'xmlns:atom' => 'http://www.w3.org/2005/Atom',
         ]);
 
         $this->registration = $registration;

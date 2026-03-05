@@ -33,7 +33,7 @@
                 "options": []
             },
             {
-                "action": "composer lint:composer",
+                "action": "ddev composer lint:composer",
                 "options": [],
                 "conditions": [
                     {
@@ -43,7 +43,7 @@
                 ]
             },
             {
-                "action": "composer lint:php",
+                "action": "ddev composer lint:php",
                 "options": [],
                 "conditions": [
                     {
@@ -53,7 +53,7 @@
                 ]
             },
             {
-                "action": "composer sca:php",
+                "action": "ddev composer sca:php",
                 "options": [],
                 "conditions": [
                     {

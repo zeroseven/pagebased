@@ -35,7 +35,7 @@ class TCAUtility
     {
         return ['AND' => [
             sprintf('FIELD:%s:=:%s', DetectionUtility::REGISTRATION_FIELD_NAME, $registration->getIdentifier()),
-            sprintf('FIELD:%s:!=:%d', self::getPageTypeField(), $registration->getCategory()->getDocumentType())
+            sprintf('FIELD:%s:!=:%d', self::getPageTypeField(), $registration->getCategory()->getDocumentType()),
         ]];
     }
 

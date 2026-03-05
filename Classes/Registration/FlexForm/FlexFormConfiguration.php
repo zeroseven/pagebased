@@ -10,7 +10,6 @@ use TYPO3\CMS\Core\Type\Exception;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Pagebased\Registration\Event\AddFlexFormEvent;
-use Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent;
 
 class FlexFormConfiguration
 {
@@ -84,11 +83,11 @@ class FlexFormConfiguration
                 $config['sheets'][$sheet->getKey()] = [
                     'ROOT' => [
                         'TCEforms' => [
-                            'sheetTitle' => $sheet->getTitle()
+                            'sheetTitle' => $sheet->getTitle(),
                         ],
                         'type' => 'array',
-                        'el' => $sheet->getFields()
-                    ]
+                        'el' => $sheet->getFields(),
+                    ],
                 ];
             } else {
                 throw new Exception(sprintf('Argument is not instance of %s.', FlexFormSheetConfiguration::class), 1677576373);

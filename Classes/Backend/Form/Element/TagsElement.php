@@ -60,12 +60,12 @@ class TagsElement extends AbstractFormElement
     {
         $fieldWizardResult = $this->renderFieldWizard();
         $formField = '<input type="text" ' . GeneralUtility::implodeAttributes([
-                'name' => $this->name,
-                'value' => $this->value,
-                'id' => $this->id,
-                'placeholder' => $this->placeholder,
-                'class' => 'form-control form-control--tags'
-            ], true) . ' />';
+            'name' => $this->name,
+            'value' => $this->value,
+            'id' => $this->id,
+            'placeholder' => $this->placeholder,
+            'class' => 'form-control form-control--tags',
+        ], true) . ' />';
 
         return '
             <div class="form-control-wrap">

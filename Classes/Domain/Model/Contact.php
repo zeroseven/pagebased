@@ -234,7 +234,7 @@ class Contact extends AbstractEntity
     {
         if ($this->pageLink === null) {
             return $this->pageLink = (string)GeneralUtility::makeInstance(ContentObjectRenderer::class)->typoLink_URL([
-                'parameter' => $this->getPage()
+                'parameter' => $this->getPage(),
             ]);
         }
 

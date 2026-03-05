@@ -18,7 +18,7 @@
   "require": {
     "ext-json": "*",
     "ext-pdo": "*",
-    "php": "^8.0 | ^8.1",
+    "php": "^8.3",
     "symfony/property-access": "*",
     "typo3/cms-core": "^12.4.0"
   },

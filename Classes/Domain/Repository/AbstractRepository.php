@@ -47,12 +47,12 @@ abstract class AbstractRepository extends Repository
             }
 
             $this->setDefaultOrderings([
-                $columnName => ($direction = $matches[2] ?? null) && $direction === 'desc' ? QueryInterface::ORDER_DESCENDING : QueryInterface::ORDER_ASCENDING
+                $columnName => ($direction = $matches[2] ?? null) && $direction === 'desc' ? QueryInterface::ORDER_DESCENDING : QueryInterface::ORDER_ASCENDING,
             ]);
         }
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
+    /** @throws AspectNotFoundException|InvalidQueryException|PersistenceException */
     public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = [];
@@ -127,7 +127,7 @@ abstract class AbstractRepository extends Repository
         return $objects;
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
+    /** @throws AspectNotFoundException|InvalidQueryException|PersistenceException */
     public function findByDemand(DemandInterface $demand, ?QueryInterface $query = null): ?QueryResultInterface
     {
         // Override sorting
@@ -154,19 +154,19 @@ abstract class AbstractRepository extends Repository
         return $query->execute();
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException | RegistrationException */
+    /** @throws AspectNotFoundException|InvalidQueryException|PersistenceException|RegistrationException */
     public function findByUidList(mixed $uidList, DemandInterface $demand = null): ?QueryResultInterface
     {
         return $this->findByDemand(($demand ?? $this->initializeDemand())->setUidList($uidList));
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException | RegistrationException */
+    /** @throws AspectNotFoundException|InvalidQueryException|PersistenceException|RegistrationException */
     public function findAll(DemandInterface $demand = null): ?QueryResultInterface
     {
         return $this->findByDemand($demand ?? $this->initializeDemand());
     }
 
-    /** @throws AspectNotFoundException | TypeException | InvalidQueryException | PersistenceException | RegistrationException */
+    /** @throws AspectNotFoundException|TypeException|InvalidQueryException|PersistenceException|RegistrationException */
     public function findByUid(mixed $uid, bool $ignoreRestrictions = null): ?DomainObjectInterface
     {
         $uid = CastUtility::int($uid);

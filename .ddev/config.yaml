@@ -1,7 +1,7 @@
 name: pagebased
 type: typo3
 docroot: .build/public
-php_version: "8.1"
+php_version: "8.3"
 webserver_type: nginx-fpm
 router_http_port: "80"
 router_https_port: "443"
@@ -12,7 +12,7 @@ database:
   type: mariadb
   version: "10.11"
 nodejs_version: "20"
-webimage_extra_packages: [php8.1-pcov]
+webimage_extra_packages: [php8.3-pcov]
 use_dns_when_possible: true
 composer_version: "2"
 web_environment:
