@@ -1,27 +1,27 @@
 {
-  "name": "{{ cookiecutter.vendor_name|lower }}/{{ cookiecutter.extension_key.replace('_', '-') }}",
-  "license": "GPL-2.0-only",
-  "type": "typo3-cms-extension",
-  "authors": [
-    {
-      "name": "zeroseven design studios GmbH",
-      "email": "typo3@zeroseven.de",
-      "homepage": "https://www.zeroseven.de/",
-      "role": "Company"
-    }
-  ],
-  "require": {
-    "typo3/cms-core": "^12.4.0",
-    "zeroseven/pagebased": "*"
-  },
-  "autoload": {
-    "psr-4": {
-      "{{ cookiecutter.__namespace_vendor }}\\{{ cookiecutter.__namespace_extension }}\\": "Classes/"
-    }
-  },
-  "extra": {
-    "typo3/cms": {
-      "extension-key": "{{ cookiecutter.extension_key }}"
-    }
-  }
+"name": "{{ cookiecutter.vendor_name|lower }}/{{ cookiecutter.extension_key.replace('_', '-') }}",
+"license": "GPL-2.0-only",
+"type": "typo3-cms-extension",
+"authors": [
+	{
+	  "name": "zeroseven design studios GmbH",
+	  "email": "typo3@zeroseven.de",
+	  "homepage": "https://www.zeroseven.de/",
+	  "role": "Company"
+	}
+],
+"require": {
+	"typo3/cms-core": "^12.4.0",
+	"zeroseven/pagebased": "*"
+},
+"autoload": {
+	"psr-4": {
+	  "{{ cookiecutter.__namespace_vendor }}\\{{ cookiecutter.__namespace_extension }}\\": "Classes/"
+	}
+},
+"extra": {
+	"typo3/cms": {
+	  "extension-key": "{{ cookiecutter.extension_key }}"
+	}
+}
 }

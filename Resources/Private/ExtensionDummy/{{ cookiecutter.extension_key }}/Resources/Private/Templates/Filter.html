@@ -1,42 +1,42 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:pagebased="http://typo3.org/ns/Zeroseven/Pagebased/ViewHelpers" data-namespace-typo3-fluid="true">
-    <style type="text/css">[data-filter-active] {
-        background: yellow;
-        color: #000;
-    }</style>
+		<style type="text/css">[data-filter-active] {
+				background: yellow;
+				color: #000;
+		}</style>
 
-    <p>
-        <pagebased:filter.clear>reset</pagebased:filter.clear>
-    </p>
+		<p>
+				<pagebased:filter.clear>reset</pagebased:filter.clear>
+		</p>
 
-    <f:if condition="{categories}">
-        <h2>Categories</h2>
-        <f:for each="{categories}" as="category">
-            <pagebased:filter.link demand="{demand}" properties="{category:category}" toggle="1">{category.title}</pagebased:filter.link><br>
-        </f:for>
-    </f:if>
+		<f:if condition="{categories}">
+				<h2>Categories</h2>
+				<f:for each="{categories}" as="category">
+						<pagebased:filter.link demand="{demand}" properties="{category:category}" toggle="1">{category.title}</pagebased:filter.link><br>
+				</f:for>
+		</f:if>
 
-    <f:if condition="{topics}">
-        <h2>Topics</h2>
-        <f:for each="{topics}" as="topic">
-            <pagebased:filter.link demand="{demand}" properties="{topics:topic.uid}" toggle="1">{topic.title}</pagebased:filter.link><br>
-        </f:for>
-    </f:if>
+		<f:if condition="{topics}">
+				<h2>Topics</h2>
+				<f:for each="{topics}" as="topic">
+						<pagebased:filter.link demand="{demand}" properties="{topics:topic.uid}" toggle="1">{topic.title}</pagebased:filter.link><br>
+				</f:for>
+		</f:if>
 
-    <f:if condition="{contacts}">
-        <h2>Contact</h2>
-        <f:for each="{contacts}" as="contact">
-            <pagebased:filter.link demand="{demand}" properties="{contact:contact.uid}" toggle="1">{contact.fullName}</pagebased:filter.link><br>
-        </f:for>
-    </f:if>
+		<f:if condition="{contacts}">
+				<h2>Contact</h2>
+				<f:for each="{contacts}" as="contact">
+						<pagebased:filter.link demand="{demand}" properties="{contact:contact.uid}" toggle="1">{contact.fullName}</pagebased:filter.link><br>
+				</f:for>
+		</f:if>
 
-    <f:if condition="{tags}">
-        <h2>Tags</h2>
-        <f:for each="{tags}" as="tag">
-            <pagebased:filter.link demand="{demand}" properties="{tags:tag}" toggle="1">{tag}</pagebased:filter.link><br>
-        </f:for>
-    </f:if>
+		<f:if condition="{tags}">
+				<h2>Tags</h2>
+				<f:for each="{tags}" as="tag">
+						<pagebased:filter.link demand="{demand}" properties="{tags:tag}" toggle="1">{tag}</pagebased:filter.link><br>
+				</f:for>
+		</f:if>
 
-    <h2>Top</h2>
-    <pagebased:filter.link demand="{demand}" properties="{_top_mode:1}" toggle="1">Top only</pagebased:filter.link>
-    <pagebased:filter.link demand="{demand}" properties="{_top_mode:2}" toggle="1">Top first</pagebased:filter.link>
+		<h2>Top</h2>
+		<pagebased:filter.link demand="{demand}" properties="{_top_mode:1}" toggle="1">Top only</pagebased:filter.link>
+		<pagebased:filter.link demand="{demand}" properties="{_top_mode:2}" toggle="1">Top first</pagebased:filter.link>
 </html>

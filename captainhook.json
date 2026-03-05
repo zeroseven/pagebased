@@ -1,108 +1,108 @@
 {
-    "config": {
-        "bootstrap": "captainhook-bootstrap.php",
-        "fail-on-first-error": true,
-        "includes": [],
-        "excludes": [],
-        "ansi-colors": true
-    },
-    "commit-msg": {
-        "enabled": true,
-        "actions": [
-            {
-                "action": "\\CaptainHook\\App\\Hook\\Message\\Action\\Regex",
-                "options": {
-                    "regex": "/^\\[(BUGFIX|FEATURE|DOCS|TASK|SECURITY|!!!)(\\]\\[|\\])/",
-                    "error": "Commit message must start with a TYPO3 keyword: [BUGFIX], [FEATURE], [DOCS], [TASK], [!!!][FEATURE], etc.\nSee: https://docs.typo3.org/m/typo3/guide-contributionworkflow/main/en-us/Appendix/CommitMessage.html"
-                }
-            },
-            {
-                "action": "\\CaptainHook\\App\\Hook\\Message\\Action\\Beams",
-                "options": {
-                    "subjectLength": 72,
-                    "bodyLineLength": 100
-                }
-            }
-        ]
-    },
-    "pre-commit": {
-        "enabled": true,
-        "actions": [
-            {
-                "action": "echo 'Running code quality checks...'",
-                "options": []
-            },
-            {
-                "action": "ddev composer lint:composer",
-                "options": [],
-                "conditions": [
-                    {
-                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
-                        "args": ["json"]
-                    }
-                ]
-            },
-            {
-                "action": "ddev composer lint:php",
-                "options": [],
-                "conditions": [
-                    {
-                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
-                        "args": ["php"]
-                    }
-                ]
-            },
-            {
-                "action": "ddev composer sca:php",
-                "options": [],
-                "conditions": [
-                    {
-                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
-                        "args": ["php"]
-                    }
-                ]
-            },
-            {
-                "action": "echo '✓ All checks passed!'",
-                "options": []
-            }
-        ]
-    },
-    "pre-push": {
-        "enabled": true,
-        "actions": [
-            {
-                "action": "echo 'Running tests before push...'",
-                "options": []
-            },
-            {
-                "action": "ddev composer test",
-                "options": []
-            },
-            {
-                "action": "echo '✓ Tests passed!'",
-                "options": []
-            }
-        ]
-    },
-    "post-commit": {
-        "enabled": false,
-        "actions": []
-    },
-    "post-merge": {
-        "enabled": false,
-        "actions": []
-    },
-    "post-checkout": {
-        "enabled": false,
-        "actions": []
-    },
-    "post-rewrite": {
-        "enabled": false,
-        "actions": []
-    },
-    "prepare-commit-msg": {
-        "enabled": false,
-        "actions": []
-    }
+	"config": {
+		"bootstrap": "captainhook-bootstrap.php",
+		"fail-on-first-error": true,
+		"includes": [],
+		"excludes": [],
+		"ansi-colors": true
+	},
+	"commit-msg": {
+		"enabled": true,
+		"actions": [
+			{
+				"action": "\\CaptainHook\\App\\Hook\\Message\\Action\\Regex",
+				"options": {
+					"regex": "/^\\[(BUGFIX|FEATURE|DOCS|TASK|SECURITY|!!!)(\\]\\[|\\])/",
+					"error": "Commit message must start with a TYPO3 keyword: [BUGFIX], [FEATURE], [DOCS], [TASK], [!!!][FEATURE], etc.\nSee: https://docs.typo3.org/m/typo3/guide-contributionworkflow/main/en-us/Appendix/CommitMessage.html"
+				}
+			},
+			{
+				"action": "\\CaptainHook\\App\\Hook\\Message\\Action\\Beams",
+				"options": {
+					"subjectLength": 72,
+					"bodyLineLength": 100
+				}
+			}
+		]
+	},
+	"pre-commit": {
+		"enabled": true,
+		"actions": [
+			{
+				"action": "echo 'Running code quality checks...'",
+				"options": []
+			},
+			{
+				"action": "ddev composer lint:composer",
+				"options": [],
+				"conditions": [
+					{
+						"exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
+						"args": ["json"]
+					}
+				]
+			},
+			{
+				"action": "ddev composer lint:php",
+				"options": [],
+				"conditions": [
+					{
+						"exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
+						"args": ["php"]
+					}
+				]
+			},
+			{
+				"action": "ddev composer sca:php",
+				"options": [],
+				"conditions": [
+					{
+						"exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
+						"args": ["php"]
+					}
+				]
+			},
+			{
+				"action": "echo '✓ All checks passed!'",
+				"options": []
+			}
+		]
+	},
+	"pre-push": {
+		"enabled": true,
+		"actions": [
+			{
+				"action": "echo 'Running tests before push...'",
+				"options": []
+			},
+			{
+				"action": "ddev composer test",
+				"options": []
+			},
+			{
+				"action": "echo '✓ Tests passed!'",
+				"options": []
+			}
+		]
+	},
+	"post-commit": {
+		"enabled": false,
+		"actions": []
+	},
+	"post-merge": {
+		"enabled": false,
+		"actions": []
+	},
+	"post-checkout": {
+		"enabled": false,
+		"actions": []
+	},
+	"post-rewrite": {
+		"enabled": false,
+		"actions": []
+	},
+	"prepare-commit-msg": {
+		"enabled": false,
+		"actions": []
+	}
 }
