@@ -6,6 +6,7 @@ namespace Zeroseven\Pagebased\Domain\Repository;
 
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
@@ -15,6 +16,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Exception\RegistrationException;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Registration\Registration;
@@ -117,6 +119,45 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         $query->setLimit(1);
 
         return $query->execute()->getFirst();
+    }
+
+    /**
+     * Fetches only the raw tag CSV strings from the pages table for this registration,
+     * bypassing full Extbase object hydration. This is significantly cheaper than
+     * loading complete page objects just to collect tag values.
+     *
+     * @param ObjectDemandInterface $demand Used for optional category-tree filtering.
+     * @return string[] Raw comma-separated tag strings, one entry per page row.
+     */
+    public function findTagStrings(ObjectDemandInterface $demand): array
+    {
+        $qb = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable(AbstractPage::TABLE_NAME);
+
+        $qb->select('pagebased_tags')
+            ->from(AbstractPage::TABLE_NAME)
+            ->where(
+                $qb->expr()->eq(
+                    DetectionUtility::REGISTRATION_FIELD_NAME,
+                    $qb->createNamedParameter($this->registration->getIdentifier())
+                ),
+                $qb->expr()->neq(
+                    $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'],
+                    $qb->createNamedParameter($this->registration->getCategory()->getDocumentType(), \Doctrine\DBAL\ParameterType::INTEGER)
+                ),
+                $qb->expr()->neq('pagebased_tags', $qb->createNamedParameter(''))
+            );
+
+        if (($categoryUid = $demand->getCategory()) > 0) {
+            $pageIds = array_keys(RootLineUtility::collectPagesBelow($categoryUid));
+            if (!empty($pageIds)) {
+                $qb->andWhere($qb->expr()->in('uid', $pageIds));
+            } else {
+                return [];
+            }
+        }
+
+        return array_column($qb->executeQuery()->fetchAllAssociative(), 'pagebased_tags');
     }
 
     public function findChildObjects(mixed $value): ?QueryResultInterface

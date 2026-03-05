@@ -158,4 +158,48 @@ class TagUtilityTest extends UnitTestCase
         self::assertArrayHasKey(0, $tags);
         self::assertArrayHasKey(1, $tags);
     }
+
+    // ---------------------------------------------------------------------------
+    // collectTagsFromStrings
+    // ---------------------------------------------------------------------------
+
+    /** @test */
+    public function collectTagsFromStringsReturnsEmptyArrayForEmptyInput(): void
+    {
+        self::assertSame([], TagUtility::collectTagsFromStrings([]));
+    }
+
+    /** @test */
+    public function collectTagsFromStringsParsesSingleCsvRow(): void
+    {
+        $tags = TagUtility::collectTagsFromStrings(['php,typo3']);
+
+        self::assertContains('php', $tags);
+        self::assertContains('typo3', $tags);
+        self::assertCount(2, $tags);
+    }
+
+    /** @test */
+    public function collectTagsFromStringsMergesAndDeduplicatesAcrossRows(): void
+    {
+        $tags = TagUtility::collectTagsFromStrings(['php,typo3', 'symfony,php']);
+
+        self::assertSame(['php', 'symfony', 'typo3'], $tags);
+    }
+
+    /** @test */
+    public function collectTagsFromStringsSortedAlphabetically(): void
+    {
+        $tags = TagUtility::collectTagsFromStrings(['zebra,apple,mango']);
+
+        self::assertSame(['apple', 'mango', 'zebra'], $tags);
+    }
+
+    /** @test */
+    public function collectTagsFromStringsIgnoresEmptySegments(): void
+    {
+        $tags = TagUtility::collectTagsFromStrings([',php,', 'typo3,']);
+
+        self::assertSame(['php', 'typo3'], $tags);
+    }
 }
