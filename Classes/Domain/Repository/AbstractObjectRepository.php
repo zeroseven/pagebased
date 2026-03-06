@@ -8,6 +8,7 @@ use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
@@ -148,7 +149,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         $qb = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(AbstractPage::TABLE_NAME);
 
-        $qb->select('pagebased_tags')
+        $qb->select('uid', 'pagebased_tags')
             ->from(AbstractPage::TABLE_NAME)
             ->where(
                 $qb->expr()->eq(
@@ -165,15 +166,17 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         if ($categoryUid > 0) {
             $pageIds = array_keys(RootLineUtility::collectPagesBelow($categoryUid));
             if (!empty($pageIds)) {
-                $qb->andWhere($qb->expr()->in('uid', $pageIds));
+                $qb->andWhere($qb->expr()->in('uid', $qb->createNamedParameter($pageIds, Connection::PARAM_INT_ARRAY)));
             } else {
                 return [];
             }
         }
 
-        $result = array_column($qb->executeQuery()->fetchAllAssociative(), 'pagebased_tags');
+        $rows = $qb->executeQuery()->fetchAllAssociative();
+        $result = array_column($rows, 'pagebased_tags');
 
-        $cache?->set($cacheKey, $result, ['pageId_1']);
+        $cacheTags = array_map(static fn(array $row) => 'pageId_' . $row['uid'], $rows);
+        $cache?->set($cacheKey, $result, $cacheTags ?: ['pagebased_tags']);
 
         return $result;
     }
