@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Registration\EventListener;
 
-use BadFunctionCallException;
-use ReflectionClass;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -29,10 +27,10 @@ class CheckExtensionConfigurationEvent
 
     protected function logRegistrationUpdate(string $property, RegistrationPropertyInterface $registrationProperty): void
     {
-        $this->logOnConsole(sprintf('Override property "%s" in "%s" for extension "%s".', $property, (new ReflectionClass($registrationProperty))->getShortName(), $this->registration->getExtensionName()));
+        $this->logOnConsole(sprintf('Override property "%s" in "%s" for extension "%s".', $property, (new \ReflectionClass($registrationProperty))->getShortName(), $this->registration->getExtensionName()));
     }
 
-    /** @throws BadFunctionCallException */
+    /** @throws \BadFunctionCallException */
     protected function createExtensionConfigurationTemplate(): void
     {
         $path = ExtensionManagementUtility::extPath($this->registration->getExtensionName(), 'ext_conf_template.txt');
@@ -125,7 +123,7 @@ registration {
             [$this->registration->getObject(), SettingsUtility::getExtensionConfiguration($this->registration, 'registration.object')],
             [$this->registration->getCategory(), SettingsUtility::getExtensionConfiguration($this->registration, 'registration.category')],
             [$this->registration->getListPlugin(), SettingsUtility::getExtensionConfiguration($this->registration, 'registration.listPlugin')],
-            [$this->registration->getFilterPlugin(), SettingsUtility::getExtensionConfiguration($this->registration, 'registration.filterPlugin')]
+            [$this->registration->getFilterPlugin(), SettingsUtility::getExtensionConfiguration($this->registration, 'registration.filterPlugin')],
         ];
 
         foreach ($overrides as $override) {

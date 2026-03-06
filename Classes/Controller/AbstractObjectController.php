@@ -6,7 +6,6 @@ namespace Zeroseven\Pagebased\Controller;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
-use PDO;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
@@ -48,7 +47,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
 
     protected function initializeRegistration(): void
     {
-        $this->registration = RegistrationService::getRegistrationByController(get_class($this));
+        $this->registration = RegistrationService::getRegistrationByController(static::class);
     }
 
     protected function initializeDemand(): void
@@ -128,8 +127,8 @@ abstract class AbstractObjectController extends AbstractController implements Ob
             $flexForm = $queryBuilder
                 ->select('pi_flexform')
                 ->from('tt_content')
-                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)))
-                ->execute()
+                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)))
+                ->executeQuery()
                 ->fetchOne();
         } catch (DBALException | Exception $e) {
             return null;
@@ -161,7 +160,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
             'objects' => $objects,
             'demand' => $this->demand,
             'registration' => $this->registration,
-            $this->pluralizeWord(strtolower($this->registration->getObject()->getName())) => $objects // alias variable
+            $this->pluralizeWord(strtolower($this->registration->getObject()->getName())) => $objects, // alias variable
         ], $this->registration, 'list'))->getVariables());
 
         return $this->htmlResponse();
@@ -185,7 +184,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
             'topics' => GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($this->registration),
             'contacts' => GeneralUtility::makeInstance(ContactRepository::class)->findByRegistration($this->registration),
             'demand' => $this->demand,
-            'registration' => $this->registration
+            'registration' => $this->registration,
         ], $this->registration, 'filter'))->getVariables());
 
         return $this->htmlResponse();

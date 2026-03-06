@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\ViewHelpers\Pagination;
 
-use Closure;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -34,7 +33,7 @@ final class EachStageViewHelper extends AbstractViewHelper
     }
 
     /** @throws Exception */
-    public static function renderStatic(array $arguments, Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
         $selected = (bool)($arguments['selected'] ?? false);
         $active = (bool)($arguments['active'] ?? false);

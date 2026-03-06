@@ -13,34 +13,34 @@ return [
         'transOrigDiffSourceField' => 'l10n_diffsource',
         'delete' => 'deleted',
         'enablecolumns' => [
-            'disabled' => 'hidden'
+            'disabled' => 'hidden',
         ],
         'searchFields' => 'firstname, lastname, company, email, address, city, zip, country, description, image',
         'typeicon_classes' => [
-            'default' => 'actions-user'
-        ]
+            'default' => 'actions-user',
+        ],
     ],
     'palettes' => [
         'name' => [
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.palette.name',
-            'showitem' => 'firstname, lastname'
+            'showitem' => 'firstname, lastname',
         ],
         'contact' => [
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.palette.contact',
-            'showitem' => 'email, phone, website'
+            'showitem' => 'email, phone, website',
         ],
         'address' => [
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.palette.address',
-            'showitem' => 'address, --linebreak--, city, zip, country'
-        ]
+            'showitem' => 'address, --linebreak--, city, zip, country',
+        ],
     ],
     'types' => [
         '1' => [
             'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, --palette--;;name, company, expertise, image,
                 --div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.tab.contact, --palette--;;address, --palette--;;contact,
                 --div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.tab.info, description, page,
-                --div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.tab.social, twitter, facebook, linkedin, xing'
-        ]
+                --div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.tab.social, twitter, facebook, linkedin, xing',
+        ],
     ],
     'columns' => [
         'sys_language_uid' => [
@@ -48,8 +48,8 @@ return [
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
             'config' => [
                 'type' => 'language',
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ],
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -58,16 +58,16 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['label' => '', 'value' => 0]
+                    ['label' => '', 'value' => 0],
                 ],
                 'foreign_table' => 'tx_pagebased_domain_model_contact',
-                'foreign_table_where' => 'AND tx_pagebased_domain_model_contact.pid=###CURRENT_PID### AND tx_pagebased_domain_model_contact.sys_language_uid IN (-1,0)'
-            ]
+                'foreign_table_where' => 'AND tx_pagebased_domain_model_contact.pid=###CURRENT_PID### AND tx_pagebased_domain_model_contact.sys_language_uid IN (-1,0)',
+            ],
         ],
         'l10n_diffsource' => [
             'config' => [
-                'type' => 'passthrough'
-            ]
+                'type' => 'passthrough',
+            ],
         ],
         'hidden' => [
             'exclude' => false,
@@ -75,9 +75,9 @@ return [
             'config' => [
                 'type' => 'check',
                 'items' => [
-                    ['label' => 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled', 'value' => 1]
-                ]
-            ]
+                    ['label' => 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled', 'value' => 1],
+                ],
+            ],
         ],
         'firstname' => [
             'exclude' => false,
@@ -86,8 +86,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'lastname' => [
             'exclude' => false,
@@ -96,8 +96,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'company' => [
             'exclude' => true,
@@ -105,8 +105,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'expertise' => [
             'exclude' => true,
@@ -114,8 +114,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'email' => [
             'exclude' => true,
@@ -123,8 +123,8 @@ return [
             'label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact.email',
             'config' => [
                 'type' => 'email',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'phone' => [
             'exclude' => true,
@@ -134,8 +134,8 @@ return [
                 'type' => 'input',
                 'eval' => 'trim,is_in',
                 'is_in' => '0123456789 -+',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'website' => [
             'exclude' => true,
@@ -143,8 +143,8 @@ return [
             'config' => [
                 'type' => 'link',
                 'allowedTypes' => ['url'],
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'address' => [
             'exclude' => true,
@@ -155,8 +155,8 @@ return [
                 'cols' => 40,
                 'rows' => 3,
                 'eval' => 'trim',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'city' => [
             'exclude' => true,
@@ -165,8 +165,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'zip' => [
             'exclude' => true,
@@ -175,8 +175,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'country' => [
             'exclude' => true,
@@ -185,8 +185,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'eval' => 'trim',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'description' => [
             'exclude' => true,
@@ -198,8 +198,8 @@ return [
                 'rows' => 15,
                 'eval' => 'trim',
                 'enableRichtext' => 1,
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'image' => [
             'exclude' => true,
@@ -211,11 +211,11 @@ return [
                 'overrideChildTca' => [
                     'types' => [
                         '0' => ['showitem' => '--palette--;;filePalette'],
-                        \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_IMAGE => ['showitem' => '--palette--;;filePalette']
-                    ]
+                        \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_IMAGE => ['showitem' => '--palette--;;filePalette'],
+                    ],
                 ],
-                'allowed' => 'common-image-types'
-            ]
+                'allowed' => 'common-image-types',
+            ],
         ],
         'page' => [
             'exclude' => true,
@@ -224,8 +224,8 @@ return [
             'config' => [
                 'type' => 'link',
                 'allowedTypes' => ['page', 'url'],
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'twitter' => [
             'exclude' => true,
@@ -234,8 +234,8 @@ return [
             'config' => [
                 'type' => 'link',
                 'allowedTypes' => ['url'],
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'facebook' => [
             'exclude' => true,
@@ -244,8 +244,8 @@ return [
             'config' => [
                 'type' => 'link',
                 'allowedTypes' => ['url'],
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'linkedin' => [
             'exclude' => true,
@@ -254,8 +254,8 @@ return [
             'config' => [
                 'type' => 'link',
                 'allowedTypes' => ['url'],
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'xing' => [
             'exclude' => true,
@@ -264,8 +264,8 @@ return [
             'config' => [
                 'type' => 'link',
                 'allowedTypes' => ['url'],
-                'default' => ''
-            ]
-        ]
-    ]
+                'default' => '',
+            ],
+        ],
+    ],
 ];

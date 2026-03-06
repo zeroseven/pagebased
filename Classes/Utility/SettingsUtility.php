@@ -36,17 +36,17 @@ class SettingsUtility
         $extensionName = $registration->getExtensionName();
 
         $pluginConfiguration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['plugin-settings'][$extensionName] ?? call_user_func(static function () use ($registration, $extensionName) {
-                $pluginKey = AddTypoScriptEvent::getTypoScriptPluginKey($registration);
-                try {
-                    $pluginConfiguration = GeneralUtility::makeInstance(ConfigurationManager::class)
-                            ->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT)['plugin.'][$pluginKey . '.'] ?? [];
-                } catch (InvalidConfigurationTypeException $e) {
-                    $pluginConfiguration = [];
-                }
+            $pluginKey = AddTypoScriptEvent::getTypoScriptPluginKey($registration);
+            try {
+                $pluginConfiguration = GeneralUtility::makeInstance(ConfigurationManager::class)
+                        ->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT)['plugin.'][$pluginKey . '.'] ?? [];
+            } catch (InvalidConfigurationTypeException $e) {
+                $pluginConfiguration = [];
+            }
 
-                return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['plugin-settings'][$extensionName]
-                    = GeneralUtility::makeInstance(TypoScriptService::class)->convertTypoScriptArrayToPlainArray($pluginConfiguration);
-            });
+            return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['plugin-settings'][$extensionName]
+                = GeneralUtility::makeInstance(TypoScriptService::class)->convertTypoScriptArrayToPlainArray($pluginConfiguration);
+        });
 
         return ArrayPathUtility::getPath($pluginConfiguration, $propertyPath);
     }

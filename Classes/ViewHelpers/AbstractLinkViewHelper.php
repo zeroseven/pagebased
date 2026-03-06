@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\ViewHelpers;
 
-use ReflectionClass;
-use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
@@ -71,7 +69,7 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
                 return $this->request = $request;
             }
 
-            throw new RuntimeException(sprintf('ViewHelper "%s" needs a request implementing "%s". You can either create an extbase plugin or use the "%s"', get_class($this), RequestInterface::class, RenderUtility::class), 1688559410);
+            throw new \RuntimeException(sprintf('ViewHelper "%s" needs a request implementing "%s". You can either create an extbase plugin or use the "%s"', static::class, RequestInterface::class, RenderUtility::class), 1688559410);
         }
 
         return $this->request;
@@ -85,7 +83,7 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
         $this->initializeRegistration();
     }
 
-    /** @throws ValueException | Exception */
+    /** @throws ValueException|Exception */
     protected function initializeRegistration(): void
     {
         // Try to get demand
@@ -114,7 +112,7 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
 
         // Unfortunately didn't work :(
         if ($this->registration === null && $this->demand === null) {
-            throw new Exception(sprintf('The registration object and demand object could not be determined. Add arguments "registration" or "demand" to the ViewHelper ("%s").', get_class($this)), 1690362083);
+            throw new Exception(sprintf('The registration object and demand object could not be determined. Add arguments "registration" or "demand" to the ViewHelper ("%s").', static::class), 1690362083);
         }
     }
 
@@ -139,7 +137,7 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
 
         // Set controller name
         if (empty($controller) && $this->renderingContext->getControllerName() === 'Standard') {
-            $controller = GeneralUtility::makeInstance(ReflectionClass::class, $this->registration->getObject()->getClassName())->getShortName();
+            $controller = GeneralUtility::makeInstance(\ReflectionClass::class, $this->registration->getObject()->getClassName())->getShortName();
         }
 
         // Create instance of the uriBuilder

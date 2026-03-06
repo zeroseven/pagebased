@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Registration\EventListener;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent;
 use Zeroseven\Pagebased\Registration\AbstractRegistrationPluginProperty;
+use Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent;
 use Zeroseven\Pagebased\Registration\Registration;
 
 class AddTSConfigEvent

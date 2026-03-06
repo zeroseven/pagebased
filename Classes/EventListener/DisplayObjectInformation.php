@@ -18,7 +18,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Utility\DetectionUtility;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
-use Zeroseven\Pagebased\Utility\SettingsUtility;
 
 class DisplayObjectInformation
 {
@@ -42,8 +41,11 @@ class DisplayObjectInformation
 
     protected function translate(string $key, array $arguments = null, string $fileName = null): string
     {
-        return LocalizationUtility::translate('LLL:EXT:pagebased/Resources/Private/Language/' . ($fileName ?? 'locallang_be.xlf') . ':' . $key,
-            'pagebased', $arguments ?? []) ?? $key;
+        return LocalizationUtility::translate(
+            'LLL:EXT:pagebased/Resources/Private/Language/' . ($fileName ?? 'locallang_be.xlf') . ':' . $key,
+            'pagebased',
+            $arguments ?? []
+        ) ?? $key;
     }
 
     protected function isChildObject(int $uid): bool

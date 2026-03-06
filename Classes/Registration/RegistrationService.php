@@ -10,6 +10,55 @@ use Zeroseven\Pagebased\Exception\ValueException;
 
 class RegistrationService
 {
+    /** @var array<string, Registration> Lookup index keyed by object class name */
+    private static array $indexByObjectClass = [];
+
+    /** @var array<string, Registration> Lookup index keyed by controller class name */
+    private static array $indexByController = [];
+
+    /** @var array<string, Registration> Lookup index keyed by repository class name */
+    private static array $indexByRepository = [];
+
+    /** @var array<string, Registration> Lookup index keyed by demand class name */
+    private static array $indexByDemand = [];
+
+    /** @var array<string, Registration> Lookup index keyed by category class name */
+    private static array $indexByCategoryClass = [];
+
+    /** @var array<string, Registration> Lookup index keyed by category repository class name */
+    private static array $indexByCategoryRepository = [];
+
+    /** @var array<int, Registration> Lookup index keyed by category document type */
+    private static array $indexByDocumentType = [];
+
+    private static function addToIndex(Registration $registration): void
+    {
+        $obj = $registration->getObject();
+        $cat = $registration->getCategory();
+
+        if ($c = $obj->getClassName()) {
+            self::$indexByObjectClass[$c] = $registration;
+        }
+        if ($c = $obj->getControllerClassName()) {
+            self::$indexByController[$c] = $registration;
+        }
+        if ($c = $obj->getRepositoryClassName()) {
+            self::$indexByRepository[$c] = $registration;
+        }
+        if ($c = $obj->getDemandClassName()) {
+            self::$indexByDemand[$c] = $registration;
+        }
+        if ($c = $cat->getClassName()) {
+            self::$indexByCategoryClass[$c] = $registration;
+        }
+        if ($c = $cat->getRepositoryClassName()) {
+            self::$indexByCategoryRepository[$c] = $registration;
+        }
+        if ($dt = $cat->getDocumentType()) {
+            self::$indexByDocumentType[$dt] = $registration;
+        }
+    }
+
     /** @return Registration[] */
     public static function getRegistrations(): array
     {
@@ -19,6 +68,7 @@ class RegistrationService
     public static function addRegistration(Registration $registration): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['registrations'][$registration->getIdentifier()] = $registration;
+        self::addToIndex($registration);
     }
 
     protected static function getClassName(mixed $value): ?string
@@ -37,11 +87,7 @@ class RegistrationService
     public static function getRegistrationByObjectClass(mixed $object): ?Registration
     {
         if ($className = self::getClassName($object)) {
-            foreach (self::getRegistrations() as $registration) {
-                if ($registration->getObject()->getClassName() === $className) {
-                    return $registration;
-                }
-            }
+            return self::$indexByObjectClass[$className] ?? null;
         }
 
         return null;
@@ -50,11 +96,7 @@ class RegistrationService
     public static function getRegistrationByController(mixed $controller): ?Registration
     {
         if ($className = self::getClassName($controller)) {
-            foreach (self::getRegistrations() as $registration) {
-                if ($registration->getObject()->getControllerClassName() === $className) {
-                    return $registration;
-                }
-            }
+            return self::$indexByController[$className] ?? null;
         }
 
         return null;
@@ -63,11 +105,7 @@ class RegistrationService
     public static function getRegistrationByRepository(mixed $repository): ?Registration
     {
         if ($className = self::getClassName($repository)) {
-            foreach (self::getRegistrations() as $registration) {
-                if ($registration->getObject()->getRepositoryClassName() === $className) {
-                    return $registration;
-                }
-            }
+            return self::$indexByRepository[$className] ?? null;
         }
 
         return null;
@@ -76,11 +114,7 @@ class RegistrationService
     public static function getRegistrationByDemand(mixed $demand): ?Registration
     {
         if ($className = self::getClassName($demand)) {
-            foreach (self::getRegistrations() as $registration) {
-                if ($registration->getObject()->getDemandClassName() === $className) {
-                    return $registration;
-                }
-            }
+            return self::$indexByDemand[$className] ?? null;
         }
 
         return null;
@@ -89,11 +123,7 @@ class RegistrationService
     public static function getRegistrationByCategoryClass(mixed $category): ?Registration
     {
         if ($className = self::getClassName($category)) {
-            foreach (self::getRegistrations() as $registration) {
-                if ($registration->getCategory()->getClassName() === $className) {
-                    return $registration;
-                }
-            }
+            return self::$indexByCategoryClass[$className] ?? null;
         }
 
         return null;
@@ -102,11 +132,7 @@ class RegistrationService
     public static function getRegistrationByCategoryRepository(mixed $repository): ?Registration
     {
         if ($className = self::getClassName($repository)) {
-            foreach (self::getRegistrations() as $registration) {
-                if ($registration->getCategory()->getRepositoryClassName() === $className) {
-                    return $registration;
-                }
-            }
+            return self::$indexByCategoryRepository[$className] ?? null;
         }
 
         return null;
@@ -114,13 +140,7 @@ class RegistrationService
 
     public static function getRegistrationByCategoryDocumentType(int $documentType): ?Registration
     {
-        foreach (self::getRegistrations() as $registration) {
-            if ($registration->getCategory()->getDocumentType() === $documentType) {
-                return $registration;
-            }
-        }
-
-        return null;
+        return self::$indexByDocumentType[$documentType] ?? null;
     }
 
     /** @throws ValueException */

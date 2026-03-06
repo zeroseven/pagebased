@@ -10,7 +10,11 @@ CREATE TABLE pages
 	pagebased_redirect_category tinyint(1) unsigned DEFAULT '0' NOT NULL,
 	_pagebased_site             int(11) DEFAULT '0' NOT NULL,
 	_pagebased_registration     varchar(255) DEFAULT '' NOT NULL,
-	_pagebased_child_object     tinyint(1) unsigned DEFAULT '0' NOT NULL
+	_pagebased_child_object     tinyint(1) unsigned DEFAULT '0' NOT NULL,
+
+	KEY pagebased_registration (_pagebased_registration),
+	KEY pagebased_site (_pagebased_site),
+	KEY pagebased_registration_site (_pagebased_registration, _pagebased_site)
 );
 
 CREATE TABLE tx_pagebased_domain_model_topic

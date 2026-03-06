@@ -38,7 +38,7 @@ class DetectionUtility
         return [
             self::SITE_FIELD_NAME => $registration ? RootLineUtility::getRootPage($uid) : 0,
             self::REGISTRATION_FIELD_NAME => $registration ? $registration->getIdentifier() : '',
-            self::CHILD_OBJECT_FIELD_NAME => $registration && ObjectUtility::isChildObject($uid) ? 1 : 0
+            self::CHILD_OBJECT_FIELD_NAME => $registration && ObjectUtility::isChildObject($uid) ? 1 : 0,
         ];
     }
 

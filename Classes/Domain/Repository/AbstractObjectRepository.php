@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Domain\Repository;
 
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
@@ -15,6 +19,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Exception\RegistrationException;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Registration\Registration;
@@ -31,19 +36,19 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     {
         parent::__construct();
 
-        $this->registration = RegistrationService::getRegistrationByRepository(get_class($this));
+        $this->registration = RegistrationService::getRegistrationByRepository(static::class);
 
         $this->defaultOrderings = [
             $this->registration->getObject()->getSortingField() =>
                 $this->registration->getObject()->isSortingAscending()
                     ? QueryInterface::ORDER_ASCENDING
-                    : QueryInterface::ORDER_DESCENDING
+                    : QueryInterface::ORDER_DESCENDING,
         ];
     }
 
     public function initializeDemand(): DemandInterface
     {
-        return RegistrationService::getRegistrationByRepository(get_class($this))?->getObject()->getDemandClass();
+        return RegistrationService::getRegistrationByRepository(static::class)?->getObject()->getDemandClass();
     }
 
     /** @throws PersistenceException */
@@ -56,7 +61,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         }
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
+    /** @throws AspectNotFoundException|InvalidQueryException|PersistenceException */
     public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = parent::createDemandConstraints($demand, $query);
@@ -96,6 +101,95 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         return $constraints;
     }
 
+    /** @throws TypeException|InvalidQueryException */
+    public function findByUid(mixed $uid, bool $ignoreRestrictions = null): ?DomainObjectInterface
+    {
+        $uid = CastUtility::int($uid);
+        if ($uid <= 0) {
+            return null;
+        }
+
+        $query = $this->createQuery();
+
+        if ($ignoreRestrictions === true) {
+            $query->getQuerySettings()->setIgnoreEnableFields(true)->setIncludeDeleted(true)->setRespectStoragePage(false);
+        }
+
+        $query->matching($query->logicalAnd(
+            $query->equals('uid', $uid),
+            $query->equals(DetectionUtility::REGISTRATION_FIELD_NAME, $this->registration->getIdentifier())
+        ));
+        $query->setLimit(1);
+
+        return $query->execute()->getFirst();
+    }
+
+    /**
+     * Fetches only the raw tag CSV strings from the pages table for this registration,
+     * bypassing full Extbase object hydration. Results are cached in TYPO3's data
+     * cache and automatically invalidated when pages are modified.
+     *
+     * @param ObjectDemandInterface $demand Used for optional category-tree filtering.
+     * @return string[] Raw comma-separated tag strings, one entry per page row.
+     */
+    public function findTagStrings(ObjectDemandInterface $demand): array
+    {
+        $categoryUid = $demand->getCategory();
+        $languageUid = (int)GeneralUtility::makeInstance(Context::class)
+            ->getPropertyFromAspect('language', 'id', 0);
+        $cacheKey = 'pagebased_tags_' . md5(
+            $this->registration->getIdentifier() . '_' . $categoryUid . '_' . $languageUid
+        );
+
+        $cache = $this->getTagsCache();
+        if ($cache !== null && ($cached = $cache->get($cacheKey)) !== false) {
+            return $cached;
+        }
+
+        $qb = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable(AbstractPage::TABLE_NAME);
+
+        $qb->select('uid', 'pagebased_tags')
+            ->from(AbstractPage::TABLE_NAME)
+            ->where(
+                $qb->expr()->eq(
+                    DetectionUtility::REGISTRATION_FIELD_NAME,
+                    $qb->createNamedParameter($this->registration->getIdentifier())
+                ),
+                $qb->expr()->neq(
+                    $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'],
+                    $qb->createNamedParameter($this->registration->getCategory()->getDocumentType(), \Doctrine\DBAL\ParameterType::INTEGER)
+                ),
+                $qb->expr()->neq('pagebased_tags', $qb->createNamedParameter(''))
+            );
+
+        if ($categoryUid > 0) {
+            $pageIds = array_keys(RootLineUtility::collectPagesBelow($categoryUid));
+            if (!empty($pageIds)) {
+                $qb->andWhere($qb->expr()->in('uid', $qb->createNamedParameter($pageIds, Connection::PARAM_INT_ARRAY)));
+            } else {
+                return [];
+            }
+        }
+
+        $rows = $qb->executeQuery()->fetchAllAssociative();
+        $result = array_column($rows, 'pagebased_tags');
+
+        $cacheTags = array_map(static fn(array $row) => 'pageId_' . $row['uid'], $rows);
+        $cache?->set($cacheKey, $result, $cacheTags ?: ['pagebased_tags']);
+
+        return $result;
+    }
+
+    private function getTagsCache(): ?FrontendInterface
+    {
+        try {
+            return GeneralUtility::makeInstance(CacheManager::class)->getCache('pagebased_tags');
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
     public function findChildObjects(mixed $value): ?QueryResultInterface
     {
         $query = $this->createQuery();
@@ -111,7 +205,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         return null;
     }
 
-    /** @throws AspectNotFoundException | TypeException | InvalidQueryException | PersistenceException | RegistrationException */
+    /** @throws AspectNotFoundException|TypeException|InvalidQueryException|PersistenceException|RegistrationException */
     public function findParentObject(mixed $value): ?DomainObjectInterface
     {
         return ($uid = $value instanceof AbstractPage ? $value->getUid() : CastUtility::int($value))

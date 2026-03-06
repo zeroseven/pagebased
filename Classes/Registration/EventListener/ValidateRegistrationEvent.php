@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Registration\EventListener;
 
-use LogicException;
-use TYPO3\CMS\Core\Core\Event\BootCompletedEvent;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Core\Event\BootCompletedEvent;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -39,7 +38,6 @@ use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class ValidateRegistrationEvent
 {
-
     /** @throws RegistrationException */
     protected function checkPageEntityConfiguration(AbstractRegistrationEntityProperty $entity): void
     {
@@ -49,7 +47,7 @@ class ValidateRegistrationEvent
                 if (($tableName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($className)->getTableName()) !== AbstractPage::TABLE_NAME) {
                     throw new RegistrationException(sprintf('The object "%s" must be stored in table "pages" instead of "%s". See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $entity->getTitle(), $tableName), 1676066023);
                 }
-            } catch (Exception | LogicException $e) {
+            } catch (Exception | \LogicException $e) {
                 throw new RegistrationException(sprintf('Class mapping for page entity "%s" failed (ERROR: %s). See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $entity->getClassName(), $e->getMessage()), 1680720144);
             }
         }
@@ -91,7 +89,7 @@ class ValidateRegistrationEvent
         }
     }
 
-    /** @throws RegistrationException | Exception */
+    /** @throws RegistrationException|Exception */
     protected function checkCategoryConfiguration(CategoryRegistration $categoryRegistration): void
     {
         // Check domain model
@@ -167,7 +165,7 @@ class ValidateRegistrationEvent
         }
     }
 
-    /** @throws RegistrationException | Exception */
+    /** @throws RegistrationException|Exception */
     protected function checkRegistration(Registration $registration): void
     {
         $objectRegistration = $registration->getObject();

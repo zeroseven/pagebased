@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Imaging\IconProvider;
 
-use InvalidArgumentException;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconProviderInterface;
 use Zeroseven\Pagebased\Exception\ValueException;
@@ -25,7 +24,7 @@ abstract class AbstractIconProvider implements IconProviderInterface
         try {
             $registration = RegistrationService::getRegistrationByIdentifier($options['registration'] ?? '');
         } catch (ValueException $e) {
-            throw new InvalidArgumentException('[' . $icon->getIdentifier() . '] Registration not found: ' . $e->getMessage(), 1620146666);
+            throw new \InvalidArgumentException('[' . $icon->getIdentifier() . '] Registration not found: ' . $e->getMessage(), 1620146666);
         }
 
         $icon->setMarkup($this->generateMarkup($icon, $options, $registration));

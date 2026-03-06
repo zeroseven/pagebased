@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Domain\Model;
 
-use DateTime;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Resource\AbstractFile;
 use TYPO3\CMS\Core\Resource\FileReference;
@@ -25,10 +24,10 @@ abstract class AbstractPage extends AbstractEntity
     protected string $navigationTitle = '';
     protected string $description = '';
     protected string $abstract = '';
-    protected ?DateTime $lastChangeDate = null;
-    protected ?DateTime $createDate = null;
-    protected ?DateTime $accessStartDate = null;
-    protected ?DateTime $accessEndDate = null;
+    protected ?\DateTime $lastChangeDate = null;
+    protected ?\DateTime $createDate = null;
+    protected ?\DateTime $accessStartDate = null;
+    protected ?\DateTime $accessEndDate = null;
     protected ?FileReference $firstMedia = null;
     protected ?FileReference $firstImage = null;
     protected ?ObjectStorage $media = null;
@@ -38,7 +37,6 @@ abstract class AbstractPage extends AbstractEntity
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected ObjectStorage $fileReferences;
-
 
     public function __construct()
     {
@@ -140,45 +138,45 @@ abstract class AbstractPage extends AbstractEntity
         return $this;
     }
 
-    public function getLastChangeDate(): ?DateTime
+    public function getLastChangeDate(): ?\DateTime
     {
         return $this->lastChangeDate;
     }
 
-    public function setLastChangeDate(DateTime $lastChangeDate): self
+    public function setLastChangeDate(\DateTime $lastChangeDate): self
     {
         $this->lastChangeDate = $lastChangeDate;
         return $this;
     }
 
-    public function getCreateDate(): ?DateTime
+    public function getCreateDate(): ?\DateTime
     {
         return $this->createDate;
     }
 
-    public function setCreateDate(DateTime $createDate): self
+    public function setCreateDate(\DateTime $createDate): self
     {
         $this->createDate = $createDate;
         return $this;
     }
 
-    public function getAccessStartDate(): ?DateTime
+    public function getAccessStartDate(): ?\DateTime
     {
         return $this->accessStartDate;
     }
 
-    public function setAccessStartDate(DateTime $accessStartDate): self
+    public function setAccessStartDate(\DateTime $accessStartDate): self
     {
         $this->accessStartDate = $accessStartDate;
         return $this;
     }
 
-    public function getAccessEndDate(): ?DateTime
+    public function getAccessEndDate(): ?\DateTime
     {
         return $this->accessEndDate;
     }
 
-    public function setAccessEndDate(DateTime $accessEndDate): self
+    public function setAccessEndDate(\DateTime $accessEndDate): self
     {
         $this->accessEndDate = $accessEndDate;
         return $this;

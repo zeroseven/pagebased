@@ -52,7 +52,7 @@ class ItemsProcFunc
                 $PA['items'][] = [
                     'label' => $topic->getTitle(),
                     'value' => $topic->getUid(),
-                    'icon' => 'actions-tag'
+                    'icon' => 'actions-tag',
                 ];
             }
         }
@@ -67,7 +67,7 @@ class ItemsProcFunc
                 $PA['items'][] = [
                     'label' => $contact->getFullName(),
                     'value' => $contact->getUid(),
-                    'icon' => 'actions-user'
+                    'icon' => 'actions-user',
                 ];
             }
         }

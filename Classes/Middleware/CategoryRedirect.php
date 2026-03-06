@@ -8,7 +8,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use ReflectionClass;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
@@ -27,7 +26,7 @@ class CategoryRedirect implements MiddlewareInterface
         if ($listPlugin = RootLineUtility::findListPlugin($registration, $startPage, false)) {
             $pid = (int)($listPlugin['pid'] ?? 0);
             $uid = (int)($listPlugin['uid'] ?? 0);
-            $controllerName = str_replace('Controller', '', GeneralUtility::makeInstance(ReflectionClass::class, $registration->getObject()->getControllerClassName())->getShortName());
+            $controllerName = str_replace('Controller', '', GeneralUtility::makeInstance(\ReflectionClass::class, $registration->getObject()->getControllerClassName())->getShortName());
             $controllerArguments = ['category' => $startPage, ObjectDemandInterface::PROPERTY_CONTENT_ID => $uid];
             $extensionName = GeneralUtility::underscoredToUpperCamelCase($registration->getExtensionName());
 

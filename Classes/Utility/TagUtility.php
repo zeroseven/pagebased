@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Utility;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
+use Zeroseven\Pagebased\Domain\Repository\AbstractObjectRepository;
 use Zeroseven\Pagebased\Domain\Repository\RepositoryInterface;
 use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Registration\RegistrationService;
@@ -14,15 +16,36 @@ class TagUtility
 {
     public static function collectTagsFromQueryResult(QueryResultInterface $objects): array
     {
-        $tags = [];
+        $tagMap = [];
         foreach ($objects->toArray() as $object) {
             foreach ($object->getTags() ?? [] as $tag) {
-                if (!in_array($tag, $tags, true)) {
-                    $tags[] = $tag;
-                }
+                $tagMap[$tag] = true;
             }
         }
 
+        $tags = array_keys($tagMap);
+        sort($tags, SORT_STRING);
+
+        return $tags;
+    }
+
+    /**
+     * Collects distinct sorted tags from raw CSV strings (e.g. from findTagStrings()).
+     * Much cheaper than collectTagsFromQueryResult() as it avoids Extbase hydration.
+     *
+     * @param string[] $tagStrings Raw comma-separated tag strings, one per row.
+     * @return string[]
+     */
+    public static function collectTagsFromStrings(array $tagStrings): array
+    {
+        $tagMap = [];
+        foreach ($tagStrings as $csv) {
+            foreach (GeneralUtility::trimExplode(',', $csv, true) as $tag) {
+                $tagMap[$tag] = true;
+            }
+        }
+
+        $tags = array_keys($tagMap);
         sort($tags, SORT_STRING);
 
         return $tags;
@@ -41,7 +64,15 @@ class TagUtility
             $repository->setDefaultQuerySettings($querySettings);
         }
 
-        // Find objects and return their tags
+        // Use a lightweight tag-only query when supported (avoids full Extbase object hydration)
+        if ($repository instanceof AbstractObjectRepository) {
+            $tagDemand = $ignoreTagsFromDemand === true ? $demand->setTags(null) : $demand;
+            $tagStrings = $repository->findTagStrings($tagDemand);
+
+            return $tagStrings !== [] ? self::collectTagsFromStrings($tagStrings) : null;
+        }
+
+        // Fallback: load full objects and extract tags in PHP
         if ($objects = $repository->findByDemand($ignoreTagsFromDemand === true ? $demand->setTags(null) : $demand)) {
             return self::collectTagsFromQueryResult($objects);
         }

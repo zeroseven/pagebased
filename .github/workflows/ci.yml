@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint & Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@v1
+
+      - name: Install dependencies
+        run: ddev composer install
+
+      - name: Lint composer
+        run: ddev composer lint:composer
+
+      - name: Lint EditorConfig
+        run: ddev composer lint:editorconfig
+
+      - name: Lint PHP (php-cs-fixer)
+        run: ddev composer lint:php
+
+      - name: Static analysis (PHPStan)
+        run: ddev composer sca:php
+
+  tests:
+    name: Tests (PHP ${{ matrix.php-version }}, ${{ matrix.test-type }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.3', '8.4']
+        test-type: ['unit', 'functional']
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Set PHP version
+        env:
+          PHP_VERSION: ${{ matrix.php-version }}
+        run: |
+          sed -i "s/^php_version:.*/php_version: ${PHP_VERSION}/" .ddev/config.yaml
+
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@v1
+
+      - name: Install dependencies
+        run: ddev composer install
+
+      - name: Run tests
+        run: ddev composer test:${{ matrix.test-type }}

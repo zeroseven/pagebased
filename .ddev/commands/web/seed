@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+## Description: Seed the TYPO3 dev instance with pagebased example data
+## Usage: seed [flags]
+## Example: "ddev seed" or "ddev seed --force --clean"
+## Flags: [{"Name":"force","Shorthand":"f","Usage":"Skip confirmation prompts"},{"Name":"clean","Shorthand":"c","Usage":"Remove existing seed data before importing"}]
+
+set -Eeuo pipefail
+
+if [ -z "${IS_DDEV_PROJECT:-}" ]; then
+    if command -v ddev >/dev/null 2>&1 && [ -d ".ddev" ]; then
+        ddev exec bash -lc "/var/www/html/.ddev/commands/web/seed $*"
+        exit $?
+    fi
+fi
+
+GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; BLUE='\033[0;34m'; NC='\033[0m'
+info()   { echo -e "${YELLOW}$*${NC}"; }
+ok()     { echo -e "${GREEN}✓ $*${NC}"; }
+err()    { echo -e "${RED}✗ $*${NC}"; }
+header() { echo -e "${BLUE}━━━ $* ━━━${NC}"; }
+
+FORCE=false; CLEAN=false
+
+for arg in "$@"; do
+    case $arg in
+        --force|-f) FORCE=true ;;
+        --clean|-c) CLEAN=true ;;
+        --help|-h)
+            echo "Usage: ddev seed [flags]"
+            echo "  -f, --force   Skip confirmation prompts"
+            echo "  -c, --clean   Remove existing seed pages before reimporting"
+            echo ""
+            echo "Requires TYPO3 to be installed (pages table must exist)."
+            exit 0
+            ;;
+    esac
+done
+
+echo ""; header "pagebased Database Seeder"; echo ""
+
+TYPO3_BIN="/var/www/html/.build/bin/typo3"
+FIXTURES_DIR="/var/www/html/Build/Fixtures"
+SEED_MARKER="pagebased_seed"
+
+if [ ! -x "$TYPO3_BIN" ]; then
+    err "TYPO3 CLI not found. Run: ddev composer install"; exit 1
+fi
+if ! mysqladmin ping -h db -u root -proot --silent 2>/dev/null; then
+    err "Database not reachable. Run: ddev start"; exit 1
+fi
+if ! mysql -h db -u root -proot db -e "SELECT uid FROM pages LIMIT 1;" >/dev/null 2>&1; then
+    err "TYPO3 pages table not found — run 'ddev init' or install TYPO3 first."; exit 1
+fi
+ok "TYPO3 environment ready"; echo ""
+
+EXISTING=$(mysql -h db -u root -proot db -ss \
+    -e "SELECT COUNT(*) FROM pages WHERE description = '$SEED_MARKER';" 2>/dev/null || echo "0")
+
+if [ "$EXISTING" -gt 0 ]; then
+    header "Existing Seed Data"
+    info "Found $EXISTING existing seed page(s)"
+    if [ "$CLEAN" = true ]; then
+        mysql -h db -u root -proot db \
+            -e "DELETE FROM pages WHERE description = '$SEED_MARKER';" 2>/dev/null
+        ok "Existing seed data removed"
+    else
+        if [ "$FORCE" = false ]; then
+            read -p "Seed data already exists. Re-import anyway? [y/N]: " -n 1 -r; echo ""
+            [[ ! $REPLY =~ ^[Yy]$ ]] && { info "Cancelled. Use --clean to remove first."; exit 0; }
+        fi
+    fi
+    echo ""
+fi
+
+if [ "$FORCE" = false ]; then
+    read -p "Import pagebased seed data into dev TYPO3 instance? [y/N]: " -n 1 -r; echo ""
+    [[ ! $REPLY =~ ^[Yy]$ ]] && { info "Cancelled."; exit 0; }
+fi
+
+header "Importing Fixtures"
+for sql_file in $(ls -1 "$FIXTURES_DIR"/*.sql 2>/dev/null | sort); do
+    filename=$(basename "$sql_file")
+    info "  → $filename"
+    mysql -h db -u root -proot db < "$sql_file"
+    ok "    $filename imported"
+done
+
+echo ""; header "Post-import"
+info "Running pagebased:detection..."
+"$TYPO3_BIN" pagebased:detection 1 99 2>/dev/null || true
+ok "Detection complete"
+
+info "Flushing TYPO3 caches..."
+"$TYPO3_BIN" cache:flush
+ok "Caches flushed"
+
+echo ""; header "Done"
+ok "pagebased example data imported!"
+echo "  ddev seed --clean --force   # Clean reimport"
+echo "  ddev snapshot               # Snapshot with seed data"
+echo ""

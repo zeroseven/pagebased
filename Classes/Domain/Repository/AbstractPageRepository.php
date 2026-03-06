@@ -16,7 +16,7 @@ use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 abstract class AbstractPageRepository extends AbstractRepository implements RepositoryInterface
 {
     protected $defaultOrderings = [
-        'sorting' => QueryInterface::ORDER_ASCENDING
+        'sorting' => QueryInterface::ORDER_ASCENDING,
     ];
 
     public function initializeObject(): void
@@ -26,7 +26,7 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
         $this->setDefaultQuerySettings($querySettings);
     }
 
-    /** @throws AspectNotFoundException | InvalidQueryException | PersistenceException */
+    /** @throws AspectNotFoundException|InvalidQueryException|PersistenceException */
     public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array
     {
         $constraints = parent::createDemandConstraints($demand, $query);

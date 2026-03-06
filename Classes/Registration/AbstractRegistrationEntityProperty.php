@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Registration;
 
-use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
@@ -108,6 +107,6 @@ abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
 
     public function getName(): string
     {
-        return $this->name ?? ($this->name = GeneralUtility::makeInstance(ReflectionClass::class, $this->className)->getShortName());
+        return $this->name ?? ($this->name = GeneralUtility::makeInstance(\ReflectionClass::class, $this->className)->getShortName());
     }
 }

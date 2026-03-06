@@ -24,6 +24,8 @@ use Zeroseven\Pagebased\Registration\Registration;
 
 class RootLineUtility
 {
+    /** @var array<string, array<int, array<string, mixed>>> */
+    private static array $cache = [];
     protected static function getRequest(): ?ServerRequestInterface
     {
         return ($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface ? $GLOBALS['TYPO3_REQUEST'] : null;
@@ -124,26 +126,26 @@ class RootLineUtility
         return $queryBuilder;
     }
 
-    /** @throws DBALException | DriverException */
+    /** @throws DBALException|DriverException */
     protected static function getStartingPoint(array &$list, int $startingPoint, QueryBuilder $queryBuilder): void
     {
         $queryBuilder->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($startingPoint, Connection::PARAM_INT)))
             ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($startingPoint, Connection::PARAM_INT)));
 
-        foreach ($queryBuilder->execute()->fetchAllAssociative() as $row) {
+        foreach ($queryBuilder->executeQuery()->fetchAllAssociative() as $row) {
             if ($uid = (int)($row['uid'] ?? 0)) {
                 $list[$uid] = $row;
             }
         }
     }
 
-    /** @throws DBALException | DriverException */
+    /** @throws DBALException|DriverException */
     protected static function lookUp(array &$list, int $pid, int $looped, int $depth, QueryBuilder $queryBuilder): void
     {
         if ($pid > 0 && $looped <= $depth) {
             $queryBuilder->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)));
 
-            $statement = $queryBuilder->execute();
+            $statement = $queryBuilder->executeQuery();
             while ($row = $statement->fetchAssociative()) {
                 if ($uid = (int)($row['uid'] ?? 0)) {
                     if ($looped) {
@@ -158,13 +160,13 @@ class RootLineUtility
         }
     }
 
-    /** @throws DBALException | DriverException */
+    /** @throws DBALException|DriverException */
     protected static function lookDown(array &$list, int $uid, int $looped, int $depth, QueryBuilder $queryBuilder): void
     {
         if ($looped < $depth) {
             $queryBuilder->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
 
-            $statement = $queryBuilder->execute();
+            $statement = $queryBuilder->executeQuery();
             while ($row = $statement->fetchAssociative()) {
                 if ($uid = (int)($row['uid'] ?? 0)) {
                     $list[$uid] = $row;
@@ -175,7 +177,7 @@ class RootLineUtility
         }
     }
 
-    /** @throws AspectNotFoundException | DriverException | DBALException */
+    /** @throws AspectNotFoundException|DriverException|DBALException */
     protected static function searchContentElementInRootline(int $pid, string $pluginName, QueryBuilder $queryBuilder, array $constraints = null): ?array
     {
         if ($pid > 0) {
@@ -196,7 +198,7 @@ class RootLineUtility
             $queryBuilder->andWhere(...$constraints);
 
             // An element with the same CType can be found on the given pid
-            if (count($result = $queryBuilder->execute()->fetchAllAssociative())) {
+            if (count($result = $queryBuilder->executeQuery()->fetchAllAssociative())) {
                 return $result[0];
             }
 
@@ -212,6 +214,12 @@ class RootLineUtility
     public static function collectPagesAbove(?int $startingPoint = null, ?bool $includingStartingPoint = null, ?int $depth = null): array
     {
         $startingPoint || $startingPoint = self::getCurrentPage();
+        $cacheKey = 'above_' . $startingPoint . '_' . (int)$includingStartingPoint . '_' . ($depth ?? 'null');
+
+        if (isset(self::$cache[$cacheKey])) {
+            return self::$cache[$cacheKey];
+        }
+
         $list = [];
         $queryBuilder = self::getTreeCollectQueryBuilder();
 
@@ -224,12 +232,18 @@ class RootLineUtility
         } catch (DBALException | DriverException $e) {
         }
 
-        return $list;
+        return self::$cache[$cacheKey] = $list;
     }
 
     public static function collectPagesBelow(?int $startingPoint = null, ?bool $includingStartingPoint = null, ?int $depth = null): array
     {
         $startingPoint || $startingPoint = self::getCurrentPage();
+        $cacheKey = 'below_' . $startingPoint . '_' . (int)$includingStartingPoint . '_' . ($depth ?? 'null');
+
+        if (isset(self::$cache[$cacheKey])) {
+            return self::$cache[$cacheKey];
+        }
+
         $list = [];
         $queryBuilder = self::getTreeCollectQueryBuilder();
 
@@ -242,7 +256,7 @@ class RootLineUtility
         } catch (DBALException | DriverException $e) {
         }
 
-        return $list;
+        return self::$cache[$cacheKey] = $list;
     }
 
     public static function findListPlugin(Registration $registration, ?int $startingPoint = null, ?bool $includingStartingPoint = null): ?array

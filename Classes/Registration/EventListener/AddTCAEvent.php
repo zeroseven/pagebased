@@ -91,7 +91,7 @@ class AddTCAEvent
                     [
                         'label' => $categoryRegistration->getTitle(),
                         'value' => $pageType,
-                        'icon' => $categoryRegistration->getIconIdentifier()
+                        'icon' => $categoryRegistration->getIconIdentifier(),
                     ],
                     '1',
                     'after'
@@ -133,13 +133,13 @@ class AddTCAEvent
                     'foreign_table_where' => sprintf(' AND pages.sys_language_uid <= 0 AND pages.%s = %d', $typeField, $registration->getCategory()->getDocumentType()),
                     'items' => array_merge([
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.no_restrictions', 'value' => '--div--'],
-                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.all', 'value' => '']
+                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.all', 'value' => ''],
                     ], $multiSite ? [
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.allInstances', 'value' => '--div--'],
                         ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.allGlobal', 'value' => -1],
                     ] : [], [
-                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.available', 'value' => '--div--']
-                    ])
+                        ['label' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category.div.available', 'value' => '--div--'],
+                    ]),
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.category');
             }
 
@@ -148,7 +148,7 @@ class AddTCAEvent
                     'type' => 'user',
                     'renderType' => 'pagebasedTags',
                     'placeholder' => 'ADD TAGS …',
-                    'registrationIdentifier' => $registration->getIdentifier()
+                    'registrationIdentifier' => $registration->getIdentifier(),
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tags');
             }
 
@@ -170,8 +170,8 @@ class AddTCAEvent
                     'foreign_table_where' => sprintf(' AND {#tx_pagebased_domain_model_contact}.{#pid} IN(%s) AND {#tx_pagebased_domain_model_contact}.{#%s} < 1', implode(',', $contactPageIds), $GLOBALS['TCA']['tx_pagebased_domain_model_contact']['ctrl']['languageField']),
                     'default' => 0,
                     'items' => [
-                        ['-', 0, 'actions-user']
-                    ]
+                        ['-', 0, 'actions-user'],
+                    ],
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.contact');
             }
 
@@ -186,8 +186,8 @@ class AddTCAEvent
                     'items' => [
                         ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode.0', 0],
                         ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode.1', AbstractObjectDemand::TOP_MODE_FIRST],
-                        ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode.2', AbstractObjectDemand::TOP_MODE_ONLY]
-                    ]
+                        ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode.2', AbstractObjectDemand::TOP_MODE_ONLY],
+                    ],
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.topMode');
             }
 
@@ -199,11 +199,11 @@ class AddTCAEvent
                 'items' => array_merge([
                     ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.default', ''],
                     ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.title_asc', 'title_asc'],
-                    ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.title_desc', 'title_desc']
+                    ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.title_desc', 'title_desc'],
                 ], $registration->getObject()->dateEnabled() ? [
                     ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.date_desc', 'date_desc'],
-                    ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.date_asc', 'date_asc']
-                ] : [])
+                    ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting.date_asc', 'date_asc'],
+                ] : []),
             ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.sorting');
 
             $optionsSheet->addField('settings.' . ObjectDemandInterface::PROPERTY_INCLUDE_CHILD_OBJECTS, [
@@ -214,9 +214,9 @@ class AddTCAEvent
                 'items' => [
                     ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.child_objects.0', 0],
                     ['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.child_objects.1', 1],
-                ]
+                ],
             ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.child_objects', [
-                'displayCond' => 'USER:' . DisplayCondition::class . '->hasChildRecords:' . $registration->getIdentifier()
+                'displayCond' => 'USER:' . DisplayCondition::class . '->hasChildRecords:' . $registration->getIdentifier(),
             ]);
 
             $layoutSheet = FlexFormSheetConfiguration::makeInstance('layout', 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.layout')
@@ -224,7 +224,7 @@ class AddTCAEvent
                     'placeholder' => '6',
                     'type' => 'input',
                     'eval' => 'trim,is_in',
-                    'is_in' => ',0123456789'
+                    'is_in' => ',0123456789',
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.itemsPerStage')
                 ->addField('settings.maxStages', [
                     'type' => 'select',
@@ -237,8 +237,8 @@ class AddTCAEvent
                         ['2', 2],
                         ['3', 3],
                         ['4', 4],
-                        ['5', 5]
-                    ]
+                        ['5', 5],
+                    ],
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.maxStages');
 
             if (count($layouts = $registration->getListPlugin()->getLayouts())) {
@@ -250,7 +250,7 @@ class AddTCAEvent
                     'items' => array_merge(
                         [['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout.0', '']],
                         array_map(static fn($label, $value) => [$label, $value], $layouts, array_keys($layouts))
-                    )
+                    ),
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout');
             }
 
@@ -283,18 +283,18 @@ class AddTCAEvent
                         'maxitems' => '1',
                         'suggestOptions' => [
                             'default' => [
-                                'searchWholePhrase' => true
+                                'searchWholePhrase' => true,
                             ],
                             $table => [
-                                'searchCondition' => 'CType = "' . $listCType . '"'
-                            ]
+                                'searchCondition' => 'CType = "' . $listCType . '"',
+                            ],
                         ],
                         'filter' => [
                             'userFunc' => GroupFilter::class . '->filterTypes',
                             'parameters' => [
-                                'allowed' => $listCType
-                            ]
-                        ]
+                                'allowed' => $listCType,
+                            ],
+                        ],
                     ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.contentId');
 
                 if (count($layouts = $registration->getFilterPlugin()->getLayouts())) {
@@ -306,7 +306,7 @@ class AddTCAEvent
                         'items' => array_merge(
                             [['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout.0', '']],
                             array_map(static fn($label, $value) => [$label, $value], $layouts, array_keys($layouts))
-                        )
+                        ),
                     ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout');
                 }
 

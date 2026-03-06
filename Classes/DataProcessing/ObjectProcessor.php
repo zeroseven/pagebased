@@ -15,7 +15,7 @@ use Zeroseven\Pagebased\Utility\SettingsUtility;
 
 class ObjectProcessor implements DataProcessorInterface
 {
-    /** @throws ValueException | TypeException */
+    /** @throws ValueException|TypeException */
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData): array
     {
         $registrationIdentifiers = CastUtility::array($cObj->stdWrapValue('registration', $processorConfiguration, null) ?? $cObj->stdWrapValue('registration.', $processorConfiguration));

@@ -1,0 +1,1891 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: Classes/Backend/Form/Element/TagsElement.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\Form\\\\Element\\\\TagsElement\\:\\:__construct\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/Form/Element/TagsElement.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\Form\\\\Element\\\\TagsElement\\:\\:render\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/Form/Element/TagsElement.php
+
+		-
+			message: "#^Cannot access offset 'uid' on non\\-empty\\-array\\|object\\.$#"
+			count: 1
+			path: Classes/Backend/Form/Wizard/SuggestRelationReceiver.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\Form\\\\Wizard\\\\SuggestRelationReceiver\\:\\:__construct\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/Form/Wizard/SuggestRelationReceiver.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:setIncludeChildObjects\\(\\)\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/DisplayCondition.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\TCA\\\\DisplayCondition\\:\\:hasChildRecords\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/DisplayCondition.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(object\\)\\: bool\\)\\|null, Closure\\(Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\)\\: bool given\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/DisplayCondition.php
+
+		-
+			message: "#^Right side of && is always true\\.$#"
+			count: 3
+			path: Classes/Backend/TCA/DisplayCondition.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\TCA\\\\GroupFilter\\:\\:filterObject\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/GroupFilter.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\TCA\\\\GroupFilter\\:\\:filterObject\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/GroupFilter.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getFullName\\(\\)\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/ItemsProcFunc.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getTitle\\(\\)\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/ItemsProcFunc.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getUid\\(\\)\\.$#"
+			count: 2
+			path: Classes/Backend/TCA/ItemsProcFunc.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\TCA\\\\ItemsProcFunc\\:\\:contacts\\(\\) has parameter \\$PA with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/ItemsProcFunc.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\TCA\\\\ItemsProcFunc\\:\\:filterCategories\\(\\) has parameter \\$PA with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/ItemsProcFunc.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\TCA\\\\ItemsProcFunc\\:\\:getPageUid\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/ItemsProcFunc.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\TCA\\\\ItemsProcFunc\\:\\:getRegistration\\(\\) has parameter \\$PA with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/ItemsProcFunc.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\TCA\\\\ItemsProcFunc\\:\\:getRootPageUid\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/ItemsProcFunc.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Backend\\\\TCA\\\\ItemsProcFunc\\:\\:topics\\(\\) has parameter \\$PA with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/ItemsProcFunc.php
+
+		-
+			message: "#^Right side of && is always true\\.$#"
+			count: 1
+			path: Classes/Backend/TCA/ItemsProcFunc.php
+
+		-
+			message: "#^Cannot access property \\$data on TYPO3\\\\CMS\\\\Frontend\\\\ContentObject\\\\ContentObjectRenderer\\|null\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractController.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Controller\\\\AbstractController\\:\\:\\$contentData type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractController.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\View\\\\ViewInterface\\:\\:getRenderingContext\\(\\)\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getVariables\\(\\)\\.$#"
+			count: 2
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Cannot call method getCategory\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Cannot call method getContentId\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Cannot call method getObject\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 3
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Cannot call method getProperty\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Cannot call method hasProperty\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Cannot call method setContentId\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Cannot call method setParameterArray\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 3
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Caught class Doctrine\\\\DBAL\\\\DBALException not found\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Controller\\\\AbstractObjectController\\:\\:getPluginSettings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Parameter \\#1 \\$demand of method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface\\:\\:findByDemand\\(\\) expects Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface, Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null given\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Parameter \\#1 \\$registration of method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRelationRepository\\:\\:findByRegistration\\(\\) expects Zeroseven\\\\Pagebased\\\\Registration\\\\Registration, Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null given\\.$#"
+			count: 2
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Parameter \\#1 \\$registration of static method Zeroseven\\\\Pagebased\\\\Utility\\\\TagUtility\\:\\:getTagsByRegistration\\(\\) expects Zeroseven\\\\Pagebased\\\\Registration\\\\Registration, Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null given\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Parameter \\#2 \\$registration of class Zeroseven\\\\Pagebased\\\\Event\\\\AssignTemplateVariablesEvent constructor expects Zeroseven\\\\Pagebased\\\\Registration\\\\Registration, Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null given\\.$#"
+			count: 2
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Controller\\\\AbstractObjectController\\:\\:\\$requestArguments type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Controller/AbstractObjectController.php
+
+		-
+			message: "#^Method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\RepositoryInterface\\<object\\>\\:\\:findByUid\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: Classes/DataProcessing/ObjectProcessor.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\DataProcessing\\\\ObjectProcessor\\:\\:process\\(\\) has parameter \\$contentObjectConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/DataProcessing/ObjectProcessor.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\DataProcessing\\\\ObjectProcessor\\:\\:process\\(\\) has parameter \\$processedData with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/DataProcessing/ObjectProcessor.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\DataProcessing\\\\ObjectProcessor\\:\\:process\\(\\) has parameter \\$processorConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/DataProcessing/ObjectProcessor.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\DataProcessing\\\\ObjectProcessor\\:\\:process\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/DataProcessing/ObjectProcessor.php
+
+		-
+			message: "#^Parameter \\#1 \\$uid of method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\RepositoryInterface\\<object\\>\\:\\:findByUid\\(\\) expects int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|string\\|true given\\.$#"
+			count: 1
+			path: Classes/DataProcessing/ObjectProcessor.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractCategory\\:\\:setRedirectCategory\\(\\) has parameter \\$redirectCategory with no type specified\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractCategory.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface\\:\\:findChildObjects\\(\\)\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Cannot call method attach\\(\\) on TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\<Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Topic\\>\\|null\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Cannot call method detach\\(\\) on TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\<Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Topic\\>\\|null\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 2
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:getCategory\\(\\) should return Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractCategory\\|null but returns object\\|null\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:getChildObjects\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:getLinkedObject\\(\\) should return Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\|null but returns object\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:getParentObject\\(\\) should return Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\|null but returns object\\|null\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:getRelations\\(\\) return type with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:getRelationsFrom\\(\\) return type with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:getRelationsTo\\(\\) return type with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:getTags\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:getTopics\\(\\) return type with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:setRelationsFrom\\(\\) has parameter \\$relationsFrom with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage but does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:setRelationsTo\\(\\) has parameter \\$relationsTo with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage but does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:setTopics\\(\\) has parameter \\$topics with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage but does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:\\$category \\(Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractCategory\\|null\\) does not accept object\\|null\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:\\$childObjects with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:\\$linkedObject \\(Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\|null\\) does not accept object\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:\\$parentObject \\(Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\|null\\) does not accept object\\|null\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:\\$relations with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractObject.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getType\\(\\)\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractPage.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractPage\\:\\:getFileReferences\\(\\) return type with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractPage.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractPage\\:\\:getFirstImage\\(\\) should return TYPO3\\\\CMS\\\\Core\\\\Resource\\\\FileReference\\|null but returns object\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractPage.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractPage\\:\\:getMedia\\(\\) return type with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractPage.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractPage\\:\\:setFileReferences\\(\\) has parameter \\$fileReferences with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage but does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractPage.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractPage\\:\\:setMedia\\(\\) has parameter \\$media with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage but does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractPage.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractPage\\:\\:\\$firstImage \\(TYPO3\\\\CMS\\\\Core\\\\Resource\\\\FileReference\\|null\\) does not accept object\\.$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractPage.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractPage\\:\\:\\$media with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/AbstractPage.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\CategoryInterface\\:\\:setRedirectCategory\\(\\) has parameter \\$redirectCategory with no type specified\\.$#"
+			count: 1
+			path: Classes/Domain/Model/CategoryInterface.php
+
+		-
+			message: "#^Call to an undefined method ReflectionType\\:\\:getName\\(\\)\\.$#"
+			count: 2
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:__call\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:__call\\(\\) has parameter \\$arguments with no type specified\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:__call\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:__construct\\(\\) has parameter \\$parameterArray with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:getParameterArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:getParameterDiff\\(\\) has parameter \\$base with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:getParameterDiff\\(\\) has parameter \\$protectedParameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:getParameterDiff\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:getType\\(\\) has parameter \\$tableDefinition with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:getUidList\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:setParameterArray\\(\\) has parameter \\$parameterArray with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:setProperties\\(\\) has parameter \\$propertyArray with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:toggleProperties\\(\\) has parameter \\$propertyArray with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\AbstractDemand\\:\\:\\$tableDefinition type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between 'get'\\|'has'\\|'is'\\|'set' and 'toggle' will always evaluate to false\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractDemand.php
+
+		-
+			message: "#^PHPDoc tag @method has invalid value \\(\\(\\)\\: array\\)\\: Unexpected token \"\\\\n \", expected type at offset 143$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractObjectDemand.php
+
+		-
+			message: "#^PHPDoc tag @method has invalid value \\(\\(\\)\\: int\\)\\: Unexpected token \"\\\\n \\* \", expected type at offset 76$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractObjectDemand.php
+
+		-
+			message: "#^PHPDoc tag @method has invalid value \\(\\(mixed \\$value\\)\\: self\\)\\: Unexpected token \"\\\\n \\* \", expected type at offset 115$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractObjectDemand.php
+
+		-
+			message: "#^PHPDoc tag @method has invalid value \\(\\(mixed \\$value\\)\\: self\\)\\: Unexpected token \"\\\\n \\* \", expected type at offset 46$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/AbstractObjectDemand.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:getParameterArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/DemandInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:getParameterDiff\\(\\) has parameter \\$base with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/DemandInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:getParameterDiff\\(\\) has parameter \\$protectedParameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/DemandInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:getParameterDiff\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/DemandInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/DemandInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:getUidList\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/DemandInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:setParameterArray\\(\\) has parameter \\$parameterArray with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/DemandInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:setProperties\\(\\) has parameter \\$propertyArray with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/DemandInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:toggleProperties\\(\\) has parameter \\$propertyArray with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Demand/DemandInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\:\\:getChildObjects\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Model/ObjectInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\:\\:getRelations\\(\\) return type with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/ObjectInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\:\\:getRelationsFrom\\(\\) return type with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/ObjectInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\:\\:getRelationsTo\\(\\) return type with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/ObjectInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\:\\:getTags\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/ObjectInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\:\\:setRelationsFrom\\(\\) has parameter \\$relationsFrom with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage but does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/ObjectInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\ObjectInterface\\:\\:setRelationsTo\\(\\) has parameter \\$relationsTo with generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage but does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Domain/Model/ObjectInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractCategoryRepository\\:\\:createDemandConstraints\\(\\) has parameter \\$query with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryInterface but does not specify its types\\: T$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractCategoryRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractCategoryRepository\\:\\:createDemandConstraints\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractCategoryRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractCategoryRepository\\:\\:initializeDemand\\(\\) should return Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface but returns Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractCategoryRepository.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractPageRepository\\:\\:\\$defaultOrderings \\(array\\<non\\-empty\\-string, 'ASC'\\|'DESC'\\>\\) does not accept non\\-empty\\-array\\<string, 'ASC'\\|'DESC'\\>\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractCategoryRepository.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:getCategory\\(\\)\\.$#"
+			count: 2
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\ObjectDemandInterface\\:\\:getCategory\\(\\)\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:getIncludeChildObjects\\(\\)\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:getTopObjectFirst\\(\\)\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:getTopObjectOnly\\(\\)\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:setIncludeChildObjects\\(\\)\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Cannot call method getColumnName\\(\\) on TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Generic\\\\Mapper\\\\ColumnMap\\|null\\.$#"
+			count: 2
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Cannot call method getObject\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 2
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractObjectRepository\\:\\:createDemandConstraints\\(\\) has parameter \\$query with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryInterface but does not specify its types\\: T$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractObjectRepository\\:\\:createDemandConstraints\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractObjectRepository\\:\\:findChildObjects\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractObjectRepository\\:\\:initializeDemand\\(\\) should return Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface but returns Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractObjectRepository\\:\\:\\$registration \\(Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\) does not accept Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractPageRepository\\:\\:\\$defaultOrderings \\(array\\<non\\-empty\\-string, 'ASC'\\|'DESC'\\>\\) does not accept non\\-empty\\-array\\<string, 'ASC'\\|'DESC'\\>\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractObjectRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractPageRepository\\:\\:createDemandConstraints\\(\\) has parameter \\$query with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryInterface but does not specify its types\\: T$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractPageRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractPageRepository\\:\\:createDemandConstraints\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractPageRepository.php
+
+		-
+			message: "#^Class Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRelationRepository extends generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Repository but does not specify its types\\: T$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRelationRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRelationRepository\\:\\:findByRegistration\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRelationRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRelationRepository\\:\\:getRelationPageIds\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRelationRepository.php
+
+		-
+			message: "#^Class Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository extends generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Repository but does not specify its types\\: T$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository\\:\\:createDemandConstraints\\(\\) has parameter \\$query with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryInterface but does not specify its types\\: T$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository\\:\\:createDemandConstraints\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository\\:\\:findAll\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository\\:\\:findByDemand\\(\\) has parameter \\$query with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryInterface but does not specify its types\\: T$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository\\:\\:findByDemand\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository\\:\\:findByUid\\(\\) should return TYPO3\\\\CMS\\\\Extbase\\\\DomainObject\\\\DomainObjectInterface\\|null but returns object\\|null\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository\\:\\:findByUidList\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository\\:\\:getDefaultOrderings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository\\:\\:orderByUid\\(\\) has parameter \\$objects with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\AbstractRepository\\:\\:orderByUid\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Offset 1 on array\\{0\\: string, 1\\: non\\-empty\\-string, 2\\?\\: 'asc'\\|'desc'\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\$defaultOrderings of method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Repository\\<TYPO3\\\\CMS\\\\Extbase\\\\DomainObject\\\\DomainObjectInterface\\>\\:\\:setDefaultOrderings\\(\\) expects array\\<non\\-empty\\-string, 'ASC'\\|'DESC'\\>, non\\-empty\\-array\\<string, 'ASC'\\|'DESC'\\> given\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\ContactRepository\\:\\:getRelationPageIds\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/ContactRepository.php
+
+		-
+			message: "#^Interface Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface extends generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\RepositoryInterface but does not specify its types\\: T$#"
+			count: 1
+			path: Classes/Domain/Repository/RepositoryInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface\\:\\:createDemandConstraints\\(\\) has parameter \\$query with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryInterface but does not specify its types\\: T$#"
+			count: 1
+			path: Classes/Domain/Repository/RepositoryInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface\\:\\:createDemandConstraints\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/RepositoryInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface\\:\\:findAll\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Repository/RepositoryInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface\\:\\:findByDemand\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Repository/RepositoryInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface\\:\\:findByUidList\\(\\) has parameter \\$uidList with no type specified\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/RepositoryInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface\\:\\:findByUidList\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Domain/Repository/RepositoryInterface.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\TopicRepository\\:\\:getRelationPageIds\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/TopicRepository.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\AssignTemplateVariablesEvent\\:\\:__construct\\(\\) has parameter \\$variables with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/AssignTemplateVariablesEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\AssignTemplateVariablesEvent\\:\\:getVariables\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/AssignTemplateVariablesEvent.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Event\\\\AssignTemplateVariablesEvent\\:\\:\\$variables type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/AssignTemplateVariablesEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\AbstractRssObject\\:\\:set\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/Rss/AbstractRssObject.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\AbstractRssObject\\:\\:setIfEmpty\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/Rss/AbstractRssObject.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:render\\(\\)\\.$#"
+			count: 1
+			path: Classes/Event/Rss/RssChannelEvent.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(object\\)\\: mixed\\)\\|null, Closure\\(Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\AbstractObject\\)\\: mixed given\\.$#"
+			count: 1
+			path: Classes/Event/Rss/RssChannelEvent.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:render\\(\\)\\.$#"
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\RssFeedEvent\\:\\:__construct\\(\\) has parameter \\$content with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\RssFeedEvent\\:\\:__construct\\(\\) has parameter \\$objects with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\RssFeedEvent\\:\\:__construct\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\RssFeedEvent\\:\\:getContent\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\RssFeedEvent\\:\\:getObjects\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\RssFeedEvent\\:\\:getSettings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\RssFeedEvent\\:\\:\\$content type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\RssFeedEvent\\:\\:\\$objects with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Event\\\\Rss\\\\RssFeedEvent\\:\\:\\$settings type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(object\\)\\: mixed\\)\\|null, Closure\\(Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Topic\\)\\: string given\\.$#"
+			count: 1
+			path: Classes/Event/Rss/RssItemEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:__construct\\(\\) has parameter \\$row with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:addProperties\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:addPropertyType\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:createImageObjectType\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:getRow\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:parseProperties\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:parseProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:removeEmptyValues\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:removeEmptyValues\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Parameter \\#1 \\$image of method TYPO3\\\\CMS\\\\Extbase\\\\Service\\\\ImageService\\:\\:applyProcessingInstructions\\(\\) expects TYPO3\\\\CMS\\\\Core\\\\Resource\\\\FileInterface, TYPO3\\\\CMS\\\\Core\\\\Resource\\\\FileReference\\|null given\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Event\\\\StructuredDataEvent\\:\\:\\$row type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Event/StructuredDataEvent.php
+
+		-
+			message: "#^Cannot access offset 'edit' on array\\|object\\.$#"
+			count: 1
+			path: Classes/EventListener/DetectObjects.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:setCategory\\(\\)\\.$#"
+			count: 1
+			path: Classes/EventListener/DisplayObjectInformation.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface\\:\\:findParentObject\\(\\)\\.$#"
+			count: 1
+			path: Classes/EventListener/DisplayObjectInformation.php
+
+		-
+			message: "#^Cannot access offset 'edit' on array\\|object\\.$#"
+			count: 1
+			path: Classes/EventListener/DisplayObjectInformation.php
+
+		-
+			message: "#^Cannot call method count\\(\\) on TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\|null\\.$#"
+			count: 1
+			path: Classes/EventListener/DisplayObjectInformation.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\EventListener\\\\DisplayObjectInformation\\:\\:translate\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/EventListener/DisplayObjectInformation.php
+
+		-
+			message: "#^Cannot access offset 'edit' on array\\|object\\.$#"
+			count: 1
+			path: Classes/EventListener/DisplayObjectRelations.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\EventListener\\\\DisplayObjectRelations\\:\\:getObjectsByPageIds\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/EventListener/DisplayObjectRelations.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\EventListener\\\\DisplayObjectRelations\\:\\:showMessage\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/EventListener/DisplayObjectRelations.php
+
+		-
+			message: "#^Property TYPO3\\\\CMS\\\\Core\\\\ExpressionLanguage\\\\AbstractProvider\\:\\:\\$expressionLanguageVariables \\(array\\<non\\-empty\\-string, mixed\\>\\) does not accept non\\-empty\\-array\\<string, stdClass\\>\\.$#"
+			count: 1
+			path: Classes/ExpressionLanguage/TypoScriptConditionProvider.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Hooks\\\\DataHandler\\\\IdentifierDetection\\:\\:moveRecord_afterAnotherElementPostProcess\\(\\) has parameter \\$moveRec with no type specified\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/IdentifierDetection.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Hooks\\\\DataHandler\\\\IdentifierDetection\\:\\:moveRecord_afterAnotherElementPostProcess\\(\\) has parameter \\$origDestPid with no type specified\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/IdentifierDetection.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Hooks\\\\DataHandler\\\\IdentifierDetection\\:\\:moveRecord_afterAnotherElementPostProcess\\(\\) has parameter \\$updateFields with no type specified\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/IdentifierDetection.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Hooks\\\\DataHandler\\\\IdentifierDetection\\:\\:processDatamap_postProcessFieldArray\\(\\) has parameter \\$fieldArray with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/IdentifierDetection.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Hooks\\\\DataHandler\\\\IdentifierDetection\\:\\:updateIdentifier\\(\\) has parameter \\$fieldArray with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/IdentifierDetection.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getUid\\(\\)\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/ResortPageTree.php
+
+		-
+			message: "#^Cannot call method count\\(\\) on TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\|null\\.$#"
+			count: 3
+			path: Classes/Hooks/DataHandler/ResortPageTree.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Hooks\\\\DataHandler\\\\ResortPageTree\\:\\:getUidList\\(\\) has parameter \\$result with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/ResortPageTree.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Hooks\\\\DataHandler\\\\ResortPageTree\\:\\:getUidList\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/ResortPageTree.php
+
+		-
+			message: "#^Offset 'pid' does not exist on array\\|null\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/ResortPageTree.php
+
+		-
+			message: "#^Parameter \\#1 \\$pageUid of static method Zeroseven\\\\Pagebased\\\\Utility\\\\ObjectUtility\\:\\:isCategory\\(\\) expects int\\|null, int\\|string given\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/ResortPageTree.php
+
+		-
+			message: "#^Parameter \\#1 \\$pageUid of static method Zeroseven\\\\Pagebased\\\\Utility\\\\ObjectUtility\\:\\:isObject\\(\\) expects int\\|null, int\\|string given\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/ResortPageTree.php
+
+		-
+			message: "#^Parameter \\#1 \\$result of method Zeroseven\\\\Pagebased\\\\Hooks\\\\DataHandler\\\\ResortPageTree\\:\\:getUidList\\(\\) expects TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface, TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\|null given\\.$#"
+			count: 2
+			path: Classes/Hooks/DataHandler/ResortPageTree.php
+
+		-
+			message: "#^Parameter \\#2 \\$row of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getRecordTitle\\(\\) expects array, array\\|null given\\.$#"
+			count: 1
+			path: Classes/Hooks/DataHandler/ResortPageTree.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getParentObject\\(\\)\\.$#"
+			count: 1
+			path: Classes/Hooks/IconFactory/OverrideIconOverlay.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getRedirectCategory\\(\\)\\.$#"
+			count: 1
+			path: Classes/Hooks/IconFactory/OverrideIconOverlay.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:isTop\\(\\)\\.$#"
+			count: 1
+			path: Classes/Hooks/IconFactory/OverrideIconOverlay.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Hooks\\\\IconFactory\\\\OverrideIconOverlay\\:\\:postOverlayPriorityLookup\\(\\) has parameter \\$row with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Hooks/IconFactory/OverrideIconOverlay.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Hooks\\\\IconFactory\\\\OverrideIconOverlay\\:\\:postOverlayPriorityLookup\\(\\) has parameter \\$status with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Hooks/IconFactory/OverrideIconOverlay.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Imaging\\\\IconProvider\\\\AbstractIconProvider\\:\\:createImage\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Imaging/IconProvider/AbstractIconProvider.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Imaging\\\\IconProvider\\\\AbstractIconProvider\\:\\:generateMarkup\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Imaging/IconProvider/AbstractIconProvider.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Imaging\\\\IconProvider\\\\AbstractIconProvider\\:\\:prepareIconMarkup\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Imaging/IconProvider/AbstractIconProvider.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Imaging\\\\IconProvider\\\\AppIconProvider\\:\\:createImage\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Imaging/IconProvider/AppIconProvider.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Imaging\\\\IconProvider\\\\OverlayIconProvider\\:\\:createImage\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Imaging/IconProvider/OverlayIconProvider.php
+
+		-
+			message: "#^Property TYPO3\\\\CMS\\\\Frontend\\\\Controller\\\\TypoScriptFrontendController\\:\\:\\$page \\(array\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: Classes/Middleware/CategoryRedirect.php
+
+		-
+			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Routing\\\\RouteResultInterface\\:\\:getLanguage\\(\\)\\.$#"
+			count: 1
+			path: Classes/Middleware/RssFeed.php
+
+		-
+			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Generic\\\\QuerySettingsInterface\\:\\:setLanguageUid\\(\\)\\.$#"
+			count: 1
+			path: Classes/Middleware/RssFeed.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:render\\(\\)\\.$#"
+			count: 1
+			path: Classes/Middleware/RssFeed.php
+
+		-
+			message: "#^Cannot call method getCType\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\ListPluginRegistration\\|null\\.$#"
+			count: 2
+			path: Classes/Middleware/RssFeed.php
+
+		-
+			message: "#^Caught class Doctrine\\\\DBAL\\\\DBALException not found\\.$#"
+			count: 1
+			path: Classes/Middleware/RssFeed.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 2
+			path: Classes/Middleware/RssFeed.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Middleware\\\\RssFeed\\:\\:getObjects\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Middleware/RssFeed.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Middleware\\\\RssFeed\\:\\:getObjects\\(\\) return type with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Middleware/RssFeed.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Middleware\\\\RssFeed\\:\\:getPluginSettings\\(\\) has parameter \\$pluginConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Middleware/RssFeed.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Middleware\\\\RssFeed\\:\\:getPluginSettings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Middleware/RssFeed.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:parse\\(\\)\\.$#"
+			count: 1
+			path: Classes/Middleware/StructuredData.php
+
+		-
+			message: "#^Property TYPO3\\\\CMS\\\\Frontend\\\\Controller\\\\TypoScriptFrontendController\\:\\:\\$page \\(array\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: Classes/Middleware/StructuredData.php
+
+		-
+			message: "#^Dead catch \\- TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Generic\\\\Storage\\\\Exception\\\\BadConstraintException is never thrown in the try block\\.$#"
+			count: 1
+			path: Classes/Pagination/Pagination.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Pagination\\\\Pagination\\:\\:getIndicators\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Pagination/Pagination.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Pagination\\\\Pagination\\:\\:getItems\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Pagination/Pagination.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Pagination\\\\Pagination\\:\\:getStageLengths\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Pagination/Pagination.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Pagination\\\\Pagination\\:\\:getStages\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/Pagination/Pagination.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Pagination\\\\Pagination\\:\\:\\$items type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Pagination/Pagination.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Pagination\\\\Pagination\\:\\:\\$stageLengths type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Pagination/Pagination.php
+
+		-
+			message: "#^Class Zeroseven\\\\Pagebased\\\\Pagination\\\\Stage extends generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage but does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Pagination/Stage.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Pagination\\\\Stage\\:\\:getItems\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Pagination/Stage.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:isActive\\(\\)\\.$#"
+			count: 2
+			path: Classes/Pagination/Stages.php
+
+		-
+			message: "#^Class Zeroseven\\\\Pagebased\\\\Pagination\\\\Stages extends generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage but does not specify its types\\: TEntity$#"
+			count: 1
+			path: Classes/Pagination/Stages.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Pagination\\\\Stages\\:\\:getActive\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Pagination/Stages.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Pagination\\\\Stages\\:\\:getInactive\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Pagination/Stages.php
+
+		-
+			message: "#^Class Zeroseven\\\\Pagebased\\\\Registration\\\\AbstractRegistration implements generic interface ArrayAccess but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Registration/AbstractRegistration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\AbstractRegistration\\:\\:getPublicMethods\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/AbstractRegistration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\AbstractRegistrationEntityProperty\\:\\:getDemandClass\\(\\) should return Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface but returns object\\.$#"
+			count: 1
+			path: Classes/Registration/AbstractRegistrationEntityProperty.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\AbstractRegistrationEntityProperty\\:\\:getRepositoryClass\\(\\) should return Zeroseven\\\\Pagebased\\\\Domain\\\\Repository\\\\RepositoryInterface but returns object\\.$#"
+			count: 1
+			path: Classes/Registration/AbstractRegistrationEntityProperty.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
+			count: 2
+			path: Classes/Registration/AbstractRegistrationEntityProperty.php
+
+		-
+			message: "#^Parameter \\#1 \\$objectClassName of static method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\GenericDemand\\:\\:build\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: Classes/Registration/AbstractRegistrationEntityProperty.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			count: 2
+			path: Classes/Registration/AbstractRegistrationEntityProperty.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\AbstractRegistrationPluginProperty\\:\\:getLayouts\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/AbstractRegistrationPluginProperty.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of method Zeroseven\\\\Pagebased\\\\Registration\\\\AbstractRegistration\\:\\:translate\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: Classes/Registration/AbstractRegistrationPluginProperty.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Registration\\\\AbstractRegistrationPluginProperty\\:\\:\\$layouts type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/AbstractRegistrationPluginProperty.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/AddTCAEvent.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/AddTCAEvent.php
+
+		-
+			message: "#^Using nullsafe method call on non\\-nullable type TYPO3\\\\CMS\\\\Core\\\\Site\\\\SiteFinder\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/AddTCAEvent.php
+
+		-
+			message: "#^Cannot call method getFilterPlugin\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/AddTSConfigEvent.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with '' will always evaluate to false\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/CheckExtensionConfigurationEvent.php
+
+		-
+			message: "#^Cannot call method getCategory\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/CheckExtensionConfigurationEvent.php
+
+		-
+			message: "#^Cannot call method getExtensionName\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 2
+			path: Classes/Registration/EventListener/CheckExtensionConfigurationEvent.php
+
+		-
+			message: "#^Cannot call method getFilterPlugin\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/CheckExtensionConfigurationEvent.php
+
+		-
+			message: "#^Cannot call method getListPlugin\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/CheckExtensionConfigurationEvent.php
+
+		-
+			message: "#^Cannot call method getObject\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/CheckExtensionConfigurationEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\EventListener\\\\CheckExtensionConfigurationEvent\\:\\:overrideProperties\\(\\) has parameter \\$configuration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/CheckExtensionConfigurationEvent.php
+
+		-
+			message: "#^Parameter \\#1 \\$registration of static method Zeroseven\\\\Pagebased\\\\Utility\\\\SettingsUtility\\:\\:getExtensionConfiguration\\(\\) expects Zeroseven\\\\Pagebased\\\\Registration\\\\Registration, Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null given\\.$#"
+			count: 4
+			path: Classes/Registration/EventListener/CheckExtensionConfigurationEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\EventListener\\\\IconRegistryEvent\\:\\:__invoke\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/IconRegistryEvent.php
+
+		-
+			message: "#^Cannot call method getExtensionName\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/RegisterPluginEvent.php
+
+		-
+			message: "#^Cannot call method getFilterPlugin\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/RegisterPluginEvent.php
+
+		-
+			message: "#^Cannot call method getObject\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/RegisterPluginEvent.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/RegisterPluginEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\EventListener\\\\RegisterPluginEvent\\:\\:__invoke\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/Registration/EventListener/RegisterPluginEvent.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\FilterPluginRegistration\\:\\:create\\(\\) has parameter \\$arguments with no type specified\\.$#"
+			count: 1
+			path: Classes/Registration/FilterPluginRegistration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\FlexForm\\\\FlexFormConfiguration\\:\\:getSheets\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/FlexForm/FlexFormConfiguration.php
+
+		-
+			message: "#^Parameter \\#4 \\$position of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\ExtensionManagementUtility\\:\\:addToAllTCAtypes\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: Classes/Registration/FlexForm/FlexFormConfiguration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\FlexForm\\\\FlexFormSheetConfiguration\\:\\:addField\\(\\) has parameter \\$fieldConfig with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/FlexForm/FlexFormSheetConfiguration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\FlexForm\\\\FlexFormSheetConfiguration\\:\\:addField\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/FlexForm/FlexFormSheetConfiguration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\FlexForm\\\\FlexFormSheetConfiguration\\:\\:getFields\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/FlexForm/FlexFormSheetConfiguration.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Registration\\\\FlexForm\\\\FlexFormSheetConfiguration\\:\\:\\$fields type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/FlexForm/FlexFormSheetConfiguration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\ListPluginRegistration\\:\\:create\\(\\) has parameter \\$arguments with no type specified\\.$#"
+			count: 1
+			path: Classes/Registration/ListPluginRegistration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\ObjectRegistration\\:\\:addContactPageIds\\(\\) has parameter \\$pageIds with no type specified\\.$#"
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\ObjectRegistration\\:\\:addTopicPageIds\\(\\) has parameter \\$pageIds with no type specified\\.$#"
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\ObjectRegistration\\:\\:getContactPageIds\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\ObjectRegistration\\:\\:getDemandClass\\(\\) should return Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface but returns object\\.$#"
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\ObjectRegistration\\:\\:getTopicPageIds\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
+
+		-
+			message: "#^Parameter \\#1 \\$objectClassName of static method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\GenericObjectDemand\\:\\:build\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Registration\\\\ObjectRegistration\\:\\:\\$contactPageIds type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Registration\\\\ObjectRegistration\\:\\:\\$topicPageIds type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getRegistration\\(\\)\\.$#"
+			count: 1
+			path: Classes/Registration/Registration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\:\\:create\\(\\) has parameter \\$arguments with no type specified\\.$#"
+			count: 1
+			path: Classes/Registration/Registration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\:\\:getCategory\\(\\) should return Zeroseven\\\\Pagebased\\\\Registration\\\\CategoryRegistration but returns Zeroseven\\\\Pagebased\\\\Registration\\\\CategoryRegistration\\|null\\.$#"
+			count: 1
+			path: Classes/Registration/Registration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\:\\:getObject\\(\\) should return Zeroseven\\\\Pagebased\\\\Registration\\\\ObjectRegistration but returns Zeroseven\\\\Pagebased\\\\Registration\\\\ObjectRegistration\\|null\\.$#"
+			count: 1
+			path: Classes/Registration/Registration.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\RegistrationService\\:\\:extbasePersistenceConfiguration\\(\\) has parameter \\$classConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/RegistrationService.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Registration\\\\RegistrationService\\:\\:extbasePersistenceConfiguration\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Registration/RegistrationService.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\ArrayPathUtility\\:\\:__construct\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/ArrayPathUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\ArrayPathUtility\\:\\:create\\(\\) has parameter \\$arguments with no type specified\\.$#"
+			count: 1
+			path: Classes/Utility/ArrayPathUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\ArrayPathUtility\\:\\:getPath\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/ArrayPathUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\ArrayPathUtility\\:\\:setPath\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/ArrayPathUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\ArrayPathUtility\\:\\:setPath\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/ArrayPathUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\ArrayPathUtility\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/ArrayPathUtility.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Utility\\\\ArrayPathUtility\\:\\:\\$data type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/ArrayPathUtility.php
+
+		-
+			message: "#^Property Zeroseven\\\\Pagebased\\\\Utility\\\\ArrayPathUtility\\:\\:\\$propertyAccessor \\(Symfony\\\\Component\\\\PropertyAccess\\\\PropertyAccessor\\) does not accept Symfony\\\\Component\\\\PropertyAccess\\\\PropertyAccessorInterface\\.$#"
+			count: 1
+			path: Classes/Utility/ArrayPathUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\CastUtility\\:\\:array\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/CastUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\CastUtility\\:\\:int\\(\\) should return int but returns int\\<1, max\\>\\|null\\.$#"
+			count: 1
+			path: Classes/Utility/CastUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\CastUtility\\:\\:throwException\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: Classes/Utility/CastUtility.php
+
+		-
+			message: "#^Caught class Doctrine\\\\DBAL\\\\DBALException not found\\.$#"
+			count: 1
+			path: Classes/Utility/DetectionUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\DetectionUtility\\:\\:getUpdateFields\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/DetectionUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\DetectionUtility\\:\\:updatePageRecord\\(\\) has parameter \\$update with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/DetectionUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\ObjectUtility\\:\\:getDocumentType\\(\\) has parameter \\$row with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/ObjectUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\ObjectUtility\\:\\:isCategory\\(\\) has parameter \\$row with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/ObjectUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\ObjectUtility\\:\\:isObject\\(\\) has parameter \\$row with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/ObjectUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\ObjectUtility\\:\\:isSystemPage\\(\\) has parameter \\$row with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/ObjectUtility.php
+
+		-
+			message: "#^Parameter \\#1 \\$uid of static method Zeroseven\\\\Pagebased\\\\Utility\\\\ObjectUtility\\:\\:getObjectCache\\(\\) expects int, int\\|null given\\.$#"
+			count: 1
+			path: Classes/Utility/ObjectUtility.php
+
+		-
+			message: "#^Parameter \\#1 \\$uid of static method Zeroseven\\\\Pagebased\\\\Utility\\\\ObjectUtility\\:\\:setObjectCache\\(\\) expects int, int\\|null given\\.$#"
+			count: 1
+			path: Classes/Utility/ObjectUtility.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContextInterface\\:\\:getRequest\\(\\)\\.$#"
+			count: 1
+			path: Classes/Utility/RenderUtility.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContextInterface\\:\\:setRequest\\(\\)\\.$#"
+			count: 1
+			path: Classes/Utility/RenderUtility.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getVariables\\(\\)\\.$#"
+			count: 1
+			path: Classes/Utility/RenderUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RenderUtility\\:\\:initializeView\\(\\) has parameter \\$pluginConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RenderUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RenderUtility\\:\\:render\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RenderUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RenderUtility\\:\\:renderUserFunc\\(\\) has parameter \\$conf with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RenderUtility.php
+
+		-
+			message: "#^Using nullsafe method call on non\\-nullable type TYPO3\\\\CMS\\\\Core\\\\EventDispatcher\\\\EventDispatcher\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: Classes/Utility/RenderUtility.php
+
+		-
+			message: "#^Using nullsafe method call on non\\-nullable type TYPO3\\\\CMS\\\\Extbase\\\\Core\\\\Bootstrap\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: Classes/Utility/RequestUtility.php
+
+		-
+			message: "#^Using nullsafe method call on non\\-nullable type TYPO3\\\\CMS\\\\Extbase\\\\Mvc\\\\Web\\\\RequestBuilder\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: Classes/Utility/RequestUtility.php
+
+		-
+			message: "#^Cannot call method getCType\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\ListPluginRegistration\\|null\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Caught class Doctrine\\\\DBAL\\\\DBALException not found\\.$#"
+			count: 4
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:collectPagesAbove\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:collectPagesBelow\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:findListPlugin\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:getRootLine\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:getStartingPoint\\(\\) has parameter \\$list with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:lookDown\\(\\) has parameter \\$list with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:lookUp\\(\\) has parameter \\$list with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:searchContentElementInRootline\\(\\) has parameter \\$constraints with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:searchContentElementInRootline\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^PHPDoc tag @throws with type Doctrine\\\\DBAL\\\\DBALException\\|Doctrine\\\\DBAL\\\\Driver\\\\Exception is not subtype of Throwable$#"
+			count: 3
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^PHPDoc tag @throws with type Doctrine\\\\DBAL\\\\DBALException\\|Doctrine\\\\DBAL\\\\Driver\\\\Exception\\|TYPO3\\\\CMS\\\\Core\\\\Context\\\\Exception\\\\AspectNotFoundException is not subtype of Throwable$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Parameter \\#1 \\$pageId of method TYPO3\\\\CMS\\\\Core\\\\Site\\\\SiteFinder\\:\\:getSiteByPageId\\(\\) expects int, int\\|null given\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Parameter \\#1 \\$pid of static method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:searchContentElementInRootline\\(\\) expects int, int\\|null given\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Parameter \\#2 \\$pid of static method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:lookUp\\(\\) expects int, int\\|null given\\.$#"
+			count: 2
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Parameter \\#2 \\$startingPoint of static method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:getStartingPoint\\(\\) expects int, int\\|null given\\.$#"
+			count: 2
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Parameter \\#2 \\$uid of static method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:lookDown\\(\\) expects int, int\\|null given\\.$#"
+			count: 1
+			path: Classes/Utility/RootLineUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\TCAUtility\\:\\:addDisplayCondition\\(\\) has parameter \\$condition with no type specified\\.$#"
+			count: 1
+			path: Classes/Utility/TCAUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\TCAUtility\\:\\:getObjectDisplayCondition\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/TCAUtility.php
+
+		-
+			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Generic\\\\QuerySettingsInterface\\:\\:setLanguageUid\\(\\)\\.$#"
+			count: 1
+			path: Classes/Utility/TagUtility.php
+
+		-
+			message: "#^Call to an undefined method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\ObjectDemandInterface\\:\\:setTags\\(\\)\\.$#"
+			count: 2
+			path: Classes/Utility/TagUtility.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getTags\\(\\)\\.$#"
+			count: 1
+			path: Classes/Utility/TagUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\TagUtility\\:\\:collectTagsFromQueryResult\\(\\) has parameter \\$objects with generic interface TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: Classes/Utility/TagUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\TagUtility\\:\\:collectTagsFromQueryResult\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/TagUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\TagUtility\\:\\:getTags\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/TagUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\TagUtility\\:\\:getTagsByDemand\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/TagUtility.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\Utility\\\\TagUtility\\:\\:getTagsByRegistration\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Utility/TagUtility.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContextInterface\\:\\:getRequest\\(\\)\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
+
+		-
+			message: "#^Cannot call method getExtensionName\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
+
+		-
+			message: "#^Cannot call method getObject\\(\\) on Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\ViewHelpers\\\\AbstractLinkViewHelper\\:\\:initialize\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
+
+		-
+			message: "#^Parameter \\#1 \\$registration of static method Zeroseven\\\\Pagebased\\\\Utility\\\\RequestUtility\\:\\:getExtbaseRequest\\(\\) expects Zeroseven\\\\Pagebased\\\\Registration\\\\Registration, Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null given\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
+
+		-
+			message: "#^Right side of && is always true\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
+
+		-
+			message: "#^Parameter \\#1 \\$registration of static method Zeroseven\\\\Pagebased\\\\Utility\\\\RootLineUtility\\:\\:findListPlugin\\(\\) expects Zeroseven\\\\Pagebased\\\\Registration\\\\Registration, Zeroseven\\\\Pagebased\\\\Registration\\\\Registration\\|null given\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Filter/AbstractFilterLinkViewHelper.php
+
+		-
+			message: "#^Cannot call method clear\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Filter/ClearViewHelper.php
+
+		-
+			message: "#^Cannot call method getProperty\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Filter/ClearViewHelper.php
+
+		-
+			message: "#^Cannot call method hasProperty\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Filter/ClearViewHelper.php
+
+		-
+			message: "#^Cannot call method getParameterDiff\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Filter/LinkViewHelper.php
+
+		-
+			message: "#^Cannot call method getProperty\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 2
+			path: Classes/ViewHelpers/Filter/LinkViewHelper.php
+
+		-
+			message: "#^Cannot call method hasProperty\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Filter/LinkViewHelper.php
+
+		-
+			message: "#^Cannot call method setParameterArray\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Filter/LinkViewHelper.php
+
+		-
+			message: "#^Cannot call method setProperties\\(\\) on Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\|null\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Filter/LinkViewHelper.php
+
+		-
+			message: "#^Parameter \\#1 \\$propertyName of method Zeroseven\\\\Pagebased\\\\Domain\\\\Model\\\\Demand\\\\DemandInterface\\:\\:hasProperty\\(\\) expects string, int\\|string given\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Filter/LinkViewHelper.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\ViewHelpers\\\\Pagination\\\\EachItemViewHelper\\:\\:initializeArguments\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Pagination/EachItemViewHelper.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\ViewHelpers\\\\Pagination\\\\EachStageViewHelper\\:\\:initializeArguments\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/Pagination/EachStageViewHelper.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContextInterface\\:\\:getRequest\\(\\)\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/PaginationViewHelper.php
+
+		-
+			message: "#^Method Zeroseven\\\\Pagebased\\\\ViewHelpers\\\\PaginationViewHelper\\:\\:initializeArguments\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/ViewHelpers/PaginationViewHelper.php

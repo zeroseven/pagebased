@@ -1,0 +1,11 @@
+pages,,,,,,,,,,,,,
+,uid,pid,title,doktype,sorting,deleted,hidden,nav_hide,sys_language_uid,l10n_parent,_pagebased_registration,_pagebased_site,_pagebased_child_object
+,1,0,Root,1,256,0,0,0,0,0,,0,0
+,10,1,Category,1,256,0,0,0,0,0,,0,0
+,11,10,Child Level 1a,1,256,0,0,0,0,0,,0,0
+,12,10,Child Level 1b,1,256,0,0,0,0,0,,0,0
+,13,10,Child Level 1c,1,256,0,0,0,0,0,,0,0
+,20,11,Child Level 2a,1,256,0,0,0,0,0,,0,0
+,21,11,Child Level 2b,1,256,0,0,0,0,0,,0,0
+,30,12,Child Level 2c,1,256,0,0,0,0,0,,0,0
+,100,0,Other Root,1,256,0,0,0,0,0,,0,0

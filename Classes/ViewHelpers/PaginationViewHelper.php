@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\ViewHelpers;
 
-use Closure;
-use Traversable;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
@@ -43,12 +41,12 @@ final class PaginationViewHelper extends AbstractViewHelper
     }
 
     /** @throws Exception */
-    public static function renderStatic(array $arguments, Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
         $selectedStage = self::getSelectedStage($renderingContext);
         $as = (empty($as = $arguments['as'] ?? null) || $as === self::PAGINATION_VARIABLE_IDENTIFIER) ? null : $as;
 
-        if (empty($items = $arguments['items'] ?? null) || (is_object($items) && !$items instanceof Traversable)) {
+        if (empty($items = $arguments['items'] ?? null) || (is_object($items) && !$items instanceof \Traversable)) {
             throw new Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1677229957);
         }
 
