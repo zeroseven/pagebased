@@ -120,9 +120,9 @@ final class RepositoryPerformanceTest extends FunctionalTestCase
 
     /**
      * @test
-     * findByUid() must use at most 2 queries. Before the optimisation it ran
+     * findByUid() must use at most 3 queries. Before the optimisation it ran
      * through the full demand pipeline (site-scope query + registration query).
-     * After the fix it is a single direct SELECT.
+     * After the fix it is a single direct SELECT with minimal Extbase overhead.
      */
     public function findByUidIssuesMinimalQueries(): void
     {

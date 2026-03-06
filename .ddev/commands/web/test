@@ -10,7 +10,7 @@ set -Eeuo pipefail
 # Auto-proxy into DDEV if running outside the container
 if [ -z "${IS_DDEV_PROJECT:-}" ]; then
     if command -v ddev >/dev/null 2>&1 && [ -d ".ddev" ]; then
-        ddev exec bash -lc "/var/www/html/.ddev/commands/web/test $*"
+        ddev exec bash -lc '/var/www/html/.ddev/commands/web/test "$@"' -- test "$@"
         exit $?
     fi
 fi

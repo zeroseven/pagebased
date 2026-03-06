@@ -64,8 +64,10 @@ class TagUtility
             $repository->setDefaultQuerySettings($querySettings);
         }
 
-        // Use a lightweight tag-only query when supported (avoids full Extbase object hydration)
-        if ($repository instanceof AbstractObjectRepository) {
+        // Use a lightweight tag-only query when supported (avoids full Extbase object hydration).
+        // Skip this path when a specific language is requested: findTagStrings() uses raw DBAL
+        // and does not apply language overlays, so language-scoped callers must use the hydrated path.
+        if ($repository instanceof AbstractObjectRepository && $languageUid === null) {
             $tagDemand = $ignoreTagsFromDemand === true ? $demand->setTags(null) : $demand;
             $tagStrings = $repository->findTagStrings($tagDemand);
 

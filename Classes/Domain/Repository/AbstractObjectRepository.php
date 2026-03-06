@@ -135,8 +135,9 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     public function findTagStrings(ObjectDemandInterface $demand): array
     {
         $categoryUid = $demand->getCategory();
+        $excludeChildObjects = $demand->getIncludeChildObjects() === false;
         $cacheKey = 'pagebased_tags_' . md5(
-            $this->registration->getIdentifier() . '_' . $categoryUid
+            $this->registration->getIdentifier() . '_' . $categoryUid . '_' . (int)$excludeChildObjects
         );
 
         $cache = $this->getTagsCache();
@@ -160,6 +161,29 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
                 ),
                 $qb->expr()->neq('pagebased_tags', $qb->createNamedParameter(''))
             );
+
+        // Replicate nav_hide constraint from AbstractPageRepository::createDemandConstraints()
+        $qb->andWhere($qb->expr()->eq('nav_hide', $qb->createNamedParameter(0, \Doctrine\DBAL\ParameterType::INTEGER)));
+
+        // Replicate l18n_cfg constraint from AbstractPageRepository::createDemandConstraints()
+        $qb->andWhere($qb->expr()->or(
+            $qb->expr()->eq('l18n_cfg', $qb->createNamedParameter(0, \Doctrine\DBAL\ParameterType::INTEGER)),
+            $qb->expr()->and(
+                $qb->expr()->gte('l18n_cfg', $qb->createNamedParameter(1, \Doctrine\DBAL\ParameterType::INTEGER)),
+                $qb->expr()->gte(
+                    $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['languageField'],
+                    $qb->createNamedParameter(1, \Doctrine\DBAL\ParameterType::INTEGER)
+                )
+            )
+        ));
+
+        // Replicate child-object exclusion from AbstractObjectRepository::createDemandConstraints()
+        if ($excludeChildObjects) {
+            $qb->andWhere($qb->expr()->neq(
+                DetectionUtility::CHILD_OBJECT_FIELD_NAME,
+                $qb->createNamedParameter(1, \Doctrine\DBAL\ParameterType::INTEGER)
+            ));
+        }
 
         if ($categoryUid > 0) {
             $pageIds = array_keys(RootLineUtility::collectPagesBelow($categoryUid));
