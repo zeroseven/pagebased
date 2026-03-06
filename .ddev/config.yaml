@@ -12,7 +12,7 @@ database:
   type: mariadb
   version: "10.11"
 nodejs_version: "20"
-webimage_extra_packages: [php8.3-pcov]
+webimage_extra_packages: [php-pcov]
 use_dns_when_possible: true
 composer_version: "2"
 web_environment:

@@ -135,10 +135,8 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     public function findTagStrings(ObjectDemandInterface $demand): array
     {
         $categoryUid = $demand->getCategory();
-        $languageUid = (int)GeneralUtility::makeInstance(Context::class)
-            ->getPropertyFromAspect('language', 'id', 0);
         $cacheKey = 'pagebased_tags_' . md5(
-            $this->registration->getIdentifier() . '_' . $categoryUid . '_' . $languageUid
+            $this->registration->getIdentifier() . '_' . $categoryUid
         );
 
         $cache = $this->getTagsCache();
