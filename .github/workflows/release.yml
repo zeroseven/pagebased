@@ -124,7 +124,9 @@ jobs:
         run: |
           git tag -a "${{ steps.version.outputs.version }}" \
             -m "Release ${{ steps.version.outputs.version }}"
-          git push origin "HEAD:${{ github.ref_name }}"
+          if [ "${{ github.ref_type }}" = "branch" ]; then
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi
           git push origin "${{ steps.version.outputs.version }}"
 
       - name: Create GitHub Release

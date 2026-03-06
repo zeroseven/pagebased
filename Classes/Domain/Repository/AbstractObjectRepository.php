@@ -129,6 +129,11 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
      * bypassing full Extbase object hydration. Results are cached in TYPO3's data
      * cache and automatically invalidated when pages are modified.
      *
+     * This method operates on the default language only (no language overlays are applied).
+     * Call sites must ensure it is not invoked in a non-default language context.
+     * TagUtility::getTags() enforces this by checking both the explicit $languageUid
+     * parameter and the current TYPO3 Context language before choosing this path.
+     *
      * @param ObjectDemandInterface $demand Used for optional category-tree filtering.
      * @return string[] Raw comma-separated tag strings, one entry per page row.
      */

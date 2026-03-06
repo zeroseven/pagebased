@@ -163,7 +163,7 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
      * We allow a generous factor of 5× to account for measurement noise on slow CI.
      * The zero-query guarantee is verified separately in collectPagesBelowIssuesZeroQueriesOnCacheHit().
      */
-    public function cachedCallIsFasterThanColdCall(): void
+    public function cachedCallIsNotSignificantlySlowerThanColdCall(): void
     {
         // Cold call
         $start = microtime(true);

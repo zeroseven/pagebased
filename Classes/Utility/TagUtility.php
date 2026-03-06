@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Utility;
 
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
@@ -65,9 +66,13 @@ class TagUtility
         }
 
         // Use a lightweight tag-only query when supported (avoids full Extbase object hydration).
-        // Skip this path when a specific language is requested: findTagStrings() uses raw DBAL
-        // and does not apply language overlays, so language-scoped callers must use the hydrated path.
-        if ($repository instanceof AbstractObjectRepository && $languageUid === null) {
+        // Skip this path when a non-default language is active: findTagStrings() uses raw DBAL
+        // and does not apply language overlays. We check both the explicit $languageUid parameter
+        // and the current TYPO3 Context language so implicit callers (e.g. AbstractObjectController)
+        // are also protected when operating in a non-default site language.
+        $contextLanguageUid = (int)GeneralUtility::makeInstance(Context::class)
+            ->getPropertyFromAspect('language', 'id', 0);
+        if ($repository instanceof AbstractObjectRepository && $languageUid === null && $contextLanguageUid === 0) {
             $tagDemand = $ignoreTagsFromDemand === true ? $demand->setTags(null) : $demand;
             $tagStrings = $repository->findTagStrings($tagDemand);
 
