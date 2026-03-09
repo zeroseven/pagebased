@@ -53,6 +53,28 @@ class TagUtility
 
     public static function getTags(ObjectDemandInterface $demand, RepositoryInterface $repository, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
+        // Ensure the demand is filtered by the current blog instance (category)
+        if (!$demand->{'getCategory'}()) {
+            // Automatically determine the current blog category from the current page context
+            $currentPage = RootLineUtility::getCurrentPage();
+            $pagesAbove = RootLineUtility::collectPagesAbove($currentPage, true);
+
+            // Find the blog category page (doktype 93) in the rootline
+            $blogCategoryUid = null;
+            foreach ($pagesAbove as $page) {
+                if (isset($page['doktype']) && (int)$page['doktype'] === 93) {
+                    $blogCategoryUid = (int)$page['uid'];
+                    break;
+                }
+            }
+
+            if ($blogCategoryUid) {
+                $demand->{'setCategory'}($blogCategoryUid);
+            } else {
+                // If no blog category found, return null to avoid showing all tags
+                return null;
+            }
+        }
         // Override language
         if ($languageUid !== null) {
             $querySettings = $repository->getDefaultQuerySettings();
