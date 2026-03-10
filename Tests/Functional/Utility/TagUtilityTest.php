@@ -64,6 +64,8 @@ class TagUtilityTest extends FunctionalTestCase
     {
         // Clear the static RootLineUtility cache so page-context changes between
         // tests do not bleed into one another.
+        // Note: setAccessible(true) is intentionally omitted – it is a no-op since PHP 8.1
+        // and produces a deprecation notice on PHP 8.4.
         $reflection = new \ReflectionProperty(RootLineUtility::class, 'cache');
         $reflection->setValue(null, []);
 

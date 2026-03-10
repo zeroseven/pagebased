@@ -57,23 +57,37 @@ class TagUtility
         // When the nonglobal-tags feature is enabled, scope tags to the current rootline category.
         if (GeneralUtility::makeInstance(Features::class)->isFeatureEnabled('pagebased.nonglobalTags')) {
             if (!$demand->{'getCategory'}()) {
-                // Automatically determine the current blog category from the current page context
+                // Resolve the category doktype for this specific repository to avoid matching
+                // category pages from a different registration in multi-registration installations.
+                $registrationDoktype = RegistrationService::getRegistrationByRepository($repository)
+                    ?->getCategory()
+                    ?->getDocumentType();
+
                 $currentPage = RootLineUtility::getCurrentPage();
                 $pagesAbove = RootLineUtility::collectPagesAbove($currentPage, true);
 
-                // Find the first registered category page in the rootline
-                $blogCategoryUid = null;
+                // Find the first category page in the rootline that belongs to this registration.
+                // Fall back to any registered category doktype when the registration cannot be resolved.
+                $categoryUid = null;
                 foreach ($pagesAbove as $page) {
-                    if (isset($page['doktype']) && RegistrationService::getRegistrationByCategoryDocumentType((int)$page['doktype']) !== null) {
-                        $blogCategoryUid = (int)$page['uid'];
+                    if (!isset($page['doktype'])) {
+                        continue;
+                    }
+                    $doktype = (int)$page['doktype'];
+                    $matches = $registrationDoktype !== null
+                        ? $doktype === $registrationDoktype
+                        : RegistrationService::getRegistrationByCategoryDocumentType($doktype) !== null;
+
+                    if ($matches) {
+                        $categoryUid = (int)$page['uid'];
                         break;
                     }
                 }
 
-                if ($blogCategoryUid) {
-                    $demand->{'setCategory'}($blogCategoryUid);
+                if ($categoryUid) {
+                    $demand->{'setCategory'}($categoryUid);
                 } else {
-                    // No blog category found in rootline → return null to avoid showing all tags
+                    // No category found in rootline → return null to avoid showing all tags
                     return null;
                 }
             }
