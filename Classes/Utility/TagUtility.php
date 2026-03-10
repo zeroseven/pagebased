@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Utility;
 
+use TYPO3\CMS\Core\Configuration\Features;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
@@ -53,28 +54,31 @@ class TagUtility
 
     public static function getTags(ObjectDemandInterface $demand, RepositoryInterface $repository, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
-        // Ensure the demand is filtered by the current blog instance (category)
-        if (!$demand->{'getCategory'}()) {
-            // Automatically determine the current blog category from the current page context
-            $currentPage = RootLineUtility::getCurrentPage();
-            $pagesAbove = RootLineUtility::collectPagesAbove($currentPage, true);
+        // When the nonglobal-tags feature is enabled, scope tags to the current rootline category.
+        if (GeneralUtility::makeInstance(Features::class)->isFeatureEnabled('pagebased.nonglobalTags')) {
+            if (!$demand->{'getCategory'}()) {
+                // Automatically determine the current blog category from the current page context
+                $currentPage = RootLineUtility::getCurrentPage();
+                $pagesAbove = RootLineUtility::collectPagesAbove($currentPage, true);
 
-            // Find the blog category page (doktype 93) in the rootline
-            $blogCategoryUid = null;
-            foreach ($pagesAbove as $page) {
-                if (isset($page['doktype']) && (int)$page['doktype'] === 93) {
-                    $blogCategoryUid = (int)$page['uid'];
-                    break;
+                // Find the first registered category page in the rootline
+                $blogCategoryUid = null;
+                foreach ($pagesAbove as $page) {
+                    if (isset($page['doktype']) && RegistrationService::getRegistrationByCategoryDocumentType((int)$page['doktype']) !== null) {
+                        $blogCategoryUid = (int)$page['uid'];
+                        break;
+                    }
+                }
+
+                if ($blogCategoryUid) {
+                    $demand->{'setCategory'}($blogCategoryUid);
+                } else {
+                    // No blog category found in rootline → return null to avoid showing all tags
+                    return null;
                 }
             }
-
-            if ($blogCategoryUid) {
-                $demand->{'setCategory'}($blogCategoryUid);
-            } else {
-                // If no blog category found, return null to avoid showing all tags
-                return null;
-            }
         }
+
         // Override language
         if ($languageUid !== null) {
             $querySettings = $repository->getDefaultQuerySettings();

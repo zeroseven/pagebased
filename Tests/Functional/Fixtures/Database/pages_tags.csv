@@ -1,0 +1,9 @@
+pages,,,,,,,,,,,,,,,
+,uid,pid,title,doktype,sorting,deleted,hidden,nav_hide,sys_language_uid,l10n_parent,_pagebased_registration,_pagebased_site,_pagebased_child_object,pagebased_tags
+,1,0,Site Root,1,256,0,0,0,0,0,,1,0,
+,10,1,Category A,199,128,0,0,0,0,0,,1,0,
+,20,10,Object A1,1,128,0,0,0,0,0,test_news,1,0,"php,typo3"
+,21,10,Object A2,1,256,0,0,0,0,0,test_news,1,0,"php,symfony"
+,30,1,Category B,199,256,0,0,0,0,0,,1,0,
+,31,30,Object B1,1,128,0,0,0,0,0,test_news,1,0,"javascript,typo3"
+,40,1,Standalone Page,1,384,0,0,0,0,0,,1,0,
