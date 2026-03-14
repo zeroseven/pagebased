@@ -29,7 +29,10 @@ use Zeroseven\Pagebased\Tests\Functional\Fixtures\Middleware\QueryCountingMiddle
  */
 final class RepositoryPerformanceTest extends FunctionalTestCase
 {
-    protected array $testExtensionsToLoad = ['typo3conf/ext/pagebased'];
+    protected array $testExtensionsToLoad = [
+        'typo3conf/ext/pagebased',
+        'typo3conf/ext/pagebased/Tests/Functional/Fixtures',
+    ];
 
     protected array $configurationToUseInTestInstance = [
         'DB' => [
