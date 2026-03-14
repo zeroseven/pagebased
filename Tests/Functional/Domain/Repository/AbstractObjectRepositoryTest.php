@@ -24,7 +24,7 @@ use Zeroseven\Pagebased\Tests\Functional\Fixtures\Classes\TestObjectRepository;
  * - Default limit of 1000 when maxItems is 0
  * - Identifier constraint (_pagebased_registration = 'test_news')
  *
- * Fixtures: Tests/Functional/fixtures/Database/pages_objects.csv
+ * Fixtures: Tests/Functional/Fixtures/Database/pages_objects.csv
  *   uid 10 → category (doktype=199, _pagebased_site=1)
  *   uid 20-22 → visible objects in category 10 (_pagebased_registration=test_news)
  *   uid 23   → hidden object (hidden=1)
@@ -39,7 +39,7 @@ class AbstractObjectRepositoryTest extends FunctionalTestCase
 {
     protected array $testExtensionsToLoad = [
         'typo3conf/ext/pagebased',
-        'typo3conf/ext/pagebased/Tests/Functional/fixtures',
+        'typo3conf/ext/pagebased/Tests/Functional/Fixtures',
     ];
 
     protected array $coreExtensionsToLoad = [
@@ -57,7 +57,7 @@ class AbstractObjectRepositoryTest extends FunctionalTestCase
         // resolve TestObjectRepository → 'test_news'.
         $this->bootstrapTestRegistration();
 
-        $this->importCSVDataSet(__DIR__ . '/../../fixtures/Database/pages_objects.csv');
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Database/pages_objects.csv');
 
         $this->repository = $this->get(TestObjectRepository::class);
     }

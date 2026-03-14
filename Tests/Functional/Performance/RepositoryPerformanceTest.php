@@ -31,7 +31,7 @@ final class RepositoryPerformanceTest extends FunctionalTestCase
 {
     protected array $testExtensionsToLoad = [
         'typo3conf/ext/pagebased',
-        'typo3conf/ext/pagebased/Tests/Functional/pagebased_test_fixtures',
+        'typo3conf/ext/pagebased/Tests/Functional/Fixtures',
     ];
 
     protected array $configurationToUseInTestInstance = [
@@ -51,7 +51,7 @@ final class RepositoryPerformanceTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->importCSVDataSet(__DIR__ . '/../pagebased_test_fixtures/Database/pages_many_objects.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/Database/pages_many_objects.csv');
         $this->bootstrapTestRegistration();
         $this->repository = $this->get(TestObjectRepository::class);
         QueryCountingMiddleware::reset();
