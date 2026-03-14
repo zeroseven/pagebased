@@ -11,6 +11,7 @@ $EM_CONF[$_EXTKEY] = [
     'constraints' => [
         'depends' => [
             'typo3' => '12.4.0-12.99.99',
+            'pagebased' => '',
         ],
     ],
 ];
