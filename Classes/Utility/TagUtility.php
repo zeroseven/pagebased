@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Utility;
 
+use TYPO3\CMS\Core\Configuration\Features;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
@@ -53,6 +54,45 @@ class TagUtility
 
     public static function getTags(ObjectDemandInterface $demand, RepositoryInterface $repository, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
+        // When the nonglobal-tags feature is enabled, scope tags to the current rootline category.
+        if (GeneralUtility::makeInstance(Features::class)->isFeatureEnabled('pagebased.nonglobalTags')) {
+            if (!$demand->{'getCategory'}()) {
+                // Resolve the category doktype for this specific repository to avoid matching
+                // category pages from a different registration in multi-registration installations.
+                $registrationDoktype = RegistrationService::getRegistrationByRepository($repository)
+                    ?->getCategory()
+                    ?->getDocumentType();
+
+                $currentPage = RootLineUtility::getCurrentPage();
+                $pagesAbove = RootLineUtility::collectPagesAbove($currentPage, true);
+
+                // Find the first category page in the rootline that belongs to this registration.
+                // Fall back to any registered category doktype when the registration cannot be resolved.
+                $categoryUid = null;
+                foreach ($pagesAbove as $page) {
+                    if (!isset($page['doktype'])) {
+                        continue;
+                    }
+                    $doktype = (int)$page['doktype'];
+                    $matches = $registrationDoktype !== null
+                        ? $doktype === $registrationDoktype
+                        : RegistrationService::getRegistrationByCategoryDocumentType($doktype) !== null;
+
+                    if ($matches) {
+                        $categoryUid = (int)$page['uid'];
+                        break;
+                    }
+                }
+
+                if ($categoryUid) {
+                    $demand->{'setCategory'}($categoryUid);
+                } else {
+                    // No category found in rootline → return null to avoid showing all tags
+                    return null;
+                }
+            }
+        }
+
         // Override language
         if ($languageUid !== null) {
             $querySettings = $repository->getDefaultQuerySettings();
