@@ -7,10 +7,6 @@ services:
     Zeroseven\Pagebased\:
         resource: '../Classes/*'
 
-    Zeroseven\Pagebased\Tests\Functional\Fixtures\Classes\:
-        resource: '../Tests/Functional/Fixtures/Classes/*'
-        public: true
-
     Zeroseven\Pagebased\Middleware\RssFeed:
         arguments:
             $cache: '@cache.pagebased_rss_feed'

@@ -67,11 +67,4 @@ return [
             ],
         ],
     ],
-    // Test fixture classes — map to pages table (only loaded in test context)
-    \Zeroseven\Pagebased\Tests\Functional\Fixtures\Classes\TestObject::class => [
-        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
-    ],
-    \Zeroseven\Pagebased\Tests\Functional\Fixtures\Classes\TestCategory::class => [
-        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
-    ],
 ];
