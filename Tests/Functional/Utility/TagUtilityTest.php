@@ -38,6 +38,7 @@ class TagUtilityTest extends FunctionalTestCase
 {
     protected array $testExtensionsToLoad = [
         'typo3conf/ext/pagebased',
+        'typo3conf/ext/pagebased/Tests/Functional/Fixtures',
     ];
 
     protected array $coreExtensionsToLoad = [
