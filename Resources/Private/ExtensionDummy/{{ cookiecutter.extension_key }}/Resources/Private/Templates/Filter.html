@@ -32,7 +32,7 @@
 		<f:if condition="{tags}">
 				<h2>Tags</h2>
 				<f:for each="{tags}" as="tag">
-						<pagebased:filter.link demand="{demand}" properties="{tags:tag}" toggle="1">{tag}</pagebased:filter.link><br>
+						<pagebased:filter.link demand="{demand}" properties="{tags:tag}" toggle="1" rel="nofollow">{tag}</pagebased:filter.link><br>
 				</f:for>
 		</f:if>
 
