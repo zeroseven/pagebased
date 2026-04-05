@@ -16,7 +16,6 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Registration\AbstractRegistrationEntityProperty;
-use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
 use Zeroseven\Pagebased\Utility\RootLineUtility;
 
@@ -37,7 +36,9 @@ class ResortPageTree
                 'LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.title',
                 'pagebased',
                 [0 => $registrationEntityProperty->getTitle()]
-            ), ContextualFeedbackSeverity::OK, true
+            ),
+            ContextualFeedbackSeverity::OK,
+            true
         );
 
         $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();

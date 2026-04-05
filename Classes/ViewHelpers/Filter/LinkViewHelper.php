@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\ViewHelpers\Filter;
 
-use ReflectionClass;
-use ReflectionException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Exception\TypeException;
@@ -24,7 +22,7 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
         $this->registerArgument('dataAttributes', 'bool', 'Set data attributes, if the filter is enabled', false, true);
     }
 
-    /** @throws Exception | ReflectionException | ValueException */
+    /** @throws Exception|\ReflectionException|ValueException */
     public function validateArguments(): void
     {
         parent::validateArguments();
@@ -32,7 +30,7 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
         if ($this->demand) {
             foreach (array_keys($this->arguments['properties'] ?? []) as $key) {
                 if (!$this->demand->hasProperty($key)) {
-                    throw new Exception(sprintf('Undefined property "%s" in demand class "%s". Allowed properties are %s', $key, (new ReflectionClass($this->demand))->getName(), implode(', ', array_map(static fn($property) => $property->getName(), $this->demand->getProperties()))), 1678130803);
+                    throw new Exception(sprintf('Undefined property "%s" in demand class "%s". Allowed properties are %s', $key, (new \ReflectionClass($this->demand))->getName(), implode(', ', array_map(static fn($property) => $property->getName(), $this->demand->getProperties()))), 1678130803);
                 }
             }
         }

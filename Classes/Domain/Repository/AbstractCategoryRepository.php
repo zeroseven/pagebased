@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Domain\Repository;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
@@ -19,19 +18,19 @@ abstract class AbstractCategoryRepository extends AbstractPageRepository impleme
     {
         parent::__construct();
 
-        if ($registration = RegistrationService::getRegistrationByCategoryRepository(get_class($this))) {
+        if ($registration = RegistrationService::getRegistrationByCategoryRepository(static::class)) {
             $this->defaultOrderings = [
                 $registration->getCategory()->getSortingField() =>
                     $registration->getCategory()->isSortingAscending()
                         ? QueryInterface::ORDER_ASCENDING
-                        : QueryInterface::ORDER_DESCENDING
+                        : QueryInterface::ORDER_DESCENDING,
             ];
         }
     }
 
     public function initializeDemand(): DemandInterface
     {
-        return RegistrationService::getRegistrationByCategoryRepository(get_class($this))?->getCategory()->getDemandClass();
+        return RegistrationService::getRegistrationByCategoryRepository(static::class)?->getCategory()->getDemandClass();
     }
 
     public function initializeObject(): void

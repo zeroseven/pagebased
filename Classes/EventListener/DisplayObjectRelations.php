@@ -7,21 +7,20 @@ namespace Zeroseven\Pagebased\EventListener;
 use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Exception;
-use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Pagebased\Domain\Model\Contact;
 use Zeroseven\Pagebased\Domain\Model\Topic;
 use Zeroseven\Pagebased\Registration\RegistrationService;
-use Zeroseven\Pagebased\Utility\SettingsUtility;
 
 class DisplayObjectRelations
 {
     protected const TABLES = [
         Topic::class => 'tx_pagebased_domain_model_topic',
-        Contact::class => 'tx_pagebased_domain_model_contact'
+        Contact::class => 'tx_pagebased_domain_model_contact',
     ];
 
     protected function getObjectsByPageIds(int $pid, string $pageIdMethode): array
@@ -43,8 +42,11 @@ class DisplayObjectRelations
 
     protected function showMessage(array $objects): void
     {
-        $message = LocalizationUtility::translate('LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.objectRelations.description',
-            'pagebased', [implode(', ', $objects)]);
+        $message = LocalizationUtility::translate(
+            'LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.objectRelations.description',
+            'pagebased',
+            [implode(', ', $objects)]
+        );
 
         $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, '', ContextualFeedbackSeverity::INFO);
 

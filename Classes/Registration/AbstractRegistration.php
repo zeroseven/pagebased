@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Registration;
 
-use ArrayAccess;
-use ReflectionClass;
-use ReflectionMethod;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Pagebased\Exception\RegistrationException;
 
-abstract class AbstractRegistration implements RegistrationPropertyInterface, ArrayAccess
+abstract class AbstractRegistration implements RegistrationPropertyInterface, \ArrayAccess
 {
     protected string $title;
 
@@ -55,8 +52,8 @@ abstract class AbstractRegistration implements RegistrationPropertyInterface, Ar
     /** @throws RegistrationException */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        $methods = self::getPublicMethods(get_class($this));
-        $availableMethods = array_diff($methods, self::getPublicMethods(ArrayAccess::class));
+        $methods = self::getPublicMethods(static::class);
+        $availableMethods = array_diff($methods, self::getPublicMethods(\ArrayAccess::class));
 
         throw new RegistrationException('ArrayAccess is only for reading. Methods "offsetSet" and "offsetUnset" are not available. Please use other public methods instead: ' . implode(', ', array_map(static fn(string $method) => '"' . $method . '"', $availableMethods)));
     }
@@ -69,10 +66,13 @@ abstract class AbstractRegistration implements RegistrationPropertyInterface, Ar
 
     protected static function getPublicMethods(string $className): array
     {
-        return array_map(static fn(ReflectionMethod $method) => $method->getName(),
-            array_filter(GeneralUtility::makeInstance(ReflectionClass::class, $className)->getMethods(),
-                static fn(ReflectionMethod $method) => !$method->isStatic() && $method->isPublic() && !str_starts_with($method->getName(), '__')
-            ));
+        return array_map(
+            static fn(\ReflectionMethod $method) => $method->getName(),
+            array_filter(
+                GeneralUtility::makeInstance(\ReflectionClass::class, $className)->getMethods(),
+                static fn(\ReflectionMethod $method) => !$method->isStatic() && $method->isPublic() && !str_starts_with($method->getName(), '__')
+            )
+        );
     }
 
     abstract public static function create(string $title): RegistrationPropertyInterface;

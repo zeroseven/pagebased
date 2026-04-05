@@ -142,7 +142,7 @@ class DemandProperty
             if (count(array_diff($this->parseValue($value), $this->getValue())) === 0) {
                 return true;
             }
-        } else if ($this->parseValue($value) === $this->getValue()) {
+        } elseif ($this->parseValue($value) === $this->getValue()) {
             return true;
         }
 

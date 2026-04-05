@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Pagination;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Exception\BadConstraintException;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Utility\CastUtility;

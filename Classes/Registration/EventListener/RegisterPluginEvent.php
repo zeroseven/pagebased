@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Registration\EventListener;
 
-use ReflectionClass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use Zeroseven\Pagebased\Registration\AbstractRegistrationPluginProperty;
@@ -21,7 +20,7 @@ class RegisterPluginEvent
             $controllerClassName = $this->registration->getObject()->getControllerClassName();
             $uncachedAction = $plugin->getType() . 'Uncached';
 
-            if (GeneralUtility::makeInstance(ReflectionClass::class, $controllerClassName)->hasMethod($uncachedAction)) {
+            if (GeneralUtility::makeInstance(\ReflectionClass::class, $controllerClassName)->hasMethod($uncachedAction)) {
                 $controllerActions = [$controllerClassName => $plugin->getType(), $uncachedAction];
                 $nonCacheableControllerActions = [$controllerClassName => $uncachedAction];
             } else {

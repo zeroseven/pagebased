@@ -13,10 +13,10 @@ call_user_func(static function (string $table) {
                 'type' => 'check',
                 'items' => [[
                     'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled',
-                    'value' => 1
+                    'value' => 1,
                 ]],
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ],
         'pagebased_date' => [
             'exclude' => false,
@@ -27,8 +27,8 @@ call_user_func(static function (string $table) {
                 'type' => 'datetime',
                 'format' => 'date',
                 'required' => true,
-                'default' => time()
-            ]
+                'default' => time(),
+            ],
         ],
         'pagebased_tags' => [
             'exclude' => true,
@@ -38,8 +38,8 @@ call_user_func(static function (string $table) {
                 'type' => 'user',
                 'renderType' => 'pagebasedTags',
                 'placeholder' => 'ADD TAGS …',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'pagebased_topics' => [
             'exclude' => true,
@@ -52,8 +52,8 @@ call_user_func(static function (string $table) {
                 'foreign_table' => 'tx_pagebased_domain_model_topic',
                 'MM' => 'tx_pagebased_object_topic_mm',
                 'itemsProcFunc' => \Zeroseven\Pagebased\Backend\TCA\ItemsProcFunc::class . '->topics',
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ],
         'pagebased_contact' => [
             'exclude' => true,
@@ -69,9 +69,9 @@ call_user_func(static function (string $table) {
                 'items' => [[
                     'label' => '-',
                     'value' => 0,
-                    'icon' => $GLOBALS['TCA']['tx_pagebased_domain_model_contact']['ctrl']['typeicon_classes']['default'] ?? ''
-                ]]
-            ]
+                    'icon' => $GLOBALS['TCA']['tx_pagebased_domain_model_contact']['ctrl']['typeicon_classes']['default'] ?? '',
+                ]],
+            ],
         ],
         'pagebased_relations_to' => [
             'exclude' => true,
@@ -88,7 +88,7 @@ call_user_func(static function (string $table) {
                 'autoSizeMax' => 10,
                 'maxitems' => 99,
                 'filter' => [[
-                    'userFunc' => \Zeroseven\Pagebased\Backend\TCA\GroupFilter::class . '->filterObject'
+                    'userFunc' => \Zeroseven\Pagebased\Backend\TCA\GroupFilter::class . '->filterObject',
                 ]],
                 'suggestOptions' => [
                     'default' => [
@@ -97,13 +97,13 @@ call_user_func(static function (string $table) {
                         'searchWholePhrase' => true,
                     ],
                     $table => [
-                        'addWhere' => ' AND ' . $table . '.uid != ###THIS_UID###'
-                    ]
+                        'addWhere' => ' AND ' . $table . '.uid != ###THIS_UID###',
+                    ],
                 ],
                 'elementBrowserEntryPoints' => [
-                    $table => '###CURRENT_PID###'
-                ]
-            ]
+                    $table => '###CURRENT_PID###',
+                ],
+            ],
         ],
         'pagebased_relations_from' => [
             'exclude' => true,
@@ -117,8 +117,8 @@ call_user_func(static function (string $table) {
                 'size' => 5,
                 'maxitems' => 100,
                 'MM' => 'tx_pagebased_relation_mm',
-                'readOnly' => true
-            ]
+                'readOnly' => true,
+            ],
         ],
         'pagebased_redirect_category' => [
             'exclude' => true,
@@ -130,27 +130,27 @@ call_user_func(static function (string $table) {
                 'type' => 'check',
                 'items' => [[
                     'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.enabled',
-                    'value' => 1
+                    'value' => 1,
                 ]],
-                'default' => 0
-            ]
-        ]
+                'default' => 0,
+            ],
+        ],
     ]);
 
     // System relevant fields must exist in TCA to map their values to the model
     foreach ([
-                 'SYS_LASTCHANGED', 'crdate',
-                 \Zeroseven\Pagebased\Utility\DetectionUtility::SITE_FIELD_NAME,
-                 \Zeroseven\Pagebased\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
-                 \Zeroseven\Pagebased\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME
-             ] as $fieldName) {
+        'SYS_LASTCHANGED', 'crdate',
+        \Zeroseven\Pagebased\Utility\DetectionUtility::SITE_FIELD_NAME,
+        \Zeroseven\Pagebased\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
+        \Zeroseven\Pagebased\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME,
+    ] as $fieldName) {
         isset($GLOBALS['TCA'][$table]['columns'][$fieldName])
         || \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [$fieldName => ['config' => ['type' => 'passthrough']]]);
     }
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.tab.pagebased_settings, pagebased_top, pagebased_date, pagebased_tags, pagebased_topics, pagebased_contact, pagebased_relations_to, pagebased_relations_from, pagebased_redirect_category,' . implode(',', [
-            \Zeroseven\Pagebased\Utility\DetectionUtility::SITE_FIELD_NAME,
-            \Zeroseven\Pagebased\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
-            \Zeroseven\Pagebased\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME
-        ]), '');
+        \Zeroseven\Pagebased\Utility\DetectionUtility::SITE_FIELD_NAME,
+        \Zeroseven\Pagebased\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
+        \Zeroseven\Pagebased\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME,
+    ]), '');
 }, 'pages');

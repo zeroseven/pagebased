@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Domain\Model\Demand;
 
-use ReflectionClass;
-use ReflectionProperty;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception;
@@ -24,7 +22,7 @@ abstract class AbstractDemand implements DemandInterface
     protected array $properties = [];
     protected ?array $tableDefinition = null;
 
-    /** @throws TypeException | PropertyException */
+    /** @throws TypeException|PropertyException */
     public function __construct(array $parameterArray = null)
     {
         $this->initProperties();
@@ -41,15 +39,15 @@ abstract class AbstractDemand implements DemandInterface
         $this->addProperty(self::PROPERTY_MAX_ITEMS, DemandProperty::TYPE_INTEGER);
     }
 
-    protected function getType(ReflectionProperty $reflection, array $tableDefinition, ColumnMap $columnMap, string $tableName): ?string
+    protected function getType(\ReflectionProperty $reflection, array $tableDefinition, ColumnMap $columnMap, string $tableName): ?string
     {
         // The field must not be defined in table controls
         if ($ctrl = $GLOBALS['TCA'][$tableName]['ctrl']) {
             $fieldName = $columnMap->getColumnName();
 
             if (
-                'uid' === $fieldName ||
-                'pid' === $fieldName ||
+                $fieldName === 'uid' ||
+                $fieldName === 'pid' ||
                 ($ctrl['cruser_id'] ?? null) === $fieldName ||
                 ($ctrl['descriptionColumn'] ?? null) === $fieldName ||
                 ($ctrl['editlock'] ?? null) === $fieldName ||
@@ -158,7 +156,7 @@ abstract class AbstractDemand implements DemandInterface
         return isset($this->properties[$propertyName]);
     }
 
-    /** @throws TypeException | PropertyException */
+    /** @throws TypeException|PropertyException */
     public function setProperty(string $propertyName, mixed $value, bool $toggle = null): self
     {
         if ($property = $this->properties[$propertyName] ?? null) {
@@ -170,13 +168,13 @@ abstract class AbstractDemand implements DemandInterface
         return $this;
     }
 
-    /** @throws TypeException | PropertyException */
+    /** @throws TypeException|PropertyException */
     public function toggleProperty(string $propertyName, mixed $value): self
     {
         return $this->setProperty($propertyName, $value, true);
     }
 
-    /** @throws TypeException | PropertyException */
+    /** @throws TypeException|PropertyException */
     public function setProperties(array $propertyArray, bool $ignoreEmptyValues = null, bool $toggle = null): self
     {
         foreach ($propertyArray as $key => $value) {
@@ -192,13 +190,13 @@ abstract class AbstractDemand implements DemandInterface
         return $this;
     }
 
-    /** @throws TypeException | PropertyException */
+    /** @throws TypeException|PropertyException */
     public function toggleProperties(array $propertyArray, bool $ignoreEmptyValues = null): self
     {
         return $this->setProperties($propertyArray, $ignoreEmptyValues, true);
     }
 
-    /** @throws TypeException | PropertyException */
+    /** @throws TypeException|PropertyException */
     public function setParameterArray(array $parameterArray, bool $ignoreEmptyValues = null): self
     {
         foreach ($this->properties as $property) {
@@ -267,7 +265,7 @@ abstract class AbstractDemand implements DemandInterface
 
     public function getCopy(): self
     {
-        $clone = GeneralUtility::makeInstance(get_class($this));
+        $clone = GeneralUtility::makeInstance(static::class);
 
         foreach ($this->properties as $property) {
             if (!$clone->hasProperty($property->getName())) {
@@ -286,7 +284,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->getProperty(self::PROPERTY_UID_LIST)->getValue();
     }
 
-    /** @throws TypeException | PropertyException */
+    /** @throws TypeException|PropertyException */
     public function setUidList(mixed $value): self
     {
         $this->setProperty(self::PROPERTY_UID_LIST, $value);
@@ -300,7 +298,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->getProperty(self::PROPERTY_ORDER_BY)->getValue();
     }
 
-    /** @throws TypeException | PropertyException */
+    /** @throws TypeException|PropertyException */
     public function setOrderBy(mixed $value): self
     {
         $this->setProperty(self::PROPERTY_ORDER_BY, $value);
@@ -314,7 +312,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this->getProperty(self::PROPERTY_MAX_ITEMS)->getValue();
     }
 
-    /** @throws TypeException | PropertyException */
+    /** @throws TypeException|PropertyException */
     public function setMaxItems(mixed $value): self
     {
         $this->setProperty(self::PROPERTY_MAX_ITEMS, $value);
@@ -322,7 +320,7 @@ abstract class AbstractDemand implements DemandInterface
         return $this;
     }
 
-    /** @throws TypeException | PropertyException | ValueException */
+    /** @throws TypeException|PropertyException|ValueException */
     public function __call($name, $arguments)
     {
         if (preg_match('/((?:s|g)et|is|has)([A-Z].*)/', $name, $matches)) {

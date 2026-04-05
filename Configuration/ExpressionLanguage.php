@@ -1,6 +1,7 @@
 <?php
+
 return [
     'typoscript' => [
-        \Zeroseven\Pagebased\ExpressionLanguage\TypoScriptConditionProvider::class
-    ]
+        \Zeroseven\Pagebased\ExpressionLanguage\TypoScriptConditionProvider::class,
+    ],
 ];

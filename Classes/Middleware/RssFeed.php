@@ -98,8 +98,8 @@ class RssFeed implements MiddlewareInterface
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][self::CACHE_KEY] ??= [
             'options' => [
-                'defaultLifetime' => 18000 // 5 hours
-            ]
+                'defaultLifetime' => 18000, // 5 hours
+            ],
         ];
     }
 
@@ -150,7 +150,7 @@ class RssFeed implements MiddlewareInterface
                             'Content-Type' => 'application/rss+xml; charset=utf-8',
                             'X-Robots-Tag' => 'noindex',
                             'X-Typo3-Extension' => 'pagebased',
-                            'X-Xml-Identifier' => $identifier
+                            'X-Xml-Identifier' => $identifier,
                         ]);
                     }
                 } catch (DBALException | Exception $e) {

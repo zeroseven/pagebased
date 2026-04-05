@@ -6,7 +6,6 @@ namespace Zeroseven\Pagebased\Domain\Model;
 
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use Zeroseven\Pagebased\Domain\Model\Entity\PageObject;
 
 interface ObjectInterface extends PageEntityInterface
 {

@@ -42,7 +42,7 @@ class FlexFormSheetConfiguration
     {
         $this->fields[$fieldKey] = array_merge($options ?? [], [
             'label' => $fieldTitle ?? $fieldKey,
-            'config' => $fieldConfig
+            'config' => $fieldConfig,
         ]);
 
         return $this;

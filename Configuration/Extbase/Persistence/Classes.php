@@ -8,63 +8,63 @@ return [
         'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
         'properties' => [
             'fileReferences' => [
-                'fieldName' => 'media'
+                'fieldName' => 'media',
             ],
             'documentType' => [
-                'fieldName' => 'doktype'
+                'fieldName' => 'doktype',
             ],
             'navigationTitle' => [
-                'fieldName' => 'nav_title'
+                'fieldName' => 'nav_title',
             ],
             'lastChangeDate' => [
-                'fieldName' => 'SYS_LASTCHANGED'
+                'fieldName' => 'SYS_LASTCHANGED',
             ],
             'createDate' => [
-                'fieldName' => 'crdate'
+                'fieldName' => 'crdate',
             ],
             'accessStartDate' => [
-                'fieldName' => 'starttime'
+                'fieldName' => 'starttime',
             ],
             'accessEndDate' => [
-                'fieldName' => 'endtime'
-            ]
-        ]
+                'fieldName' => 'endtime',
+            ],
+        ],
     ],
     \Zeroseven\Pagebased\Domain\Model\AbstractObject::class => [
         'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
         'properties' => [
             'top' => [
-                'fieldName' => 'pagebased_top'
+                'fieldName' => 'pagebased_top',
             ],
             'date' => [
-                'fieldName' => 'pagebased_date'
+                'fieldName' => 'pagebased_date',
             ],
             'tagsString' => [
-                'fieldName' => 'pagebased_tags'
+                'fieldName' => 'pagebased_tags',
             ],
             'topics' => [
-                'fieldName' => 'pagebased_topics'
+                'fieldName' => 'pagebased_topics',
             ],
             'contact' => [
-                'fieldName' => 'pagebased_contact'
+                'fieldName' => 'pagebased_contact',
             ],
             'relationsTo' => [
-                'fieldName' => 'pagebased_relations_to'
+                'fieldName' => 'pagebased_relations_to',
             ],
             'relationsFrom' => [
-                'fieldName' => 'pagebased_relations_from'
+                'fieldName' => 'pagebased_relations_from',
             ],
             'childObject' => [
-                'fieldName' => '_pagebased_child_object'
-            ]
-        ]
+                'fieldName' => '_pagebased_child_object',
+            ],
+        ],
     ],
     \Zeroseven\Pagebased\Domain\Model\AbstractCategory::class => [
         'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
         'properties' => [
             'redirectCategory' => [
-                'fieldName' => 'pagebased_redirect_category'
-            ]
-        ]
-    ]
+                'fieldName' => 'pagebased_redirect_category',
+            ],
+        ],
+    ],
 ];

@@ -24,7 +24,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
     abstract protected function detectRegistration(): ?Registration;
 
-    /** @throws Exception | ValueException */
+    /** @throws Exception|ValueException */
     public function render(): string
     {
         $registration = RegistrationService::getRegistrationByIdentifier($this->arguments['registration'] ?? '');

@@ -1,35 +1,136 @@
 {
-  "name": "zeroseven/pagebased",
-  "license": "GPL-2.0-only",
-  "type": "typo3-cms-extension",
-  "description": "The ultimate tool to create page based extensions",
-  "authors": [
-    {
-      "name": "zeroseven design studios GmbH",
-      "email": "typo3@zeroseven.de",
-      "homepage": "https://www.zeroseven.de/",
-      "role": "Company"
-    },
-    {
-      "name": "Raphael Thanner",
-      "role": "Developer"
-    }
-  ],
-  "require": {
-    "ext-json": "*",
-    "ext-pdo": "*",
-    "php": "^8.0 | ^8.1",
-    "symfony/property-access": "*",
-    "typo3/cms-core": "^13.4"
-  },
-  "autoload": {
-    "psr-4": {
-      "Zeroseven\\Pagebased\\": "Classes"
-    }
-  },
-  "extra": {
-    "typo3/cms": {
-      "extension-key": "pagebased"
-    }
-  }
+	"name": "zeroseven/pagebased",
+	"description": "The ultimate tool to create page based extensions",
+	"license": "GPL-2.0-only",
+	"type": "typo3-cms-extension",
+	"authors": [
+		{
+			"name": "zeroseven design studios GmbH",
+			"email": "typo3@zeroseven.de",
+			"homepage": "https://www.zeroseven.de/",
+			"role": "Company"
+		},
+		{
+			"name": "Raphael Thanner",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": "^8.2 || ^8.3",
+		"ext-json": "*",
+		"ext-pdo": "*",
+		"symfony/property-access": "*",
+		"typo3/cms-core": "^13.4"
+	},
+	"require-dev": {
+		"armin/editorconfig-cli": "^2.1",
+		"captainhook/captainhook": "^5.25",
+		"ergebnis/composer-normalize": "^2.48",
+		"friendsofphp/php-cs-fixer": "^3.0",
+		"phpmd/phpmd": "^2.13",
+		"phpunit/phpcov": "^9.0",
+		"phpunit/phpunit": "^10.1",
+		"ssch/typo3-rector": "2.15 || ^3.6",
+		"typo3/cms-install": "^13.4",
+		"typo3/coding-standards": "^0.8.0",
+		"typo3/testing-framework": "^8.0"
+	},
+	"minimum-stability": "stable",
+	"prefer-stable": true,
+	"autoload": {
+		"psr-4": {
+			"Zeroseven\\Pagebased\\": "Classes"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Zeroseven\\Pagebased\\Tests\\": "Tests/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"ergebnis/composer-normalize": true,
+			"phpstan/extension-installer": true,
+			"typo3/class-alias-loader": true,
+			"typo3/cms-composer-installers": true
+		},
+		"bin-dir": ".build/bin",
+		"optimize-autoloader": true,
+		"sort-packages": true,
+		"vendor-dir": ".build/vendor"
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "pagebased",
+			"web-dir": ".build/public"
+		}
+	},
+	"scripts": {
+		"post-install-cmd": "captainhook install --configuration captainhook.json --force --skip-existing",
+		"post-update-cmd": "captainhook install --configuration captainhook.json --force --skip-existing",
+		"post-autoload-dump": [
+			"TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
+		],
+		"fix": [
+			"@fix:composer",
+			"@fix:editorconfig",
+			"@fix:php"
+		],
+		"fix:composer": "@composer normalize",
+		"fix:editorconfig": ".build/bin/ec --fix",
+		"fix:php": ".build/bin/php-cs-fixer fix",
+		"fix:rector": ".build/bin/rector process",
+		"lint": [
+			"@lint:composer",
+			"@lint:editorconfig",
+			"@lint:php",
+			"@lint:phpmd",
+			"@lint:rector"
+		],
+		"lint:composer": "@fix:composer --dry-run",
+		"lint:editorconfig": ".build/bin/ec",
+		"lint:php": "@fix:php --dry-run",
+		"lint:phpmd": ".build/bin/phpmd Classes/ ansi .phpmd.xml --exclude Tests/,vendor/",
+		"lint:rector": ".build/bin/rector process --dry-run",
+		"sca": [
+			"@sca:php"
+		],
+		"sca:php": ".build/bin/phpstan analyse -c phpstan.neon",
+		"test": [
+			"@test:functional",
+			"@test:unit"
+		],
+		"test:coverage": [
+			"@test:coverage:functional",
+			"@test:coverage:unit",
+			"@test:coverage:merge"
+		],
+		"test:coverage:functional": ".build/bin/phpunit -c phpunit.functional.xml",
+		"test:coverage:merge": ".build/bin/phpcov merge --html .build/coverage/html/_merged --clover .build/coverage/clover.xml --text php://stdout .build/coverage/php",
+		"test:coverage:unit": ".build/bin/phpunit -c phpunit.unit.xml",
+		"test:functional": "@test:coverage:functional --no-coverage",
+		"test:unit": "@test:coverage:unit --no-coverage"
+	},
+	"scripts-descriptions": {
+		"fix": "Fix all code style issues (composer, editorconfig, PHP)",
+		"fix:composer": "Normalize composer.json format",
+		"fix:editorconfig": "Apply EditorConfig fixes",
+		"fix:php": "Apply PHP-CS-Fixer code style fixes",
+		"fix:rector": "Apply Rector refactoring suggestions",
+		"lint": "Run all linters (composer, editorconfig, PHP, PHPMD, Rector)",
+		"lint:composer": "Validate composer.json format (dry-run)",
+		"lint:editorconfig": "Check EditorConfig compliance",
+		"lint:php": "Check PHP code style with PHP-CS-Fixer (dry-run)",
+		"lint:phpmd": "Run PHP Mess Detector",
+		"lint:rector": "Check Rector refactoring suggestions (dry-run)",
+		"sca": "Run all static code analysis",
+		"sca:php": "Run PHPStan static analysis",
+		"test": "Run all tests (functional and unit)",
+		"test:coverage": "Run all tests with coverage reports",
+		"test:coverage:functional": "Run functional tests with coverage",
+		"test:coverage:merge": "Merge coverage reports from functional and unit tests",
+		"test:coverage:unit": "Run unit tests with coverage",
+		"test:functional": "Run functional tests only",
+		"test:unit": "Run unit tests only"
+	}
 }

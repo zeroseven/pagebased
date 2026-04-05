@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Domain\Model;
 
-use DateTime;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -21,7 +20,7 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
     protected const TAG_DELIMITER = ',';
 
     protected bool $top;
-    protected DateTime $date;
+    protected \DateTime $date;
     protected string $tagsString;
     protected array $tags = [];
     protected ?Contact $contact = null;
@@ -29,31 +28,31 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
     protected bool $childObject;
 
     /**
-     * @var ObjectStorage<Topic> | null
+     * @var ObjectStorage<Topic>|null
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected ?ObjectStorage $topics = null;
 
     /**
-     * @var ObjectInterface | null
+     * @var ObjectInterface|null
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected ?ObjectInterface $linkedObject = null;
 
     /**
-     * @var ObjectInterface | null
+     * @var ObjectInterface|null
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected ?ObjectInterface $parentObject = null;
 
     /**
-     * @var QueryResultInterface | null
+     * @var QueryResultInterface|null
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected ?QueryResultInterface $childObjects = null;
 
     /**
-     * @var AbstractCategory | null
+     * @var AbstractCategory|null
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected ?AbstractCategory $category = null;
@@ -94,12 +93,12 @@ abstract class AbstractObject extends AbstractPage implements ObjectInterface
         return $this;
     }
 
-    public function getDate(): ?DateTime
+    public function getDate(): ?\DateTime
     {
         return $this->date ?? null;
     }
 
-    public function setDate(DateTime $date): self
+    public function setDate(\DateTime $date): self
     {
         $this->date = $date;
 
