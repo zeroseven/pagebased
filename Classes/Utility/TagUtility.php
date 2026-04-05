@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Utility;
 
+use TYPO3\CMS\Core\Configuration\Features;
 use TYPO3\CMS\Core\Context\LanguageAspect;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Domain\Repository\AbstractObjectRepository;
 use Zeroseven\Pagebased\Domain\Repository\RepositoryInterface;
 use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Registration\RegistrationService;
+use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class TagUtility
 {

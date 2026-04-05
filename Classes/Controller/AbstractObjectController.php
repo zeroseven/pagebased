@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Controller;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\ParameterType;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
@@ -128,10 +128,10 @@ abstract class AbstractObjectController extends AbstractController implements Ob
             $flexForm = $queryBuilder
                 ->select('pi_flexform')
                 ->from('tt_content')
-                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)))
+                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)))
                 ->executeQuery()
                 ->fetchOne();
-        } catch (DBALException | Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
 

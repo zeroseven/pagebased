@@ -68,12 +68,15 @@ abstract class AbstractDemand implements DemandInterface
 
         // Get type by class reflection
         if ($reflectionType = $reflection->getType()) {
-            if (in_array(($type = $reflectionType->getName()), [DemandProperty::TYPE_ARRAY, DemandProperty::TYPE_INTEGER, DemandProperty::TYPE_BOOLEAN, DemandProperty::TYPE_STRING], true)) {
-                return $type;
-            }
+            // getName() is only available on ReflectionNamedType (PHP 8.0+)
+            if ($reflectionType instanceof \ReflectionNamedType) {
+                if (in_array(($type = $reflectionType->getName()), [DemandProperty::TYPE_ARRAY, DemandProperty::TYPE_INTEGER, DemandProperty::TYPE_BOOLEAN, DemandProperty::TYPE_STRING], true)) {
+                    return $type;
+                }
 
-            if ($reflectionType->getName() === ObjectStorage::class) {
-                return DemandProperty::TYPE_ARRAY;
+                if ($reflectionType->getName() === ObjectStorage::class) {
+                    return DemandProperty::TYPE_ARRAY;
+                }
             }
         }
 
@@ -114,7 +117,7 @@ abstract class AbstractDemand implements DemandInterface
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($dataMap->getTableName());
 
             if (($schemaManager = $queryBuilder->createSchemaManager()) && $tableDefinition = $schemaManager->listTableColumns($dataMap->getTableName())) {
-                foreach (GeneralUtility::makeInstance(ReflectionClass::class, $dataMap->getClassName())->getProperties() ?? [] as $reflection) {
+                foreach (GeneralUtility::makeInstance(\ReflectionClass::class, $dataMap->getClassName())->getProperties() ?? [] as $reflection) {
                     $name = $reflection->getName();
 
                     // Check if the property exists in the database and the type can be handled
