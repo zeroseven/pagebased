@@ -68,15 +68,12 @@ abstract class AbstractDemand implements DemandInterface
 
         // Get type by class reflection
         if ($reflectionType = $reflection->getType()) {
-            // getName() is only available on ReflectionNamedType (PHP 8.0+)
-            if ($reflectionType instanceof \ReflectionNamedType) {
-                if (in_array(($type = $reflectionType->getName()), [DemandProperty::TYPE_ARRAY, DemandProperty::TYPE_INTEGER, DemandProperty::TYPE_BOOLEAN, DemandProperty::TYPE_STRING], true)) {
-                    return $type;
-                }
+            if (in_array(($type = $reflectionType->getName()), [DemandProperty::TYPE_ARRAY, DemandProperty::TYPE_INTEGER, DemandProperty::TYPE_BOOLEAN, DemandProperty::TYPE_STRING], true)) {
+                return $type;
+            }
 
-                if ($reflectionType->getName() === ObjectStorage::class) {
-                    return DemandProperty::TYPE_ARRAY;
-                }
+            if ($reflectionType->getName() === ObjectStorage::class) {
+                return DemandProperty::TYPE_ARRAY;
             }
         }
 
@@ -87,7 +84,7 @@ abstract class AbstractDemand implements DemandInterface
 
         // Check table definition
         if (($column = $tableDefinition[$columnMap->getColumnName()] ?? null) && $type = $column->getType()) {
-            $typeName = $type->getName();
+            $typeName = method_exists($type, 'getName') ? $type->getName() : $type::class;
             if (str_contains($typeName, 'SmallInt') || $typeName === 'smallint') {
                 return DemandProperty::TYPE_BOOLEAN;
             }

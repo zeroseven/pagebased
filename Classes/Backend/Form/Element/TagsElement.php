@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Backend\Form\Element;
 
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
-use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
-use Zeroseven\Pagebased\Exception\ValueException;
 use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Registration\RegistrationService;
 use Zeroseven\Pagebased\Utility\DetectionUtility;

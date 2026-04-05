@@ -50,11 +50,11 @@ class ObjectUtility
     public static function isSystemPage(int $pageUid = null, array $row = null): bool
     {
         return ($documentType = self::getDocumentType($pageUid, $row)) && in_array($documentType, [
-                PageRepository::DOKTYPE_BE_USER_SECTION,
-                PageRepository::DOKTYPE_MOUNTPOINT,
-                PageRepository::DOKTYPE_SPACER,
-                PageRepository::DOKTYPE_SYSFOLDER
-            ], true);
+            PageRepository::DOKTYPE_BE_USER_SECTION,
+            PageRepository::DOKTYPE_MOUNTPOINT,
+            PageRepository::DOKTYPE_SPACER,
+            PageRepository::DOKTYPE_SYSFOLDER,
+        ], true);
     }
 
     public static function isCategory(int $pageUid = null, array $row = null): ?Registration

@@ -13,7 +13,6 @@ use Zeroseven\Pagebased\Domain\Repository\AbstractObjectRepository;
 use Zeroseven\Pagebased\Domain\Repository\RepositoryInterface;
 use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Registration\RegistrationService;
-use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class TagUtility
 {
