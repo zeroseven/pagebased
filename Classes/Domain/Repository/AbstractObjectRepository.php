@@ -130,12 +130,13 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
      * cache and automatically invalidated when pages are modified.
      *
      * @param ObjectDemandInterface $demand Used for optional category-tree filtering.
+     * @param int|null $languageUid Optional language UID override. If null, uses current context language.
      * @return string[] Raw comma-separated tag strings, one entry per page row.
      */
-    public function findTagStrings(ObjectDemandInterface $demand): array
+    public function findTagStrings(ObjectDemandInterface $demand, ?int $languageUid = null): array
     {
         $categoryUid = $demand->getCategory();
-        $languageUid = (int)GeneralUtility::makeInstance(Context::class)
+        $languageUid = $languageUid ?? (int)GeneralUtility::makeInstance(Context::class)
             ->getPropertyFromAspect('language', 'id', 0);
         $cacheKey = 'pagebased_tags_' . md5(
             $this->registration->getIdentifier() . '_' . $categoryUid . '_' . $languageUid
@@ -162,6 +163,15 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
                 ),
                 $qb->expr()->neq('pagebased_tags', $qb->createNamedParameter(''))
             );
+
+        // Respect language setting
+        if ($languageUid === -1) {
+            // -1 means all languages, no additional constraint needed
+        } else {
+            $qb->andWhere(
+                $qb->expr()->eq('sys_language_uid', $qb->createNamedParameter($languageUid, \Doctrine\DBAL\ParameterType::INTEGER))
+            );
+        }
 
         if ($categoryUid > 0) {
             $pageIds = array_keys(RootLineUtility::collectPagesBelow($categoryUid));
