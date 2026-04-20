@@ -15,8 +15,8 @@ abstract class AbstractController extends ActionController
     {
         parent::initializeAction();
 
-        /** @extensionScannerIgnoreLine */
-        $this->contentData = $this->configurationManager->getContentObject()->data;
+        $contentObject = $this->request->getAttribute('currentContentObject');
+        $this->contentData = $contentObject?->data;
     }
 
     protected function resolveView(): ViewInterface

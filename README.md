@@ -246,3 +246,44 @@ The editor receives a note in the backend for which objects there are, e.g. a co
 ### Do I mandatorily need an object category?
 
 Yes! The subpages of an object category are automatically identified as objects. Therefore, it is necessary to create a category first. The category behaves, similarly to objects, like a "normal" TYPO3 page.
+
+## Changelog
+
+### Unreleased (2026-04-10)
+
+- **Language parameter**: Add optional language UID parameter to findTagStrings method
+- **SEO improvements**: Add rel="nofollow" attribute to tag filter links
+
+### 2.1.0 (2026-03-05)
+
+- **Performance optimization**: Major performance improvements with caching, O(1) registration lookup index, and optimized tag queries
+- **Database efficiency**: Add database indexes and RootLine cache, replace deprecated QueryBuilder::execute()
+- **Development**: Add CI/CD workflows, GitHub Actions, DDEV test runner, and comprehensive unit/functional tests
+- **Tag management**: Add nonglobal tag scoping via feature flag, optimize tag deduplication
+- **Bug fixes**: Fix SQL array binding, functional tests, and deprecated method usage
+
+### 2.0.1 (2025-11-27)
+
+- **Bug fixes**: Ensure fallback for null value when fetching tags in TagsElement
+
+### 2.0.0 (2025-01-31)
+
+- **Relations management**: Filter and maintain relations in default language only
+- **Object handling improvements**: Update object handling from detaching to attaching
+- **Error handling**: Catch siteFinder errors in TCA event
+- **Code modernization**: Update FlashMessage severity to ContextualFeedbackSeverity
+
+### 1.4.0 (2024-10-10)
+
+- **Global categories feature**: Merge global categories support
+- **Child objects support**: Add option to show/hide child objects with new isChildObject property
+- **Category improvements**: Fix category selection and TCA improvements
+- **Stage selection**: Add pagination link to select stage
+- **Topics ordering**: Order topics by title
+
+### 1.3.0 (2023-11-08)
+
+- **TYPO3 12 support**: Full compatibility with TYPO3 12
+- **Deprecation fixes**: Fix deprecations #100053 and #97787
+- **TCA migration**: Migrate TCA to new syntax
+- **Event system**: Change event for registration validation

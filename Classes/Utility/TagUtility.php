@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Utility;
 
 use TYPO3\CMS\Core\Configuration\Features;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
@@ -97,9 +98,12 @@ class TagUtility
         if ($languageUid !== null) {
             $querySettings = $repository->getDefaultQuerySettings();
 
-            $languageUid === -1
-                ? $querySettings->setRespectSysLanguage(false)
-                : $querySettings->setLanguageUid($languageUid);
+            if ($languageUid === -1) {
+                $querySettings->setRespectSysLanguage(false);
+            } else {
+                $languageAspect = new LanguageAspect($languageUid, $languageUid, LanguageAspect::OVERLAYS_MIXED);
+                $querySettings->setLanguageAspect($languageAspect);
+            }
 
             $repository->setDefaultQuerySettings($querySettings);
         }

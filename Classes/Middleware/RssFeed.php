@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
@@ -67,7 +68,8 @@ class RssFeed implements MiddlewareInterface
 
         if ($languageId = $language->getLanguageId()) {
             $querySettings = $repository->getDefaultQuerySettings();
-            $querySettings->setLanguageUid($languageId);
+            $languageAspect = new LanguageAspect($languageId, $languageId, LanguageAspect::OVERLAYS_MIXED);
+            $querySettings->setLanguageAspect($languageAspect);
             $repository->setDefaultQuerySettings($querySettings);
         }
 
