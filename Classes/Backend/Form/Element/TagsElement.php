@@ -65,6 +65,7 @@ class TagsElement extends AbstractFormElement
 
         return '
             <div class="form-control-wrap">
+                <legend class="form-label t3js-formengine-label">' . htmlspecialchars($this->data['parameterArray']['fieldConf']['label'] ?? '') . '</legend>
                 <div class="form-wizards-wrap">
                     <div class="form-wizards-element">' . $formField . '</div>
                     <div class="form-wizards-items-bottom">' . ($fieldWizardResult['html'] ?? '') . '</div>
