@@ -7,6 +7,11 @@ on:
         description: 'Version to release (e.g. 1.4.0). Leave empty to auto-detect from commits.'
         required: false
         type: string
+      use_existing_tag:
+        description: 'Use existing latest tag instead of creating a new one'
+        required: false
+        default: false
+        type: boolean
       dry_run:
         description: 'Dry run (do not create tag or release)'
         required: false
@@ -19,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      tag: ${{ steps.version.outputs.version }}
 
     steps:
       - uses: actions/checkout@v6
@@ -39,7 +46,7 @@ jobs:
 
       - name: Auto-detect version bump
         id: version_bump
-        if: ${{ !inputs.version }}
+        if: ${{ !inputs.version && !inputs.use_existing_tag }}
         run: |
           LATEST="${{ steps.latest_tag.outputs.tag }}"
           MAJOR=$(echo "$LATEST" | sed 's/v//' | cut -d. -f1)
@@ -71,6 +78,9 @@ jobs:
         run: |
           if [ -n "${{ inputs.version }}" ]; then
             VERSION="${{ inputs.version }}"
+          elif [ "${{ inputs.use_existing_tag }}" = "true" ]; then
+            VERSION="${{ steps.latest_tag.outputs.tag }}"
+            echo "Using existing tag: $VERSION"
           else
             VERSION="${{ steps.version_bump.outputs.version }}"
           fi
@@ -81,6 +91,7 @@ jobs:
           echo "Release version: v${VERSION}"
 
       - name: Check tag does not exist
+        if: ${{ !inputs.use_existing_tag }}
         run: |
           if git rev-parse "${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
             echo "Tag ${{ steps.version.outputs.version }} already exists!"
@@ -89,6 +100,7 @@ jobs:
 
       - name: Generate changelog
         id: changelog
+        if: ${{ !inputs.use_existing_tag }}
         run: |
           LATEST="${{ steps.latest_tag.outputs.tag }}"
           # Generate changelog for this release only (since last tag)
@@ -103,16 +115,33 @@ jobs:
             --tag "${{ steps.version.outputs.version }}" \
             --output CHANGELOG.md
 
+      - name: Generate changelog for existing tag
+        if: ${{ inputs.use_existing_tag }}
+        run: |
+          CURRENT_TAG="${{ steps.version.outputs.version }}"
+          PREVIOUS_TAG=$(git tag --list 'v*' --sort=-version:refname | grep -A1 "^${CURRENT_TAG}$" | tail -n1)
+          echo "Generating changelog between ${PREVIOUS_TAG} and ${CURRENT_TAG}"
+
+          # Generate changelog for this release only
+          git cliff ${PREVIOUS_TAG}..${CURRENT_TAG} \
+            --config cliff.toml \
+            --output RELEASE_NOTES.md || echo "# Release $CURRENT_TAG" > RELEASE_NOTES.md
+          cat RELEASE_NOTES.md
+
       - name: Show release summary (dry run)
         if: ${{ inputs.dry_run }}
         run: |
           echo "=== DRY RUN ==="
-          echo "Would create tag: ${{ steps.version.outputs.version }}"
+          if [ "${{ inputs.use_existing_tag }}" = "true" ]; then
+            echo "Would use existing tag: ${{ steps.version.outputs.version }}"
+          else
+            echo "Would create tag: ${{ steps.version.outputs.version }}"
+          fi
           echo ""
           cat RELEASE_NOTES.md
 
       - name: Commit CHANGELOG.md
-        if: ${{ !inputs.dry_run }}
+        if: ${{ !inputs.dry_run && !inputs.use_existing_tag }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -120,14 +149,14 @@ jobs:
           git diff --staged --quiet || git commit -m "[TASK] Update CHANGELOG.md for ${{ steps.version.outputs.version }}"
 
       - name: Create tag
-        if: ${{ !inputs.dry_run }}
+        if: ${{ !inputs.dry_run && !inputs.use_existing_tag }}
         run: |
           git tag -a "${{ steps.version.outputs.version }}" \
             -m "Release ${{ steps.version.outputs.version }}"
           git push origin HEAD "${{ steps.version.outputs.version }}"
 
       - name: Create GitHub Release
-        if: ${{ !inputs.dry_run }}
+        if: ${{ !inputs.dry_run && !inputs.use_existing_tag }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.version }}
@@ -143,6 +172,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.release.outputs.tag }}
 
       - name: Publish to TYPO3 TER
         uses: tomasnorre/typo3-upload-ter@v2
