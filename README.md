@@ -255,7 +255,7 @@ Yes! The subpages of an object category are automatically identified as objects.
 - **TYPO3 13 support**: Full compatibility with TYPO3 13
 - **Performance optimization**: Major performance improvements with caching, O(1) registration lookup index, and optimized tag queries
 - **Database efficiency**: Add database indexes and RootLine cache, replace deprecated QueryBuilder::execute()
-- **Development**: Add CI/CD workflows, GitHub Actions, DDEV test runner, and comprehensive unit/functional tests
+- **Development**: Add CI/CD workflows, update release workflow, GitHub Actions, DDEV test runner, and comprehensive unit/functional tests
 - **Tag management**: Add nonglobal tag scoping via feature flag, optimize tag deduplication
 - **Language parameter**: Add optional language UID parameter to findTagStrings method
 - **SEO improvements**: Add rel="nofollow" attribute to tag filter links
