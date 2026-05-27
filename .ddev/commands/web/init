@@ -2,8 +2,8 @@
 
 ## Description: Initialize TYPO3 dev instance for pagebased development
 ## Usage: init [flags]
-## Example: "ddev init" or "ddev init --force" or "ddev init --skip-seed"
-## Flags: [{"Name":"force","Shorthand":"f","Usage":"Force reinit even if TYPO3 is already configured"},{"Name":"skip-seed","Shorthand":"s","Usage":"Skip importing example seed data"},{"Name":"snapshot","Usage":"Create a DB snapshot after successful init"}]
+## Example: "ddev init" or "ddev init --typo3 12" or "ddev init --force"
+## Flags: [{"Name":"force","Shorthand":"f","Usage":"Force reinit even if TYPO3 is already configured"},{"Name":"skip-seed","Shorthand":"s","Usage":"Skip importing example seed data"},{"Name":"snapshot","Usage":"Create a DB snapshot after successful init"},{"Name":"typo3","Usage":"TYPO3 major version to install (12 or 13, default: use composer.lock)","DefValue":""}]
 
 set -Eeuo pipefail
 
@@ -21,13 +21,21 @@ ok()     { echo -e "${GREEN}✓ $*${NC}"; }
 err()    { echo -e "${RED}✗ $*${NC}"; }
 header() { echo -e "\n${BLUE}━━━ $* ━━━${NC}"; }
 
-FORCE=false; SKIP_SEED=false; CREATE_SNAPSHOT=false
+FORCE=false; SKIP_SEED=false; CREATE_SNAPSHOT=false; TYPO3_VERSION=""
 
-for arg in "$@"; do
-    case $arg in
+while [[ $# -gt 0 ]]; do
+    case $1 in
         --force|-f)     FORCE=true ;;
         --skip-seed|-s) SKIP_SEED=true ;;
         --snapshot)     CREATE_SNAPSHOT=true ;;
+        --typo3)
+            shift
+            TYPO3_VERSION="${1:-}"
+            if [[ "$TYPO3_VERSION" != "12" && "$TYPO3_VERSION" != "13" ]]; then
+                err "Invalid TYPO3 version: '$TYPO3_VERSION'. Use 12 or 13."
+                exit 1
+            fi
+            ;;
         --help|-h)
             echo "Usage: ddev init [flags]"
             echo ""
@@ -37,14 +45,18 @@ for arg in "$@"; do
             echo "  -f, --force        Reinitialize even if TYPO3 is already configured"
             echo "  -s, --skip-seed    Skip importing example pagebased pages"
             echo "      --snapshot     Create a DB snapshot after successful init"
+            echo "      --typo3 <ver>  Install specific TYPO3 version (12 or 13)"
             echo ""
             echo "Examples:"
-            echo "  ddev init                  # First-time setup"
+            echo "  ddev init                  # First-time setup (uses composer.lock)"
+            echo "  ddev init --typo3 12       # Setup with TYPO3 v12"
+            echo "  ddev init --typo3 13       # Setup with TYPO3 v13"
             echo "  ddev init --force          # Wipe and reinitialize"
             echo "  ddev init --skip-seed      # Setup without example data"
             exit 0
             ;;
     esac
+    shift
 done
 
 TYPO3_BIN="/var/www/html/.build/bin/typo3"
@@ -74,7 +86,14 @@ fi
 
 # ─── Step 1: Dependencies ─────────────────────────────────────────────────────
 header "Step 1: Dependencies"
-if [ ! -f "/var/www/html/.build/vendor/autoload.php" ]; then
+if [ -n "$TYPO3_VERSION" ]; then
+    info "Installing dependencies for TYPO3 v${TYPO3_VERSION}..."
+    cd /var/www/html && composer update \
+        --with "typo3/cms-core:^${TYPO3_VERSION}.4" \
+        --with "typo3/cms-install:^${TYPO3_VERSION}.4" \
+        --no-interaction --no-progress --prefer-stable
+    ok "Dependencies installed (TYPO3 v${TYPO3_VERSION})"
+elif [ ! -f "/var/www/html/.build/vendor/autoload.php" ]; then
     info "Running composer install..."
     cd /var/www/html && composer install --no-interaction --no-progress
     ok "Dependencies installed"
@@ -152,6 +171,10 @@ echo ""
 echo "  TYPO3 Backend: https://pagebased.ddev.site/typo3"
 echo "  Username:      admin"
 echo "  Password:      Admin1234!"
+echo ""
+if [ -n "$TYPO3_VERSION" ]; then
+echo "  TYPO3 Version: v${TYPO3_VERSION}"
+fi
 echo ""
 echo "  ddev test              # Run tests"
 echo "  ddev seed --force      # Reimport seed data"
