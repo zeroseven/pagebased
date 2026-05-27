@@ -39,12 +39,13 @@ jobs:
         run: ddev composer sca:php
 
   tests:
-    name: Tests (PHP ${{ matrix.php-version }}, ${{ matrix.test-type }})
+    name: Tests (PHP ${{ matrix.php-version }}, TYPO3 ${{ matrix.typo3-version }}, ${{ matrix.test-type }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.3', '8.4']
+        php-version: ['8.2', '8.3']
+        typo3-version: ['12', '13']
         test-type: ['unit', 'functional']
 
     steps:
@@ -54,8 +55,8 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.composer/cache
-          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
-          restore-keys: composer-${{ runner.os }}-
+          key: composer-${{ runner.os }}-typo3${{ matrix.typo3-version }}-php${{ matrix.php-version }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: composer-${{ runner.os }}-typo3${{ matrix.typo3-version }}-php${{ matrix.php-version }}-
 
       - name: Set PHP version
         env:
@@ -66,8 +67,12 @@ jobs:
       - name: Setup DDEV
         uses: ddev/github-action-setup-ddev@v1
 
-      - name: Install dependencies
-        run: ddev composer install
+      - name: Install dependencies for TYPO3 ${{ matrix.typo3-version }}
+        run: |
+          ddev composer update \
+            --with "typo3/cms-core:^${{ matrix.typo3-version }}.4" \
+            --with "typo3/cms-install:^${{ matrix.typo3-version }}.4" \
+            --no-interaction --prefer-stable
 
       - name: Run tests
         run: ddev composer test:${{ matrix.test-type }}
