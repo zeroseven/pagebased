@@ -1891,7 +1891,49 @@ parameters:
 			path: Classes/Utility/DetectionUtility.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Utility\\ObjectUtility\:\:getDocumentType\(\) has parameter \$row with no value type specified in iterable type array\.$#'
+			message: '#^Method Zeroseven\\Pagebased\\Utility\\PageClassifier\:\:getDocumentType\(\) has parameter \$row with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Classes/Utility/PageClassifier.php
+
+		-
+			message: '#^Method Zeroseven\\Pagebased\\Utility\\PageClassifier\:\:isCategory\(\) has parameter \$row with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Classes/Utility/PageClassifier.php
+
+		-
+			message: '#^Method Zeroseven\\Pagebased\\Utility\\PageClassifier\:\:isObject\(\) has parameter \$row with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Classes/Utility/PageClassifier.php
+
+		-
+			message: '#^Method Zeroseven\\Pagebased\\Utility\\PageClassifier\:\:isSystemPage\(\) has parameter \$row with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Classes/Utility/PageClassifier.php
+
+		-
+			message: '#^Method Zeroseven\\Pagebased\\Utility\\PageClassifierInterface\:\:isObject\(\) has parameter \$row with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Classes/Utility/PageClassifierInterface.php
+
+		-
+			message: '#^Method Zeroseven\\Pagebased\\Utility\\PageClassifierInterface\:\:isCategory\(\) has parameter \$row with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Classes/Utility/PageClassifierInterface.php
+
+		-
+			message: '#^Method Zeroseven\\Pagebased\\Utility\\PageClassifierInterface\:\:isSystemPage\(\) has parameter \$row with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Classes/Utility/PageClassifierInterface.php
+
+		-
+			message: '#^Method Zeroseven\\Pagebased\\Utility\\ObjectUtility\:\:isSystemPage\(\) has parameter \$row with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: Classes/Utility/ObjectUtility.php
@@ -1905,24 +1947,6 @@ parameters:
 		-
 			message: '#^Method Zeroseven\\Pagebased\\Utility\\ObjectUtility\:\:isObject\(\) has parameter \$row with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: Classes/Utility/ObjectUtility.php
-
-		-
-			message: '#^Method Zeroseven\\Pagebased\\Utility\\ObjectUtility\:\:isSystemPage\(\) has parameter \$row with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: Classes/Utility/ObjectUtility.php
-
-		-
-			message: '#^Parameter \#1 \$uid of static method Zeroseven\\Pagebased\\Utility\\ObjectUtility\:\:getObjectCache\(\) expects int, int\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Utility/ObjectUtility.php
-
-		-
-			message: '#^Parameter \#1 \$uid of static method Zeroseven\\Pagebased\\Utility\\ObjectUtility\:\:setObjectCache\(\) expects int, int\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: Classes/Utility/ObjectUtility.php
 

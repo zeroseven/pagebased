@@ -4,155 +4,38 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Utility;
 
-use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use TYPO3\CMS\Core\Utility\MathUtility;
-use Zeroseven\Pagebased\Domain\Model\AbstractPage;
-use Zeroseven\Pagebased\Exception\TypeException;
-use Zeroseven\Pagebased\Exception\ValueException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Pagebased\Registration\Registration;
-use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class ObjectUtility
 {
-    protected static function getObjectCache(int $uid): ?Registration
+    private static function classifier(): PageClassifierInterface
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['cache']['object'][$uid] ?? null;
+        return GeneralUtility::makeInstance(PageClassifier::class);
     }
 
-    protected static function setObjectCache(int $uid, ?Registration $registration = null): ?Registration
+    public static function isSystemPage(?int $pageUid = null, ?array $row = null): bool
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['cache']['object'][$uid] = $registration;
+        return self::classifier()->isSystemPage($pageUid, $row);
     }
 
-    protected static function getPageTypeField(): string
+    public static function isCategory(?int $pageUid = null, ?array $row = null): ?Registration
     {
-        return $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'];
+        return self::classifier()->isCategory($pageUid, $row);
     }
 
-    protected static function getDocumentType(int $pageUid = null, array $row = null): int
+    public static function isObject(?int $pageUid = null, ?array $row = null): ?Registration
     {
-        $typeField = self::getPageTypeField();
-
-        if ($documentType = $row[$typeField] ?? null) {
-            return (int)$documentType;
-        }
-
-        if ($pageUid || ($pageUid = (int)($row['uid'] ?? RootLineUtility::getCurrentPage()))) {
-            $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, $typeField);
-
-            return (int)($row[$typeField] ?? 0);
-        }
-
-        return 0;
-    }
-
-    public static function isSystemPage(int $pageUid = null, array $row = null): bool
-    {
-        return ($documentType = self::getDocumentType($pageUid, $row)) && in_array($documentType, [
-            PageRepository::DOKTYPE_BE_USER_SECTION,
-            PageRepository::DOKTYPE_MOUNTPOINT,
-            PageRepository::DOKTYPE_SPACER,
-            PageRepository::DOKTYPE_SYSFOLDER,
-        ], true);
-    }
-
-    public static function isCategory(int $pageUid = null, array $row = null): ?Registration
-    {
-        if (($documentType = self::getDocumentType($pageUid, $row)) && !self::isSystemPage($pageUid, $row)) {
-            return RegistrationService::getRegistrationByCategoryDocumentType($documentType);
-        }
-
-        return null;
-    }
-
-    public static function isObject(int $pageUid = null, array $row = null): ?Registration
-    {
-        $pageUid || ($pageUid = (int)($row['uid'] ?? RootLineUtility::getCurrentPage()));
-
-        if ($registration = self::getObjectCache($pageUid)) {
-            return $registration;
-        }
-
-        if ($pageUid) {
-            $typeField = self::getPageTypeField();
-            $registrationField = DetectionUtility::REGISTRATION_FIELD_NAME;
-
-            if (!isset($row[$typeField], $row[$registrationField])) {
-                $row = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $pageUid, implode(',', [$registrationField, $typeField]));
-            }
-
-            try {
-                if (
-                    ($identifier = $row[$registrationField] ?? null)
-                    && !self::isSystemPage($pageUid, $row)
-                    && !self::isCategory($pageUid, $row)
-                ) {
-                    return self::setObjectCache($pageUid, RegistrationService::getRegistrationByIdentifier($identifier));
-                }
-            } catch (ValueException $e) {
-            }
-        }
-
-        return self::setObjectCache($pageUid);
+        return self::classifier()->isObject($pageUid, $row);
     }
 
     public static function isChildObject(mixed $uid): ?Registration
     {
-        try {
-            if (!self::isSystemPage($uid) && $parentPages = RootLineUtility::collectPagesAbove(CastUtility::int($uid), false, 1)) {
-                foreach ($parentPages as $parentPage) {
-                    if ($registration = self::isObject(null, $parentPage)) {
-                        return $registration;
-                    }
-                }
-            }
-        } catch (TypeException $e) {
-        }
-
-        return null;
-    }
-
-    public static function findRegistrationInRootLine(mixed $startPoint): ?Registration
-    {
-        if (MathUtility::canBeInterpretedAsInteger($startPoint)) {
-            foreach (RootLineUtility::collectPagesAbove($startPoint, true) as $uid => $row) {
-                if ($registration = self::isCategory((int)$uid, $row)) {
-                    return $registration;
-                }
-
-                if ($registration = self::isObject((int)$uid, $row)) {
-                    return $registration;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public static function findObjectInRootLine(mixed $startPoint): ?Registration
-    {
-        if (MathUtility::canBeInterpretedAsInteger($startPoint)) {
-            foreach (RootLineUtility::collectPagesAbove($startPoint, true) as $uid => $row) {
-                if ($registration = self::isObject((int)$uid, $row)) {
-                    return $registration;
-                }
-            }
-        }
-
-        return null;
+        return self::classifier()->isChildObject($uid);
     }
 
     public static function findCategoryInRootLine(mixed $startPoint): ?Registration
     {
-        if (MathUtility::canBeInterpretedAsInteger($startPoint)) {
-            foreach (RootLineUtility::collectPagesAbove($startPoint, true) as $uid => $row) {
-                if ($registration = self::isCategory((int)$uid, $row)) {
-                    return $registration;
-                }
-            }
-        }
-
-        return null;
+        return self::classifier()->findCategoryInRootLine($startPoint);
     }
 }
