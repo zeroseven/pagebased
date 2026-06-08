@@ -87,7 +87,7 @@ class RootLineUtility
             return $rootLine;
         }
 
-        return self::collectPagesBelow($startingPoint);
+        return self::collectPagesAbove($startingPoint);
     }
 
     public static function getRootPage(int $startingPoint = null): int
@@ -164,7 +164,10 @@ class RootLineUtility
     protected static function lookDown(array &$list, int $uid, int $looped, int $depth, QueryBuilder $queryBuilder): void
     {
         if ($looped < $depth) {
-            $queryBuilder->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)));
+            $queryBuilder->where(
+                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)),
+                $queryBuilder->expr()->eq('sys_language_uid', 0)
+            );
 
             $statement = $queryBuilder->executeQuery();
             while ($row = $statement->fetchAssociative()) {
@@ -189,7 +192,7 @@ class RootLineUtility
                     $constraints[] = $queryBuilder->expr()->in($languageField, [-1, $languageId]);
                 }
 
-                if ($hiddenField = $GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled'] ?? null) {
+                if ($hiddenField = $GLOBALS['TCA']['tt_content']['ctrl']['enablecolumns']['disabled'] ?? null) {
                     $constraints[] = $queryBuilder->expr()->eq($hiddenField, 0);
                 }
             }
@@ -268,7 +271,7 @@ class RootLineUtility
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
             $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
             $queryBuilder->select('*')->from('tt_content')
-                ->orderBy($GLOBALS['TCA']['pages']['ctrl']['sortby'] ?? 'uid');
+                ->orderBy($GLOBALS['TCA']['tt_content']['ctrl']['sortby'] ?? 'sorting');
 
             if ($includingStartingPoint !== true && ($parentPageUid = self::getParentPage($startingPoint))) {
                 $startingPoint = $parentPageUid;
