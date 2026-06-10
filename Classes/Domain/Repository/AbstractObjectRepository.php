@@ -129,6 +129,11 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
      * bypassing full Extbase object hydration. Results are cached in TYPO3's data
      * cache and automatically invalidated when pages are modified.
      *
+     * Applies the same nav_hide, l18n_cfg, and child-object exclusion constraints as
+     * createDemandConstraints() so the result set matches what Extbase would return.
+     * For non-default languages, TagUtility::getTags() skips this path and falls back
+     * to full Extbase hydration which handles language overlays correctly.
+     *
      * @param ObjectDemandInterface $demand Used for optional category-tree filtering.
      * @param int|null $languageUid Optional language UID override. If null, uses current context language.
      * @return string[] Raw comma-separated tag strings, one entry per page row.
@@ -138,8 +143,9 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         $categoryUid = $demand->getCategory();
         $languageUid = $languageUid ?? (int)GeneralUtility::makeInstance(Context::class)
             ->getPropertyFromAspect('language', 'id', 0);
+        $excludeChildObjects = $demand->getIncludeChildObjects() === false;
         $cacheKey = 'pagebased_tags_' . md5(
-            $this->registration->getIdentifier() . '_' . $categoryUid . '_' . $languageUid
+            $this->registration->getIdentifier() . '_' . $categoryUid . '_' . $languageUid . '_' . (int)$excludeChildObjects
         );
 
         $cache = $this->getTagsCache();
@@ -171,6 +177,29 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
             $qb->andWhere(
                 $qb->expr()->eq('sys_language_uid', $qb->createNamedParameter($languageUid, \Doctrine\DBAL\ParameterType::INTEGER))
             );
+        }
+
+        // Replicate nav_hide constraint from createDemandConstraints()
+        $qb->andWhere($qb->expr()->eq('nav_hide', $qb->createNamedParameter(0, \Doctrine\DBAL\ParameterType::INTEGER)));
+
+        // Replicate l18n_cfg constraint from createDemandConstraints()
+        $qb->andWhere($qb->expr()->or(
+            $qb->expr()->eq('l18n_cfg', $qb->createNamedParameter(0, \Doctrine\DBAL\ParameterType::INTEGER)),
+            $qb->expr()->and(
+                $qb->expr()->gte('l18n_cfg', $qb->createNamedParameter(1, \Doctrine\DBAL\ParameterType::INTEGER)),
+                $qb->expr()->gte(
+                    $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['languageField'],
+                    $qb->createNamedParameter(1, \Doctrine\DBAL\ParameterType::INTEGER)
+                )
+            )
+        ));
+
+        // Replicate child-object exclusion from createDemandConstraints()
+        if ($excludeChildObjects) {
+            $qb->andWhere($qb->expr()->neq(
+                DetectionUtility::CHILD_OBJECT_FIELD_NAME,
+                $qb->createNamedParameter(1, \Doctrine\DBAL\ParameterType::INTEGER)
+            ));
         }
 
         if ($categoryUid > 0) {
