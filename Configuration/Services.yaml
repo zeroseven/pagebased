@@ -7,6 +7,9 @@ services:
     Zeroseven\Pagebased\:
         resource: '../Classes/*'
 
+    Zeroseven\Pagebased\Utility\PageClassifierInterface:
+        alias: Zeroseven\Pagebased\Utility\PageClassifier
+
     Zeroseven\Pagebased\Middleware\RssFeed:
         arguments:
             $cache: '@cache.pagebased_rss_feed'

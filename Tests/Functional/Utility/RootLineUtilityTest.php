@@ -191,4 +191,36 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertSame(11, $parentOf20);
         self::assertSame(12, $parentOf30);
     }
+
+    // ---------------------------------------------------------------------------
+    // Language / translation handling
+    // ---------------------------------------------------------------------------
+
+    /** @test */
+    public function collectPagesBelowExcludesTranslatedPages(): void
+    {
+        // Fixture adds uid=40 (pid=12, sys_language_uid=1, l10n_parent=30).
+        // collectPagesBelow must return only default-language pages (sys_language_uid=0).
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/Database/pages_tree_with_translation.csv');
+
+        $pages = RootLineUtility::collectPagesBelow(12);
+
+        self::assertArrayHasKey(30, $pages, 'Default-language child uid=30 must be returned');
+        self::assertArrayNotHasKey(40, $pages, 'Translated page uid=40 (sys_language_uid=1) must NOT be returned');
+    }
+
+    /** @test */
+    public function collectPagesAboveExcludesTranslatedPages(): void
+    {
+        // Fixture: uid=40 is a translation of uid=30, child of uid=12.
+        // Walking up from uid=20 (ancestor chain: 11 → 10 → 1) must not include
+        // any translated page.
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/Database/pages_tree_with_translation.csv');
+
+        $pages = RootLineUtility::collectPagesAbove(20);
+
+        foreach ($pages as $row) {
+            self::assertSame(0, (int)($row['sys_language_uid'] ?? 0), 'Ancestor uid=' . $row['uid'] . ' must be default language (sys_language_uid=0)');
+        }
+    }
 }
