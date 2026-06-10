@@ -20,6 +20,11 @@ jobs:
           key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: composer-${{ runner.os }}-
 
+      - name: Cache Docker images
+        uses: ScribeMD/docker-cache@0.5.0
+        with:
+          key: docker-${{ runner.os }}-ddev-lint-${{ hashFiles('.ddev/config.yaml') }}
+
       - name: Setup DDEV
         uses: ddev/github-action-setup-ddev@v1
 
@@ -57,6 +62,11 @@ jobs:
           path: ~/.composer/cache
           key: composer-${{ runner.os }}-typo3${{ matrix.typo3-version }}-php${{ matrix.php-version }}-${{ hashFiles('**/composer.json') }}
           restore-keys: composer-${{ runner.os }}-typo3${{ matrix.typo3-version }}-php${{ matrix.php-version }}-
+
+      - name: Cache Docker images
+        uses: ScribeMD/docker-cache@0.5.0
+        with:
+          key: docker-${{ runner.os }}-ddev-php${{ matrix.php-version }}-${{ hashFiles('.ddev/config.yaml') }}
 
       - name: Set PHP version
         env:
