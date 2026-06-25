@@ -13,41 +13,41 @@
 UPDATE sys_template SET config = 'page = PAGE
 page.10 = CONTENT
 page.10 {
-    table = tt_content
-    select {
-        orderBy = sorting
-        where = colPos=0
-    }
+	table = tt_content
+	select {
+		orderBy = sorting
+		where = colPos=0
+	}
 }
 ' WHERE pid = 1 AND root = 1;
 
 INSERT IGNORE INTO tt_content (uid, pid, CType, header, colPos, sorting, pi_flexform, deleted, hidden, tstamp, crdate)
 VALUES
-    (100, 10, 'pagebaseddemo_list', 'Latest News',   0, 256,
+	(100, 10, 'pagebaseddemo_list', 'Latest News',   0, 256,
 '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
-    <data>
-        <sheet index="filter">
-            <language index="lDEF">
-                <field index="settings.category">
-                    <value index="vDEF">10</value>
-                </field>
-            </language>
-        </sheet>
-    </data>
+	<data>
+		<sheet index="filter">
+			<language index="lDEF">
+				<field index="settings.category">
+					<value index="vDEF">10</value>
+				</field>
+			</language>
+		</sheet>
+	</data>
 </T3FlexForms>',
-        0, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP()),
-    (101, 20, 'pagebaseddemo_list', 'Latest Events', 0, 256,
+		0, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP()),
+	(101, 20, 'pagebaseddemo_list', 'Latest Events', 0, 256,
 '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
-    <data>
-        <sheet index="filter">
-            <language index="lDEF">
-                <field index="settings.category">
-                    <value index="vDEF">20</value>
-                </field>
-            </language>
-        </sheet>
-    </data>
+	<data>
+		<sheet index="filter">
+			<language index="lDEF">
+				<field index="settings.category">
+					<value index="vDEF">20</value>
+				</field>
+			</language>
+		</sheet>
+	</data>
 </T3FlexForms>',
-        0, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
+		0, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
