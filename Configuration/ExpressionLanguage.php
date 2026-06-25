@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+use Zeroseven\Pagebased\ExpressionLanguage\TypoScriptConditionProvider;
+
 return [
     'typoscript' => [
-        \Zeroseven\Pagebased\ExpressionLanguage\TypoScriptConditionProvider::class,
+        TypoScriptConditionProvider::class,
     ],
 ];

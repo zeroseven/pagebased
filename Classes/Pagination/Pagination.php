@@ -12,10 +12,15 @@ use Zeroseven\Pagebased\Utility\CastUtility;
 class Pagination
 {
     protected array $items;
+
     protected Stages $stages;
+
     protected int $selectedStage;
+
     protected string $itemsPerStage;
+
     protected int $maxStages;
+
     protected array $stageLengths;
 
     /** @throws TypeException */
@@ -50,7 +55,7 @@ class Pagination
         $this->initialize();
     }
 
-    public function getStages()
+    public function getStages(): Stages
     {
         return $this->stages;
     }
@@ -65,7 +70,7 @@ class Pagination
     {
         try {
             $this->items = CastUtility::array($items);
-        } catch (BadConstraintException $exception) {
+        } catch (BadConstraintException) {
             $this->items = [];
         }
 

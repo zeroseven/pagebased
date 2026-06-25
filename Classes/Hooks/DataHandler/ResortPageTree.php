@@ -16,21 +16,24 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Registration\AbstractRegistrationEntityProperty;
+use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
 use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class ResortPageTree
 {
+    public function __construct(private readonly FlashMessageService $flashMessageService) {}
+
     protected function addNotification(int $parentPageUid, AbstractRegistrationEntityProperty $registrationEntityProperty): void
     {
         $parentPage = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $parentPageUid);
 
-        $message = GeneralUtility::makeInstance(
+        $flashMessage = GeneralUtility::makeInstance(
             FlashMessage::class,
             LocalizationUtility::translate(
                 'LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.description',
                 'pagebased',
-                [0 => BackendUtility::getRecordTitle(AbstractPage::TABLE_NAME, $parentPage)]
+                [0 => BackendUtility::getRecordTitle(AbstractPage::TABLE_NAME, $parentPage ?? [])]
             ),
             LocalizationUtility::translate(
                 'LLL:EXT:pagebased/Resources/Private/Language/locallang_be.xlf:notification.resortPagetree.title',
@@ -41,28 +44,28 @@ class ResortPageTree
             true
         );
 
-        $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
+        $flashMessageQueue = $this->flashMessageService->getMessageQueueByIdentifier();
 
         try {
-            $messageQueue->enqueue($message);
-        } catch (Exception $e) {
+            $flashMessageQueue->enqueue($flashMessage);
+        } catch (Exception) {
         }
     }
 
-    protected function getUidList(QueryResultInterface $result): array
+    protected function getUidList(QueryResultInterface $queryResult): array
     {
-        return array_map(static fn($object) => $object->getUid(), $result->toArray());
+        return array_map(static fn(object $object) => $object->getUid(), $queryResult->toArray());
     }
 
     protected function updateSorting(int $parentPageUid, AbstractRegistrationEntityProperty $registrationEntityProperty, DataHandler $dataHandler): void
     {
-        $repository = $registrationEntityProperty->getRepositoryClass();
+        $repositoryRepository = $registrationEntityProperty->getRepositoryClass();
 
         if ($registrationEntityProperty->getSortingField() !== $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby']) {
             $demand = $registrationEntityProperty->getDemandClass()->setUidList(array_keys(RootLineUtility::collectPagesBelow($parentPageUid, false, 1)));
 
-            $expectedOrdering = $repository->findByDemand($demand);
-            $currentOrdering = $repository->findByDemand($demand->setOrderBy($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby']));
+            $expectedOrdering = $repositoryRepository->findByDemand($demand);
+            $currentOrdering = $repositoryRepository->findByDemand($demand->setOrderBy($GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['sortby']));
 
             if ($expectedOrdering->count() > 1 && $expectedOrdering->count() === $currentOrdering->count()) {
                 $expectedUidList = $this->getUidList($expectedOrdering);
@@ -97,13 +100,12 @@ class ResortPageTree
                         && ($pid = (int)($data['pid'] ?? BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, 'pid')['pid']))
                         && empty($pidList[$pid])
                     ) {
-                        if ($registration = ObjectUtility::isObject($uid, $data)) {
+                        if (($registration = ObjectUtility::isObject($uid, $data)) instanceof Registration) {
                             $pidList[$pid] = $registration->getObject();
-                        } else {
-                            ($registration = ObjectUtility::isCategory($uid, $data))
-                            && ($parentRegistration = ObjectUtility::isCategory($pid))
-                            && ($parentRegistration->getIdentifier() === $registration->getIdentifier())
-                            && ($pidList[$pid] = $registration->getCategory());
+                        } elseif (($registration = ObjectUtility::isCategory($uid, $data))
+                        && ($parentRegistration = ObjectUtility::isCategory($pid))
+                        && ($parentRegistration->getIdentifier() === $registration->getIdentifier())) {
+                            $pidList[$pid] = $registration->getCategory();
                         }
                     }
                 }

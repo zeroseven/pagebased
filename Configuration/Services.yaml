@@ -12,7 +12,7 @@ services:
 
     Zeroseven\Pagebased\Middleware\RssFeed:
         arguments:
-            $cache: '@cache.pagebased_rss_feed'
+            $frontend: '@cache.pagebased_rss_feed'
 
     cache.pagebased_rss_feed:
         class: TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
@@ -26,6 +26,13 @@ services:
                 description: 'Detect objects and categories'
                 hidden: false
                 schedulable: true
+
+    Zeroseven\Pagebased\Registration\EventListener\RegisterIconsEvent:
+        tags:
+            - name: event.listener
+              identifier: 'pagebased/registration-register-icons'
+              before: 'pagebased/registration-validation'
+              event: TYPO3\CMS\Core\Core\Event\BootCompletedEvent
 
     Zeroseven\Pagebased\Registration\EventListener\ValidateRegistrationEvent:
         tags:
@@ -56,13 +63,13 @@ services:
         tags:
             - name: event.listener
               identifier: 'pagebased/registration-add-tsconfig'
-              event: Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent
+              event: TYPO3\CMS\Core\TypoScript\IncludeTree\Event\BeforeLoadedPageTsConfigEvent
 
     Zeroseven\Pagebased\Registration\EventListener\AddUserTSConfigEvent:
         tags:
             - name: event.listener
               identifier: 'pagebased/registration-add-usertsconfig'
-              event: Zeroseven\Pagebased\Registration\Event\AfterStoreRegistrationEvent
+              event: TYPO3\CMS\Core\TypoScript\IncludeTree\Event\BeforeLoadedUserTsConfigEvent
 
     Zeroseven\Pagebased\Registration\EventListener\AddTypoScriptEvent:
         tags:

@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use TYPO3\CMS\Core\Resource\FileType;
+
 return [
     'ctrl' => [
         'title' => 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tx_pagebased_domain_model_contact',
@@ -15,7 +19,6 @@ return [
         'enablecolumns' => [
             'disabled' => 'hidden',
         ],
-        'searchFields' => 'firstname, lastname, company, email, address, city, zip, country, description, image',
         'typeicon_classes' => [
             'default' => 'actions-user',
         ],
@@ -115,6 +118,7 @@ return [
                 'type' => 'input',
                 'eval' => 'trim',
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'email' => [
@@ -135,6 +139,7 @@ return [
                 'eval' => 'trim,is_in',
                 'is_in' => '0123456789 -+',
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'website' => [
@@ -144,6 +149,7 @@ return [
                 'type' => 'link',
                 'allowedTypes' => ['url'],
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'address' => [
@@ -211,7 +217,7 @@ return [
                 'overrideChildTca' => [
                     'types' => [
                         '0' => ['showitem' => '--palette--;;filePalette'],
-                        \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_IMAGE => ['showitem' => '--palette--;;filePalette'],
+                        FileType::IMAGE->value => ['showitem' => '--palette--;;filePalette'],
                     ],
                 ],
                 'allowed' => 'common-image-types',
@@ -225,6 +231,7 @@ return [
                 'type' => 'link',
                 'allowedTypes' => ['page', 'url'],
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'twitter' => [
@@ -235,6 +242,7 @@ return [
                 'type' => 'link',
                 'allowedTypes' => ['url'],
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'facebook' => [
@@ -245,6 +253,7 @@ return [
                 'type' => 'link',
                 'allowedTypes' => ['url'],
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'linkedin' => [
@@ -255,6 +264,7 @@ return [
                 'type' => 'link',
                 'allowedTypes' => ['url'],
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'xing' => [
@@ -265,6 +275,7 @@ return [
                 'type' => 'link',
                 'allowedTypes' => ['url'],
                 'default' => '',
+                'searchable' => false,
             ],
         ],
     ],

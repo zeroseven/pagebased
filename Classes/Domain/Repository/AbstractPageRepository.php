@@ -21,9 +21,9 @@ abstract class AbstractPageRepository extends AbstractRepository implements Repo
 
     public function initializeObject(): void
     {
-        $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
-        $querySettings->setRespectStoragePage(false);
-        $this->setDefaultQuerySettings($querySettings);
+        $typo3QuerySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
+        $typo3QuerySettings->setRespectStoragePage(false);
+        $this->setDefaultQuerySettings($typo3QuerySettings);
     }
 
     /** @throws AspectNotFoundException|InvalidQueryException|PersistenceException */

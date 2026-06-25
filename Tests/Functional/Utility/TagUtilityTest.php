@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Tests\Functional\Utility;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Zeroseven\Pagebased\Registration\CategoryRegistration;
 use Zeroseven\Pagebased\Registration\ObjectRegistration;
@@ -46,7 +47,7 @@ class TagUtilityTest extends FunctionalTestCase
         'frontend',
     ];
 
-    private TestObjectRepository $repository;
+    private TestObjectRepository $testObjectRepository;
 
     protected function setUp(): void
     {
@@ -55,7 +56,7 @@ class TagUtilityTest extends FunctionalTestCase
         $this->bootstrapTestRegistration();
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Database/pages_tags.csv');
 
-        $this->repository = $this->get(TestObjectRepository::class);
+        $this->testObjectRepository = $this->get(TestObjectRepository::class);
 
         // Ensure the feature flag is off by default for each test.
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['pagebased.nonglobalTags'] = false;
@@ -67,8 +68,8 @@ class TagUtilityTest extends FunctionalTestCase
         // tests do not bleed into one another.
         // Note: setAccessible(true) is intentionally omitted – it is a no-op since PHP 8.1
         // and produces a deprecation notice on PHP 8.4.
-        $reflection = new \ReflectionProperty(RootLineUtility::class, 'cache');
-        $reflection->setValue(null, []);
+        $reflectionProperty = new \ReflectionProperty(RootLineUtility::class, 'cache');
+        $reflectionProperty->setValue(null, []);
 
         unset($_GET['id']);
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['pagebased.nonglobalTags'] = false;
@@ -97,14 +98,13 @@ class TagUtilityTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // Feature flag OFF (default behaviour)
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function getTagsReturnsGlobalTagsWhenFeatureFlagIsOff(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['pagebased.nonglobalTags'] = false;
 
-        $demand = $this->repository->initializeDemand();
-        $tags = TagUtility::getTags($demand, $this->repository);
+        $demand = $this->testObjectRepository->initializeDemand();
+        $tags = TagUtility::getTags($demand, $this->testObjectRepository);
 
         // All objects across all categories are included: php, typo3, symfony, javascript
         self::assertNotNull($tags);
@@ -118,8 +118,7 @@ class TagUtilityTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // Feature flag ON – rootline detection active
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function getTagsScopesTagsToCategoryFoundInRootlineWhenFlagIsOn(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['pagebased.nonglobalTags'] = true;
@@ -127,8 +126,8 @@ class TagUtilityTest extends FunctionalTestCase
         // Simulate browsing object page 20 (child of Category A, uid=10)
         $_GET['id'] = '20';
 
-        $demand = $this->repository->initializeDemand();
-        $tags = TagUtility::getTags($demand, $this->repository);
+        $demand = $this->testObjectRepository->initializeDemand();
+        $tags = TagUtility::getTags($demand, $this->testObjectRepository);
 
         // Only objects in Category A (uid 20, 21): php, typo3, symfony
         self::assertNotNull($tags);
@@ -136,7 +135,7 @@ class TagUtilityTest extends FunctionalTestCase
         self::assertNotContains('javascript', $tags);
     }
 
-    /** @test */
+    #[Test]
     public function getTagsReturnsNullWhenFlagIsOnButNoCategoryPageInRootline(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['pagebased.nonglobalTags'] = true;
@@ -144,13 +143,13 @@ class TagUtilityTest extends FunctionalTestCase
         // Simulate browsing a standalone page (uid=40) with no registered category ancestor
         $_GET['id'] = '40';
 
-        $demand = $this->repository->initializeDemand();
-        $result = TagUtility::getTags($demand, $this->repository);
+        $demand = $this->testObjectRepository->initializeDemand();
+        $result = TagUtility::getTags($demand, $this->testObjectRepository);
 
         self::assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function getTagsSkipsRootlineDetectionWhenCategoryAlreadySetInDemand(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['pagebased.nonglobalTags'] = true;
@@ -159,10 +158,10 @@ class TagUtilityTest extends FunctionalTestCase
         // $_GET['id'] points to a page outside any category to prove rootline is skipped.
         $_GET['id'] = '40';
 
-        $demand = $this->repository->initializeDemand();
+        $demand = $this->testObjectRepository->initializeDemand();
         $demand->{'setCategory'}(30);
 
-        $tags = TagUtility::getTags($demand, $this->repository);
+        $tags = TagUtility::getTags($demand, $this->testObjectRepository);
 
         // Only objects in Category B (uid 31): javascript, typo3
         self::assertNotNull($tags);
@@ -171,7 +170,7 @@ class TagUtilityTest extends FunctionalTestCase
         self::assertNotContains('symfony', $tags);
     }
 
-    /** @test */
+    #[Test]
     public function getTagsOnCategoryPageItselfResolvesCorrectlyWhenFlagIsOn(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['pagebased.nonglobalTags'] = true;
@@ -179,8 +178,8 @@ class TagUtilityTest extends FunctionalTestCase
         // Simulate browsing the Category A page itself (uid=10, doktype=199)
         $_GET['id'] = '10';
 
-        $demand = $this->repository->initializeDemand();
-        $tags = TagUtility::getTags($demand, $this->repository);
+        $demand = $this->testObjectRepository->initializeDemand();
+        $tags = TagUtility::getTags($demand, $this->testObjectRepository);
 
         // collectPagesAbove with includingStartingPoint=true includes uid=10 itself
         self::assertNotNull($tags);

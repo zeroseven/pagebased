@@ -11,8 +11,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3Fluid\Fluid\View\ViewInterface;
+use TYPO3\CMS\Core\View\ViewInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Domain\Repository\ContactRepository;
@@ -22,16 +21,19 @@ use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Registration\RegistrationService;
 use Zeroseven\Pagebased\Utility\CastUtility;
+use Zeroseven\Pagebased\Utility\FrontendRequestUtility;
 use Zeroseven\Pagebased\Utility\TagUtility;
 use Zeroseven\Pagebased\ViewHelpers\PaginationViewHelper;
 
 abstract class AbstractObjectController extends AbstractController implements ObjectControllerInterface
 {
     protected ?Registration $registration = null;
+
     protected ?DemandInterface $demand = null;
+
     protected array $requestArguments = [];
 
-    public function initializeAction(): void
+    protected function initializeAction(): void
     {
         parent::initializeAction();
 
@@ -41,7 +43,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
 
         try {
             $this->controlCache();
-        } catch (TypeException $e) {
+        } catch (TypeException) {
         }
     }
 
@@ -72,27 +74,30 @@ abstract class AbstractObjectController extends AbstractController implements Ob
     /** @throws TypeException */
     protected function controlCache(): void
     {
-        if (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController) {
-            $demandArguments = array_filter(array_keys($this->requestArguments), fn(string $argument) => $this->demand->hasProperty($argument));
+        // Only relevant for cached frontend rendering
+        if (FrontendRequestUtility::getPageId() === 0) {
+            return;
+        }
 
-            // Limit caching on multiple arguments
-            if (count($demandArguments) > 2) {
-                $GLOBALS['TSFE']->set_no_cache();
-                return;
-            }
+        $demandArguments = array_filter(array_keys($this->requestArguments), fn(string $argument): bool => $this->demand->hasProperty($argument));
 
-            // Limit pagination
-            if ((int)($this->requestArguments[PaginationViewHelper::REQUEST_ARGUMENT] ?? 0) > 3) {
-                $GLOBALS['TSFE']->set_no_cache();
-                return;
-            }
+        // Limit caching on multiple arguments
+        if (count($demandArguments) > 2) {
+            FrontendRequestUtility::disableCache();
+            return;
+        }
 
-            // Limit caching on multiple array values
-            foreach ($demandArguments as $argument) {
-                if ($this->demand->getProperty($argument)->isArray()
-                    && count(CastUtility::array($this->requestArguments[$argument] ?? null)) > 1) {
-                    $GLOBALS['TSFE']->set_no_cache();
-                }
+        // Limit pagination
+        if ((int)($this->requestArguments[PaginationViewHelper::REQUEST_ARGUMENT] ?? 0) > 3) {
+            FrontendRequestUtility::disableCache();
+            return;
+        }
+
+        // Limit caching on multiple array values
+        foreach ($demandArguments as $demandArgument) {
+            if ($this->demand->getProperty($demandArgument)->isArray()
+                && count(CastUtility::array($this->requestArguments[$demandArgument] ?? null)) > 1) {
+                FrontendRequestUtility::disableCache();
             }
         }
     }
@@ -131,7 +136,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
                 ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)))
                 ->executeQuery()
                 ->fetchOne();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return null;
         }
 
@@ -145,12 +150,12 @@ abstract class AbstractObjectController extends AbstractController implements Ob
     public function listAction(): ResponseInterface
     {
         // Apply request arguments
-        if (empty($requestID = (int)($this->requestArguments[ObjectDemandInterface::PROPERTY_CONTENT_ID] ?? 0)) || (int)($this->contentData['uid'] ?? 0) === $requestID) {
+        if (($requestID = (int)($this->requestArguments[ObjectDemandInterface::PROPERTY_CONTENT_ID] ?? 0)) === 0 || (int)($this->contentData['uid'] ?? 0) === $requestID) {
             $this->demand->setParameterArray($this->requestArguments);
         }
 
-        $repository = $this->registration->getObject()->getRepositoryClass();
-        $objects = $repository->findByDemand($this->demand);
+        $repositoryRepository = $this->registration->getObject()->getRepositoryClass();
+        $objects = $repositoryRepository->findByDemand($this->demand);
 
         if (!$this->demand->getContentId() && $contentId = $this->contentData['uid'] ?? null) {
             $this->demand->setContentId($contentId);
@@ -172,7 +177,7 @@ abstract class AbstractObjectController extends AbstractController implements Ob
         // Apply filter settings of the linked list plugin
         if (($listID = (int)($this->settings[ObjectDemandInterface::PROPERTY_CONTENT_ID] ?? 0)) && $settings = $this->getPluginSettings($listID)) {
             $this->demand->setParameterArray($settings, true);
-            $this->view->getRenderingContext()->getVariableProvider()->add('settings', array_merge($settings, $this->settings));
+            $this->view->assign('settings', array_merge($settings, $this->settings));
         }
 
         // Apply request arguments

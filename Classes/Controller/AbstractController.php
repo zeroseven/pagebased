@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Controller;
 
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3Fluid\Fluid\View\ViewInterface;
 
 abstract class AbstractController extends ActionController
 {
-    protected ?array $contentData;
+    protected ?array $contentData = null;
 
-    public function initializeAction(): void
+    protected function initializeAction(): void
     {
         parent::initializeAction();
 

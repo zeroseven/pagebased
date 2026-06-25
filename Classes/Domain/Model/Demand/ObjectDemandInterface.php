@@ -7,7 +7,9 @@ namespace Zeroseven\Pagebased\Domain\Model\Demand;
 interface ObjectDemandInterface extends DemandInterface
 {
     public const PROPERTY_CONTENT_ID = '_c';
+
     public const PROPERTY_TOP_MODE = '_top_mode';
+
     public const PROPERTY_INCLUDE_CHILD_OBJECTS = '_child_objects';
 
     public function getContentId(): int;

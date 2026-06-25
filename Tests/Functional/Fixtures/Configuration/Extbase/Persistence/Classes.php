@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Tests\Functional\Fixtures\Classes\TestCategory;
+use Zeroseven\Pagebased\Tests\Functional\Fixtures\Classes\TestObject;
+
 return [
-    \Zeroseven\Pagebased\Tests\Functional\Fixtures\Classes\TestObject::class => [
-        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
+    TestObject::class => [
+        'tableName' => AbstractPage::TABLE_NAME,
     ],
-    \Zeroseven\Pagebased\Tests\Functional\Fixtures\Classes\TestCategory::class => [
-        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
+    TestCategory::class => [
+        'tableName' => AbstractPage::TABLE_NAME,
     ],
 ];

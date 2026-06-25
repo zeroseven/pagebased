@@ -35,7 +35,7 @@ abstract class AbstractRepository extends Repository
     public function setOrdering(DemandInterface $demand = null): void
     {
         if (
-            $demand
+            $demand instanceof DemandInterface
             && $demand->getOrderBy()
             && preg_match('/([a-zA-Z]+)(?:_(asc|desc))?/', $demand->getOrderBy(), $matches) // Examples: "date_desc", "title_asc", "title",
             && ($property = $matches[1] ?? null)
@@ -98,33 +98,31 @@ abstract class AbstractRepository extends Repository
         return $this->defaultOrderings;
     }
 
-    protected function orderByUid(mixed $orderReference, QueryResultInterface $objects): QueryResultInterface
+    protected function orderByUid(mixed $orderReference, QueryResultInterface $queryResult): QueryResultInterface
     {
         // Create ordered list
         try {
             $sortedList = array_fill_keys(CastUtility::array($orderReference), null);
-        } catch (TypeException $e) {
-            return $objects;
+        } catch (TypeException) {
+            return $queryResult;
         }
 
         // Assign objects
-        foreach ($objects as $object) {
+        foreach ($queryResult as $object) {
             if ($uid = $object->getUid()) {
                 $sortedList[$uid] = $object;
             }
         }
 
         // Remove empty objects
-        $sortedList = array_filter($sortedList, static function ($o) {
-            return $o;
-        });
+        $sortedList = array_filter($sortedList, static fn(?object $o): ?object => $o);
 
         // Resort objects in result
-        foreach ($objects as $key => $value) {
-            $objects->offsetSet($key, array_shift($sortedList));
+        foreach ($queryResult as $key => $value) {
+            $queryResult->offsetSet($key, array_shift($sortedList));
         }
 
-        return $objects;
+        return $queryResult;
     }
 
     /** @throws AspectNotFoundException|InvalidQueryException|PersistenceException */
@@ -134,10 +132,10 @@ abstract class AbstractRepository extends Repository
         $this->setOrdering($demand);
 
         // Create query
-        $query = $query ?? $this->createQuery();
+        $query ??= $this->createQuery();
 
         // Apply constraints
-        if (!empty($constraints = $this->createDemandConstraints($demand, $query))) {
+        if (($constraints = $this->createDemandConstraints($demand, $query)) !== []) {
             $query->matching(
                 $query->logicalAnd(...$constraints)
             );
@@ -176,7 +174,7 @@ abstract class AbstractRepository extends Repository
             $query->getQuerySettings()->setIgnoreEnableFields(true)->setIncludeDeleted(true)->setRespectStoragePage(false);
         }
 
-        if ($results = $this->findByDemand($this->initializeDemand()->setUidList([$uid]), $query)) {
+        if (($results = $this->findByDemand($this->initializeDemand()->setUidList([$uid]), $query)) instanceof QueryResultInterface) {
             return $results->getFirst();
         }
 

@@ -13,18 +13,18 @@ abstract class AbstractRelationRepository extends Repository
 {
     public function initializeObject(): void
     {
-        $storagePageIds = array_merge(...array_values(array_map(fn(Registration $registration) => $this->getRelationPageIds($registration), RegistrationService::getRegistrations())));
+        $storagePageIds = array_merge(...array_values(array_map($this->getRelationPageIds(...), RegistrationService::getRegistrations())));
 
-        $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
-        $querySettings->setRespectStoragePage(true)->setStoragePageIds($storagePageIds);
-        $this->setDefaultQuerySettings($querySettings);
+        $typo3QuerySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
+        $typo3QuerySettings->setRespectStoragePage(true)->setStoragePageIds($storagePageIds);
+        $this->setDefaultQuerySettings($typo3QuerySettings);
     }
 
     abstract protected function getRelationPageIds(Registration $registration): array;
 
     public function findByRegistration(Registration $registration): ?QueryResultInterface
     {
-        if (!empty($pageIds = $this->getRelationPageIds($registration))) {
+        if (($pageIds = $this->getRelationPageIds($registration)) !== []) {
             $query = $this->createQuery();
             $query->getQuerySettings()->setStoragePageIds($pageIds)->setRespectStoragePage(true);
 

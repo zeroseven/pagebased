@@ -68,7 +68,7 @@ class PageClassifier implements PageClassifierInterface, SingletonInterface
             return $this->cache[$pageUid];
         }
 
-        if ($pageUid) {
+        if ($pageUid !== 0) {
             $typeField = $this->getPageTypeField();
             $registrationField = DetectionUtility::REGISTRATION_FIELD_NAME;
 
@@ -84,7 +84,7 @@ class PageClassifier implements PageClassifierInterface, SingletonInterface
                 ) {
                     return $this->cache[$pageUid] = RegistrationService::getRegistrationByIdentifier($identifier);
                 }
-            } catch (ValueException $e) {
+            } catch (ValueException) {
             }
         }
 
@@ -96,12 +96,12 @@ class PageClassifier implements PageClassifierInterface, SingletonInterface
         try {
             if (!$this->isSystemPage($uid) && $parentPages = RootLineUtility::collectPagesAbove(CastUtility::int($uid), false, 1)) {
                 foreach ($parentPages as $parentPage) {
-                    if ($registration = $this->isObject(null, $parentPage)) {
+                    if (($registration = $this->isObject(null, $parentPage)) instanceof Registration) {
                         return $registration;
                     }
                 }
             }
-        } catch (TypeException $e) {
+        } catch (TypeException) {
         }
 
         return null;
@@ -111,7 +111,7 @@ class PageClassifier implements PageClassifierInterface, SingletonInterface
     {
         if (MathUtility::canBeInterpretedAsInteger($startPoint)) {
             foreach (RootLineUtility::collectPagesAbove($startPoint, true) as $uid => $row) {
-                if ($registration = $this->isCategory((int)$uid, $row)) {
+                if (($registration = $this->isCategory((int)$uid, $row)) instanceof Registration) {
                     return $registration;
                 }
             }

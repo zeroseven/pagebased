@@ -1,0 +1,16 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<div class="pagebased-demo-news-list">
+    <f:if condition="{objects}">
+        <f:then>
+            <ul>
+                <f:for each="{objects}" as="object">
+                    <li><f:link.page pageUid="{object.uid}">{object.title}</f:link.page></li>
+                </f:for>
+            </ul>
+        </f:then>
+        <f:else>
+            <p>No news objects found.</p>
+        </f:else>
+    </f:if>
+</div>
+</html>

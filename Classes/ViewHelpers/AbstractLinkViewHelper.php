@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\ViewHelpers;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
@@ -25,10 +25,12 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
     protected $tagName = 'a';
 
     private ?RequestInterface $request = null;
+
     protected ?DemandInterface $demand = null;
+
     protected ?Registration $registration = null;
 
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -52,20 +54,18 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
         $this->registerArgument('addQueryString', 'string', 'If set, the current query parameters will be kept in the URL. If set to "untrusted", then ALL query parameters will be added. Be aware, that this might lead to problems when the generated link is cached.', false, false);
         $this->registerArgument('argumentsToBeExcludedFromQueryString', 'array', 'Arguments to be removed from the URI. Only active if $addQueryString = TRUE');
         $this->registerArgument('arguments', 'array', 'Arguments for the controller action, associative array');
-
-        $this->registerUniversalTagAttributes();
         $this->registerTagAttribute('rel', 'string', 'Specifies the relationship between the current document and the linked document');
         $this->registerTagAttribute('target', 'string', 'Specifies where to open the linked document');
     }
 
     protected function getRequest(): RequestInterface
     {
-        if ($this->request === null) {
-            if (($renderingContext = $this->renderingContext) instanceof RenderingContextInterface && ($request = $renderingContext->getRequest()) instanceof RequestInterface) {
+        if (!$this->request instanceof RequestInterface) {
+            if (($request = $this->renderingContext->getAttribute(ServerRequestInterface::class)) instanceof RequestInterface) {
                 return $this->request = $request;
             }
 
-            if ($request = RequestUtility::getExtbaseRequest($this->registration)) {
+            if (($request = RequestUtility::getExtbaseRequest($this->registration)) instanceof RequestInterface) {
                 return $this->request = $request;
             }
 
@@ -78,8 +78,6 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
     /** @throws ValueException */
     public function validateArguments(): void
     {
-        parent::validateArguments();
-
         $this->initializeRegistration();
     }
 
@@ -101,17 +99,17 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
         }
 
         // Try to get registration by the demand class
-        if ($this->registration === null && $this->demand) {
+        if (!$this->registration instanceof Registration && $this->demand instanceof DemandInterface) {
             $this->registration = RegistrationService::getRegistrationByDemand($this->demand);
         }
 
         // Try to get demand from registration
-        if ($this->registration && $this->demand === null) {
+        if ($this->registration instanceof Registration && !$this->demand instanceof DemandInterface) {
             $this->demand = $this->registration->getObject()->getDemandClass();
         }
 
         // Unfortunately didn't work :(
-        if ($this->registration === null && $this->demand === null) {
+        if (!$this->registration instanceof Registration && !$this->demand instanceof DemandInterface) {
             throw new Exception(sprintf('The registration object and demand object could not be determined. Add arguments "registration" or "demand" to the ViewHelper ("%s").', static::class), 1690362083);
         }
     }
@@ -147,11 +145,25 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
             ->setAddQueryString($addQueryString);
 
         // Apply variables
-        empty($pageUid) || $uriBuilder->setTargetPageUid($pageUid);
-        empty($pageType) || $uriBuilder->setTargetPageType($pageType);
-        empty($section) || $uriBuilder->setSection($section);
-        empty($additionalParams) || $uriBuilder->setArguments($additionalParams);
-        empty($argumentsToBeExcludedFromQueryString) || $uriBuilder->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString);
+        if ($pageUid !== 0) {
+            $uriBuilder->setTargetPageUid($pageUid);
+        }
+
+        if ($pageType !== 0) {
+            $uriBuilder->setTargetPageType($pageType);
+        }
+
+        if ($section !== '' && $section !== '0') {
+            $uriBuilder->setSection($section);
+        }
+
+        if ($additionalParams !== []) {
+            $uriBuilder->setArguments($additionalParams);
+        }
+
+        if ($argumentsToBeExcludedFromQueryString !== []) {
+            $uriBuilder->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString);
+        }
 
         // Set extension name
         $extensionName = GeneralUtility::underscoredToLowerCamelCase($this->registration->getExtensionName());
@@ -162,8 +174,9 @@ abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
     /** @throws TypeException */
     public function render(): string
     {
+        $uri = $this->createUri();
         // Render link
-        if ($uri = $this->createUri()) {
+        if ($uri !== '' && $uri !== '0') {
             $this->tag->addAttribute('href', $uri);
             $this->tag->setContent($this->renderChildren());
 

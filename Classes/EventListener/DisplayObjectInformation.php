@@ -16,26 +16,30 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Exception\BadConstraintException;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Utility\DetectionUtility;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
 
 class DisplayObjectInformation
 {
+    public function __construct(private readonly Context $context, private readonly FlashMessageService $flashMessageService) {}
+
     protected function showMessage(string $message, int $uid = null, string $title = null): void
     {
         try {
-            $uid && GeneralUtility::makeInstance(Context::class)->getAspect('backend.user')->isAdmin()
-            && ($registrationIdentifier = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, DetectionUtility::REGISTRATION_FIELD_NAME)[DetectionUtility::REGISTRATION_FIELD_NAME] ?? null)
-            && $message .= ' [identifier: ' . $registrationIdentifier . ']';
-        } catch (AspectNotFoundException $e) {
+            if ($uid && $this->context->getAspect('backend.user')->isAdmin()
+            && ($registrationIdentifier = BackendUtility::getRecord(AbstractPage::TABLE_NAME, $uid, DetectionUtility::REGISTRATION_FIELD_NAME)[DetectionUtility::REGISTRATION_FIELD_NAME] ?? null)) {
+                $message .= ' [identifier: ' . $registrationIdentifier . ']';
+            }
+        } catch (AspectNotFoundException) {
         }
 
         $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title ?? '', ContextualFeedbackSeverity::INFO);
 
         try {
-            $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
+            $messageQueue = $this->flashMessageService->getMessageQueueByIdentifier();
             $messageQueue->enqueue($flashMessage);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
@@ -63,7 +67,7 @@ class DisplayObjectInformation
 
     protected function isObject(int $uid): bool
     {
-        if ($registration = ObjectUtility::isObject($uid)) {
+        if (($registration = ObjectUtility::isObject($uid)) instanceof Registration) {
             $this->showMessage($this->translate('notification.object.description', [
                 $registration->getObject()->getTitle(),
                 $this->translate('pages.tab.pagebased_settings', null, 'locallang_db.xlf'),
@@ -77,12 +81,12 @@ class DisplayObjectInformation
 
     protected function isCategory(int $uid): bool
     {
-        if ($registration = ObjectUtility::isCategory($uid)) {
+        if (($registration = ObjectUtility::isCategory($uid)) instanceof Registration) {
             $demand = $registration->getObject()->getDemandClass();
 
             try {
                 $count = $registration->getObject()->getRepositoryClass()->findByDemand($demand->setCategory($uid))->count();
-            } catch (BadConstraintException $e) {
+            } catch (BadConstraintException) {
                 $count = 0;
             }
 
@@ -94,14 +98,19 @@ class DisplayObjectInformation
         return false;
     }
 
-    public function __invoke(BeforeFormEnginePageInitializedEvent $event): void
+    public function __invoke(BeforeFormEnginePageInitializedEvent $beforeFormEnginePageInitializedEvent): void
     {
-        $parsedBody = $event->getRequest()->getParsedBody();
-        $queryParams = $event->getRequest()->getQueryParams();
+        $parsedBody = $beforeFormEnginePageInitializedEvent->getRequest()->getParsedBody();
+        $queryParams = $beforeFormEnginePageInitializedEvent->getRequest()->getQueryParams();
 
-        ($editConfiguration = $parsedBody['edit'] ?? $queryParams['edit'] ?? null)
-        && ($table = array_key_first($editConfiguration)) === AbstractPage::TABLE_NAME
-        && ($uid = (int)(array_key_first($editConfiguration[$table] ?? [])))
-        && ($this->isChildObject($uid) || $this->isObject($uid) || $this->isCategory($uid));
+        if (
+            ($editConfiguration = $parsedBody['edit'] ?? $queryParams['edit'] ?? null)
+            && ($table = array_key_first($editConfiguration)) === AbstractPage::TABLE_NAME
+            && ($uid = (int)(array_key_first($editConfiguration[$table] ?? [])))
+            && !$this->isChildObject($uid)
+            && !$this->isObject($uid)
+        ) {
+            $this->isCategory($uid);
+        }
     }
 }

@@ -7,7 +7,9 @@ namespace Zeroseven\Pagebased\Domain\Model\Demand;
 interface DemandInterface
 {
     public const PROPERTY_UID_LIST = '_id';
+
     public const PROPERTY_ORDER_BY = '_sorting';
+
     public const PROPERTY_MAX_ITEMS = '_max_items';
 
     public function addProperty(string $name, string $type, string $extbasePropertyName = null): self;

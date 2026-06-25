@@ -1,6 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Method Zeroseven\\Pagebased\\Controller\\AbstractController\:\:resolveView\(\) should return TYPO3\\CMS\\Core\\View\\ViewInterface but returns TYPO3\\CMS\\Core\\View\\ViewInterface\|TYPO3Fluid\\Fluid\\View\\ViewInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: Classes/Controller/AbstractController.php
+
+		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -121,22 +127,10 @@ parameters:
 			path: Classes/Backend/TCA/ItemsProcFunc.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Controller\\AbstractController\:\:resolveView\(\) should return TYPO3Fluid\\Fluid\\View\\ViewInterface but returns TYPO3\\CMS\\Core\\View\\ViewInterface\|TYPO3Fluid\\Fluid\\View\\ViewInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Controller/AbstractController.php
-
-		-
 			message: '#^Property Zeroseven\\Pagebased\\Controller\\AbstractController\:\:\$contentData type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: Classes/Controller/AbstractController.php
-
-		-
-			message: '#^Call to an undefined method TYPO3\\CMS\\Core\\View\\ViewInterface\|TYPO3Fluid\\Fluid\\View\\ViewInterface\:\:getRenderingContext\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: Classes/Controller/AbstractObjectController.php
 
 		-
 			message: '#^Cannot call method getCategory\(\) on Zeroseven\\Pagebased\\Registration\\Registration\|null\.$#'
@@ -337,19 +331,19 @@ parameters:
 			path: Classes/Domain/Model/AbstractObject.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\AbstractObject\:\:setRelationsFrom\(\) has parameter \$relationsFrom with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
+			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\AbstractObject\:\:setRelationsFrom\(\) has parameter \$objectStorage with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Domain/Model/AbstractObject.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\AbstractObject\:\:setRelationsTo\(\) has parameter \$relationsTo with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
+			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\AbstractObject\:\:setRelationsTo\(\) has parameter \$objectStorage with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Domain/Model/AbstractObject.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\AbstractObject\:\:setTopics\(\) has parameter \$topics with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
+			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\AbstractObject\:\:setTopics\(\) has parameter \$objectStorage with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Domain/Model/AbstractObject.php
@@ -433,13 +427,13 @@ parameters:
 			path: Classes/Domain/Model/AbstractPage.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\AbstractPage\:\:setFileReferences\(\) has parameter \$fileReferences with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
+			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\AbstractPage\:\:setFileReferences\(\) has parameter \$objectStorage with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Domain/Model/AbstractPage.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\AbstractPage\:\:setMedia\(\) has parameter \$media with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
+			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\AbstractPage\:\:setMedia\(\) has parameter \$objectStorage with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Domain/Model/AbstractPage.php
@@ -487,14 +481,8 @@ parameters:
 			path: Classes/Domain/Model/Demand/AbstractDemand.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\Demand\\AbstractDemand\:\:__call\(\) has parameter \$arguments with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: Classes/Domain/Model/Demand/AbstractDemand.php
-
-		-
-			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\Demand\\AbstractDemand\:\:__call\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
+			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\Demand\\AbstractDemand\:\:__call\(\) has parameter \$arguments with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: Classes/Domain/Model/Demand/AbstractDemand.php
 
@@ -567,12 +555,6 @@ parameters:
 		-
 			message: '#^Strict comparison using \=\=\= between ''get''\|''has''\|''is''\|''set'' and ''toggle'' will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
-			count: 1
-			path: Classes/Domain/Model/Demand/AbstractDemand.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between ''has'' and ''has'' will always evaluate to true\.$#'
-			identifier: identical.alwaysTrue
 			count: 1
 			path: Classes/Domain/Model/Demand/AbstractDemand.php
 
@@ -685,13 +667,13 @@ parameters:
 			path: Classes/Domain/Model/ObjectInterface.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\ObjectInterface\:\:setRelationsFrom\(\) has parameter \$relationsFrom with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
+			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\ObjectInterface\:\:setRelationsFrom\(\) has parameter \$objectStorage with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Domain/Model/ObjectInterface.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\ObjectInterface\:\:setRelationsTo\(\) has parameter \$relationsTo with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
+			message: '#^Method Zeroseven\\Pagebased\\Domain\\Model\\ObjectInterface\:\:setRelationsTo\(\) has parameter \$objectStorage with generic class TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage but does not specify its types\: TEntity$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Domain/Model/ObjectInterface.php
@@ -889,7 +871,7 @@ parameters:
 			path: Classes/Domain/Repository/AbstractRepository.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Domain\\Repository\\AbstractRepository\:\:orderByUid\(\) has parameter \$objects with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
+			message: '#^Method Zeroseven\\Pagebased\\Domain\\Repository\\AbstractRepository\:\:orderByUid\(\) has parameter \$queryResult with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Domain/Repository/AbstractRepository.php
@@ -913,7 +895,19 @@ parameters:
 			path: Classes/Domain/Repository/AbstractRepository.php
 
 		-
-			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(object\|null\)\: bool\)\|null, Closure\(mixed\)\: \(object\|null\) given\.$#'
+			message: '#^Parameter \#1 \$propertyName of method TYPO3\\CMS\\Extbase\\Persistence\\QueryInterface\<object\>\:\:equals\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: '#^Parameter \#1 \$propertyName of method TYPO3\\CMS\\Extbase\\Persistence\\QueryInterface\<object\>\:\:in\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Classes/Domain/Repository/AbstractRepository.php
+
+		-
+			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(object\|null\)\: bool\)\|null, Closure\(object\|null\)\: \(object\|null\) given\.$#'
 			identifier: argument.type
 			count: 1
 			path: Classes/Domain/Repository/AbstractRepository.php
@@ -991,12 +985,6 @@ parameters:
 			path: Classes/Event/AssignTemplateVariablesEvent.php
 
 		-
-			message: '#^Property Zeroseven\\Pagebased\\Event\\AssignTemplateVariablesEvent\:\:\$variables type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: Classes/Event/AssignTemplateVariablesEvent.php
-
-		-
 			message: '#^Method Zeroseven\\Pagebased\\Event\\Rss\\AbstractRssObject\:\:set\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1009,10 +997,22 @@ parameters:
 			path: Classes/Event/Rss/AbstractRssObject.php
 
 		-
+			message: '#^Class Zeroseven\\Pagebased\\Event\\Rss\\RssItemEvent constructor invoked with 2 parameters, 3 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: Classes/Event/Rss/RssChannelEvent.php
+
+		-
 			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(object\)\: mixed\)\|null, Closure\(Zeroseven\\Pagebased\\Domain\\Model\\AbstractObject\)\: string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: Classes/Event/Rss/RssChannelEvent.php
+
+		-
+			message: '#^Class Zeroseven\\Pagebased\\Event\\Rss\\RssChannelEvent constructor invoked with 1 parameter, 2 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: Classes/Event/Rss/RssFeedEvent.php
 
 		-
 			message: '#^Method Zeroseven\\Pagebased\\Event\\Rss\\RssFeedEvent\:\:__construct\(\) has parameter \$content with no value type specified in iterable type array\.$#'
@@ -1021,7 +1021,7 @@ parameters:
 			path: Classes/Event/Rss/RssFeedEvent.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Event\\Rss\\RssFeedEvent\:\:__construct\(\) has parameter \$objects with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
+			message: '#^Method Zeroseven\\Pagebased\\Event\\Rss\\RssFeedEvent\:\:__construct\(\) has parameter \$queryResult with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Event/Rss/RssFeedEvent.php
@@ -1051,22 +1051,16 @@ parameters:
 			path: Classes/Event/Rss/RssFeedEvent.php
 
 		-
-			message: '#^Property Zeroseven\\Pagebased\\Event\\Rss\\RssFeedEvent\:\:\$content type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
+			message: '#^Instanceof between TYPO3\\CMS\\Core\\Resource\\ProcessedFile and TYPO3\\CMS\\Core\\Resource\\ProcessedFile will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
-			path: Classes/Event/Rss/RssFeedEvent.php
+			path: Classes/Event/Rss/RssItemEvent.php
 
 		-
-			message: '#^Property Zeroseven\\Pagebased\\Event\\Rss\\RssFeedEvent\:\:\$objects with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
+			message: '#^Instanceof between Zeroseven\\Pagebased\\Event\\Rss\\AbstractRssObject and Zeroseven\\Pagebased\\Event\\Rss\\AbstractRssObject will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
-			path: Classes/Event/Rss/RssFeedEvent.php
-
-		-
-			message: '#^Property Zeroseven\\Pagebased\\Event\\Rss\\RssFeedEvent\:\:\$settings type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: Classes/Event/Rss/RssFeedEvent.php
+			path: Classes/Event/Rss/RssItemEvent.php
 
 		-
 			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(object\)\: mixed\)\|null, Closure\(Zeroseven\\Pagebased\\Domain\\Model\\Topic\)\: string given\.$#'
@@ -1141,12 +1135,6 @@ parameters:
 			path: Classes/Event/StructuredDataEvent.php
 
 		-
-			message: '#^Property Zeroseven\\Pagebased\\Event\\StructuredDataEvent\:\:\$row type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: Classes/Event/StructuredDataEvent.php
-
-		-
 			message: '#^Cannot access offset ''edit'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -1177,8 +1165,38 @@ parameters:
 			path: Classes/EventListener/DisplayObjectInformation.php
 
 		-
+			message: '#^Left side of && is always false\.$#'
+			identifier: booleanAnd.leftAlwaysFalse
+			count: 1
+			path: Classes/EventListener/DisplayObjectInformation.php
+
+		-
 			message: '#^Method Zeroseven\\Pagebased\\EventListener\\DisplayObjectInformation\:\:translate\(\) has parameter \$arguments with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: Classes/EventListener/DisplayObjectInformation.php
+
+		-
+			message: '#^Undefined variable\: \$editConfiguration$#'
+			identifier: variable.undefined
+			count: 1
+			path: Classes/EventListener/DisplayObjectInformation.php
+
+		-
+			message: '#^Undefined variable\: \$table$#'
+			identifier: variable.undefined
+			count: 1
+			path: Classes/EventListener/DisplayObjectInformation.php
+
+		-
+			message: '#^Variable \$editConfiguration on left side of \?\? is never defined\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: Classes/EventListener/DisplayObjectInformation.php
+
+		-
+			message: '#^Variable \$uid might not be defined\.$#'
+			identifier: variable.undefined
 			count: 1
 			path: Classes/EventListener/DisplayObjectInformation.php
 
@@ -1219,8 +1237,8 @@ parameters:
 			path: Classes/Hooks/DataHandler/IdentifierDetection.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Hooks\\DataHandler\\IdentifierDetection\:\:moveRecord_afterAnotherElementPostProcess\(\) has parameter \$updateFields with no type specified\.$#'
-			identifier: missingType.parameter
+			message: '#^Method Zeroseven\\Pagebased\\Hooks\\DataHandler\\IdentifierDetection\:\:moveRecord_afterAnotherElementPostProcess\(\) has parameter \$updateFields with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: Classes/Hooks/DataHandler/IdentifierDetection.php
 
@@ -1249,7 +1267,7 @@ parameters:
 			path: Classes/Hooks/DataHandler/ResortPageTree.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Hooks\\DataHandler\\ResortPageTree\:\:getUidList\(\) has parameter \$result with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
+			message: '#^Method Zeroseven\\Pagebased\\Hooks\\DataHandler\\ResortPageTree\:\:getUidList\(\) has parameter \$queryResult with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Hooks/DataHandler/ResortPageTree.php
@@ -1279,15 +1297,9 @@ parameters:
 			path: Classes/Hooks/DataHandler/ResortPageTree.php
 
 		-
-			message: '#^Parameter \#1 \$result of method Zeroseven\\Pagebased\\Hooks\\DataHandler\\ResortPageTree\:\:getUidList\(\) expects TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface, TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface\|null given\.$#'
+			message: '#^Parameter \#1 \$queryResult of method Zeroseven\\Pagebased\\Hooks\\DataHandler\\ResortPageTree\:\:getUidList\(\) expects TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface, TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface\|null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: Classes/Hooks/DataHandler/ResortPageTree.php
-
-		-
-			message: '#^Parameter \#2 \$row of static method TYPO3\\CMS\\Backend\\Utility\\BackendUtility\:\:getRecordTitle\(\) expects array, array\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: Classes/Hooks/DataHandler/ResortPageTree.php
 
 		-
@@ -1297,14 +1309,14 @@ parameters:
 			path: Classes/Hooks/IconFactory/OverrideIconOverlay.php
 
 		-
-			message: '#^Call to an undefined method object\:\:getRedirectCategory\(\)\.$#'
+			message: '#^Call to an undefined method object\:\:isTop\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: Classes/Hooks/IconFactory/OverrideIconOverlay.php
 
 		-
-			message: '#^Call to an undefined method object\:\:isTop\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Cannot call method getCategory\(\) on null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: Classes/Hooks/IconFactory/OverrideIconOverlay.php
 
@@ -1419,12 +1431,6 @@ parameters:
 		-
 			message: '#^Method Zeroseven\\Pagebased\\Pagination\\Pagination\:\:getStageLengths\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: Classes/Pagination/Pagination.php
-
-		-
-			message: '#^Method Zeroseven\\Pagebased\\Pagination\\Pagination\:\:getStages\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: Classes/Pagination/Pagination.php
 
@@ -1555,10 +1561,22 @@ parameters:
 			path: Classes/Registration/EventListener/AddTCAEvent.php
 
 		-
+			message: '#^Call to an undefined static method TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility\:\:addPageTSConfig\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: Classes/Registration/EventListener/AddTSConfigEvent.php
+
+		-
 			message: '#^Cannot call method getFilterPlugin\(\) on Zeroseven\\Pagebased\\Registration\\Registration\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: Classes/Registration/EventListener/AddTSConfigEvent.php
+
+		-
+			message: '#^Call to an undefined static method TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility\:\:addUserTSConfig\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: Classes/Registration/EventListener/AddUserTSConfigEvent.php
 
 		-
 			message: '#^Call to function is_array\(\) with '''' will always evaluate to false\.$#'
@@ -1609,12 +1627,6 @@ parameters:
 			path: Classes/Registration/EventListener/CheckExtensionConfigurationEvent.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Registration\\EventListener\\IconRegistryEvent\:\:__invoke\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: Classes/Registration/EventListener/IconRegistryEvent.php
-
-		-
 			message: '#^Cannot call method getExtensionName\(\) on Zeroseven\\Pagebased\\Registration\\Registration\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -1635,12 +1647,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: Classes/Registration/EventListener/RegisterPluginEvent.php
-
-		-
-			message: '#^Method Zeroseven\\Pagebased\\Registration\\EventListener\\RegisterPluginEvent\:\:__invoke\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: Classes/Registration/EventListener/RegisterPluginEvent.php
 
@@ -1697,6 +1703,12 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: Classes/Registration/ListPluginRegistration.php
+
+		-
+			message: '#^Instanceof between Zeroseven\\Pagebased\\Registration\\AbstractRegistrationEntityProperty and Zeroseven\\Pagebased\\Registration\\AbstractRegistrationEntityProperty will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: Classes/Registration/ObjectRegistration.php
 
 		-
 			message: '#^Method Zeroseven\\Pagebased\\Registration\\ObjectRegistration\:\:addContactPageIds\(\) has parameter \$pageIds with no type specified\.$#'
@@ -1951,18 +1963,6 @@ parameters:
 			path: Classes/Utility/PageClassifierInterface.php
 
 		-
-			message: '#^Call to an undefined method TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\:\:getRequest\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: Classes/Utility/RenderUtility.php
-
-		-
-			message: '#^Call to an undefined method TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\:\:setRequest\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: Classes/Utility/RenderUtility.php
-
-		-
 			message: '#^Method Zeroseven\\Pagebased\\Utility\\RenderUtility\:\:initializeView\(\) has parameter \$pluginConfiguration with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2155,7 +2155,7 @@ parameters:
 			path: Classes/Utility/TagUtility.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\Utility\\TagUtility\:\:collectTagsFromQueryResult\(\) has parameter \$objects with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
+			message: '#^Method Zeroseven\\Pagebased\\Utility\\TagUtility\:\:collectTagsFromQueryResult\(\) has parameter \$queryResult with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
 			count: 1
 			path: Classes/Utility/TagUtility.php
@@ -2185,8 +2185,26 @@ parameters:
 			path: Classes/Utility/TagUtility.php
 
 		-
-			message: '#^Call to an undefined method TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\:\:getRequest\(\)\.$#'
+			message: '#^Call to an undefined method Zeroseven\\Pagebased\\ViewHelpers\\AbstractLinkViewHelper\:\:registerTagAttribute\(\)\.$#'
 			identifier: method.notFound
+			count: 2
+			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
+
+		-
+			message: '#^Cannot call method get\(\) on TYPO3Fluid\\Fluid\\Core\\Variables\\VariableProviderInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
+
+		-
+			message: '#^Cannot call method getAttribute\(\) on TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
+
+		-
+			message: '#^Cannot call method getControllerName\(\) on TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
 
@@ -2199,12 +2217,6 @@ parameters:
 		-
 			message: '#^Cannot call method getObject\(\) on Zeroseven\\Pagebased\\Registration\\Registration\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
-
-		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\AbstractLinkViewHelper\:\:initialize\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: Classes/ViewHelpers/AbstractLinkViewHelper.php
 
@@ -2245,6 +2257,12 @@ parameters:
 			path: Classes/ViewHelpers/Filter/ClearViewHelper.php
 
 		-
+			message: '#^Cannot call method get\(\) on TYPO3Fluid\\Fluid\\Core\\Variables\\VariableProviderInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: Classes/ViewHelpers/Filter/LinkViewHelper.php
+
+		-
 			message: '#^Cannot call method getParameterDiff\(\) on Zeroseven\\Pagebased\\Domain\\Model\\Demand\\DemandInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -2281,67 +2299,43 @@ parameters:
 			path: Classes/ViewHelpers/Filter/LinkViewHelper.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\Pagination\\EachItemViewHelper\:\:initializeArguments\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Cannot call method getVariableProvider\(\) on TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: Classes/ViewHelpers/Pagination/EachItemViewHelper.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\Pagination\\EachItemViewHelper\:\:renderStatic\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: Classes/ViewHelpers/Pagination/EachItemViewHelper.php
-
-		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\Pagination\\EachItemViewHelper\:\:renderStatic\(\) has parameter \$arguments with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: Classes/ViewHelpers/Pagination/EachItemViewHelper.php
-
-		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\Pagination\\EachStageViewHelper\:\:initializeArguments\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Cannot call method getVariableProvider\(\) on TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: Classes/ViewHelpers/Pagination/EachStageViewHelper.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\Pagination\\EachStageViewHelper\:\:renderStatic\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Cannot call method exists\(\) on TYPO3Fluid\\Fluid\\Core\\Variables\\VariableProviderInterface\|null\.$#'
+			identifier: method.nonObject
 			count: 1
-			path: Classes/ViewHelpers/Pagination/EachStageViewHelper.php
+			path: Classes/ViewHelpers/Pagination/Link/AbstractPaginationLinkViewHelper.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\Pagination\\EachStageViewHelper\:\:renderStatic\(\) has parameter \$arguments with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: Classes/ViewHelpers/Pagination/EachStageViewHelper.php
+			message: '#^Cannot call method get\(\) on TYPO3Fluid\\Fluid\\Core\\Variables\\VariableProviderInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: Classes/ViewHelpers/Pagination/Link/AbstractPaginationLinkViewHelper.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\Pagination\\Link\\StageViewHelper\:\:getTargetStage\(\) never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
+			message: '#^Cannot call method getVariableProvider\(\) on TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\|null\.$#'
+			identifier: method.nonObject
 			count: 1
-			path: Classes/ViewHelpers/Pagination/Link/StageViewHelper.php
+			path: Classes/ViewHelpers/Pagination/Link/AbstractPaginationLinkViewHelper.php
 
 		-
-			message: '#^Call to an undefined method TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\:\:getRequest\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: Classes/ViewHelpers/PaginationViewHelper.php
-
-		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\PaginationViewHelper\:\:initializeArguments\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Cannot call method getAttribute\(\) on TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: Classes/ViewHelpers/PaginationViewHelper.php
 
 		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\PaginationViewHelper\:\:renderStatic\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: Classes/ViewHelpers/PaginationViewHelper.php
-
-		-
-			message: '#^Method Zeroseven\\Pagebased\\ViewHelpers\\PaginationViewHelper\:\:renderStatic\(\) has parameter \$arguments with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
+			message: '#^Cannot call method getVariableProvider\(\) on TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: Classes/ViewHelpers/PaginationViewHelper.php

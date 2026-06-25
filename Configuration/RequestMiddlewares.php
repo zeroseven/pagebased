@@ -1,15 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
+use Zeroseven\Pagebased\Middleware\CategoryRedirect;
+use Zeroseven\Pagebased\Middleware\RssFeed;
+use Zeroseven\Pagebased\Middleware\StructuredData;
+
 return [
     'frontend' => [
         'zeroseven/pagebased/structured-data' => [
-            'target' => \Zeroseven\Pagebased\Middleware\StructuredData::class,
+            'target' => StructuredData::class,
             'after' => [
                 'typo3/cms-frontend/prepare-tsfe-rendering',
             ],
         ],
         'zeroseven/pagebased/category-redirect' => [
-            'target' => \Zeroseven\Pagebased\Middleware\CategoryRedirect::class,
+            'target' => CategoryRedirect::class,
             'before' => [
                 'typo3/cms-frontend/shortcut-and-mountpoint-redirect',
             ],
@@ -18,7 +24,7 @@ return [
             ],
         ],
         'zeroseven/pagebased/rss-feed' => [
-            'target' => \Zeroseven\Pagebased\Middleware\RssFeed::class,
+            'target' => RssFeed::class,
             'before' => [
                 'typo3/cms-frontend/page-resolver',
             ],

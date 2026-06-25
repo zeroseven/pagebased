@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\SetList;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
@@ -25,8 +26,14 @@ return RectorConfig::configure()
         \Ssch\TYPO3Rector\CodeQuality\General\InjectMethodToConstructorInjectionRector::class => [
             __DIR__ . '/Classes/Domain/Repository/*',
         ],
+
+        // RssFeed has a constructor argument wired by name in Services.yaml
+        // ($frontend). Renaming it to match the type would break that binding.
+        \Rector\Naming\Rector\ClassMethod\RenameParamToMatchTypeRector::class => [
+            __DIR__ . '/Classes/Middleware/RssFeed.php',
+        ],
     ])
-    ->withPhpSets(php81: true)
+    ->withPhpSets(php82: true)
     ->withPreparedSets(
         deadCode: true,
         codeQuality: true,
@@ -42,9 +49,10 @@ return RectorConfig::configure()
         SetList::DEAD_CODE,
         SetList::EARLY_RETURN,
         SetList::TYPE_DECLARATION,
-        Typo3LevelSetList::UP_TO_TYPO3_12,
+        Typo3LevelSetList::UP_TO_TYPO3_14,
         Typo3SetList::CODE_QUALITY,
         Typo3SetList::GENERAL,
+        PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
     ])
     ->withImportNames(importShortClasses: false, removeUnusedImports: true)
     ->withParallel(maxNumberOfProcess: 4, jobSize: 10)

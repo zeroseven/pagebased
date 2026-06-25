@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\Tests\Functional\Fixtures\Middleware;
 
 use Doctrine\DBAL\Driver;
+use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Middleware;
 use Doctrine\DBAL\Driver\Middleware\AbstractConnectionMiddleware;
 use Doctrine\DBAL\Driver\Middleware\AbstractDriverMiddleware;
@@ -48,7 +49,7 @@ final class QueryCountingMiddleware implements Middleware
     public function wrap(Driver $driver): Driver
     {
         return new class ($driver) extends AbstractDriverMiddleware {
-            public function connect(array $params): Driver\Connection
+            public function connect(array $params): Connection
             {
                 return new class (parent::connect($params)) extends AbstractConnectionMiddleware {
                     public function prepare(string $sql): Statement

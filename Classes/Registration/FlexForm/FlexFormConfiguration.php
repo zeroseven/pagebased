@@ -13,21 +13,10 @@ use Zeroseven\Pagebased\Registration\Event\AddFlexFormEvent;
 
 class FlexFormConfiguration
 {
-    protected string $table;
-    protected string $type;
-    protected string $field;
-    protected ?string $position;
-
     /** @var FlexFormSheetConfiguration[] */
     protected array $sheets = [];
 
-    public function __construct(string $table, string $type, string $field, string $position = null)
-    {
-        $this->table = $table;
-        $this->type = $type;
-        $this->field = $field;
-        $this->position = $position;
-    }
+    public function __construct(protected string $table, protected string $type, protected string $field, protected ?string $position = null) {}
 
     public static function makeInstance(string $table, string $type, string $field, string $position = null): self
     {
@@ -64,9 +53,9 @@ class FlexFormConfiguration
         return $this->sheets[$key] ?? null;
     }
 
-    public function addSheet(FlexFormSheetConfiguration $sheet): self
+    public function addSheet(FlexFormSheetConfiguration $flexFormSheetConfiguration): self
     {
-        $this->sheets[$sheet->getKey()] = $sheet;
+        $this->sheets[$flexFormSheetConfiguration->getKey()] = $flexFormSheetConfiguration;
 
         return $this;
     }
@@ -94,7 +83,19 @@ class FlexFormConfiguration
             }
         }
 
-        $GLOBALS['TCA'][$this->table]['columns'][$this->field]['config']['ds']['*,' . $this->type] = GeneralUtility::makeInstance(FlexFormTools::class)->flexArray2Xml($config);
+        $dataStructure = GeneralUtility::makeInstance(FlexFormTools::class)->flexArray2Xml($config);
+
+        // Register the data structure per content type. The mechanism differs between TYPO3 versions,
+        // so branch on the shape of the default "ds":
+        //  * v13 and earlier: pi_flexform ships an array "ds" plus a "ds_pointerField" (list_type,CType).
+        //    Add the data structure under the matching "*,<CType>" pointer key.
+        //  * v14: pi_flexform ships a single "ds" string and no "ds_pointerField", so a pointer is never
+        //    matched. Bind the data structure to the CType via columnsOverrides instead.
+        if (is_array($GLOBALS['TCA'][$this->table]['columns'][$this->field]['config']['ds'] ?? null)) {
+            $GLOBALS['TCA'][$this->table]['columns'][$this->field]['config']['ds']['*,' . $this->type] = $dataStructure;
+        } else {
+            $GLOBALS['TCA'][$this->table]['types'][$this->type]['columnsOverrides'][$this->field]['config']['ds'] = $dataStructure;
+        }
 
         // Add the flexForm TCA field to the content element
         ExtensionManagementUtility::addToAllTCAtypes($this->table, $this->field, $this->type, $this->position);

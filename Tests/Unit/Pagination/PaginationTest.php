@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Tests\Unit\Pagination;
 
+use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Zeroseven\Pagebased\Pagination\Pagination;
@@ -26,14 +27,13 @@ class PaginationTest extends UnitTestCase
     /** Creates N distinct stdClass objects for use as pagination items. */
     private function makeItems(int $count): array
     {
-        return array_map(static fn() => new \stdClass(), range(1, $count));
+        return array_map(static fn(): \stdClass => new \stdClass(), range(1, $count));
     }
 
     // ---------------------------------------------------------------------------
     // Items
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function itemsAreStoredCorrectly(): void
     {
         $items = $this->makeItems(3);
@@ -42,7 +42,7 @@ class PaginationTest extends UnitTestCase
         self::assertSame($items, $pagination->getItems());
     }
 
-    /** @test */
+    #[Test]
     public function emptyItemsResultInEmptyArray(): void
     {
         $pagination = new Pagination([], 0);
@@ -53,8 +53,7 @@ class PaginationTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // Stage selection
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function selectedStageDefaultsToZero(): void
     {
         $pagination = new Pagination($this->makeItems(2), 0);
@@ -62,7 +61,7 @@ class PaginationTest extends UnitTestCase
         self::assertSame(0, $pagination->getSelectedStage());
     }
 
-    /** @test */
+    #[Test]
     public function selectedStageIsStoredCorrectly(): void
     {
         $pagination = new Pagination($this->makeItems(20), 2, 6);
@@ -73,8 +72,7 @@ class PaginationTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // itemsPerStage
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function uniformItemsPerStageDistributesEvenly(): void
     {
         $pagination = new Pagination($this->makeItems(12), 0, 4);
@@ -86,7 +84,7 @@ class PaginationTest extends UnitTestCase
         self::assertCount(4, $stages[2]->toArray());
     }
 
-    /** @test */
+    #[Test]
     public function commaSeparatedItemsPerStageUsesProgressiveLengths(): void
     {
         // First stage: 3 items, second: 6, then 12 for remaining stages
@@ -100,7 +98,7 @@ class PaginationTest extends UnitTestCase
         self::assertCount(9, $stages[3]->toArray());
     }
 
-    /** @test */
+    #[Test]
     public function lastValueInCommaSeparatedListFillsRemainingStages(): void
     {
         $pagination = new Pagination($this->makeItems(10), 0, '4,3');
@@ -115,8 +113,7 @@ class PaginationTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // maxStages
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function maxStagesIsCappedAt100(): void
     {
         $pagination = new Pagination([], 0, 6, 200);
@@ -124,7 +121,7 @@ class PaginationTest extends UnitTestCase
         self::assertSame(100, $pagination->getMaxStages());
     }
 
-    /** @test */
+    #[Test]
     public function maxStagesMinimumIsOne(): void
     {
         // Constructor treats 0 as "use default (100)", so test the setter directly.
@@ -134,7 +131,7 @@ class PaginationTest extends UnitTestCase
         self::assertSame(1, $pagination->getMaxStages());
     }
 
-    /** @test */
+    #[Test]
     public function maxStagesLimitsNumberOfStages(): void
     {
         $pagination = new Pagination($this->makeItems(100), 0, 6, 3);
@@ -145,8 +142,7 @@ class PaginationTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // getIndicators
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function getIndicatorsReturnsOneEntryPerStageWhenAllFilled(): void
     {
         $pagination = new Pagination($this->makeItems(12), 0, 4);
@@ -155,7 +151,7 @@ class PaginationTest extends UnitTestCase
         self::assertCount(3, $pagination->getIndicators());
     }
 
-    /** @test */
+    #[Test]
     public function getIndicatorsStopsBeforePartialLastStage(): void
     {
         // 10 items, 4 per stage: stage 0=4, stage 1=4, stage 2=2 (partial)
@@ -166,7 +162,7 @@ class PaginationTest extends UnitTestCase
         self::assertCount(2, $indicators);
     }
 
-    /** @test */
+    #[Test]
     public function getIndicatorsReturnsEmptyArrayForNoItems(): void
     {
         $pagination = new Pagination([], 0, 6);
@@ -177,8 +173,7 @@ class PaginationTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // getNextStage / getPreviousStage
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function getNextStageReturnsIncrementedIndexWhenMoreItemsExist(): void
     {
         $pagination = new Pagination($this->makeItems(20), 0, 6);
@@ -186,7 +181,7 @@ class PaginationTest extends UnitTestCase
         self::assertSame(1, $pagination->getNextStage());
     }
 
-    /** @test */
+    #[Test]
     public function getNextStageReturnsNullWhenAllItemsShown(): void
     {
         $pagination = new Pagination($this->makeItems(6), 0, 6);
@@ -194,7 +189,7 @@ class PaginationTest extends UnitTestCase
         self::assertNull($pagination->getNextStage());
     }
 
-    /** @test */
+    #[Test]
     public function getNextStageReturnsNullAtMaxStageLimit(): void
     {
         $pagination = new Pagination($this->makeItems(100), 99, 1, 100);
@@ -202,7 +197,7 @@ class PaginationTest extends UnitTestCase
         self::assertNull($pagination->getNextStage());
     }
 
-    /** @test */
+    #[Test]
     public function getPreviousStageReturnsNullOnFirstStage(): void
     {
         $pagination = new Pagination($this->makeItems(10), 0, 5);
@@ -210,7 +205,7 @@ class PaginationTest extends UnitTestCase
         self::assertNull($pagination->getPreviousStage());
     }
 
-    /** @test */
+    #[Test]
     public function getPreviousStageReturnsDecrementedIndex(): void
     {
         $pagination = new Pagination($this->makeItems(20), 2, 5);
@@ -221,8 +216,7 @@ class PaginationTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // Stage object
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function selectedStageIsMarkedAsSelected(): void
     {
         $pagination = new Pagination($this->makeItems(12), 1, 4);
@@ -233,7 +227,7 @@ class PaginationTest extends UnitTestCase
         self::assertFalse($stages[2]->isSelected());
     }
 
-    /** @test */
+    #[Test]
     public function allStagesUpToSelectedAreActive(): void
     {
         $pagination = new Pagination($this->makeItems(12), 1, 4);
@@ -247,8 +241,7 @@ class PaginationTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // Range
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function stageRangeCalculatesCorrectFromAndTo(): void
     {
         $pagination = new Pagination($this->makeItems(12), 0, 4);

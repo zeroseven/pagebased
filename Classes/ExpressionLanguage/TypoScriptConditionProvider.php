@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\ExpressionLanguage;
 
 use TYPO3\CMS\Core\ExpressionLanguage\AbstractProvider;
+use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
 
 /**
@@ -32,7 +33,7 @@ class TypoScriptConditionProvider extends AbstractProvider
         $object = ObjectUtility::isObject();
         $category = ObjectUtility::isCategory();
 
-        if ($registration = $object ?? $category) {
+        if (($registration = $object ?? $category) instanceof Registration) {
             $result = new \stdClass();
             $result->object = (bool)$object;
             $result->category = (bool)$category;

@@ -17,7 +17,8 @@ class ArrayPathUtility
     protected const PATH_DIVIDER = '.';
 
     protected array $data;
-    private PropertyAccessor $propertyAccessor;
+
+    private readonly PropertyAccessor $propertyAccessor;
 
     public function __construct(array $array = null)
     {
@@ -33,12 +34,12 @@ class ArrayPathUtility
 
     protected function convertPathToPropertyPath(string $path): string
     {
-        return implode('', array_map(static fn($property) => '[' . $property . ']', explode(self::PATH_DIVIDER, trim($path, self::PATH_DIVIDER))));
+        return implode('', array_map(static fn($property): string => '[' . $property . ']', explode(self::PATH_DIVIDER, trim($path, self::PATH_DIVIDER))));
     }
 
     public function get(string $propertyPath = null): mixed
     {
-        if (empty($propertyPath)) {
+        if (in_array($propertyPath, [null, '', '0'], true)) {
             return $this->data;
         }
 
@@ -77,7 +78,7 @@ class ArrayPathUtility
 
     public function isEmpty(): bool
     {
-        return empty($this->data);
+        return $this->data === [];
     }
 
     public function toArray(): array

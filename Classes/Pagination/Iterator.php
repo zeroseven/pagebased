@@ -6,12 +6,10 @@ namespace Zeroseven\Pagebased\Pagination;
 
 class Iterator
 {
-    private int $total;
     private int $index;
 
-    public function __construct(int $total, int $index = null)
+    public function __construct(private readonly int $total, int $index = null)
     {
-        $this->total = $total;
         $this->index = $index ?? 0;
     }
 

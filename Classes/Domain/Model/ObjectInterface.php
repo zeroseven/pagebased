@@ -25,11 +25,11 @@ interface ObjectInterface extends PageEntityInterface
 
     public function getRelationsTo(): ObjectStorage;
 
-    public function setRelationsTo(ObjectStorage $relationsTo): self;
+    public function setRelationsTo(ObjectStorage $objectStorage): self;
 
     public function getRelationsFrom(): ObjectStorage;
 
-    public function setRelationsFrom(ObjectStorage $relationsFrom): self;
+    public function setRelationsFrom(ObjectStorage $objectStorage): self;
 
     public function getRelations(): ObjectStorage;
 }

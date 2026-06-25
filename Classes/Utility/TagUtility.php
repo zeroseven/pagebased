@@ -17,10 +17,10 @@ use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class TagUtility
 {
-    public static function collectTagsFromQueryResult(QueryResultInterface $objects): array
+    public static function collectTagsFromQueryResult(QueryResultInterface $queryResult): array
     {
         $tagMap = [];
-        foreach ($objects->toArray() as $object) {
+        foreach ($queryResult->toArray() as $object) {
             foreach ($object->getTags() ?? [] as $tag) {
                 $tagMap[$tag] = true;
             }
@@ -42,8 +42,8 @@ class TagUtility
     public static function collectTagsFromStrings(array $tagStrings): array
     {
         $tagMap = [];
-        foreach ($tagStrings as $csv) {
-            foreach (GeneralUtility::trimExplode(',', $csv, true) as $tag) {
+        foreach ($tagStrings as $tagString) {
+            foreach (GeneralUtility::trimExplode(',', $tagString, true) as $tag) {
                 $tagMap[$tag] = true;
             }
         }
@@ -54,50 +54,47 @@ class TagUtility
         return $tags;
     }
 
-    public static function getTags(ObjectDemandInterface $demand, RepositoryInterface $repository, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
+    public static function getTags(ObjectDemandInterface $objectDemand, RepositoryInterface $repositoryRepository, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
         // When the nonglobal-tags feature is enabled, scope tags to the current rootline category.
-        if (GeneralUtility::makeInstance(Features::class)->isFeatureEnabled('pagebased.nonglobalTags')) {
-            if (!$demand->{'getCategory'}()) {
-                // Resolve the category doktype for this specific repository to avoid matching
-                // category pages from a different registration in multi-registration installations.
-                $registrationDoktype = RegistrationService::getRegistrationByRepository($repository)
-                    ?->getCategory()
-                    ?->getDocumentType();
-
-                $currentPage = RootLineUtility::getCurrentPage();
-                $pagesAbove = RootLineUtility::collectPagesAbove($currentPage, true);
-
-                // Find the first category page in the rootline that belongs to this registration.
-                // Fall back to any registered category doktype when the registration cannot be resolved.
-                $categoryUid = null;
-                foreach ($pagesAbove as $page) {
-                    if (!isset($page['doktype'])) {
-                        continue;
-                    }
-                    $doktype = (int)$page['doktype'];
-                    $matches = $registrationDoktype !== null
-                        ? $doktype === $registrationDoktype
-                        : RegistrationService::getRegistrationByCategoryDocumentType($doktype) !== null;
-
-                    if ($matches) {
-                        $categoryUid = (int)$page['uid'];
-                        break;
-                    }
+        if (GeneralUtility::makeInstance(Features::class)->isFeatureEnabled('pagebased.nonglobalTags') && !$objectDemand->{'getCategory'}()) {
+            // Resolve the category doktype for this specific repository to avoid matching
+            // category pages from a different registration in multi-registration installations.
+            $registrationDoktype = RegistrationService::getRegistrationByRepository($repositoryRepository)
+                ?->getCategory()
+                ?->getDocumentType();
+            $currentPage = RootLineUtility::getCurrentPage();
+            $pagesAbove = RootLineUtility::collectPagesAbove($currentPage, true);
+            // Find the first category page in the rootline that belongs to this registration.
+            // Fall back to any registered category doktype when the registration cannot be resolved.
+            $categoryUid = null;
+            foreach ($pagesAbove as $pageAbove) {
+                if (!isset($pageAbove['doktype'])) {
+                    continue;
                 }
 
-                if ($categoryUid) {
-                    $demand->{'setCategory'}($categoryUid);
-                } else {
-                    // No category found in rootline → return null to avoid showing all tags
-                    return null;
+                $doktype = (int)$pageAbove['doktype'];
+                $matches = $registrationDoktype !== null
+                    ? $doktype === $registrationDoktype
+                    : RegistrationService::getRegistrationByCategoryDocumentType($doktype) instanceof Registration;
+
+                if ($matches) {
+                    $categoryUid = (int)$pageAbove['uid'];
+                    break;
                 }
+            }
+
+            if ($categoryUid) {
+                $objectDemand->{'setCategory'}($categoryUid);
+            } else {
+                // No category found in rootline → return null to avoid showing all tags
+                return null;
             }
         }
 
         // Override language
         if ($languageUid !== null) {
-            $querySettings = $repository->getDefaultQuerySettings();
+            $querySettings = $repositoryRepository->getDefaultQuerySettings();
 
             if ($languageUid === -1) {
                 $querySettings->setRespectSysLanguage(false);
@@ -106,7 +103,7 @@ class TagUtility
                 $querySettings->setLanguageAspect($languageAspect);
             }
 
-            $repository->setDefaultQuerySettings($querySettings);
+            $repositoryRepository->setDefaultQuerySettings($querySettings);
         }
 
         // Use a lightweight tag-only query when supported (avoids full Extbase object hydration).
@@ -116,25 +113,25 @@ class TagUtility
         // are also protected when operating in a non-default site language.
         $contextLanguageUid = (int)GeneralUtility::makeInstance(Context::class)
             ->getPropertyFromAspect('language', 'id', 0);
-        if ($repository instanceof AbstractObjectRepository && $languageUid === null && $contextLanguageUid === 0) {
-            $tagDemand = $ignoreTagsFromDemand === true ? $demand->setTags(null) : $demand;
-            $tagStrings = $repository->findTagStrings($tagDemand);
+        if ($repositoryRepository instanceof AbstractObjectRepository && $languageUid === null && $contextLanguageUid === 0) {
+            $tagDemand = $ignoreTagsFromDemand === true ? $objectDemand->setTags(null) : $objectDemand;
+            $tagStrings = $repositoryRepository->findTagStrings($tagDemand);
 
             return $tagStrings !== [] ? self::collectTagsFromStrings($tagStrings) : null;
         }
 
         // Fallback: load full objects and extract tags in PHP
-        if ($objects = $repository->findByDemand($ignoreTagsFromDemand === true ? $demand->setTags(null) : $demand)) {
+        if (($objects = $repositoryRepository->findByDemand($ignoreTagsFromDemand === true ? $objectDemand->setTags(null) : $objectDemand)) instanceof QueryResultInterface) {
             return self::collectTagsFromQueryResult($objects);
         }
 
         return null;
     }
 
-    public static function getTagsByDemand(ObjectDemandInterface $demand, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
+    public static function getTagsByDemand(ObjectDemandInterface $objectDemand, bool $ignoreTagsFromDemand = null, int $languageUid = null): ?array
     {
-        if (($registration = RegistrationService::getRegistrationByDemand($demand)) && ($repository = $registration->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
-            return self::getTags($demand, $repository, $ignoreTagsFromDemand, $languageUid);
+        if (($registration = RegistrationService::getRegistrationByDemand($objectDemand)) && ($repository = $registration->getObject()->getRepositoryClass()) instanceof RepositoryInterface) {
+            return self::getTags($objectDemand, $repository, $ignoreTagsFromDemand, $languageUid);
         }
 
         return null;

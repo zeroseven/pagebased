@@ -13,7 +13,7 @@ use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class SuggestRelationReceiver extends SuggestWizardDefaultReceiver
 {
-    public function __construct($table, $config)
+    public function __construct(string $table, array $config)
     {
         parent::__construct($table, $config);
 
@@ -26,7 +26,7 @@ class SuggestRelationReceiver extends SuggestWizardDefaultReceiver
         ) {
             $this->queryBuilder->andWhere($this->queryBuilder->expr()->eq(DetectionUtility::REGISTRATION_FIELD_NAME, $this->queryBuilder->createNamedParameter($registration->getIdentifier())));
 
-            if ($rootPage = RootLineUtility::getRootPage($uid)) {
+            if (($rootPage = RootLineUtility::getRootPage($uid)) !== 0) {
                 $this->queryBuilder->andWhere($this->queryBuilder->expr()->eq(DetectionUtility::SITE_FIELD_NAME, $rootPage));
             }
         }

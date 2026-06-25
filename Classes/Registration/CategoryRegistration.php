@@ -8,8 +8,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class CategoryRegistration extends AbstractRegistrationEntityProperty
 {
-    protected ?string $iconIdentifier = null;
-    protected int $documentType = 0;
+    private ?string $iconIdentifier = null;
+
+    private int $documentType = 0;
 
     public function getIconIdentifier(bool $hideInMenu = null): string
     {

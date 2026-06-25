@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Tests\Functional\Performance;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Zeroseven\Pagebased\Tests\Functional\Fixtures\Middleware\QueryCountingMiddleware;
 use Zeroseven\Pagebased\Utility\RootLineUtility;
@@ -37,7 +38,9 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
             'Connections' => [
                 'Default' => [
                     'driverMiddlewares' => [
-                        QueryCountingMiddleware::class,
+                        'pagebased/query-counting' => [
+                            'target' => QueryCountingMiddleware::class,
+                        ],
                     ],
                 ],
             ],
@@ -56,14 +59,7 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
     // -------------------------------------------------------------------------
     // Query count – cold (no cache)
     // -------------------------------------------------------------------------
-
-    /**
-     * @test
-     * Traversing a 20-level linear chain from the root should require at least
-     * as many queries as there are levels (one per node without cache).
-     * Before our static-cache fix this was always the case; after the fix it
-     * still holds for the very first call (cold cache).
-     */
+    #[Test]
     public function collectPagesBelowFiresMultipleQueriesForDeepTreeOnColdCache(): void
     {
         QueryCountingMiddleware::reset();
@@ -80,11 +76,7 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
         ));
     }
 
-    /**
-     * @test
-     * Traversing upward from the deepest leaf (uid 219) must touch each
-     * ancestor once → at least 1 query per level on a cold cache.
-     */
+    #[Test]
     public function collectPagesAboveFiresMultipleQueriesOnColdCache(): void
     {
         QueryCountingMiddleware::reset();
@@ -102,12 +94,7 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
     // -------------------------------------------------------------------------
     // Query count – warm (static request cache)
     // -------------------------------------------------------------------------
-
-    /**
-     * @test
-     * After the first call populates the static cache, an identical second
-     * call must not issue ANY additional SQL queries.
-     */
+    #[Test]
     public function collectPagesBelowIssuesZeroQueriesOnCacheHit(): void
     {
         // Warm the cache
@@ -121,10 +108,7 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
         self::assertSame(0, QueryCountingMiddleware::getCount(), 'Second call with same arguments must hit cache and issue 0 queries');
     }
 
-    /**
-     * @test
-     * Same for the upward traversal.
-     */
+    #[Test]
     public function collectPagesAboveIssuesZeroQueriesOnCacheHit(): void
     {
         RootLineUtility::collectPagesAbove(219);
@@ -135,12 +119,7 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
         self::assertSame(0, QueryCountingMiddleware::getCount(), 'Cached collectPagesAbove() must issue 0 queries');
     }
 
-    /**
-     * @test
-     * Different arguments produce different cache keys – a second call with a
-     * different startingPoint must NOT reuse the previous result and must
-     * issue queries.
-     */
+    #[Test]
     public function collectPagesBelowWithDifferentArgumentsBypassesCache(): void
     {
         // Prime cache for uid=200
@@ -156,13 +135,7 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
     // -------------------------------------------------------------------------
     // Timing – cached vs uncached
     // -------------------------------------------------------------------------
-
-    /**
-     * @test
-     * The cached call must not be significantly more expensive than the cold call.
-     * We allow a generous factor of 5× to account for measurement noise on slow CI.
-     * The zero-query guarantee is verified separately in collectPagesBelowIssuesZeroQueriesOnCacheHit().
-     */
+    #[Test]
     public function cachedCallIsNotSignificantlySlowerThanColdCall(): void
     {
         // Cold call
@@ -182,11 +155,7 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
         ));
     }
 
-    /**
-     * @test
-     * The entire 20-level traversal must complete within a generous wall-clock
-     * budget. This catches regressions that introduce blocking or sleeping.
-     */
+    #[Test]
     public function collectPagesBelowCompleteWithinTimeBudget(): void
     {
         $start = microtime(true);
@@ -202,11 +171,7 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
     // -------------------------------------------------------------------------
     // Result correctness – verify cache returns same data
     // -------------------------------------------------------------------------
-
-    /**
-     * @test
-     * The cached result must be identical to the freshly queried one.
-     */
+    #[Test]
     public function cacheReturnsSameDataAsOriginalQuery(): void
     {
         $first = RootLineUtility::collectPagesBelow(200);
@@ -216,11 +181,7 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
         self::assertCount(19, $first, '20-level chain: uid=200 has 19 descendants (uid 201–219)');
     }
 
-    /**
-     * @test
-     * collectPagesBelow for the wide tree root should return all 40 descendants
-     * (10 parents + 30 grandchildren) in a single cold call.
-     */
+    #[Test]
     public function collectPagesBelowReturnsAllDescendantsOfWideTree(): void
     {
         $pages = RootLineUtility::collectPagesBelow(1);
@@ -239,9 +200,8 @@ final class RootLineUtilityPerformanceTest extends FunctionalTestCase
      */
     private function resetRootLineCache(): void
     {
-        $reflection = new \ReflectionClass(RootLineUtility::class);
-        $property = $reflection->getProperty('cache');
-        $property->setAccessible(true);
-        $property->setValue(null, []);
+        $reflectionClass = new \ReflectionClass(RootLineUtility::class);
+        $reflectionProperty = $reflectionClass->getProperty('cache');
+        $reflectionProperty->setValue(null, []);
     }
 }

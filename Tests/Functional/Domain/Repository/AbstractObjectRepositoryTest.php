@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Tests\Functional\Domain\Repository;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Zeroseven\Pagebased\Registration\CategoryRegistration;
 use Zeroseven\Pagebased\Registration\ObjectRegistration;
@@ -47,7 +48,7 @@ class AbstractObjectRepositoryTest extends FunctionalTestCase
         'frontend',
     ];
 
-    private TestObjectRepository $repository;
+    private TestObjectRepository $testObjectRepository;
 
     protected function setUp(): void
     {
@@ -59,7 +60,7 @@ class AbstractObjectRepositoryTest extends FunctionalTestCase
 
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Database/pages_objects.csv');
 
-        $this->repository = $this->get(TestObjectRepository::class);
+        $this->testObjectRepository = $this->get(TestObjectRepository::class);
     }
 
     private function bootstrapTestRegistration(): void
@@ -83,91 +84,87 @@ class AbstractObjectRepositoryTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // Identifier constraint
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function findByDemandReturnsOnlyObjectsWithMatchingRegistrationIdentifier(): void
     {
-        $demand = $this->repository->initializeDemand();
-        $results = $this->repository->findByDemand($demand);
+        $demand = $this->testObjectRepository->initializeDemand();
+        $results = $this->testObjectRepository->findByDemand($demand);
 
         self::assertNotNull($results);
 
-        foreach ($results as $object) {
-            self::assertInstanceOf(TestObject::class, $object);
+        foreach ($results as $result) {
+            self::assertInstanceOf(TestObject::class, $result);
         }
     }
 
     // ---------------------------------------------------------------------------
     // nav_hide / hidden filtering
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function findByDemandExcludesNavHiddenObjects(): void
     {
-        $demand = $this->repository->initializeDemand();
-        $results = $this->repository->findByDemand($demand);
+        $demand = $this->testObjectRepository->initializeDemand();
+        $results = $this->testObjectRepository->findByDemand($demand);
 
         self::assertNotNull($results);
 
-        $uids = array_map(static fn($o) => $o->getUid(), iterator_to_array($results));
+        $uids = array_map(static fn(object $o) => $o->getUid(), iterator_to_array($results));
         self::assertNotContains(24, $uids, 'nav_hide=1 object (uid=24) must not appear');
     }
 
-    /** @test */
+    #[Test]
     public function findByDemandExcludesHiddenObjects(): void
     {
-        $demand = $this->repository->initializeDemand();
-        $results = $this->repository->findByDemand($demand);
+        $demand = $this->testObjectRepository->initializeDemand();
+        $results = $this->testObjectRepository->findByDemand($demand);
 
         self::assertNotNull($results);
 
-        $uids = array_map(static fn($o) => $o->getUid(), iterator_to_array($results));
+        $uids = array_map(static fn(object $o) => $o->getUid(), iterator_to_array($results));
         self::assertNotContains(23, $uids, 'hidden=1 object (uid=23) must not appear');
     }
 
     // ---------------------------------------------------------------------------
     // Child object filtering
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function findByDemandExcludesChildObjectsByDefault(): void
     {
-        $demand = $this->repository->initializeDemand();
+        $demand = $this->testObjectRepository->initializeDemand();
         // includeChildObjects defaults to false
         self::assertFalse($demand->getIncludeChildObjects());
 
-        $results = $this->repository->findByDemand($demand);
+        $results = $this->testObjectRepository->findByDemand($demand);
         self::assertNotNull($results);
 
-        $uids = array_map(static fn($o) => $o->getUid(), iterator_to_array($results));
+        $uids = array_map(static fn(object $o) => $o->getUid(), iterator_to_array($results));
         self::assertNotContains(25, $uids, 'child object (uid=25) must be excluded by default');
     }
 
-    /** @test */
+    #[Test]
     public function findByDemandIncludesChildObjectsWhenEnabled(): void
     {
-        $demand = $this->repository->initializeDemand()->setIncludeChildObjects(true);
-        $results = $this->repository->findByDemand($demand);
+        $demand = $this->testObjectRepository->initializeDemand()->setIncludeChildObjects(true);
+        $results = $this->testObjectRepository->findByDemand($demand);
 
         self::assertNotNull($results);
 
-        $uids = array_map(static fn($o) => $o->getUid(), iterator_to_array($results));
+        $uids = array_map(static fn(object $o) => $o->getUid(), iterator_to_array($results));
         self::assertContains(25, $uids, 'child object (uid=25) must appear when includeChildObjects=true');
     }
 
     // ---------------------------------------------------------------------------
     // Category constraint via RootLineUtility
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function findByDemandWithCategoryConstraintReturnsOnlyObjectsUnderThatCategory(): void
     {
-        $demand = $this->repository->initializeDemand()->setCategory(10);
-        $results = $this->repository->findByDemand($demand);
+        $demand = $this->testObjectRepository->initializeDemand()->setCategory(10);
+        $results = $this->testObjectRepository->findByDemand($demand);
 
         self::assertNotNull($results);
 
-        $uids = array_map(static fn($o) => $o->getUid(), iterator_to_array($results));
+        $uids = array_map(static fn(object $o) => $o->getUid(), iterator_to_array($results));
 
         // Objects directly under category 10
         self::assertContains(20, $uids);
@@ -178,15 +175,15 @@ class AbstractObjectRepositoryTest extends FunctionalTestCase
         self::assertNotContains(31, $uids);
     }
 
-    /** @test */
+    #[Test]
     public function findByDemandWithCategoryConstraintExcludesObjectsFromOtherCategories(): void
     {
-        $demand = $this->repository->initializeDemand()->setCategory(30);
-        $results = $this->repository->findByDemand($demand);
+        $demand = $this->testObjectRepository->initializeDemand()->setCategory(30);
+        $results = $this->testObjectRepository->findByDemand($demand);
 
         self::assertNotNull($results);
 
-        $uids = array_map(static fn($o) => $o->getUid(), iterator_to_array($results));
+        $uids = array_map(static fn(object $o) => $o->getUid(), iterator_to_array($results));
         self::assertContains(31, $uids);
 
         // Objects from category 10 must not appear
@@ -197,23 +194,22 @@ class AbstractObjectRepositoryTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // Limit / maxItems
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function findByDemandUsesLimitOf1000WhenMaxItemsIsZero(): void
     {
-        $demand = $this->repository->initializeDemand();
+        $demand = $this->testObjectRepository->initializeDemand();
         self::assertSame(0, $demand->getMaxItems(), 'Default maxItems should be 0');
 
         // findByDemand must not throw and must return a result
-        $results = $this->repository->findByDemand($demand);
+        $results = $this->testObjectRepository->findByDemand($demand);
         self::assertNotNull($results);
     }
 
-    /** @test */
+    #[Test]
     public function findByDemandRespectsCustomMaxItems(): void
     {
-        $demand = $this->repository->initializeDemand()->setMaxItems(2);
-        $results = $this->repository->findByDemand($demand);
+        $demand = $this->testObjectRepository->initializeDemand()->setMaxItems(2);
+        $results = $this->testObjectRepository->findByDemand($demand);
 
         self::assertNotNull($results);
         self::assertLessThanOrEqual(2, $results->count());

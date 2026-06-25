@@ -1,9 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use Zeroseven\Pagebased\Backend\Form\Wizard\SuggestRelationReceiver;
+use Zeroseven\Pagebased\Backend\TCA\GroupFilter;
+use Zeroseven\Pagebased\Backend\TCA\ItemsProcFunc;
+use Zeroseven\Pagebased\Utility\DetectionUtility;
+
 defined('TYPO3') || die('📄');
 
-call_user_func(static function (string $table) {
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [
+call_user_func(static function (string $table): void {
+    ExtensionManagementUtility::addTCAcolumns($table, [
         'pagebased_top' => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
@@ -51,7 +59,7 @@ call_user_func(static function (string $table) {
                 'renderType' => 'selectCheckBox',
                 'foreign_table' => 'tx_pagebased_domain_model_topic',
                 'MM' => 'tx_pagebased_object_topic_mm',
-                'itemsProcFunc' => \Zeroseven\Pagebased\Backend\TCA\ItemsProcFunc::class . '->topics',
+                'itemsProcFunc' => ItemsProcFunc::class . '->topics',
                 'default' => 0,
             ],
         ],
@@ -64,7 +72,7 @@ call_user_func(static function (string $table) {
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'foreign_table' => 'tx_pagebased_domain_model_contact',
-                'itemsProcFunc' => \Zeroseven\Pagebased\Backend\TCA\ItemsProcFunc::class . '->contacts',
+                'itemsProcFunc' => ItemsProcFunc::class . '->contacts',
                 'default' => 0,
                 'items' => [[
                     'label' => '-',
@@ -88,11 +96,11 @@ call_user_func(static function (string $table) {
                 'autoSizeMax' => 10,
                 'maxitems' => 99,
                 'filter' => [[
-                    'userFunc' => \Zeroseven\Pagebased\Backend\TCA\GroupFilter::class . '->filterObject',
+                    'userFunc' => GroupFilter::class . '->filterObject',
                 ]],
                 'suggestOptions' => [
                     'default' => [
-                        'receiverClass' => \Zeroseven\Pagebased\Backend\Form\Wizard\SuggestRelationReceiver::class,
+                        'receiverClass' => SuggestRelationReceiver::class,
                         'minimumCharacters' => 2,
                         'searchWholePhrase' => true,
                     ],
@@ -140,17 +148,18 @@ call_user_func(static function (string $table) {
     // System relevant fields must exist in TCA to map their values to the model
     foreach ([
         'SYS_LASTCHANGED', 'crdate',
-        \Zeroseven\Pagebased\Utility\DetectionUtility::SITE_FIELD_NAME,
-        \Zeroseven\Pagebased\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
-        \Zeroseven\Pagebased\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME,
+        DetectionUtility::SITE_FIELD_NAME,
+        DetectionUtility::REGISTRATION_FIELD_NAME,
+        DetectionUtility::CHILD_OBJECT_FIELD_NAME,
     ] as $fieldName) {
-        isset($GLOBALS['TCA'][$table]['columns'][$fieldName])
-        || \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, [$fieldName => ['config' => ['type' => 'passthrough']]]);
+        if (!isset($GLOBALS['TCA'][$table]['columns'][$fieldName])) {
+            ExtensionManagementUtility::addTCAcolumns($table, [$fieldName => ['config' => ['type' => 'passthrough']]]);
+        }
     }
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.tab.pagebased_settings, pagebased_top, pagebased_date, pagebased_tags, pagebased_topics, pagebased_contact, pagebased_relations_to, pagebased_relations_from, pagebased_redirect_category,' . implode(',', [
-        \Zeroseven\Pagebased\Utility\DetectionUtility::SITE_FIELD_NAME,
-        \Zeroseven\Pagebased\Utility\DetectionUtility::REGISTRATION_FIELD_NAME,
-        \Zeroseven\Pagebased\Utility\DetectionUtility::CHILD_OBJECT_FIELD_NAME,
+    ExtensionManagementUtility::addToAllTCAtypes($table, '--div--;LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:pages.tab.pagebased_settings, pagebased_top, pagebased_date, pagebased_tags, pagebased_topics, pagebased_contact, pagebased_relations_to, pagebased_relations_from, pagebased_redirect_category,' . implode(',', [
+        DetectionUtility::SITE_FIELD_NAME,
+        DetectionUtility::REGISTRATION_FIELD_NAME,
+        DetectionUtility::CHILD_OBJECT_FIELD_NAME,
     ]), '');
 }, 'pages');

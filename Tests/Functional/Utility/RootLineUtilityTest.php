@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Tests\Functional\Utility;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Zeroseven\Pagebased\Utility\RootLineUtility;
 
@@ -39,8 +40,7 @@ class RootLineUtilityTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // collectPagesBelow
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function collectPagesBelowReturnsAllDirectChildren(): void
     {
         $pages = RootLineUtility::collectPagesBelow(10, false, 1);
@@ -50,7 +50,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertArrayHasKey(13, $pages);
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesBelowDoesNotIncludeStartingPointByDefault(): void
     {
         $pages = RootLineUtility::collectPagesBelow(10, false, 1);
@@ -58,7 +58,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertArrayNotHasKey(10, $pages);
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesBelowIncludesStartingPointWhenRequested(): void
     {
         $pages = RootLineUtility::collectPagesBelow(10, true, 1);
@@ -66,7 +66,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertArrayHasKey(10, $pages);
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesBelowReturnsAllDescendantsWithSufficientDepth(): void
     {
         $pages = RootLineUtility::collectPagesBelow(10, false, 2);
@@ -81,7 +81,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertArrayHasKey(30, $pages);
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesBelowRespectsDepthLimit(): void
     {
         // Depth 1 should not include level-2 descendants
@@ -92,7 +92,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertArrayNotHasKey(30, $pages);
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesBelowReturnsEmptyArrayForLeafNode(): void
     {
         $pages = RootLineUtility::collectPagesBelow(20, false, 5);
@@ -100,7 +100,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertSame([], $pages);
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesBelowDoesNotCrossIntoSiblingSubtrees(): void
     {
         // Starting from uid=11 should not return siblings 12/13 or their children
@@ -114,8 +114,7 @@ class RootLineUtilityTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // collectPagesAbove
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function collectPagesAboveReturnsAncestors(): void
     {
         // uid=20 has ancestors 11, 10, 1 (not 0 = virtual root)
@@ -126,7 +125,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertArrayHasKey(1, $pages);
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesAboveDoesNotIncludeStartingPointByDefault(): void
     {
         $pages = RootLineUtility::collectPagesAbove(20, false, 100);
@@ -134,7 +133,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertArrayNotHasKey(20, $pages);
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesAboveIncludesStartingPointWhenRequested(): void
     {
         $pages = RootLineUtility::collectPagesAbove(20, true, 100);
@@ -142,7 +141,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertArrayHasKey(20, $pages);
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesAboveRespectsDepthLimit(): void
     {
         // Depth 1: only the direct parent (uid=11)
@@ -153,7 +152,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertArrayNotHasKey(1, $pages);
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesAboveReturnsEmptyArrayForTopLevelPage(): void
     {
         // uid=1 has pid=0 (virtual root), no real ancestors
@@ -165,8 +164,7 @@ class RootLineUtilityTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // getParentPage
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function getParentPageReturnsDirectParentUid(): void
     {
         $parentUid = RootLineUtility::getParentPage(20);
@@ -174,7 +172,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertSame(11, $parentUid);
     }
 
-    /** @test */
+    #[Test]
     public function getParentPageReturnsZeroForTopLevelPage(): void
     {
         $parentUid = RootLineUtility::getParentPage(1);
@@ -182,7 +180,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertSame(0, $parentUid);
     }
 
-    /** @test */
+    #[Test]
     public function getParentPageReturnsDifferentParentsForSiblings(): void
     {
         $parentOf20 = RootLineUtility::getParentPage(20);
@@ -195,8 +193,7 @@ class RootLineUtilityTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // Language / translation handling
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function collectPagesBelowExcludesTranslatedPages(): void
     {
         // Fixture adds uid=40 (pid=12, sys_language_uid=1, l10n_parent=30).
@@ -209,7 +206,7 @@ class RootLineUtilityTest extends FunctionalTestCase
         self::assertArrayNotHasKey(40, $pages, 'Translated page uid=40 (sys_language_uid=1) must NOT be returned');
     }
 
-    /** @test */
+    #[Test]
     public function collectPagesAboveExcludesTranslatedPages(): void
     {
         // Fixture: uid=40 is a translation of uid=30, child of uid=12.
@@ -219,8 +216,8 @@ class RootLineUtilityTest extends FunctionalTestCase
 
         $pages = RootLineUtility::collectPagesAbove(20);
 
-        foreach ($pages as $row) {
-            self::assertSame(0, (int)($row['sys_language_uid'] ?? 0), 'Ancestor uid=' . $row['uid'] . ' must be default language (sys_language_uid=0)');
+        foreach ($pages as $page) {
+            self::assertSame(0, (int)($page['sys_language_uid'] ?? 0), 'Ancestor uid=' . $page['uid'] . ' must be default language (sys_language_uid=0)');
         }
     }
 }

@@ -16,10 +16,15 @@ use Zeroseven\Pagebased\Utility\TagUtility;
 class TagsElement extends AbstractFormElement
 {
     protected string $name = '';
+
     protected string $id = '';
+
     protected string $value = '';
+
     protected string $placeholder = '';
+
     protected ?Registration $registration = null;
+
     protected int $languageUid = 0;
 
     private function initializeFromData(): void
@@ -40,7 +45,7 @@ class TagsElement extends AbstractFormElement
 
     protected function getJavaScriptModule(): JavaScriptModuleInstruction
     {
-        $tags = ($this->registration === null) ? [] : (TagUtility::getTagsByRegistration($this->registration, true, $this->languageUid) ?? []);
+        $tags = ($this->registration instanceof Registration) ? TagUtility::getTagsByRegistration($this->registration, true, $this->languageUid) ?? [] : ([]);
 
         return JavaScriptModuleInstruction::create(
             '@zeroseven/pagebased/backend/TagsElement.js'
@@ -79,8 +84,9 @@ class TagsElement extends AbstractFormElement
         $this->initializeFromData();
 
         $result = $this->initializeResultArray();
+        $html = $this->renderHtml();
 
-        if ($html = $this->renderHtml()) {
+        if ($html !== '' && $html !== '0') {
             $result['html'] = $html;
         }
 
@@ -88,7 +94,9 @@ class TagsElement extends AbstractFormElement
             $result['javaScriptModules'][] = $javaScriptModules;
         }
 
-        if ($stylesheetFile = $this->getStylesheetFile()) {
+        $stylesheetFile = $this->getStylesheetFile();
+
+        if ($stylesheetFile !== '' && $stylesheetFile !== '0') {
             $result['stylesheetFiles'][] = $stylesheetFile;
         }
 

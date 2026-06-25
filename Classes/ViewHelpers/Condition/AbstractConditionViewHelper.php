@@ -28,7 +28,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     public function render(): string
     {
         $registration = RegistrationService::getRegistrationByIdentifier($this->arguments['registration'] ?? '');
-        $match = $this->detectRegistration() && $this->detectRegistration()->getIdentifier() === $registration->getIdentifier();
+        $match = $this->detectRegistration() instanceof Registration && $this->detectRegistration()->getIdentifier() === $registration->getIdentifier();
         $negate = $this->arguments['negate'] ?? false;
 
         if ($match && !$negate || !$match && $negate) {

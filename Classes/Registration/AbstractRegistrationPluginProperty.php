@@ -12,8 +12,11 @@ use Zeroseven\Pagebased\Utility\CastUtility;
 abstract class AbstractRegistrationPluginProperty extends AbstractRegistration
 {
     protected string $type;
+
     protected ?string $description = null;
+
     protected ?string $iconIdentifier = null;
+
     protected array $layouts = [];
 
     public function getType(): string
@@ -46,11 +49,11 @@ abstract class AbstractRegistrationPluginProperty extends AbstractRegistration
     /** @throws RegistrationException */
     public function addLayout(string $layout, string $label = null): self
     {
-        if (empty($layout)) {
+        if ($layout === '' || $layout === '0') {
             throw new RegistrationException('The layout identifier must not be empty.', 1602685723);
         }
 
-        $this->layouts[preg_replace('/\s/', '', $layout)] = empty($label) ? $layout : $this->translate($label);
+        $this->layouts[preg_replace('/\s/', '', $layout)] = in_array($label, [null, '', '0'], true) ? $layout : $this->translate($label);
         return $this;
     }
 

@@ -9,12 +9,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 class Stages extends ObjectStorage
 {
-    protected Pagination $pagination;
-
-    public function __construct(Pagination $pagination)
-    {
-        $this->pagination = $pagination;
-    }
+    public function __construct(protected Pagination $pagination) {}
 
     public function initialize(): void
     {
@@ -26,7 +21,7 @@ class Stages extends ObjectStorage
 
         // Build new stages
         foreach ($this->pagination->getStageLengths() as $index => $stageLength) {
-            if (count($items)) {
+            if ($items !== []) {
 
                 // Calculate states
                 $active = $index <= $this->pagination->getSelectedStage();
@@ -56,6 +51,7 @@ class Stages extends ObjectStorage
         if ($this->offsetExists($this->pagination->getSelectedStage())) {
             return $this->offsetGet($this->pagination->getSelectedStage());
         }
+
         return null;
     }
 
@@ -77,15 +73,11 @@ class Stages extends ObjectStorage
 
     public function getActive(): array
     {
-        return array_filter($this->toArray(), static function ($stage) {
-            return $stage->isActive();
-        });
+        return array_filter($this->toArray(), static fn(object $stage) => $stage->isActive());
     }
 
     public function getInactive(): array
     {
-        return array_filter($this->toArray(), static function ($stage) {
-            return !$stage->isActive();
-        });
+        return array_filter($this->toArray(), static fn(object $stage): bool => !$stage->isActive());
     }
 }

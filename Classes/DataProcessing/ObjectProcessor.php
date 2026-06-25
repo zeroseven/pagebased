@@ -21,7 +21,7 @@ class ObjectProcessor implements DataProcessorInterface
         $registrationIdentifiers = CastUtility::array($cObj->stdWrapValue('registration', $processorConfiguration, null) ?? $cObj->stdWrapValue('registration.', $processorConfiguration));
         $uid = $cObj->stdWrapValue('uid', $processorConfiguration, null) ?? RootLineUtility::getCurrentPage();
 
-        if (empty($registrationIdentifiers)) {
+        if ($registrationIdentifiers === []) {
             throw new ValueException('Define one or more registration identifiers.', 1623157649);
         }
 

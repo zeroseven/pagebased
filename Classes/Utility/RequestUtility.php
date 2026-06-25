@@ -18,9 +18,9 @@ class RequestUtility
         return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['cache']['extbaseRequest'][$registration->getIdentifier()] ?? null;
     }
 
-    protected static function setExtbaseRequestCache(Registration $registration, ExtbaseRequestInterface $request): ExtbaseRequestInterface
+    protected static function setExtbaseRequestCache(Registration $registration, ExtbaseRequestInterface $extbaseRequest): ExtbaseRequestInterface
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['cache']['extbaseRequest'][$registration->getIdentifier()] = $request;
+        return $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['cache']['extbaseRequest'][$registration->getIdentifier()] = $extbaseRequest;
     }
 
     public static function getExtbaseRequest(Registration $registration, ServerRequestInterface $serverRequest = null): ?ExtbaseRequestInterface
@@ -29,7 +29,7 @@ class RequestUtility
             return $request;
         }
 
-        if ($serverRequest === null) {
+        if (!$serverRequest instanceof ServerRequestInterface) {
             $serverRequest = self::getServerRequest();
         }
 

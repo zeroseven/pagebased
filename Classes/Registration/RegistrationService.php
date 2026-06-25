@@ -33,28 +33,39 @@ class RegistrationService
 
     private static function addToIndex(Registration $registration): void
     {
-        $obj = $registration->getObject();
-        $cat = $registration->getCategory();
+        $objectRegistration = $registration->getObject();
+        $categoryRegistration = $registration->getCategory();
+        $c = $objectRegistration->getClassName();
 
-        if ($c = $obj->getClassName()) {
+        if ($c !== '' && $c !== '0') {
             self::$indexByObjectClass[$c] = $registration;
         }
-        if ($c = $obj->getControllerClassName()) {
+
+        if ($c = $objectRegistration->getControllerClassName()) {
             self::$indexByController[$c] = $registration;
         }
-        if ($c = $obj->getRepositoryClassName()) {
+
+        $c = $objectRegistration->getRepositoryClassName();
+        if ($c !== '' && $c !== '0') {
             self::$indexByRepository[$c] = $registration;
         }
-        if ($c = $obj->getDemandClassName()) {
+
+        $c = $objectRegistration->getDemandClassName();
+        if ($c !== '' && $c !== '0') {
             self::$indexByDemand[$c] = $registration;
         }
-        if ($c = $cat->getClassName()) {
+
+        $c = $categoryRegistration->getClassName();
+        if ($c !== '' && $c !== '0') {
             self::$indexByCategoryClass[$c] = $registration;
         }
-        if ($c = $cat->getRepositoryClassName()) {
+
+        $c = $categoryRegistration->getRepositoryClassName();
+        if ($c !== '' && $c !== '0') {
             self::$indexByCategoryRepository[$c] = $registration;
         }
-        if ($dt = $cat->getDocumentType()) {
+
+        if (($dt = $categoryRegistration->getDocumentType()) !== 0) {
             self::$indexByDocumentType[$dt] = $registration;
         }
     }
@@ -74,7 +85,7 @@ class RegistrationService
     protected static function getClassName(mixed $value): ?string
     {
         if (is_object($value)) {
-            return get_class($value);
+            return $value::class;
         }
 
         if (is_string($value) && class_exists($value)) {
@@ -149,7 +160,7 @@ class RegistrationService
         $registrations = self::getRegistrations();
 
         if (!isset($registrations[$identifier])) {
-            $validIdentifier = array_map(static fn($registration) => '"' . $registration->getIdentifier() . '"', $registrations);
+            $validIdentifier = array_map(static fn(Registration $registration): string => '"' . $registration->getIdentifier() . '"', $registrations);
 
             throw new ValueException(sprintf('Registration "%s" not found. Use one of the following identifier %s', $identifier, implode(', ', $validIdentifier)), 1623157889);
         }

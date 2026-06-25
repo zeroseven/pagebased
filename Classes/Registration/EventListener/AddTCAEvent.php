@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\Exception as TypeException;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use Zeroseven\Pagebased\Backend\TCA\DisplayCondition;
 use Zeroseven\Pagebased\Backend\TCA\GroupFilter;
@@ -18,6 +17,7 @@ use Zeroseven\Pagebased\Domain\Model\Demand\AbstractObjectDemand;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Registration\AbstractRegistrationPluginProperty;
+use Zeroseven\Pagebased\Registration\FilterPluginRegistration;
 use Zeroseven\Pagebased\Registration\FlexForm\FlexFormConfiguration;
 use Zeroseven\Pagebased\Registration\FlexForm\FlexFormSheetConfiguration;
 use Zeroseven\Pagebased\Registration\Registration;
@@ -26,9 +26,11 @@ use Zeroseven\Pagebased\Utility\TCAUtility;
 
 class AddTCAEvent
 {
-    protected function createPlugin(Registration $registration, AbstractRegistrationPluginProperty $pluginRegistration): string
+    public function __construct(private readonly SiteFinder $siteFinder) {}
+
+    protected function createPlugin(Registration $registration, AbstractRegistrationPluginProperty $registrationPluginProperty): string
     {
-        $CType = $pluginRegistration->getCType($registration);
+        $CType = $registrationPluginProperty->getCType($registration);
 
         // Add some default fields to the content elements by copy configuration of "header"
         $GLOBALS['TCA']['tt_content']['types'][$CType]['showitem'] = $GLOBALS['TCA']['tt_content']['types']['header']['showitem'];
@@ -36,13 +38,13 @@ class AddTCAEvent
         // Register plugin
         ExtensionUtility::registerPlugin(
             $registration->getExtensionName(),
-            ucfirst($pluginRegistration->getType()),
-            $pluginRegistration->getTitle(),
-            $pluginRegistration->getIconIdentifier()
+            ucfirst($registrationPluginProperty->getType()),
+            $registrationPluginProperty->getTitle(),
+            $registrationPluginProperty->getIconIdentifier()
         );
 
         // Register icon
-        $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$CType] = $pluginRegistration->getIconIdentifier();
+        $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$CType] = $registrationPluginProperty->getIconIdentifier();
 
         return $CType;
     }
@@ -117,7 +119,7 @@ class AddTCAEvent
             $filterSheet = FlexFormSheetConfiguration::makeInstance('filter', 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.tab.filter');
 
             try {
-                $multiSite = count(GeneralUtility::makeInstance(SiteFinder::class)?->getAllSites()) > 1;
+                $multiSite = count($this->siteFinder?->getAllSites()) > 1;
             } catch (\Exception) {
                 $multiSite = false;
             }
@@ -241,7 +243,7 @@ class AddTCAEvent
                     ],
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.maxStages');
 
-            if (count($layouts = $registration->getListPlugin()->getLayouts())) {
+            if (($layouts = $registration->getListPlugin()->getLayouts()) !== []) {
                 $layoutSheet->addField('settings.layout', [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
@@ -249,7 +251,7 @@ class AddTCAEvent
                     'maxitems' => 1,
                     'items' => array_merge(
                         [['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout.0', '']],
-                        array_map(static fn($label, $value) => [$label, $value], $layouts, array_keys($layouts))
+                        array_map(static fn($label, $value): array => [$label, $value], $layouts, array_keys($layouts))
                     ),
                 ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout');
             }
@@ -265,7 +267,7 @@ class AddTCAEvent
     /** @throws TypeException */
     protected function addFilterPlugin(Registration $registration): void
     {
-        if ($registration->getFilterPlugin()) {
+        if ($registration->getFilterPlugin() instanceof FilterPluginRegistration) {
             $cType = $this->createPlugin($registration, $registration->getFilterPlugin());
             $listCType = $registration->getFilterPlugin()->getCType($registration);
 
@@ -297,7 +299,7 @@ class AddTCAEvent
                         ],
                     ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.contentId');
 
-                if (count($layouts = $registration->getFilterPlugin()->getLayouts())) {
+                if (($layouts = $registration->getFilterPlugin()->getLayouts()) !== []) {
                     $generalSheet->addField('settings.layout', [
                         'type' => 'select',
                         'renderType' => 'selectSingle',
@@ -305,7 +307,7 @@ class AddTCAEvent
                         'maxitems' => 1,
                         'items' => array_merge(
                             [['LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout.0', '']],
-                            array_map(static fn($label, $value) => [$label, $value], $layouts, array_keys($layouts))
+                            array_map(static fn($label, $value): array => [$label, $value], $layouts, array_keys($layouts))
                         ),
                     ], 'LLL:EXT:pagebased/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.layout');
                 }
@@ -318,7 +320,7 @@ class AddTCAEvent
     }
 
     /** @throws TypeException */
-    public function __invoke(AfterTcaCompilationEvent $event): void
+    public function __invoke(AfterTcaCompilationEvent $afterTcaCompilationEvent): void
     {
         foreach (RegistrationService::getRegistrations() as $registration) {
             $this->addPageObject($registration);
@@ -327,6 +329,6 @@ class AddTCAEvent
             $this->addFilterPlugin($registration);
         }
 
-        $event->setTca($GLOBALS['TCA']);
+        $afterTcaCompilationEvent->setTca($GLOBALS['TCA']);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Tests\Functional\Domain\Repository;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Zeroseven\Pagebased\Registration\CategoryRegistration;
 use Zeroseven\Pagebased\Registration\ObjectRegistration;
@@ -42,7 +43,7 @@ class FindTagStringsTest extends FunctionalTestCase
         'frontend',
     ];
 
-    private TestObjectRepository $repository;
+    private TestObjectRepository $testObjectRepository;
 
     protected function setUp(): void
     {
@@ -51,7 +52,7 @@ class FindTagStringsTest extends FunctionalTestCase
         $this->bootstrapTestRegistration();
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Database/pages_many_objects.csv');
 
-        $this->repository = $this->get(TestObjectRepository::class);
+        $this->testObjectRepository = $this->get(TestObjectRepository::class);
     }
 
     private function bootstrapTestRegistration(): void
@@ -75,12 +76,11 @@ class FindTagStringsTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // Return value correctness
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function findTagStringsReturnsArrayOfStrings(): void
     {
-        $demand = $this->repository->initializeDemand();
-        $result = $this->repository->findTagStrings($demand);
+        $demand = $this->testObjectRepository->initializeDemand();
+        $result = $this->testObjectRepository->findTagStrings($demand);
 
         self::assertIsArray($result);
         self::assertNotEmpty($result, 'Expected at least one tag string in fixture data');
@@ -91,11 +91,11 @@ class FindTagStringsTest extends FunctionalTestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function findTagStringsReturnsExpectedCountForKnownDataset(): void
     {
-        $demand = $this->repository->initializeDemand();
-        $result = $this->repository->findTagStrings($demand);
+        $demand = $this->testObjectRepository->initializeDemand();
+        $result = $this->testObjectRepository->findTagStrings($demand);
 
         // 3 categories × 20 objects = 60 total; last in each category is hidden → 57 visible
         self::assertCount(57, $result, '57 visible objects with non-empty tags expected');
@@ -104,15 +104,14 @@ class FindTagStringsTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // Category filtering
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function findTagStringsWithCategoryFilterReturnsSubsetOfAllResults(): void
     {
-        $allDemand = $this->repository->initializeDemand();
-        $allResults = $this->repository->findTagStrings($allDemand);
+        $allDemand = $this->testObjectRepository->initializeDemand();
+        $allResults = $this->testObjectRepository->findTagStrings($allDemand);
 
-        $categoryDemand = $this->repository->initializeDemand()->setCategory(400);
-        $categoryResults = $this->repository->findTagStrings($categoryDemand);
+        $categoryDemand = $this->testObjectRepository->initializeDemand()->setCategory(400);
+        $categoryResults = $this->testObjectRepository->findTagStrings($categoryDemand);
 
         self::assertNotEmpty($categoryResults, 'Category 400 must have objects with tags');
         self::assertLessThan(
@@ -122,22 +121,22 @@ class FindTagStringsTest extends FunctionalTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function findTagStringsWithCategoryFilterReturnsOnlyObjectsUnderThatCategory(): void
     {
         // Category 400 has 20 objects (UIDs 500–519), last one is hidden → 19 visible
-        $demand = $this->repository->initializeDemand()->setCategory(400);
-        $result = $this->repository->findTagStrings($demand);
+        $demand = $this->testObjectRepository->initializeDemand()->setCategory(400);
+        $result = $this->testObjectRepository->findTagStrings($demand);
 
         self::assertCount(19, $result, 'Category 400 must yield exactly 19 visible tag strings');
     }
 
-    /** @test */
+    #[Test]
     public function findTagStringsReturnsEmptyArrayForCategoryWithNoChildPages(): void
     {
         // UID 9999 does not exist in the fixture, so collectPagesBelow() returns [].
-        $demand = $this->repository->initializeDemand()->setCategory(9999);
-        $result = $this->repository->findTagStrings($demand);
+        $demand = $this->testObjectRepository->initializeDemand()->setCategory(9999);
+        $result = $this->testObjectRepository->findTagStrings($demand);
 
         self::assertSame([], $result, 'Non-existent category must yield an empty array');
     }
@@ -145,14 +144,13 @@ class FindTagStringsTest extends FunctionalTestCase
     // ---------------------------------------------------------------------------
     // Cache-hit behaviour
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function findTagStringsReturnsSameResultOnConsecutiveCalls(): void
     {
-        $demand = $this->repository->initializeDemand();
+        $demand = $this->testObjectRepository->initializeDemand();
 
-        $firstCall = $this->repository->findTagStrings($demand);
-        $secondCall = $this->repository->findTagStrings($demand);
+        $firstCall = $this->testObjectRepository->findTagStrings($demand);
+        $secondCall = $this->testObjectRepository->findTagStrings($demand);
 
         self::assertSame(
             $firstCall,
@@ -161,13 +159,13 @@ class FindTagStringsTest extends FunctionalTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function findTagStringsWithCategoryFilterReturnsSameResultOnConsecutiveCalls(): void
     {
-        $demand = $this->repository->initializeDemand()->setCategory(401);
+        $demand = $this->testObjectRepository->initializeDemand()->setCategory(401);
 
-        $firstCall = $this->repository->findTagStrings($demand);
-        $secondCall = $this->repository->findTagStrings($demand);
+        $firstCall = $this->testObjectRepository->findTagStrings($demand);
+        $secondCall = $this->testObjectRepository->findTagStrings($demand);
 
         self::assertSame(
             $firstCall,

@@ -8,11 +8,14 @@ use Doctrine\DBAL\DBALException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Registration\Registration;
 
 class DetectionUtility
 {
     public const REGISTRATION_FIELD_NAME = '_pagebased_registration';
+
     public const SITE_FIELD_NAME = '_pagebased_site';
+
     public const CHILD_OBJECT_FIELD_NAME = '_pagebased_child_object';
 
     protected static function updatePageRecord(int $uid, array $update): void
@@ -27,7 +30,7 @@ class DetectionUtility
 
         try {
             $statement->executeStatement();
-        } catch (DBALException $e) {
+        } catch (DBALException) {
         }
     }
 
@@ -36,9 +39,9 @@ class DetectionUtility
         $registration = ObjectUtility::isSystemPage($uid) ? null : ObjectUtility::findCategoryInRootLine($uid);
 
         return [
-            self::SITE_FIELD_NAME => $registration ? RootLineUtility::getRootPage($uid) : 0,
-            self::REGISTRATION_FIELD_NAME => $registration ? $registration->getIdentifier() : '',
-            self::CHILD_OBJECT_FIELD_NAME => $registration && ObjectUtility::isChildObject($uid) ? 1 : 0,
+            self::SITE_FIELD_NAME => $registration instanceof Registration ? RootLineUtility::getRootPage($uid) : 0,
+            self::REGISTRATION_FIELD_NAME => $registration instanceof Registration ? $registration->getIdentifier() : '',
+            self::CHILD_OBJECT_FIELD_NAME => $registration instanceof Registration && ObjectUtility::isChildObject($uid) instanceof Registration ? 1 : 0,
         ];
     }
 

@@ -8,7 +8,7 @@ use Zeroseven\Pagebased\Pagination\Pagination;
 
 final class StageViewHelper extends AbstractPaginationLinkViewHelper
 {
-    protected const STAGE_ACTIVE_ATTRIBUTE = 'data-stage-active';
+    private const STAGE_ACTIVE_ATTRIBUTE = 'data-stage-active';
 
     public function initializeArguments(): void
     {
@@ -19,7 +19,7 @@ final class StageViewHelper extends AbstractPaginationLinkViewHelper
 
     }
 
-    protected function getTargetStage(Pagination $pagination): ?int
+    protected function getTargetStage(Pagination $pagination): int
     {
         $stage = (int)($this->arguments['index'] ?? 0);
 

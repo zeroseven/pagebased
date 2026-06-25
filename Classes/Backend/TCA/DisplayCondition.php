@@ -20,7 +20,7 @@ class DisplayCondition
             && ($demand = $registration->getObject()->getDemandClass())
             && ($objects = $repository->findByDemand($demand->setIncludeChildObjects(true)))
         ) {
-            return count(array_filter($objects->toArray(), static fn(AbstractObject $object) => $object->isChildObject())) > 0;
+            return array_filter($objects->toArray(), static fn(AbstractObject $object): bool => $object->isChildObject()) !== [];
         }
 
         return false;

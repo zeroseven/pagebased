@@ -13,13 +13,7 @@ use Zeroseven\Pagebased\Registration\Registration;
 
 final class RssFeedEvent extends AbstractRssObject
 {
-    protected Registration $registration;
-    protected ServerRequestInterface $request;
-    protected array $settings;
-    protected array $content;
-    private ?QueryResultInterface $objects;
-
-    public function __construct(Registration $registration, ServerRequestInterface $request, array $settings, array $content = [], QueryResultInterface $objects = null)
+    public function __construct(private readonly Registration $registration, private readonly ServerRequestInterface $serverRequest, private readonly array $settings, private readonly array $content = [], private readonly ?QueryResultInterface $queryResult = null)
     {
         $this->tag = GeneralUtility::makeInstance(TagBuilder::class, 'rss');
         $this->tag->addAttributes([
@@ -27,12 +21,6 @@ final class RssFeedEvent extends AbstractRssObject
             'xmlns:content' => 'http://purl.org/rss/1.0/modules/content/',
             'xmlns:atom' => 'http://www.w3.org/2005/Atom',
         ]);
-
-        $this->registration = $registration;
-        $this->request = $request;
-        $this->settings = $settings;
-        $this->content = $content;
-        $this->objects = $objects;
     }
 
     public function getRegistration(): Registration
@@ -42,7 +30,7 @@ final class RssFeedEvent extends AbstractRssObject
 
     public function getRequest(): ServerRequestInterface
     {
-        return $this->request;
+        return $this->serverRequest;
     }
 
     public function getSettings(): array
@@ -57,7 +45,7 @@ final class RssFeedEvent extends AbstractRssObject
 
     public function getObjects(): ?QueryResultInterface
     {
-        return $this->objects;
+        return $this->queryResult;
     }
 
     public function render(string $append = null): string

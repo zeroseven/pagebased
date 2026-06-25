@@ -6,22 +6,18 @@ namespace Zeroseven\Pagebased\ViewHelpers\Pagination;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 use Zeroseven\Pagebased\Pagination\Iterator;
 use Zeroseven\Pagebased\Pagination\Pagination;
 use Zeroseven\Pagebased\ViewHelpers\PaginationViewHelper;
 
 final class EachStageViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     public const STAGE_VARIABLE_IDENTIFIER = '📄-9a8c2b9d518bc163e99611fbacea63b2'; // md5('stage');
 
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
 
@@ -33,26 +29,26 @@ final class EachStageViewHelper extends AbstractViewHelper
     }
 
     /** @throws Exception */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render(): string
     {
-        $selected = (bool)($arguments['selected'] ?? false);
-        $active = (bool)($arguments['active'] ?? false);
-        $inactive = (bool)($arguments['inactive'] ?? false);
-        $as = $arguments['as'] ?? self::STAGE_VARIABLE_IDENTIFIER;
-        $iteration = $arguments['iteration'] ?? 'stageIteration';
+        $selected = (bool)($this->arguments['selected'] ?? false);
+        $active = (bool)($this->arguments['active'] ?? false);
+        $inactive = (bool)($this->arguments['inactive'] ?? false);
+        $as = $this->arguments['as'] ?? self::STAGE_VARIABLE_IDENTIFIER;
+        $iteration = $this->arguments['iteration'] ?? 'stageIteration';
 
         if (((int)$selected + (int)$active + (int)$inactive) > 1) {
             throw new Exception('You can only activate one filter in EachStageViewHelper. Either "selected" or "active" or "inactive"', 1677232999);
         }
 
-        $templateVariableContainer = $renderingContext->getVariableProvider();
+        $variableProvider = $this->renderingContext->getVariableProvider();
 
-        if (!$templateVariableContainer->exists(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER)) {
+        if (!$variableProvider->exists(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER)) {
             throw new Exception(sprintf('The ViewHelper "%s" may only be used inside "%s".', self::class, PaginationViewHelper::class), 1677234056);
         }
 
         /** @var Pagination $pagination */
-        $pagination = $templateVariableContainer->get(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER);
+        $pagination = $variableProvider->get(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER);
         $iterator = GeneralUtility::makeInstance(Iterator::class, count($pagination->getStageLengths()));
 
         if ($selected) {
@@ -67,15 +63,15 @@ final class EachStageViewHelper extends AbstractViewHelper
 
         $output = '';
         foreach ($stages as $stage) {
-            $templateVariableContainer->add($iteration, $iterator);
-            $templateVariableContainer->add($as, $stage);
-            $templateVariableContainer->add(self::STAGE_VARIABLE_IDENTIFIER, $stage);
+            $variableProvider->add($iteration, $iterator);
+            $variableProvider->add($as, $stage);
+            $variableProvider->add(self::STAGE_VARIABLE_IDENTIFIER, $stage);
 
-            $output .= $renderChildrenClosure();
+            $output .= $this->renderChildren();
 
-            $templateVariableContainer->remove($iteration);
-            $templateVariableContainer->remove($as);
-            $templateVariableContainer->remove(self::STAGE_VARIABLE_IDENTIFIER);
+            $variableProvider->remove($iteration);
+            $variableProvider->remove($as);
+            $variableProvider->remove(self::STAGE_VARIABLE_IDENTIFIER);
 
             $iterator->count();
         }

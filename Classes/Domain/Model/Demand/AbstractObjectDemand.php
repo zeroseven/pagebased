@@ -16,6 +16,7 @@ use Zeroseven\Pagebased\Exception\TypeException;
 class AbstractObjectDemand extends AbstractDemand implements ObjectDemandInterface
 {
     public const TOP_MODE_ONLY = 1;
+
     public const TOP_MODE_FIRST = 2;
 
     protected function initProperties(): void

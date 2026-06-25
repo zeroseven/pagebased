@@ -20,6 +20,7 @@ abstract class AbstractDemand implements DemandInterface
 {
     /** @var DemandProperty[] */
     protected array $properties = [];
+
     protected ?array $tableDefinition = null;
 
     /** @throws TypeException|PropertyException */
@@ -39,7 +40,7 @@ abstract class AbstractDemand implements DemandInterface
         $this->addProperty(self::PROPERTY_MAX_ITEMS, DemandProperty::TYPE_INTEGER);
     }
 
-    protected function getType(\ReflectionProperty $reflection, array $tableDefinition, ColumnMap $columnMap, string $tableName): ?string
+    protected function getType(\ReflectionProperty $reflectionProperty, array $tableDefinition, ColumnMap $columnMap, string $tableName): ?string
     {
         // The field must not be defined in table controls
         if ($ctrl = $GLOBALS['TCA'][$tableName]['ctrl']) {
@@ -67,7 +68,7 @@ abstract class AbstractDemand implements DemandInterface
         }
 
         // Get type by class reflection
-        if ($reflectionType = $reflection->getType()) {
+        if ($reflectionType = $reflectionProperty->getType()) {
             if (in_array(($type = $reflectionType->getName()), [DemandProperty::TYPE_ARRAY, DemandProperty::TYPE_INTEGER, DemandProperty::TYPE_BOOLEAN, DemandProperty::TYPE_STRING], true)) {
                 return $type;
             }
@@ -85,7 +86,7 @@ abstract class AbstractDemand implements DemandInterface
         // Check table definition
         if (($column = $tableDefinition[$columnMap->getColumnName()] ?? null) && $type = $column->getType()) {
             $typeName = method_exists($type, 'getName') ? $type->getName() : $type::class;
-            if (str_contains($typeName, 'SmallInt') || $typeName === 'smallint') {
+            if (str_contains((string)$typeName, 'SmallInt') || $typeName === 'smallint') {
                 return DemandProperty::TYPE_BOOLEAN;
             }
 
@@ -93,6 +94,7 @@ abstract class AbstractDemand implements DemandInterface
                 return DemandProperty::TYPE_INTEGER;
 
             }
+
             if ($type->getBindingType() === 2) {
                 return DemandProperty::TYPE_STRING;
             }
@@ -105,15 +107,24 @@ abstract class AbstractDemand implements DemandInterface
     {
         try {
             $dataMap = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($className);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $dataMap = null;
         }
 
         // Get properties from class
         if ($dataMap) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($dataMap->getTableName());
+            // Reading the table schema needs a database connection. Guard it so boot-time contexts
+            // without a configured database (e.g. composer's asset:publish, which dispatches
+            // BootCompletedEvent and thus registration validation) degrade gracefully instead of
+            // throwing. At runtime the connection exists and properties are detected as before.
+            try {
+                $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($dataMap->getTableName());
+                $tableDefinition = $connection->createSchemaManager()->listTableColumns($dataMap->getTableName());
+            } catch (\Throwable) {
+                $tableDefinition = [];
+            }
 
-            if (($schemaManager = $queryBuilder->createSchemaManager()) && $tableDefinition = $schemaManager->listTableColumns($dataMap->getTableName())) {
+            if ($tableDefinition !== []) {
                 foreach (GeneralUtility::makeInstance(\ReflectionClass::class, $dataMap->getClassName())->getProperties() ?? [] as $reflection) {
                     $name = $reflection->getName();
 
@@ -162,7 +173,7 @@ abstract class AbstractDemand implements DemandInterface
         if ($property = $this->properties[$propertyName] ?? null) {
             $toggle ? $property->toggleValue($value) : $property->setValue($value);
         } else {
-            throw new PropertyException(sprintf('Property "%s" does not exists in %s', $propertyName, __CLASS__), 1676061710);
+            throw new PropertyException(sprintf('Property "%s" does not exists in %s', $propertyName, self::class), 1676061710);
         }
 
         return $this;
@@ -222,7 +233,7 @@ abstract class AbstractDemand implements DemandInterface
         }
 
         // Return array with/without empty values
-        return !$ignoreEmptyValues ? $params : array_filter($params);
+        return $ignoreEmptyValues ? array_filter($params) : $params;
     }
 
     /** @throws TypeException */
@@ -265,17 +276,17 @@ abstract class AbstractDemand implements DemandInterface
 
     public function getCopy(): self
     {
-        $clone = GeneralUtility::makeInstance(static::class);
+        $static = GeneralUtility::makeInstance(static::class);
 
         foreach ($this->properties as $property) {
-            if (!$clone->hasProperty($property->getName())) {
-                $clone->addProperty($property->getName(), $property->getType(), $property->getExtbasePropertyName());
+            if (!$static->hasProperty($property->getName())) {
+                $static->addProperty($property->getName(), $property->getType(), $property->getExtbasePropertyName());
             }
         }
 
-        $clone->setParameterArray($this->getParameterArray(true));
+        $static->setParameterArray($this->getParameterArray(true));
 
-        return $clone;
+        return $static;
     }
 
     /** @throws PropertyException */
@@ -321,7 +332,7 @@ abstract class AbstractDemand implements DemandInterface
     }
 
     /** @throws TypeException|PropertyException|ValueException */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
         if (preg_match('/((?:s|g)et|is|has)([A-Z].*)/', $name, $matches)) {
             $action = $matches[1];
@@ -343,11 +354,9 @@ abstract class AbstractDemand implements DemandInterface
                 return $this->hasProperty($propertyName) && !empty($this->getProperty($propertyName)->getValue());
             }
 
-            if ($action === 'has') {
-                return $this->hasProperty($propertyName);
-            }
+            return $this->hasProperty($propertyName);
         }
 
-        throw new ValueException(sprintf('Method "%s" not found in %s', $name, __CLASS__), 1676061375);
+        throw new ValueException(sprintf('Method "%s" not found in %s', $name, self::class), 1676061375);
     }
 }

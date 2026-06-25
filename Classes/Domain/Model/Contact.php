@@ -12,24 +12,43 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 class Contact extends AbstractEntity
 {
     protected string $firstname;
+
     protected string $lastname;
+
     protected string $company;
+
     protected string $expertise;
+
     protected string $email;
+
     protected string $phone;
+
     protected string $website;
+
     protected string $address;
+
     protected string $city;
+
     protected string $zip;
+
     protected string $country;
+
     protected string $description;
+
     protected ?FileReference $image = null;
+
     protected string $page;
+
     protected string $twitter;
+
     protected string $facebook;
+
     protected string $linkedin;
+
     protected string $xing;
+
     protected ?string $pageLink = null;
+
     protected ?string $fullName = null;
 
     public function getFirstname(): string
@@ -169,9 +188,9 @@ class Contact extends AbstractEntity
         return $this->image;
     }
 
-    public function setImage(FileReference $image): self
+    public function setImage(FileReference $fileReference): self
     {
-        $this->image = $image;
+        $this->image = $fileReference;
         return $this;
     }
 

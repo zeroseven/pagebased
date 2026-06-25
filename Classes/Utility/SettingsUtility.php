@@ -24,7 +24,7 @@ class SettingsUtility
         if (empty($configuration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['configuration'][$extensionName] ?? null)) {
             try {
                 $configuration = $GLOBALS['TYPO3_CONF_VARS']['USER']['zeroseven/pagebased']['configuration'][$extensionName] = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get($extensionName);
-            } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException $e) {
+            } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException) {
             }
         }
 
@@ -40,7 +40,7 @@ class SettingsUtility
             try {
                 $pluginConfiguration = GeneralUtility::makeInstance(ConfigurationManager::class)
                         ->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT)['plugin.'][$pluginKey . '.'] ?? [];
-            } catch (InvalidConfigurationTypeException $e) {
+            } catch (InvalidConfigurationTypeException) {
                 $pluginConfiguration = [];
             }
 

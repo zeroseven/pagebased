@@ -11,6 +11,10 @@ parameters:
     reportStaticMethodSignatures: true
     treatPhpDocTypesAsCertain: false
 
+    # The extension supports TYPO3 v13 and v14, whose stubs/typings differ. A baseline entry that
+    # matches on one version can be unmatched on the other, so don't fail on unmatched ignores.
+    reportUnmatchedIgnoredErrors: false
+
     parallel:
         maximumNumberOfProcesses: 4
         minimumNumberOfJobsPerProcess: 2

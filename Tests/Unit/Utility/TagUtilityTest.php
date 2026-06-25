@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Tests\Unit\Utility;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -52,8 +53,7 @@ class TagUtilityTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // collectTagsFromQueryResult
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function collectTagsReturnsEmptyArrayForEmptyResult(): void
     {
         $result = TagUtility::collectTagsFromQueryResult($this->makeQueryResult([]));
@@ -61,7 +61,7 @@ class TagUtilityTest extends UnitTestCase
         self::assertSame([], $result);
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsReturnsSingleObjectTags(): void
     {
         $queryResult = $this->makeQueryResult([
@@ -74,7 +74,7 @@ class TagUtilityTest extends UnitTestCase
         self::assertContains('typo3', $tags);
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsMergesTagsFromMultipleObjects(): void
     {
         $queryResult = $this->makeQueryResult([
@@ -89,7 +89,7 @@ class TagUtilityTest extends UnitTestCase
         self::assertContains('symfony', $tags);
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsRemovesDuplicates(): void
     {
         $queryResult = $this->makeQueryResult([
@@ -105,7 +105,7 @@ class TagUtilityTest extends UnitTestCase
         self::assertContains('typo3', $tags);
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsReturnsSortedAlphabetically(): void
     {
         $queryResult = $this->makeQueryResult([
@@ -117,7 +117,7 @@ class TagUtilityTest extends UnitTestCase
         self::assertSame(['apple', 'mango', 'zebra'], $tags);
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsReturnsSortedAndDeduplicatedAcrossMultipleObjects(): void
     {
         $queryResult = $this->makeQueryResult([
@@ -131,7 +131,7 @@ class TagUtilityTest extends UnitTestCase
         self::assertSame(['apple', 'banana', 'mango', 'zebra'], $tags);
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsHandlesObjectsWithEmptyTagArrays(): void
     {
         $queryResult = $this->makeQueryResult([
@@ -145,7 +145,7 @@ class TagUtilityTest extends UnitTestCase
         self::assertSame(['php'], $tags);
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsResultIsIndexedFromZero(): void
     {
         // After deduplication and sort, the result array must be re-indexed
@@ -162,14 +162,13 @@ class TagUtilityTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // collectTagsFromStrings
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function collectTagsFromStringsReturnsEmptyArrayForEmptyInput(): void
     {
         self::assertSame([], TagUtility::collectTagsFromStrings([]));
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsFromStringsParsesSingleCsvRow(): void
     {
         $tags = TagUtility::collectTagsFromStrings(['php,typo3']);
@@ -179,7 +178,7 @@ class TagUtilityTest extends UnitTestCase
         self::assertCount(2, $tags);
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsFromStringsMergesAndDeduplicatesAcrossRows(): void
     {
         $tags = TagUtility::collectTagsFromStrings(['php,typo3', 'symfony,php']);
@@ -187,7 +186,7 @@ class TagUtilityTest extends UnitTestCase
         self::assertSame(['php', 'symfony', 'typo3'], $tags);
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsFromStringsSortedAlphabetically(): void
     {
         $tags = TagUtility::collectTagsFromStrings(['zebra,apple,mango']);
@@ -195,7 +194,7 @@ class TagUtilityTest extends UnitTestCase
         self::assertSame(['apple', 'mango', 'zebra'], $tags);
     }
 
-    /** @test */
+    #[Test]
     public function collectTagsFromStringsIgnoresEmptySegments(): void
     {
         $tags = TagUtility::collectTagsFromStrings([',php,', 'typo3,']);

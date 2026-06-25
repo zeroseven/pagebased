@@ -9,6 +9,7 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 class Topic extends AbstractEntity
 {
     protected ?string $object = null;
+
     protected ?string $title = null;
 
     public function getObject(): string

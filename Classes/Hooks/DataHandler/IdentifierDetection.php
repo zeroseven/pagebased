@@ -25,7 +25,7 @@ class IdentifierDetection
         $this->updateIdentifier($table, $id, $fieldArray);
     }
 
-    public function moveRecord_afterAnotherElementPostProcess(string $table, int $uid, int $destPid, $origDestPid, $moveRec, $updateFields, DataHandler $dataHandler): void
+    public function moveRecord_afterAnotherElementPostProcess(string $table, int $uid, int $destPid, $origDestPid, $moveRec, array $updateFields, DataHandler $dataHandler): void
     {
         $this->updateIdentifier($table, $uid, $updateFields);
     }

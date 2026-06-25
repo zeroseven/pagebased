@@ -6,14 +6,9 @@ namespace Zeroseven\Pagebased\Registration\Event;
 
 use Zeroseven\Pagebased\Registration\FlexForm\FlexFormConfiguration;
 
-final class AddFlexFormEvent
+final readonly class AddFlexFormEvent
 {
-    protected FlexFormConfiguration $flexFormConfiguration;
-
-    public function __construct(FlexFormConfiguration $flexFormConfiguration)
-    {
-        $this->flexFormConfiguration = $flexFormConfiguration;
-    }
+    public function __construct(private FlexFormConfiguration $flexFormConfiguration) {}
 
     public function getFlexFormConfiguration(): FlexFormConfiguration
     {

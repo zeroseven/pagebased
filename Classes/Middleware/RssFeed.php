@@ -31,15 +31,12 @@ use Zeroseven\Pagebased\Registration\RegistrationService;
 class RssFeed implements MiddlewareInterface
 {
     private const CACHE_KEY = 'pagebased_rss_feed';
+
     private const URL_SUFFIX = '/-/rss.xml';
+
     private const TABLE_NAME = 'tt_content';
 
-    private FrontendInterface $cache;
-
-    public function __construct(FrontendInterface $cache)
-    {
-        $this->cache = $cache;
-    }
+    public function __construct(private readonly FrontendInterface $frontend, private readonly FlexFormService $flexFormService, private readonly EventDispatcher $eventDispatcher) {}
 
     protected function getRegistrationByCType(string $CType): ?Registration
     {
@@ -55,39 +52,39 @@ class RssFeed implements MiddlewareInterface
     protected function getPluginSettings(array $pluginConfiguration): array
     {
         if ($flexForm = $pluginConfiguration['pi_flexform'] ?? null) {
-            return GeneralUtility::makeInstance(FlexFormService::class)->convertFlexFormContentToArray($flexForm)['settings'] ?? [];
+            return $this->flexFormService->convertFlexFormContentToArray($flexForm)['settings'] ?? [];
         }
 
         return [];
     }
 
-    protected function getObjects(Registration $registration, array $settings, SiteLanguage $language): ?QueryResultInterface
+    protected function getObjects(Registration $registration, array $settings, SiteLanguage $siteLanguage): ?QueryResultInterface
     {
         $demand = $registration->getObject()->getDemandClass()->setParameterArray($settings);
-        $repository = $registration->getObject()->getRepositoryClass();
+        $repositoryRepository = $registration->getObject()->getRepositoryClass();
 
-        if ($languageId = $language->getLanguageId()) {
-            $querySettings = $repository->getDefaultQuerySettings();
+        if (($languageId = $siteLanguage->getLanguageId()) !== 0) {
+            $querySettings = $repositoryRepository->getDefaultQuerySettings();
             $languageAspect = new LanguageAspect($languageId, $languageId, LanguageAspect::OVERLAYS_MIXED);
             $querySettings->setLanguageAspect($languageAspect);
-            $repository->setDefaultQuerySettings($querySettings);
+            $repositoryRepository->setDefaultQuerySettings($querySettings);
         }
 
-        return $repository->findByDemand($demand);
+        return $repositoryRepository->findByDemand($demand);
     }
 
-    protected function getPid(ServerRequestInterface $request, RouteResultInterface $routing): ?int
+    protected function getPid(ServerRequestInterface $serverRequest, RouteResultInterface $routeResult): ?int
     {
-        if ($site = $request->getAttribute('site')) {
-            $path = $request->getUri()->getPath() === self::URL_SUFFIX ? '/'
-                : str_replace(self::URL_SUFFIX, '/', $routing->offsetGet('tail'));
-            $routing->offsetSet('tail', $path);
+        if ($site = $serverRequest->getAttribute('site')) {
+            $path = $serverRequest->getUri()->getPath() === self::URL_SUFFIX ? '/'
+                : str_replace(self::URL_SUFFIX, '/', $routeResult->offsetGet('tail'));
+            $routeResult->offsetSet('tail', $path);
 
             try {
-                $arguments = $site->getRouter()->matchRequest($request->withUri($request->getUri()->withPath($path)), $routing);
+                $arguments = $site->getRouter()->matchRequest($serverRequest->withUri($serverRequest->getUri()->withPath($path)), $routeResult);
 
                 return $arguments->getPageId();
-            } catch (RouteNotFoundException $e) {
+            } catch (RouteNotFoundException) {
             }
         }
 
@@ -114,12 +111,10 @@ class RssFeed implements MiddlewareInterface
             ) {
                 $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
 
-                $CTypes = array_filter(array_map(static function (Registration $registration) use ($queryBuilder) {
-                    return $registration->hasListPlugin() ? $queryBuilder->quote($registration->getListPlugin()->getCType($registration)) : null;
-                }, RegistrationService::getRegistrations() ?? []));
+                $CTypes = array_filter(array_map(static fn(Registration $registration): ?string => $registration->hasListPlugin() ? $queryBuilder->quote($registration->getListPlugin()->getCType($registration)) : null, RegistrationService::getRegistrations() ?? []));
 
                 try {
-                    $content = empty($CTypes) ? null : $queryBuilder->select('*')
+                    $content = $CTypes === [] ? null : $queryBuilder->select('*')
                         ->from(self::TABLE_NAME)
                         ->where(
                             $queryBuilder->expr()->in($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['type'], $CTypes),
@@ -138,12 +133,12 @@ class RssFeed implements MiddlewareInterface
                     ) {
                         $identifier = md5($registration->getIdentifier() . ($content['uid'] ?? '') . $language->getLanguageId());
 
-                        if (empty($rssFeed = $this->cache->get($identifier))) {
+                        if (empty($rssFeed = $this->frontend->get($identifier))) {
                             $settings = $this->getPluginSettings($content);
                             $objects = $this->getObjects($registration, $settings, $language);
-                            $rssFeed = GeneralUtility::makeInstance(EventDispatcher::class)->dispatch(new RssFeedEvent($registration, $request, $settings, $content, $objects))->render();
+                            $rssFeed = $this->eventDispatcher->dispatch(new RssFeedEvent($registration, $request, $settings, $content, $objects))->render();
 
-                            $this->cache->set($identifier, $rssFeed);
+                            $this->frontend->set($identifier, $rssFeed);
                         }
 
                         return GeneralUtility::makeInstance(HtmlResponse::class, trim('<?xml version="1.1" encoding="utf-8"?>' . $rssFeed), 200, [
@@ -153,7 +148,7 @@ class RssFeed implements MiddlewareInterface
                             'X-Xml-Identifier' => $identifier,
                         ]);
                     }
-                } catch (DBALException | Exception $e) {
+                } catch (DBALException | Exception) {
                 }
             }
 

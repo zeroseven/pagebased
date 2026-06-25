@@ -1,0 +1,7 @@
+pages,,,,,,,,,,,,,
+,uid,pid,title,doktype,sorting,deleted,hidden,nav_hide,sys_language_uid,l10n_parent,_pagebased_registration,_pagebased_site,_pagebased_child_object
+,1,0,Site Root,1,256,0,0,0,0,0,,0,0
+,10,1,News Category,188,256,0,0,0,0,0,,0,0
+,11,10,Article A,1,256,0,0,0,0,0,,0,0
+,12,10,Article B,1,512,0,0,0,0,0,,0,0
+,20,1,Plain Page,1,768,0,0,0,0,0,,0,0

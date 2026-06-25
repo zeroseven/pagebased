@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+use Zeroseven\Pagebased\Domain\Model\AbstractCategory;
+use Zeroseven\Pagebased\Domain\Model\AbstractObject;
+use Zeroseven\Pagebased\Domain\Model\AbstractPage;
+use Zeroseven\Pagebased\Domain\Model\Entity\PageObject;
+
 return [
-    \Zeroseven\Pagebased\Domain\Model\Entity\PageObject::class => [
-        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
+    PageObject::class => [
+        'tableName' => AbstractPage::TABLE_NAME,
     ],
-    \Zeroseven\Pagebased\Domain\Model\AbstractPage::class => [
-        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
+    AbstractPage::class => [
+        'tableName' => AbstractPage::TABLE_NAME,
         'properties' => [
             'fileReferences' => [
                 'fieldName' => 'media',
@@ -30,8 +37,8 @@ return [
             ],
         ],
     ],
-    \Zeroseven\Pagebased\Domain\Model\AbstractObject::class => [
-        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
+    AbstractObject::class => [
+        'tableName' => AbstractPage::TABLE_NAME,
         'properties' => [
             'top' => [
                 'fieldName' => 'pagebased_top',
@@ -59,8 +66,8 @@ return [
             ],
         ],
     ],
-    \Zeroseven\Pagebased\Domain\Model\AbstractCategory::class => [
-        'tableName' => \Zeroseven\Pagebased\Domain\Model\AbstractPage::TABLE_NAME,
+    AbstractCategory::class => [
+        'tableName' => AbstractPage::TABLE_NAME,
         'properties' => [
             'redirectCategory' => [
                 'fieldName' => 'pagebased_redirect_category',

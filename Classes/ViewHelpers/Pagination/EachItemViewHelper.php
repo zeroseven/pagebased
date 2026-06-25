@@ -6,19 +6,15 @@ namespace Zeroseven\Pagebased\ViewHelpers\Pagination;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 use Zeroseven\Pagebased\Pagination\Iterator;
 use Zeroseven\Pagebased\ViewHelpers\PaginationViewHelper;
 
 final class EachItemViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
 
@@ -27,28 +23,28 @@ final class EachItemViewHelper extends AbstractViewHelper
     }
 
     /** @throws Exception */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render(): string
     {
-        $templateVariableContainer = $renderingContext->getVariableProvider();
-        $as = $arguments['as'] ?? 'item';
-        $iteration = $arguments['iteration'] ?? 'itemIteration';
+        $variableProvider = $this->renderingContext->getVariableProvider();
+        $as = $this->arguments['as'] ?? 'item';
+        $iteration = $this->arguments['iteration'] ?? 'itemIteration';
         $output = '';
 
-        if (!$templateVariableContainer->exists(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER) && !$templateVariableContainer->exists(EachStageViewHelper::STAGE_VARIABLE_IDENTIFIER)) {
+        if (!$variableProvider->exists(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER) && !$variableProvider->exists(EachStageViewHelper::STAGE_VARIABLE_IDENTIFIER)) {
             throw new Exception(sprintf('The ViewHelper "%s" may only be used inside "%s" or "%s".', self::class, EachStageViewHelper::class, PaginationViewHelper::class), 1677234321);
         }
 
-        if ($items = ($templateVariableContainer->get(EachStageViewHelper::STAGE_VARIABLE_IDENTIFIER) ?? $templateVariableContainer->get(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER))->getItems()) {
+        if ($items = ($variableProvider->get(EachStageViewHelper::STAGE_VARIABLE_IDENTIFIER) ?? $variableProvider->get(PaginationViewHelper::PAGINATION_VARIABLE_IDENTIFIER))->getItems()) {
             $iterator = GeneralUtility::makeInstance(Iterator::class, count($items));
 
             foreach ($items as $item) {
-                $templateVariableContainer->add($iteration, $iterator);
-                $templateVariableContainer->add($as, $item);
+                $variableProvider->add($iteration, $iterator);
+                $variableProvider->add($as, $item);
 
-                $output .= $renderChildrenClosure();
+                $output .= $this->renderChildren();
 
-                $templateVariableContainer->remove($iteration);
-                $templateVariableContainer->remove($as);
+                $variableProvider->remove($iteration);
+                $variableProvider->remove($as);
 
                 $iterator->count();
             }

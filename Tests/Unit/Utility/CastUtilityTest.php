@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Tests\Unit\Utility;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Utility\CastUtility;
@@ -19,45 +20,44 @@ class CastUtilityTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // int()
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function intCastsIntegerValue(): void
     {
         self::assertSame(42, CastUtility::int(42));
     }
 
-    /** @test */
+    #[Test]
     public function intCastsStringInteger(): void
     {
         self::assertSame(7, CastUtility::int('7'));
     }
 
-    /** @test */
+    #[Test]
     public function intCastsZero(): void
     {
         self::assertSame(0, CastUtility::int(0));
     }
 
-    /** @test */
+    #[Test]
     public function intCastsNullToZero(): void
     {
         self::assertSame(0, CastUtility::int(null));
     }
 
-    /** @test */
+    #[Test]
     public function intCastsEmptyStringToZero(): void
     {
         self::assertSame(0, CastUtility::int(''));
     }
 
-    /** @test */
+    #[Test]
     public function intThrowsTypeExceptionForNonNumericString(): void
     {
         $this->expectException(TypeException::class);
         CastUtility::int('not-a-number');
     }
 
-    /** @test */
+    #[Test]
     public function intThrowsTypeExceptionForArray(): void
     {
         $this->expectException(TypeException::class);
@@ -67,26 +67,25 @@ class CastUtilityTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // string()
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function stringCastsStringValue(): void
     {
         self::assertSame('hello', CastUtility::string('hello'));
     }
 
-    /** @test */
+    #[Test]
     public function stringCastsIntegerToString(): void
     {
         self::assertSame('42', CastUtility::string(42));
     }
 
-    /** @test */
+    #[Test]
     public function stringCastsNullToEmptyString(): void
     {
         self::assertSame('', CastUtility::string(null));
     }
 
-    /** @test */
+    #[Test]
     public function stringJoinsArrayWithComma(): void
     {
         self::assertSame('a,b,c', CastUtility::string(['a', 'b', 'c']));
@@ -95,51 +94,50 @@ class CastUtilityTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // array()
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function arrayReturnsArrayAsIs(): void
     {
         $input = [1, 2, 3];
         self::assertSame($input, CastUtility::array($input));
     }
 
-    /** @test */
+    #[Test]
     public function arraySplitsCommaSeparatedString(): void
     {
         self::assertSame(['a', 'b', 'c'], CastUtility::array('a,b,c'));
     }
 
-    /** @test */
+    #[Test]
     public function arraySplitsStringWithCustomDelimiter(): void
     {
         self::assertSame(['tag1', 'tag2', 'tag3'], CastUtility::array('tag1,tag2,tag3', ','));
     }
 
-    /** @test */
+    #[Test]
     public function arrayTrimsWhitespaceFromSplitValues(): void
     {
         self::assertSame(['a', 'b', 'c'], CastUtility::array(' a , b , c '));
     }
 
-    /** @test */
+    #[Test]
     public function arrayWrapsIntegerInArray(): void
     {
         self::assertSame([5], CastUtility::array(5));
     }
 
-    /** @test */
+    #[Test]
     public function arrayReturnsEmptyArrayForNull(): void
     {
         self::assertSame([], CastUtility::array(null));
     }
 
-    /** @test */
+    #[Test]
     public function arrayReturnsEmptyArrayForEmptyString(): void
     {
         self::assertSame([], CastUtility::array(''));
     }
 
-    /** @test */
+    #[Test]
     public function arrayCallsToArrayOnObjectWithMethod(): void
     {
         $object = new class () {
@@ -152,7 +150,7 @@ class CastUtilityTest extends UnitTestCase
         self::assertSame(['x', 'y'], CastUtility::array($object));
     }
 
-    /** @test */
+    #[Test]
     public function arrayThrowsTypeExceptionForObjectWithoutToArray(): void
     {
         $this->expectException(TypeException::class);
@@ -162,39 +160,38 @@ class CastUtilityTest extends UnitTestCase
     // ---------------------------------------------------------------------------
     // bool()
     // ---------------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function boolCastsTrueValue(): void
     {
         self::assertTrue(CastUtility::bool(true));
     }
 
-    /** @test */
+    #[Test]
     public function boolCastsFalseValue(): void
     {
         self::assertFalse(CastUtility::bool(false));
     }
 
-    /** @test */
+    #[Test]
     public function boolCastsOneToTrue(): void
     {
         self::assertTrue(CastUtility::bool(1));
     }
 
-    /** @test */
+    #[Test]
     public function boolCastsZeroToFalse(): void
     {
         self::assertFalse(CastUtility::bool(0));
     }
 
-    /** @test */
+    #[Test]
     public function boolThrowsTypeExceptionForArray(): void
     {
         $this->expectException(TypeException::class);
         CastUtility::bool([1]);
     }
 
-    /** @test */
+    #[Test]
     public function boolThrowsTypeExceptionForObject(): void
     {
         $this->expectException(TypeException::class);

@@ -23,6 +23,8 @@ class DisplayObjectRelations
         Contact::class => 'tx_pagebased_domain_model_contact',
     ];
 
+    public function __construct(private readonly FlashMessageService $flashMessageService) {}
+
     protected function getObjectsByPageIds(int $pid, string $pageIdMethode): array
     {
         $objects = [];
@@ -51,16 +53,16 @@ class DisplayObjectRelations
         $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, '', ContextualFeedbackSeverity::INFO);
 
         try {
-            $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
+            $messageQueue = $this->flashMessageService->getMessageQueueByIdentifier();
             $messageQueue->enqueue($flashMessage);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
-    public function __invoke(BeforeFormEnginePageInitializedEvent $event): void
+    public function __invoke(BeforeFormEnginePageInitializedEvent $beforeFormEnginePageInitializedEvent): void
     {
-        $parsedBody = $event->getRequest()->getParsedBody();
-        $queryParams = $event->getRequest()->getQueryParams();
+        $parsedBody = $beforeFormEnginePageInitializedEvent->getRequest()->getParsedBody();
+        $queryParams = $beforeFormEnginePageInitializedEvent->getRequest()->getQueryParams();
 
         if (
             ($editConfiguration = $parsedBody['edit'] ?? $queryParams['edit'] ?? null)

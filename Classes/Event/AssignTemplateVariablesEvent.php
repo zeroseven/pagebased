@@ -8,16 +8,7 @@ use Zeroseven\Pagebased\Registration\Registration;
 
 final class AssignTemplateVariablesEvent
 {
-    protected array $variables;
-    protected Registration $registration;
-    protected ?string $controllerAction;
-
-    public function __construct(array $variables, Registration $registration, ?string $controllerAction = null)
-    {
-        $this->variables = $variables;
-        $this->registration = $registration;
-        $this->controllerAction = $controllerAction;
-    }
+    public function __construct(private array $variables, private readonly Registration $registration, private readonly ?string $controllerAction = null) {}
 
     public function addVariable(string $key, mixed $value, bool $force = null): self
     {

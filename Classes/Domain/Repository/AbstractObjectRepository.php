@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Context\Context;
@@ -56,7 +57,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     {
         parent::setOrdering($demand);
 
-        if ($demand && $demand->getTopObjectFirst() && $fieldName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($this->objectType)->getColumnMap('top')->getColumnName()) {
+        if ($demand instanceof DemandInterface && $demand->getTopObjectFirst() && $fieldName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($this->objectType)->getColumnMap('top')->getColumnName()) {
             $this->setDefaultOrderings(array_merge([$fieldName => QueryInterface::ORDER_DESCENDING], $this->defaultOrderings));
         }
     }
@@ -72,7 +73,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         }
 
         // Search in category
-        if (empty($demand->getUidList()) && ($categoryUid = $demand->getCategory()) > 0) {
+        if ($demand->getUidList() === [] && ($categoryUid = $demand->getCategory()) > 0) {
             $treeTableField = (int)GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id', 0) > 0
                 ? $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['transOrigPointerField']
                 : 'uid';
@@ -89,7 +90,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
         );
 
         // Exclude child objects
-        if ($demand->getIncludeChildObjects() === false && empty($demand->getUidList())) {
+        if ($demand->getIncludeChildObjects() === false && $demand->getUidList() === []) {
             $constraints[] = $query->logicalNot($query->equals(DetectionUtility::CHILD_OBJECT_FIELD_NAME, 1));
         }
 
@@ -134,87 +135,87 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
      * For non-default languages, TagUtility::getTags() skips this path and falls back
      * to full Extbase hydration which handles language overlays correctly.
      *
-     * @param ObjectDemandInterface $demand Used for optional category-tree filtering.
+     * @param ObjectDemandInterface $objectDemand Used for optional category-tree filtering.
      * @param int|null $languageUid Optional language UID override. If null, uses current context language.
      * @return string[] Raw comma-separated tag strings, one entry per page row.
      */
-    public function findTagStrings(ObjectDemandInterface $demand, ?int $languageUid = null): array
+    public function findTagStrings(ObjectDemandInterface $objectDemand, ?int $languageUid = null): array
     {
-        $categoryUid = $demand->getCategory();
-        $languageUid = $languageUid ?? (int)GeneralUtility::makeInstance(Context::class)
+        $categoryUid = $objectDemand->getCategory();
+        $languageUid ??= (int)GeneralUtility::makeInstance(Context::class)
             ->getPropertyFromAspect('language', 'id', 0);
-        $excludeChildObjects = $demand->getIncludeChildObjects() === false;
+        $excludeChildObjects = $objectDemand->getIncludeChildObjects() === false;
         $cacheKey = 'pagebased_tags_' . md5(
             $this->registration->getIdentifier() . '_' . $categoryUid . '_' . $languageUid . '_' . (int)$excludeChildObjects
         );
 
         $cache = $this->getTagsCache();
-        if ($cache !== null && ($cached = $cache->get($cacheKey)) !== false) {
+        if ($cache instanceof FrontendInterface && ($cached = $cache->get($cacheKey)) !== false) {
             return $cached;
         }
 
-        $qb = GeneralUtility::makeInstance(ConnectionPool::class)
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(AbstractPage::TABLE_NAME);
 
-        $qb->select('uid', 'pagebased_tags')
+        $queryBuilder->select('uid', 'pagebased_tags')
             ->from(AbstractPage::TABLE_NAME)
             ->where(
-                $qb->expr()->eq(
+                $queryBuilder->expr()->eq(
                     DetectionUtility::REGISTRATION_FIELD_NAME,
-                    $qb->createNamedParameter($this->registration->getIdentifier())
+                    $queryBuilder->createNamedParameter($this->registration->getIdentifier())
                 ),
-                $qb->expr()->neq(
+                $queryBuilder->expr()->neq(
                     $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['type'],
-                    $qb->createNamedParameter($this->registration->getCategory()->getDocumentType(), \Doctrine\DBAL\ParameterType::INTEGER)
+                    $queryBuilder->createNamedParameter($this->registration->getCategory()->getDocumentType(), ParameterType::INTEGER)
                 ),
-                $qb->expr()->neq('pagebased_tags', $qb->createNamedParameter(''))
+                $queryBuilder->expr()->neq('pagebased_tags', $queryBuilder->createNamedParameter(''))
             );
 
         // Respect language setting
         if ($languageUid === -1) {
             // -1 means all languages, no additional constraint needed
         } else {
-            $qb->andWhere(
-                $qb->expr()->eq('sys_language_uid', $qb->createNamedParameter($languageUid, \Doctrine\DBAL\ParameterType::INTEGER))
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter($languageUid, ParameterType::INTEGER))
             );
         }
 
         // Replicate nav_hide constraint from createDemandConstraints()
-        $qb->andWhere($qb->expr()->eq('nav_hide', $qb->createNamedParameter(0, \Doctrine\DBAL\ParameterType::INTEGER)));
+        $queryBuilder->andWhere($queryBuilder->expr()->eq('nav_hide', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)));
 
         // Replicate l18n_cfg constraint from createDemandConstraints()
-        $qb->andWhere($qb->expr()->or(
-            $qb->expr()->eq('l18n_cfg', $qb->createNamedParameter(0, \Doctrine\DBAL\ParameterType::INTEGER)),
-            $qb->expr()->and(
-                $qb->expr()->gte('l18n_cfg', $qb->createNamedParameter(1, \Doctrine\DBAL\ParameterType::INTEGER)),
-                $qb->expr()->gte(
+        $queryBuilder->andWhere($queryBuilder->expr()->or(
+            $queryBuilder->expr()->eq('l18n_cfg', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
+            $queryBuilder->expr()->and(
+                $queryBuilder->expr()->gte('l18n_cfg', $queryBuilder->createNamedParameter(1, ParameterType::INTEGER)),
+                $queryBuilder->expr()->gte(
                     $GLOBALS['TCA'][AbstractPage::TABLE_NAME]['ctrl']['languageField'],
-                    $qb->createNamedParameter(1, \Doctrine\DBAL\ParameterType::INTEGER)
+                    $queryBuilder->createNamedParameter(1, ParameterType::INTEGER)
                 )
             )
         ));
 
         // Replicate child-object exclusion from createDemandConstraints()
         if ($excludeChildObjects) {
-            $qb->andWhere($qb->expr()->neq(
+            $queryBuilder->andWhere($queryBuilder->expr()->neq(
                 DetectionUtility::CHILD_OBJECT_FIELD_NAME,
-                $qb->createNamedParameter(1, \Doctrine\DBAL\ParameterType::INTEGER)
+                $queryBuilder->createNamedParameter(1, ParameterType::INTEGER)
             ));
         }
 
         if ($categoryUid > 0) {
             $pageIds = array_keys(RootLineUtility::collectPagesBelow($categoryUid));
-            if (!empty($pageIds)) {
-                $qb->andWhere($qb->expr()->in('uid', $qb->createNamedParameter($pageIds, Connection::PARAM_INT_ARRAY)));
+            if ($pageIds !== []) {
+                $queryBuilder->andWhere($queryBuilder->expr()->in('uid', $queryBuilder->createNamedParameter($pageIds, Connection::PARAM_INT_ARRAY)));
             } else {
                 return [];
             }
         }
 
-        $rows = $qb->executeQuery()->fetchAllAssociative();
+        $rows = $queryBuilder->executeQuery()->fetchAllAssociative();
         $result = array_column($rows, 'pagebased_tags');
 
-        $cacheTags = array_map(static fn(array $row) => 'pageId_' . $row['uid'], $rows);
+        $cacheTags = array_map(static fn(array $row): string => 'pageId_' . $row['uid'], $rows);
         $cache?->set($cacheKey, $result, $cacheTags ?: ['pagebased_tags']);
 
         return $result;
@@ -224,7 +225,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
     {
         try {
             return GeneralUtility::makeInstance(CacheManager::class)->getCache('pagebased_tags');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return null;
         }
     }
@@ -238,7 +239,7 @@ abstract class AbstractObjectRepository extends AbstractPageRepository implement
             $demand = $this->initializeDemand()->setIncludeChildObjects(true);
 
             return $this->findByDemand($demand, $query);
-        } catch (RegistrationException|TypeException|AspectNotFoundException|InvalidQueryException|PersistenceException $e) {
+        } catch (RegistrationException|TypeException|AspectNotFoundException|InvalidQueryException|PersistenceException) {
         }
 
         return null;

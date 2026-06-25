@@ -18,7 +18,6 @@ use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Registration\Registration;
 
@@ -26,6 +25,7 @@ class RootLineUtility
 {
     /** @var array<string, array<int, array<string, mixed>>> */
     private static array $cache = [];
+
     protected static function getRequest(): ?ServerRequestInterface
     {
         return ($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface ? $GLOBALS['TYPO3_REQUEST'] : null;
@@ -43,8 +43,8 @@ class RootLineUtility
 
     public static function getCurrentPage(): int
     {
-        if (($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController) {
-            return (int)$GLOBALS['TSFE']->id;
+        if (($id = FrontendRequestUtility::getPageId(self::getRequest())) !== 0) {
+            return $id;
         }
 
         if ($id = $_GET['id'] ?? null) {
@@ -71,7 +71,7 @@ class RootLineUtility
         $list = [];
         try {
             self::lookUp($list, $staringPoint, 0, 1, self::getTreeCollectQueryBuilder());
-        } catch (DBALException | DriverException $e) {
+        } catch (DBALException | DriverException) {
         }
 
         if (($parentPage = reset($list)) && $uid = $parentPage['uid'] ?? null) {
@@ -83,7 +83,7 @@ class RootLineUtility
 
     protected static function getRootLine(int $startingPoint = null): array
     {
-        if ($startingPoint === null && ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController && $rootLine = $GLOBALS['TSFE']->rootLine) {
+        if ($startingPoint === null && ($rootLine = FrontendRequestUtility::getRootLine(self::getRequest()))) {
             return $rootLine;
         }
 
@@ -101,8 +101,8 @@ class RootLineUtility
         } else {
             try {
                 $site = $startingPoint === null && ($request = self::getRequest()) ? $request->getAttribute('site') : GeneralUtility::makeInstance(SiteFinder::class)->getSiteByPageId($startingPoint);
-            } catch (SiteNotFoundException $e) {
-                if (!empty($pagesAbove = self::collectPagesAbove($startingPoint))) {
+            } catch (SiteNotFoundException) {
+                if (($pagesAbove = self::collectPagesAbove($startingPoint)) !== []) {
                     return end($pagesAbove)['uid'] ?? 0;
                 }
 
@@ -133,7 +133,7 @@ class RootLineUtility
             ->orWhere($queryBuilder->expr()->eq('l10n_parent', $queryBuilder->createNamedParameter($startingPoint, Connection::PARAM_INT)));
 
         foreach ($queryBuilder->executeQuery()->fetchAllAssociative() as $row) {
-            if ($uid = (int)($row['uid'] ?? 0)) {
+            if (($uid = (int)($row['uid'] ?? 0)) !== 0) {
                 $list[$uid] = $row;
             }
         }
@@ -147,12 +147,12 @@ class RootLineUtility
 
             $statement = $queryBuilder->executeQuery();
             while ($row = $statement->fetchAssociative()) {
-                if ($uid = (int)($row['uid'] ?? 0)) {
-                    if ($looped) {
+                if (($uid = (int)($row['uid'] ?? 0)) !== 0) {
+                    if ($looped !== 0) {
                         $list[$uid] = $row;
                     }
 
-                    if ($pid = (int)($row['pid'] ?? 0)) {
+                    if (($pid = (int)($row['pid'] ?? 0)) !== 0) {
                         self::lookUp($list, $pid, $looped + 1, $depth, $queryBuilder);
                     }
                 }
@@ -171,7 +171,7 @@ class RootLineUtility
 
             $statement = $queryBuilder->executeQuery();
             while ($row = $statement->fetchAssociative()) {
-                if ($uid = (int)($row['uid'] ?? 0)) {
+                if (($uid = (int)($row['uid'] ?? 0)) !== 0) {
                     $list[$uid] = $row;
 
                     self::lookDown($list, $uid, $looped + 1, $depth, $queryBuilder);
@@ -201,12 +201,12 @@ class RootLineUtility
             $queryBuilder->andWhere(...$constraints);
 
             // An element with the same CType can be found on the given pid
-            if (count($result = $queryBuilder->executeQuery()->fetchAllAssociative())) {
+            if (($result = $queryBuilder->executeQuery()->fetchAllAssociative()) !== []) {
                 return $result[0];
             }
 
             // Check the next level in rootline
-            if ($nextPid = self::getParentPage($pid)) {
+            if (($nextPid = self::getParentPage($pid)) !== 0) {
                 return self::searchContentElementInRootline($nextPid, $pluginName, $queryBuilder, $constraints);
             }
         }
@@ -232,7 +232,7 @@ class RootLineUtility
             }
 
             self::lookUp($list, $startingPoint, 0, $depth ?? 100, $queryBuilder);
-        } catch (DBALException | DriverException $e) {
+        } catch (DBALException | DriverException) {
         }
 
         return self::$cache[$cacheKey] = $list;
@@ -256,7 +256,7 @@ class RootLineUtility
             }
 
             self::lookDown($list, $startingPoint, 0, $depth ?? 100, $queryBuilder);
-        } catch (DBALException | DriverException $e) {
+        } catch (DBALException | DriverException) {
         }
 
         return self::$cache[$cacheKey] = $list;
@@ -279,7 +279,7 @@ class RootLineUtility
 
             try {
                 return self::searchContentElementInRootline($startingPoint, $cType, $queryBuilder);
-            } catch (DBALException | DriverException | AspectNotFoundException $e) {
+            } catch (DBALException | DriverException | AspectNotFoundException) {
             }
         }
 

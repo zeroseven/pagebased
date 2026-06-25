@@ -10,6 +10,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 abstract class AbstractRssObject
 {
     protected ?TagBuilder $tag = null;
+
     protected int $indentionLevel = 0;
 
     /** @var TagBuilder[] */
@@ -27,8 +28,8 @@ abstract class AbstractRssObject
 
     public function empty(string $tagName): bool
     {
-        return ($property = $this->get($tagName)) === null
-            || (empty($property->getContent()) && empty($property->getAttributes()));
+        return !($property = $this->get($tagName)) instanceof TagBuilder
+            || (in_array($property->getContent(), [null, '', '0'], true) && $property->getAttributes() === []);
     }
 
     public function get(string $tagName): ?TagBuilder
@@ -50,7 +51,9 @@ abstract class AbstractRssObject
 
     public function setIfEmpty(string $tagName, string $value = null, array $attributes = null, bool $cdata = null): self
     {
-        $this->empty($tagName) && $this->set($tagName, $value, $attributes, $cdata);
+        if ($this->empty($tagName)) {
+            $this->set($tagName, $value, $attributes, $cdata);
+        }
 
         return $this;
     }
@@ -68,7 +71,7 @@ abstract class AbstractRssObject
     {
         $properties = '';
 
-        if ($this->tag) {
+        if ($this->tag instanceof TagBuilder) {
             $indention = "\t";
             $newLinePrefix = "\n" . str_repeat($indention, $this->indentionLevel);
 

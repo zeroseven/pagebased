@@ -10,10 +10,10 @@ use Zeroseven\Pagebased\Utility\DetectionUtility;
 
 class DetectObjects
 {
-    public function __invoke(BeforeFormEnginePageInitializedEvent $event): void
+    public function __invoke(BeforeFormEnginePageInitializedEvent $beforeFormEnginePageInitializedEvent): void
     {
-        $parsedBody = $event->getRequest()->getParsedBody();
-        $queryParams = $event->getRequest()->getQueryParams();
+        $parsedBody = $beforeFormEnginePageInitializedEvent->getRequest()->getParsedBody();
+        $queryParams = $beforeFormEnginePageInitializedEvent->getRequest()->getQueryParams();
 
         if (
             ($editConfiguration = $parsedBody['edit'] ?? $queryParams['edit'] ?? null)

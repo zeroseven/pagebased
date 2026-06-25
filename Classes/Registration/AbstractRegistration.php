@@ -10,12 +10,7 @@ use Zeroseven\Pagebased\Exception\RegistrationException;
 
 abstract class AbstractRegistration implements RegistrationPropertyInterface, \ArrayAccess
 {
-    protected string $title;
-
-    public function __construct(string $title)
-    {
-        $this->title = $title;
-    }
+    public function __construct(protected string $title) {}
 
     protected function translate(string $string): string
     {
@@ -55,7 +50,7 @@ abstract class AbstractRegistration implements RegistrationPropertyInterface, \A
         $methods = self::getPublicMethods(static::class);
         $availableMethods = array_diff($methods, self::getPublicMethods(\ArrayAccess::class));
 
-        throw new RegistrationException('ArrayAccess is only for reading. Methods "offsetSet" and "offsetUnset" are not available. Please use other public methods instead: ' . implode(', ', array_map(static fn(string $method) => '"' . $method . '"', $availableMethods)));
+        throw new RegistrationException('ArrayAccess is only for reading. Methods "offsetSet" and "offsetUnset" are not available. Please use other public methods instead: ' . implode(', ', array_map(static fn(string $method): string => '"' . $method . '"', $availableMethods)), 1337713225);
     }
 
     /** @throws RegistrationException */
@@ -67,10 +62,10 @@ abstract class AbstractRegistration implements RegistrationPropertyInterface, \A
     protected static function getPublicMethods(string $className): array
     {
         return array_map(
-            static fn(\ReflectionMethod $method) => $method->getName(),
+            static fn(\ReflectionMethod $reflectionMethod): string => $reflectionMethod->getName(),
             array_filter(
                 GeneralUtility::makeInstance(\ReflectionClass::class, $className)->getMethods(),
-                static fn(\ReflectionMethod $method) => !$method->isStatic() && $method->isPublic() && !str_starts_with($method->getName(), '__')
+                static fn(\ReflectionMethod $reflectionMethod): bool => !$reflectionMethod->isStatic() && $reflectionMethod->isPublic() && !str_starts_with($reflectionMethod->getName(), '__')
             )
         );
     }

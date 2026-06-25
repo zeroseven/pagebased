@@ -12,18 +12,15 @@ use Zeroseven\Pagebased\Registration\Event\BeforeStoreRegistrationEvent;
 
 final class Registration
 {
-    protected string $extensionName;
-    protected ?string $identifier = null;
-    protected ?ObjectRegistration $object = null;
-    protected ?CategoryRegistration $category = null;
-    protected ?ListPluginRegistration $listPlugin = null;
-    protected ?FilterPluginRegistration $filterPlugin = null;
+    private ?ObjectRegistration $objectRegistration = null;
 
-    public function __construct(string $extensionName, ?string $identifier = null)
-    {
-        $this->extensionName = $extensionName;
-        $this->identifier = $identifier;
-    }
+    private ?CategoryRegistration $categoryRegistration = null;
+
+    private ?ListPluginRegistration $listPluginRegistration = null;
+
+    private ?FilterPluginRegistration $filterPluginRegistration = null;
+
+    public function __construct(private readonly string $extensionName, private ?string $identifier = null) {}
 
     public function getExtensionName(): string
     {
@@ -44,70 +41,70 @@ final class Registration
 
     public function getObject(): ObjectRegistration
     {
-        return $this->object;
+        return $this->objectRegistration;
     }
 
     public function setObject(ObjectRegistration $objectRegistration): self
     {
-        $this->object = $objectRegistration;
+        $this->objectRegistration = $objectRegistration;
 
         return $this;
     }
 
     public function getCategory(): CategoryRegistration
     {
-        return $this->category;
+        return $this->categoryRegistration;
     }
 
     public function setCategory(CategoryRegistration $categoryRegistration): self
     {
-        $this->category = $categoryRegistration;
+        $this->categoryRegistration = $categoryRegistration;
 
         return $this;
     }
 
     public function getListPlugin(): ?ListPluginRegistration
     {
-        return $this->listPlugin;
+        return $this->listPluginRegistration;
     }
 
     public function enableListPlugin(ListPluginRegistration $listPluginRegistration): self
     {
-        $this->listPlugin = $listPluginRegistration;
+        $this->listPluginRegistration = $listPluginRegistration;
 
         return $this;
     }
 
     public function hasListPlugin(): bool
     {
-        return $this->listPlugin !== null;
+        return $this->listPluginRegistration instanceof ListPluginRegistration;
     }
 
     public function getFilterPlugin(): ?FilterPluginRegistration
     {
-        return $this->filterPlugin;
+        return $this->filterPluginRegistration;
     }
 
     public function enableFilterPlugin(FilterPluginRegistration $filterPluginRegistration): self
     {
-        $this->filterPlugin = $filterPluginRegistration;
+        $this->filterPluginRegistration = $filterPluginRegistration;
 
         return $this;
     }
 
     public function hasFilterPlugin(): bool
     {
-        return $this->filterPlugin !== null;
+        return $this->filterPluginRegistration instanceof FilterPluginRegistration;
     }
 
     /** @throws RegistrationException */
     public function store(): void
     {
-        if ($this->object === null) {
+        if (!$this->objectRegistration instanceof ObjectRegistration) {
             throw new RegistrationException(sprintf('An object must be configured in extension "%s". Please call "setObject()" methode, contains instance of "%s"', $this->extensionName, ObjectRegistration::class), 1684312103);
         }
 
-        if ($this->category === null) {
+        if (!$this->categoryRegistration instanceof CategoryRegistration) {
             throw new RegistrationException(sprintf('A category must be configured in extension "%s". Please call "setCategory()" methode, contains instance of "%s"', $this->extensionName, CategoryRegistration::class), 1684312124);
         }
 

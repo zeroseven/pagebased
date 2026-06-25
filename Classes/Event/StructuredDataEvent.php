@@ -8,23 +8,16 @@ use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference as ExtbaseFileReference;
 use TYPO3\CMS\Extbase\Service\ImageService;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Utility\ArrayPathUtility;
 
-final class StructuredDataEvent
+final readonly class StructuredDataEvent
 {
-    protected Registration $registration;
-    protected int $uid;
-    protected array $row;
-    protected ArrayPathUtility $properties;
+    private ArrayPathUtility $arrayPathUtility;
 
-    public function __construct(Registration $registration, int $uid, array $row)
+    public function __construct(private Registration $registration, private int $uid, private array $row)
     {
-        $this->registration = $registration;
-        $this->uid = $uid;
-        $this->row = $row;
-        $this->properties = ArrayPathUtility::create();
+        $this->arrayPathUtility = ArrayPathUtility::create();
     }
 
     public function getRegistration(): Registration
@@ -44,31 +37,31 @@ final class StructuredDataEvent
 
     public function getProperties(): array
     {
-        return $this->properties->toArray();
+        return $this->arrayPathUtility->toArray();
     }
 
     public function getProperty(string $path): mixed
     {
-        return $this->properties->get($path);
+        return $this->arrayPathUtility->get($path);
     }
 
     public function setProperty(string $path, mixed $value): self
     {
-        $this->properties->set($path, $value);
+        $this->arrayPathUtility->set($path, $value);
 
         return $this;
     }
 
     public function addProperty(string $path, mixed $value, bool $force = null): self
     {
-        $this->properties->add($path, $value, $force);
+        $this->arrayPathUtility->add($path, $value, $force);
 
         return $this;
     }
 
     public function addPropertyType(string $path, array $value, string $type, bool $force = null): self
     {
-        $this->properties->add($path, array_merge(['@type' => $type], $value), $force);
+        $this->arrayPathUtility->add($path, array_merge(['@type' => $type], $value), $force);
 
         return $this;
     }
@@ -76,35 +69,34 @@ final class StructuredDataEvent
     public function addProperties(array $properties, bool $force = null): self
     {
         foreach ($properties as $path => $value) {
-            $this->properties->add($path, $value, $force);
+            $this->arrayPathUtility->add($path, $value, $force);
         }
 
         return $this;
     }
 
-    protected function createImageObjectType(FileReference $media = null): array
+    private function createImageObjectType(FileReference $fileReference = null): array
     {
         $imageService = GeneralUtility::makeInstance(ImageService::class);
-        $processedImage = $imageService->applyProcessingInstructions($media, [
+        $processedFile = $imageService->applyProcessingInstructions($fileReference, [
             'width' => '1920m',
             'height' => '1080m',
         ]);
 
-        return array_merge([
+        return [
             '@type' => 'ImageObject',
-            'url' => $imageService->getImageUri($processedImage, true),
-        ], ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController && ($lastImageInfo = $GLOBALS['TSFE']->lastImageInfo ?? null) ? [
-            'width' => $lastImageInfo[0],
-            'height' => $lastImageInfo[1],
-        ] : []);
+            'url' => $imageService->getImageUri($processedFile, true),
+            'width' => $processedFile->getProperty('width'),
+            'height' => $processedFile->getProperty('height'),
+        ];
     }
 
-    protected function removeEmptyValues(array $array): array
+    private function removeEmptyValues(array $array): array
     {
-        return array_filter($array, fn($v) => !empty(is_array($v) ? $this->removeEmptyValues($v) : $v));
+        return array_filter($array, fn($v): bool => !empty(is_array($v) ? $this->removeEmptyValues($v) : $v));
     }
 
-    protected function parseProperties(array $array): array
+    private function parseProperties(array $array): array
     {
         // Create output
         $output = [];
@@ -130,10 +122,10 @@ final class StructuredDataEvent
 
     public function parse(): ?string
     {
-        if (!$this->properties->isEmpty()) {
+        if (!$this->arrayPathUtility->isEmpty()) {
             try {
-                return json_encode($this->parseProperties($this->properties->toArray()), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            } catch (\JsonException $e) {
+                return json_encode($this->parseProperties($this->arrayPathUtility->toArray()), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            } catch (\JsonException) {
             }
         }
 

@@ -11,15 +11,17 @@ use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Registration\Registration;
+use Zeroseven\Pagebased\Utility\FrontendRequestUtility;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
 use Zeroseven\Pagebased\Utility\RootLineUtility;
 
 class CategoryRedirect implements MiddlewareInterface
 {
     protected const REDIRECT_PARAMETER = '_redirected';
+
+    public function __construct(private readonly UriBuilder $uriBuilder) {}
 
     protected function buildRedirectResponse(int $startPage, Registration $registration): ?ResponseInterface
     {
@@ -30,7 +32,7 @@ class CategoryRedirect implements MiddlewareInterface
             $controllerArguments = ['category' => $startPage, ObjectDemandInterface::PROPERTY_CONTENT_ID => $uid];
             $extensionName = GeneralUtility::underscoredToUpperCamelCase($registration->getExtensionName());
 
-            $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+            $uriBuilder = $this->uriBuilder;
             $uriBuilder->reset()
                 ->setTargetPageUid($pid)
                 ->setSection('c' . $uid)
@@ -49,10 +51,9 @@ class CategoryRedirect implements MiddlewareInterface
     {
         return
             empty($request->getQueryParams()[self::REDIRECT_PARAMETER] ?? null) // Reduce multiple redirects
-            && ($GLOBALS['TSFE'] ?? null) instanceof TypoScriptFrontendController
-            && ($row = $GLOBALS['TSFE']->page ?? null)
+            && ($row = FrontendRequestUtility::getPageRecord($request))
             && ($row['pagebased_redirect_category'] ?? null)
-            && ($uid = $GLOBALS['TSFE']->id ?? $row['uid'] ?? null)
+            && ($uid = FrontendRequestUtility::getPageId($request) ?: (int)($row['uid'] ?? 0))
             && ($registration = ObjectUtility::isCategory($uid, $row))
             && ($redirectResponse = $this->buildRedirectResponse($uid, $registration))
                 ? $redirectResponse

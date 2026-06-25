@@ -23,8 +23,8 @@ abstract class AbstractIconProvider implements IconProviderInterface
     {
         try {
             $registration = RegistrationService::getRegistrationByIdentifier($options['registration'] ?? '');
-        } catch (ValueException $e) {
-            throw new \InvalidArgumentException('[' . $icon->getIdentifier() . '] Registration not found: ' . $e->getMessage(), 1620146666);
+        } catch (ValueException $valueException) {
+            throw new \InvalidArgumentException('[' . $icon->getIdentifier() . '] Registration not found: ' . $valueException->getMessage(), 1620146666, $valueException);
         }
 
         $icon->setMarkup($this->generateMarkup($icon, $options, $registration));

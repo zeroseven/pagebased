@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\Tests\Functional\Performance;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Zeroseven\Pagebased\Registration\CategoryRegistration;
 use Zeroseven\Pagebased\Registration\ObjectRegistration;
@@ -39,40 +40,36 @@ final class RepositoryPerformanceTest extends FunctionalTestCase
             'Connections' => [
                 'Default' => [
                     'driverMiddlewares' => [
-                        QueryCountingMiddleware::class,
+                        'pagebased/query-counting' => [
+                            'target' => QueryCountingMiddleware::class,
+                        ],
                     ],
                 ],
             ],
         ],
     ];
 
-    private TestObjectRepository $repository;
+    private TestObjectRepository $testObjectRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Database/pages_many_objects.csv');
         $this->bootstrapTestRegistration();
-        $this->repository = $this->get(TestObjectRepository::class);
+        $this->testObjectRepository = $this->get(TestObjectRepository::class);
         QueryCountingMiddleware::reset();
     }
 
     // -------------------------------------------------------------------------
     // findByDemand – query count
     // -------------------------------------------------------------------------
-
-    /**
-     * @test
-     * findByDemand() for all objects must complete in exactly ONE SQL query
-     * (a single SELECT against the pages table). Extbase lazy-loads relations,
-     * so the initial fetch should not trigger additional selects.
-     */
+    #[Test]
     public function findByDemandIssuesSingleQueryForAllObjects(): void
     {
         QueryCountingMiddleware::reset();
 
-        $demand = $this->repository->initializeDemand();
-        $this->repository->findByDemand($demand);
+        $demand = $this->testObjectRepository->initializeDemand();
+        $this->testObjectRepository->findByDemand($demand);
 
         $queryCount = QueryCountingMiddleware::getCount();
 
@@ -82,17 +79,13 @@ final class RepositoryPerformanceTest extends FunctionalTestCase
         ));
     }
 
-    /**
-     * @test
-     * Time to fetch 57 visible objects must stay well under 2 seconds even
-     * on a cold connection.
-     */
+    #[Test]
     public function findByDemandCompletesWithinTimeBudgetForLargeDataset(): void
     {
-        $demand = $this->repository->initializeDemand();
+        $demand = $this->testObjectRepository->initializeDemand();
 
         $start = microtime(true);
-        $result = $this->repository->findByDemand($demand);
+        $result = $this->testObjectRepository->findByDemand($demand);
         $elapsedMs = (microtime(true) - $start) * 1000;
 
         self::assertNotNull($result);
@@ -102,16 +95,12 @@ final class RepositoryPerformanceTest extends FunctionalTestCase
         ));
     }
 
-    /**
-     * @test
-     * findByDemand() must return all visible objects (hidden excluded).
-     * 3 categories × 20 objects = 60 total; last in each category is hidden → 57.
-     */
+    #[Test]
     public function findByDemandReturnsExpectedCountForLargeDataset(): void
     {
-        $demand = $this->repository->initializeDemand();
+        $demand = $this->testObjectRepository->initializeDemand();
 
-        $result = $this->repository->findByDemand($demand);
+        $result = $this->testObjectRepository->findByDemand($demand);
 
         self::assertNotNull($result);
         self::assertSame(57, $result->count(), '3×20 objects with 3 hidden = 57 visible objects expected');
@@ -120,19 +109,12 @@ final class RepositoryPerformanceTest extends FunctionalTestCase
     // -------------------------------------------------------------------------
     // findByUid – minimal query cost
     // -------------------------------------------------------------------------
-
-    /**
-     * @test
-     * findByUid() must use at most 3 queries. The main data retrieval is a single
-     * direct SELECT; any additional Extbase/TCA/language overhead must keep the
-     * total at or below 3 queries. Before the optimisation it ran through the full
-     * demand pipeline (site-scope query + registration query).
-     */
+    #[Test]
     public function findByUidIssuesMinimalQueries(): void
     {
         QueryCountingMiddleware::reset();
 
-        $this->repository->findByUid(500);
+        $this->testObjectRepository->findByUid(500);
 
         $queryCount = QueryCountingMiddleware::getCount();
 
@@ -142,15 +124,11 @@ final class RepositoryPerformanceTest extends FunctionalTestCase
         ));
     }
 
-    /**
-     * @test
-     * findByUid() must complete within a tight time budget – verifying it
-     * doesn't run through the expensive full demand pipeline.
-     */
+    #[Test]
     public function findByUidIsFasterThanFindByDemand(): void
     {
         $start = microtime(true);
-        $this->repository->findByUid(500);
+        $this->testObjectRepository->findByUid(500);
         $uidMs = (microtime(true) - $start) * 1000;
 
         self::assertLessThan(500, $uidMs, sprintf(
@@ -162,26 +140,21 @@ final class RepositoryPerformanceTest extends FunctionalTestCase
     // -------------------------------------------------------------------------
     // Repeated calls – no N+1 accumulation
     // -------------------------------------------------------------------------
-
-    /**
-     * @test
-     * Calling findByUid() 10 times in a loop must not issue 10× as many
-     * queries as a single call (Extbase sometimes over-fetches on relations).
-     * Total queries ≤ singleCallQueries * 10 + 5 (small constant overhead).
-     */
+    #[Test]
     public function repeatedFindByUidDoesNotCauseQueryExplosion(): void
     {
         // Baseline: single call
         QueryCountingMiddleware::reset();
-        $this->repository->findByUid(500);
+        $this->testObjectRepository->findByUid(500);
         $singleCallQueries = QueryCountingMiddleware::getCount();
 
         // 10 consecutive lookups
         QueryCountingMiddleware::reset();
         for ($i = 0; $i < 10; $i++) {
             $uid = 500 + $i;
-            $this->repository->findByUid($uid);
+            $this->testObjectRepository->findByUid($uid);
         }
+
         $tenCallQueries = QueryCountingMiddleware::getCount();
 
         $maxExpected = ($singleCallQueries * 10) + 5;

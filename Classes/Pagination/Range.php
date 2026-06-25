@@ -7,7 +7,9 @@ namespace Zeroseven\Pagebased\Pagination;
 class Range
 {
     protected int $from;
+
     protected int $to;
+
     protected int $length;
 
     public function __construct(Pagination $pagination, Stage $stage)

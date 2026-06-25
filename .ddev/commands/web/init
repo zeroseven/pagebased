@@ -31,8 +31,8 @@ while [[ $# -gt 0 ]]; do
         --typo3)
             shift
             TYPO3_VERSION="${1:-}"
-            if [[ "$TYPO3_VERSION" != "12" && "$TYPO3_VERSION" != "13" ]]; then
-                err "Invalid TYPO3 version: '$TYPO3_VERSION'. Use 12 or 13."
+            if [[ "$TYPO3_VERSION" != "13" && "$TYPO3_VERSION" != "14" ]]; then
+                err "Invalid TYPO3 version: '$TYPO3_VERSION'. Use 13 or 14."
                 exit 1
             fi
             ;;
@@ -45,12 +45,12 @@ while [[ $# -gt 0 ]]; do
             echo "  -f, --force        Reinitialize even if TYPO3 is already configured"
             echo "  -s, --skip-seed    Skip importing example pagebased pages"
             echo "      --snapshot     Create a DB snapshot after successful init"
-            echo "      --typo3 <ver>  Install specific TYPO3 version (12 or 13)"
+            echo "      --typo3 <ver>  Install specific TYPO3 version (13 or 14)"
             echo ""
             echo "Examples:"
             echo "  ddev init                  # First-time setup (uses composer.lock)"
-            echo "  ddev init --typo3 12       # Setup with TYPO3 v12"
             echo "  ddev init --typo3 13       # Setup with TYPO3 v13"
+            echo "  ddev init --typo3 14       # Setup with TYPO3 v14"
             echo "  ddev init --force          # Wipe and reinitialize"
             echo "  ddev init --skip-seed      # Setup without example data"
             exit 0
@@ -60,7 +60,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 TYPO3_BIN="/var/www/html/.build/bin/typo3"
-SETTINGS_PHP="/var/www/html/.build/config/system/settings.php"
+SETTINGS_PHP="/var/www/html/config/system/settings.php"
 
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -80,18 +80,31 @@ fi
 if [ "$FORCE" = true ] && [ -f "$SETTINGS_PHP" ]; then
     header "Cleanup"
     info "Removing existing TYPO3 configuration..."
-    rm -rf /var/www/html/.build/config /var/www/html/.build/public/typo3conf /var/www/html/.build/var
+    rm -rf /var/www/html/config /var/www/html/.build/public/typo3conf /var/www/html/var
     ok "Existing configuration removed"
 fi
 
 # ─── Step 1: Dependencies ─────────────────────────────────────────────────────
 header "Step 1: Dependencies"
 if [ -n "$TYPO3_VERSION" ]; then
-    info "Installing dependencies for TYPO3 v${TYPO3_VERSION}..."
+    # v13 LTS is 13.4; v14's first release line is 14.0+ (no 14.4 yet)
+    if [ "$TYPO3_VERSION" = "13" ]; then
+        T3_CONSTRAINT="^13.4"
+    else
+        T3_CONSTRAINT="^14.0"
+    fi
+    info "Installing dependencies for TYPO3 v${TYPO3_VERSION} (${T3_CONSTRAINT})..."
+    # The composer plugin runs "asset:publish" during the update. While switching TYPO3 major
+    # versions, typo3/class-alias-loader differs between the old and new dependency set and the
+    # alias-loader-include.php generated mid-update is stale (fatal: "Call to undefined method
+    # ...setCaseSensitiveClassLoading()"), which makes asset:publish — and thus the update — exit
+    # non-zero. Tolerate that, then regenerate the autoloader with the now-current plugin set, which
+    # rewrites the include cleanly.
     cd /var/www/html && composer update \
-        --with "typo3/cms-core:^${TYPO3_VERSION}.4" \
-        --with "typo3/cms-install:^${TYPO3_VERSION}.4" \
-        --no-interaction --no-progress --prefer-stable
+        --with "typo3/cms-core:${T3_CONSTRAINT}" \
+        --with "typo3/cms-install:${T3_CONSTRAINT}" \
+        --no-interaction --no-progress --prefer-stable || true
+    cd /var/www/html && composer dump-autoload --no-interaction
     ok "Dependencies installed (TYPO3 v${TYPO3_VERSION})"
 elif [ ! -f "/var/www/html/.build/vendor/autoload.php" ]; then
     info "Running composer install..."
@@ -137,8 +150,16 @@ info "Running TYPO3 setup wizard..."
     --admin-user-password=Admin1234! \
     --admin-email=admin@example.com \
     --project-name="pagebased Development" \
+    --create-site="https://pagebased.ddev.site/" \
     --server-type=other \
     --force
+
+# Local dev: trust all host headers (ddev hostname + port-based URLs).
+# Written to additional.php, which setup/install-tool never overwrites.
+cat > /var/www/html/config/system/additional.php <<'PHP'
+<?php
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '.*';
+PHP
 ok "TYPO3 setup complete"
 
 # ─── Step 4: Extensions & Schema ─────────────────────────────────────────────

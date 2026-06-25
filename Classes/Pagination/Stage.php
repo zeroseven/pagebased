@@ -9,14 +9,14 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 class Stage extends ObjectStorage
 {
-    protected Pagination $pagination;
     protected int $index;
+
     protected bool $active;
+
     protected bool $selected;
 
-    public function __construct(Pagination $pagination, int $index = null, bool $active = null, bool $selected = null)
+    public function __construct(protected Pagination $pagination, int $index = null, bool $active = null, bool $selected = null)
     {
-        $this->pagination = $pagination;
         $this->index = $index ?? 0;
         $this->active = $active ?? false;
         $this->selected = $selected ?? false;

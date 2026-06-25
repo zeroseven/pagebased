@@ -16,7 +16,7 @@ class DetectionCommand extends Command
 {
     protected function configure(): void
     {
-        $this->addArgument('startingPoint', InputArgument::REQUIRED, 'Define the starting point in TYPO3\'s page tree.');
+        $this->addArgument('startingPoint', InputArgument::REQUIRED, "Define the starting point in TYPO3's page tree.");
         $this->addArgument('depth', InputArgument::OPTIONAL, 'Specify how deep to search from the starting point.');
     }
 
@@ -26,7 +26,7 @@ class DetectionCommand extends Command
         $depth = MathUtility::canBeInterpretedAsInteger($value = $input->getArgument('depth')) ? (int)$value : null;
         $rootLine = RootLineUtility::collectPagesBelow($startingPoint, false, $depth);
 
-        foreach ($rootLine as $uid => $page) {
+        foreach (array_keys($rootLine) as $uid) {
             DetectionUtility::updateFields($uid);
         }
 

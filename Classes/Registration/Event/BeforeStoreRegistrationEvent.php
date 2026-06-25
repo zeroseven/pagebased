@@ -8,12 +8,7 @@ use Zeroseven\Pagebased\Registration\Registration;
 
 final class BeforeStoreRegistrationEvent
 {
-    private Registration $registration;
-
-    public function __construct(Registration $registration)
-    {
-        $this->registration = $registration;
-    }
+    public function __construct(private Registration $registration) {}
 
     public function getRegistration(): Registration
     {

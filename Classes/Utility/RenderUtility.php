@@ -9,10 +9,12 @@ use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Exception as PersistenceException;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 use Zeroseven\Pagebased\Event\AssignTemplateVariablesEvent;
@@ -27,47 +29,48 @@ class RenderUtility
      * Back reference to the parent content object
      * This has to be public as it is set directly from TYPO3
      */
-    public ?ContentObjectRenderer $cObj = null;
+    protected ?ContentObjectRenderer $cObj = null;
 
-    protected function initializeView(Registration $registration, array $pluginConfiguration, ServerRequestInterface $request = null): StandaloneView
+    public function __construct(private readonly EventDispatcher $eventDispatcher) {}
+
+    protected function initializeView(Registration $registration, array $pluginConfiguration, string $templatePathAndFilename, ServerRequestInterface $serverRequest = null): ViewInterface
     {
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $serverRequest = RequestUtility::getExtbaseRequest($registration, $serverRequest) ?? $serverRequest ?? RequestUtility::getServerRequest();
 
-        $view->setTemplateRootPaths($pluginConfiguration['view']['templateRootPaths'] ?? []);
-        $view->setPartialRootPaths($pluginConfiguration['view']['partialRootPaths'] ?? []);
-        $view->setLayoutRootPaths($pluginConfiguration['view']['layoutRootPaths'] ?? []);
-        $view->setFormat('html');
+        $viewFactoryData = new ViewFactoryData(
+            templateRootPaths: $pluginConfiguration['view']['templateRootPaths'] ?? [],
+            partialRootPaths: $pluginConfiguration['view']['partialRootPaths'] ?? [],
+            layoutRootPaths: $pluginConfiguration['view']['layoutRootPaths'] ?? [],
+            templatePathAndFilename: GeneralUtility::getFileAbsFileName($templatePathAndFilename),
+            request: $serverRequest,
+            format: 'html',
+        );
 
-        if ($view->getRenderingContext()->getRequest() === null && $request = RequestUtility::getExtbaseRequest($registration, $request)) {
-            $view->getRenderingContext()->setRequest($request);
-        }
-
-        return $view;
+        return GeneralUtility::makeInstance(ViewFactoryInterface::class)->create($viewFactoryData);
     }
 
     /** @throws TypeException */
-    public function render(string $templateNameAndFilePath, mixed $registrationIdentifiers, array $settings = null, int $pageUid = null, ServerRequestInterface $request = null, DomainObjectInterface $object = null): string
+    public function render(string $templateNameAndFilePath, mixed $registrationIdentifiers, array $settings = null, int $pageUid = null, ServerRequestInterface $serverRequest = null, DomainObjectInterface $domainObject = null): string
     {
         $pageUid || $pageUid = RootLineUtility::getCurrentPage();
 
         if ($pageUid && ($registration = ObjectUtility::isObject($pageUid)) && in_array($registration->getIdentifier(), CastUtility::array($registrationIdentifiers), true)) {
             $pluginConfiguration = SettingsUtility::getPluginConfiguration($registration);
-            $view = $this->initializeView($registration, $pluginConfiguration, $request);
+            $view = $this->initializeView($registration, $pluginConfiguration, $templateNameAndFilePath, $serverRequest);
 
             try {
-                $object || $object = $registration->getObject()->getRepositoryClass()->findByUid($pageUid);
-            } catch (AspectNotFoundException|TypeException|InvalidQueryException|PersistenceException|RegistrationException $e) {
+                $domainObject || $domainObject = $registration->getObject()->getRepositoryClass()->findByUid($pageUid);
+            } catch (AspectNotFoundException|TypeException|InvalidQueryException|PersistenceException|RegistrationException) {
                 return '';
             }
 
-            $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templateNameAndFilePath));
-            $view->assignMultiple(GeneralUtility::makeInstance(EventDispatcher::class)?->dispatch(new AssignTemplateVariablesEvent([
-                'object' => $object,
+            $view->assignMultiple($this->eventDispatcher?->dispatch(new AssignTemplateVariablesEvent([
+                'object' => $domainObject,
                 'demand' => $registration->getObject()->getDemandClass(),
                 'settings' => array_merge($pluginConfiguration['settings'] ?? [], $settings ?? []),
                 'data' => $this->cObj->data ?? [],
                 'registration' => $registration,
-                strtolower($registration->getObject()->getName()) => $object, // alias variable
+                strtolower($registration->getObject()->getName()) => $domainObject, // alias variable
             ], $registration, 'info'))->getVariables());
 
             return $view->render();
@@ -77,7 +80,7 @@ class RenderUtility
     }
 
     /** @throws ContentRenderingException|TypeException */
-    public function renderUserFunc(string $content, array $conf, ServerRequestInterface $request): string
+    public function renderUserFunc(string $content, array $conf, ServerRequestInterface $serverRequest): string
     {
         $file = $conf['file'] ?? null;
         $registrationIdentifiers = $conf['registration'] ?? ($conf['registration.'] ?? null);
@@ -88,11 +91,16 @@ class RenderUtility
         }
 
         if ($registrationIdentifiers === null) {
-            $validIdentifier = array_map(static fn($registration) => '"' . $registration->getIdentifier() . '"', RegistrationService::getRegistrations());
+            $validIdentifier = array_map(static fn(Registration $registration): string => '"' . $registration->getIdentifier() . '"', RegistrationService::getRegistrations());
 
             throw new ContentRenderingException('Configuration "registration" (the identifier of a registration) is not set or empty.' . (count($validIdentifier) ? ' Valid identifiers are ' . implode(',', $validIdentifier) . '.' : ''), 1685960418);
         }
 
-        return $content . $this->render($file, $registrationIdentifiers, $settings, null, $request);
+        return $content . $this->render($file, $registrationIdentifiers, $settings, null, $serverRequest);
+    }
+
+    public function setContentObjectRenderer(ContentObjectRenderer $contentObjectRenderer): void
+    {
+        $this->cObj = $contentObjectRenderer;
     }
 }

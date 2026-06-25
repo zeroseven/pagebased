@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Zeroseven\Pagebased\ViewHelpers\Filter;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\ObjectDemandInterface;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Exception\ValueException;
 
 final class LinkViewHelper extends AbstractFilterLinkViewHelper
 {
-    protected const FILTER_ACTIVE_ATTRIBUTE = 'data-filter-active';
+    private const FILTER_ACTIVE_ATTRIBUTE = 'data-filter-active';
 
     public function initializeArguments(): void
     {
@@ -27,7 +28,7 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
     {
         parent::validateArguments();
 
-        if ($this->demand) {
+        if ($this->demand instanceof DemandInterface) {
             foreach (array_keys($this->arguments['properties'] ?? []) as $key) {
                 if (!$this->demand->hasProperty($key)) {
                     throw new Exception(sprintf('Undefined property "%s" in demand class "%s". Allowed properties are %s', $key, (new \ReflectionClass($this->demand))->getName(), implode(', ', array_map(static fn($property) => $property->getName(), $this->demand->getProperties()))), 1678130803);
@@ -54,7 +55,7 @@ final class LinkViewHelper extends AbstractFilterLinkViewHelper
     }
 
     /** @throws TypeException */
-    protected function setDataAttributes(): void
+    private function setDataAttributes(): void
     {
         if ($this->arguments['dataAttributes'] ?? null) {
 

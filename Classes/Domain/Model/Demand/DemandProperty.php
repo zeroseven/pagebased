@@ -8,26 +8,27 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Zeroseven\Pagebased\Exception\TypeException;
 use Zeroseven\Pagebased\Utility\CastUtility;
 
-class DemandProperty
+class DemandProperty implements \Stringable
 {
     public const TYPE_ARRAY = 'array';
+
     public const TYPE_INTEGER = 'int';
+
     public const TYPE_BOOLEAN = 'bool';
+
     public const TYPE_STRING = 'string';
 
-    protected string $name;
-    protected string $type;
     protected string $parameter;
+
     protected string $extbasePropertyName;
+
     protected mixed $value;
 
     /** @throws TypeException */
-    public function __construct(string $name, string $type, mixed $value = null, string $extbasePropertyName = null)
+    public function __construct(protected string $name, protected string $type, mixed $value = null, string $extbasePropertyName = null)
     {
-        $this->name = $name;
-        $this->type = $type;
-        $this->parameter = GeneralUtility::camelCaseToLowerCaseUnderscored($name);
-        $this->extbasePropertyName = $extbasePropertyName ?? $name;
+        $this->parameter = GeneralUtility::camelCaseToLowerCaseUnderscored($this->name);
+        $this->extbasePropertyName = $extbasePropertyName ?? $this->name;
 
         $this->setValue($value);
     }
@@ -81,7 +82,7 @@ class DemandProperty
     public function parseValue(mixed $value): mixed
     {
         if ($this->isArray()) {
-            return array_map(static fn($v) => CastUtility::string($v), CastUtility::array($value));
+            return array_map(CastUtility::string(...), CastUtility::array($value));
         }
 
         if ($this->isInteger()) {
@@ -139,7 +140,7 @@ class DemandProperty
     public function isActive(mixed $value): bool
     {
         if ($this->isArray()) {
-            if (count(array_diff($this->parseValue($value), $this->getValue())) === 0) {
+            if (array_diff($this->parseValue($value), $this->getValue()) === []) {
                 return true;
             }
         } elseif ($this->parseValue($value) === $this->getValue()) {
@@ -153,7 +154,7 @@ class DemandProperty
     {
         try {
             $this->setValue(null);
-        } catch (TypeException $e) {
+        } catch (TypeException) {
         }
     }
 
@@ -172,7 +173,7 @@ class DemandProperty
 
         try {
             return CastUtility::string($this->getValue());
-        } catch (TypeException $e) {
+        } catch (TypeException) {
             return '';
         }
     }

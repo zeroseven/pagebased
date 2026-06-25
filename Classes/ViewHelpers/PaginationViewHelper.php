@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace Zeroseven\Pagebased\ViewHelpers;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Install\ViewHelpers\Exception;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 use Zeroseven\Pagebased\Pagination\Pagination;
 
 final class PaginationViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
+    public const PAGINATION_VARIABLE_IDENTIFIER = '📄-fe7cd4d1bf3fea9a0d921e224b3fa24c';
 
-    public const PAGINATION_VARIABLE_IDENTIFIER = '📄-fe7cd4d1bf3fea9a0d921e224b3fa24c'; // md5('pagination');
+    // md5('pagination');
     public const REQUEST_ARGUMENT = '_stage';
 
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
 
@@ -31,9 +30,9 @@ final class PaginationViewHelper extends AbstractViewHelper
         $this->registerArgument('as', 'string', 'The name of the iteration variable', false, self::PAGINATION_VARIABLE_IDENTIFIER);
     }
 
-    protected static function getSelectedStage(RenderingContextInterface $renderingContext): int
+    private function getSelectedStage(): int
     {
-        if (($request = $renderingContext->getRequest()) instanceof RequestInterface && $request->hasArgument(self::REQUEST_ARGUMENT)) {
+        if (($request = $this->renderingContext->getAttribute(ServerRequestInterface::class)) instanceof RequestInterface && $request->hasArgument(self::REQUEST_ARGUMENT)) {
             return (int)$request->getArgument(self::REQUEST_ARGUMENT);
         }
 
@@ -41,25 +40,25 @@ final class PaginationViewHelper extends AbstractViewHelper
     }
 
     /** @throws Exception */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render(): string
     {
-        $selectedStage = self::getSelectedStage($renderingContext);
-        $as = (empty($as = $arguments['as'] ?? null) || $as === self::PAGINATION_VARIABLE_IDENTIFIER) ? null : $as;
+        $selectedStage = $this->getSelectedStage();
+        $as = (empty($as = $this->arguments['as'] ?? null) || $as === self::PAGINATION_VARIABLE_IDENTIFIER) ? null : $as;
 
-        if (empty($items = $arguments['items'] ?? null) || (is_object($items) && !$items instanceof \Traversable)) {
+        if (empty($items = $this->arguments['items'] ?? null) || (is_object($items) && !$items instanceof \Traversable)) {
             throw new Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1677229957);
         }
 
-        $templateVariableContainer = $renderingContext->getVariableProvider();
-        $pagination = GeneralUtility::makeInstance(Pagination::class, $items, $selectedStage, $arguments['itemsPerStage'] ?? null, $arguments['maxStages'] ?? null);
+        $variableProvider = $this->renderingContext->getVariableProvider();
+        $pagination = GeneralUtility::makeInstance(Pagination::class, $items, $selectedStage, $this->arguments['itemsPerStage'] ?? null, $this->arguments['maxStages'] ?? null);
 
-        $as && $templateVariableContainer->add($as, $pagination);
-        $templateVariableContainer->add(self::PAGINATION_VARIABLE_IDENTIFIER, $pagination);
+        $as && $variableProvider->add($as, $pagination);
+        $variableProvider->add(self::PAGINATION_VARIABLE_IDENTIFIER, $pagination);
 
-        $output = $renderChildrenClosure();
+        $output = $this->renderChildren();
 
-        $as && $templateVariableContainer->remove($as);
-        $templateVariableContainer->remove(self::PAGINATION_VARIABLE_IDENTIFIER);
+        $as && $variableProvider->remove($as);
+        $variableProvider->remove(self::PAGINATION_VARIABLE_IDENTIFIER);
 
         return $output;
     }

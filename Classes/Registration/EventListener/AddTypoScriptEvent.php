@@ -79,9 +79,9 @@ class AddTypoScriptEvent
         }');
     }
 
-    public function __invoke(AfterStoreRegistrationEvent $event): void
+    public function __invoke(AfterStoreRegistrationEvent $afterStoreRegistrationEvent): void
     {
-        $this->addTypoScriptSetup($event->getRegistration());
-        $this->addTypoScriptConstants($event->getRegistration());
+        $this->addTypoScriptSetup($afterStoreRegistrationEvent->getRegistration());
+        $this->addTypoScriptConstants($afterStoreRegistrationEvent->getRegistration());
     }
 }

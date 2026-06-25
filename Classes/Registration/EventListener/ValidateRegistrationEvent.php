@@ -38,17 +38,20 @@ use Zeroseven\Pagebased\Registration\RegistrationService;
 
 class ValidateRegistrationEvent
 {
+    public function __construct(private readonly IconRegistry $iconRegistry) {}
+
     /** @throws RegistrationException */
-    protected function checkPageEntityConfiguration(AbstractRegistrationEntityProperty $entity): void
+    protected function checkPageEntityConfiguration(AbstractRegistrationEntityProperty $registrationEntityProperty): void
     {
+        $className = $registrationEntityProperty->getClassName();
         // Check the persistence configuration
-        if ($className = $entity->getClassName()) {
+        if ($className !== '' && $className !== '0') {
             try {
                 if (($tableName = GeneralUtility::makeInstance(DataMapper::class)->getDataMap($className)->getTableName()) !== AbstractPage::TABLE_NAME) {
-                    throw new RegistrationException(sprintf('The object "%s" must be stored in table "pages" instead of "%s". See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $entity->getTitle(), $tableName), 1676066023);
+                    throw new RegistrationException(sprintf('The object "%s" must be stored in table "pages" instead of "%s". See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $registrationEntityProperty->getTitle(), $tableName), 1676066023);
                 }
             } catch (Exception | \LogicException $e) {
-                throw new RegistrationException(sprintf('Class mapping for page entity "%s" failed (ERROR: %s). See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $entity->getClassName(), $e->getMessage()), 1680720144);
+                throw new RegistrationException(sprintf('Class mapping for page entity "%s" failed (ERROR: %s). See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $registrationEntityProperty->getClassName(), $e->getMessage()), 1680720144, $e);
             }
         }
     }
@@ -57,7 +60,7 @@ class ValidateRegistrationEvent
     protected function checkPageObjectRegistration(ObjectRegistration $objectRegistration): void
     {
         // Check domain model
-        if ($objectRegistration->getClassName()) {
+        if ($objectRegistration->getClassName() !== '' && $objectRegistration->getClassName() !== '0') {
             if (!is_subclass_of($objectRegistration->getClassName(), ObjectInterface::class)) {
                 throw new RegistrationException(sprintf('For registration of "%s" a domain model of type "%s" is required. You can simply extend a class "%s".', $objectRegistration->getTitle(), ObjectInterface::class, AbstractObject::class), 1684310714);
             }
@@ -79,8 +82,10 @@ class ValidateRegistrationEvent
             throw new RegistrationException(sprintf('The demand of object "%s" is not an instance of "%s". You can simply extend the class "%s" or build an instance by the "%s".', $objectRegistration->getClassName(), ObjectDemandInterface::class, AbstractObjectDemand::class, GenericObjectDemand::class), 1680722737);
         }
 
+        $className = $objectRegistration->getRepositoryClassName();
+
         // Check repository
-        if ($className = $objectRegistration->getRepositoryClassName()) {
+        if ($className !== '0') {
             if (!is_subclass_of($className, ObjectRepositoryInterface::class)) {
                 throw new RegistrationException(sprintf('The repository "%s" is not a subclass of "%s". You can simply extend the class "%s".', $className, ObjectRepositoryInterface::class, AbstractObjectRepository::class), 1680722761);
             }
@@ -93,7 +98,7 @@ class ValidateRegistrationEvent
     protected function checkCategoryConfiguration(CategoryRegistration $categoryRegistration): void
     {
         // Check domain model
-        if ($categoryRegistration->getClassName()) {
+        if ($categoryRegistration->getClassName() !== '' && $categoryRegistration->getClassName() !== '0') {
             if (!is_subclass_of($categoryRegistration->getClassName(), CategoryInterface::class)) {
                 throw new RegistrationException(sprintf('The class "%s" is not an instance of "%s". You can simply extend a class "%s".', $categoryRegistration->getClassName(), CategoryInterface::class, AbstractCategory::class), 1676063874);
             }
@@ -106,8 +111,10 @@ class ValidateRegistrationEvent
             throw new RegistrationException(sprintf('The demand of object "%s" is not an instance of "%s". You can simply extend the class "%s" or build an instance by the "%s".', $categoryRegistration->getClassName(), ObjectDemandInterface::class, AbstractDemand::class, GenericDemand::class), 1680720699);
         }
 
+        $className = $categoryRegistration->getRepositoryClassName();
+
         // Check repository
-        if ($className = $categoryRegistration->getRepositoryClassName()) {
+        if ($className !== '' && $className !== '0') {
             if (!is_subclass_of($className, CategoryRepositoryInterface::class)) {
                 throw new RegistrationException(sprintf('The repository "%s" is not a subclass of "%s". You can simply extend the class "%s".', $className, CategoryRepositoryInterface::class, AbstractCategoryRepository::class), 1680721292);
             }
@@ -115,9 +122,11 @@ class ValidateRegistrationEvent
             throw new RegistrationException(sprintf('Please provide a repository of "%s" for category "%s"', CategoryRepositoryInterface::class, $categoryRegistration->getTitle()), 1678708348);
         }
 
+        $iconIdentifier = $categoryRegistration->getIconIdentifier();
+
         // Check page icons
-        if ($iconIdentifier = $categoryRegistration->getIconIdentifier()) {
-            $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+        if ($iconIdentifier !== '' && $iconIdentifier !== '0') {
+            $iconRegistry = $this->iconRegistry;
 
             if (!$iconRegistry->isRegistered($iconIdentifier)) {
                 throw new RegistrationException(sprintf('The icon "%s" for the page type "%s" is not registered. More information: https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Icon/Index.html#registration', $iconIdentifier, $categoryRegistration->getTitle()), 1676552125);
@@ -134,11 +143,11 @@ class ValidateRegistrationEvent
         $documentType = $categoryRegistration->getDocumentType();
         $recordType = (int)GeneralUtility::makeInstance(DataMapper::class)->getDataMap($categoryRegistration->getClassName())->getRecordType();
 
-        if (empty($documentType)) {
+        if ($documentType === 0) {
             throw new RegistrationException(sprintf('The object "%s" requires a documentType.', $categoryRegistration->getClassName()), 1687555268);
         }
 
-        if (empty($recordType)) {
+        if ($recordType === 0) {
             throw new RegistrationException(sprintf('The object "%s" requires a "recordType" configuration. See https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Extbase/Reference/Domain/Persistence.html#extbase-manual-mapping', $categoryRegistration->getClassName()), 1680721463);
         }
 
@@ -146,7 +155,7 @@ class ValidateRegistrationEvent
             throw new RegistrationException(sprintf('The configured recordType of the "%s" extbase configuration is not equal to the registration settings', $categoryRegistration->getTitle()), 1687555363);
         }
 
-        $documentTypes = array_map(static fn(Registration $registration) => $registration->getCategory()->getDocumentType(), RegistrationService::getRegistrations());
+        $documentTypes = array_map(static fn(Registration $registration): int => $registration->getCategory()->getDocumentType(), RegistrationService::getRegistrations());
         $duplicates = array_unique(array_diff_assoc($documentTypes, array_unique($documentTypes)));
 
         foreach ($duplicates as $duplicate) {
@@ -157,11 +166,11 @@ class ValidateRegistrationEvent
     }
 
     /** @throws RegistrationException */
-    protected function checkPluginConfiguration(AbstractRegistrationPluginProperty $pluginRegistration): void
+    protected function checkPluginConfiguration(AbstractRegistrationPluginProperty $registrationPluginProperty): void
     {
         // Check plugin icon
-        if (($iconIdentifier = $pluginRegistration->getIconIdentifier()) && !GeneralUtility::makeInstance(IconRegistry::class)->isRegistered($iconIdentifier)) {
-            throw new RegistrationException(sprintf('The icon "%s" for the plugin "%s" is not registered. More information: https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Icon/Index.html#registration', $iconIdentifier, $pluginRegistration->getTitle()), 1680723529);
+        if (($iconIdentifier = $registrationPluginProperty->getIconIdentifier()) && !$this->iconRegistry->isRegistered($iconIdentifier)) {
+            throw new RegistrationException(sprintf('The icon "%s" for the plugin "%s" is not registered. More information: https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Icon/Index.html#registration', $iconIdentifier, $registrationPluginProperty->getTitle()), 1680723529);
         }
     }
 
@@ -178,7 +187,7 @@ class ValidateRegistrationEvent
         $this->checkPageEntityConfiguration($categoryRegistration);
     }
 
-    public function __invoke(BootCompletedEvent $event): void
+    public function __invoke(BootCompletedEvent $bootCompletedEvent): void
     {
         if (Environment::isCli() && Environment::getContext()->isDevelopment()) {
             foreach (RegistrationService::getRegistrations() as $registration) {

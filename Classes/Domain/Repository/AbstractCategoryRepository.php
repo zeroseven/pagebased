@@ -8,6 +8,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use Zeroseven\Pagebased\Domain\Model\Demand\DemandInterface;
+use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Registration\RegistrationService;
 use Zeroseven\Pagebased\Utility\DetectionUtility;
 use Zeroseven\Pagebased\Utility\RootLineUtility;
@@ -18,7 +19,7 @@ abstract class AbstractCategoryRepository extends AbstractPageRepository impleme
     {
         parent::__construct();
 
-        if ($registration = RegistrationService::getRegistrationByCategoryRepository(static::class)) {
+        if (($registration = RegistrationService::getRegistrationByCategoryRepository(static::class)) instanceof Registration) {
             $this->defaultOrderings = [
                 $registration->getCategory()->getSortingField() =>
                     $registration->getCategory()->isSortingAscending()
@@ -35,9 +36,9 @@ abstract class AbstractCategoryRepository extends AbstractPageRepository impleme
 
     public function initializeObject(): void
     {
-        $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
-        $querySettings->setRespectStoragePage(false);
-        $this->setDefaultQuerySettings($querySettings);
+        $typo3QuerySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
+        $typo3QuerySettings->setRespectStoragePage(false);
+        $this->setDefaultQuerySettings($typo3QuerySettings);
     }
 
     public function createDemandConstraints(DemandInterface $demand, QueryInterface $query): array

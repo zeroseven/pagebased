@@ -16,13 +16,14 @@ use Zeroseven\Pagebased\Utility\SettingsUtility;
 
 class CheckExtensionConfigurationEvent
 {
-    protected ?Registration $registration;
+    protected ?Registration $registration = null;
 
     protected function logOnConsole(string $message): void
     {
-        Environment::isCli()
-        && Environment::getContext()->isDevelopment()
-        && DebugUtility::debug($message);
+        if (Environment::isCli()
+        && Environment::getContext()->isDevelopment()) {
+            DebugUtility::debug($message);
+        }
     }
 
     protected function logRegistrationUpdate(string $property, RegistrationPropertyInterface $registrationProperty): void
@@ -88,7 +89,7 @@ registration {
     {
         foreach ($configuration as $key => $value) {
             if ($value !== '' || (is_array($value) && count($value))) {
-                foreach (['set' . ucfirst($key), 'add' . ucfirst($key)] as $method) {
+                foreach (['set' . ucfirst((string)$key), 'add' . ucfirst((string)$key)] as $method) {
                     if (method_exists($registrationProperty, $method)) {
                         $registrationProperty->$method($value);
 
@@ -98,13 +99,13 @@ registration {
                 }
 
                 if (MathUtility::canBeInterpretedAsInteger($value)) {
-                    if ((int)$value === 1 && method_exists($registrationProperty, $method = 'enable' . ucfirst($key))) {
+                    if ((int)$value === 1 && method_exists($registrationProperty, $method = 'enable' . ucfirst((string)$key))) {
                         $registrationProperty->$method();
 
                         $this->logRegistrationUpdate($key, $registrationProperty);
                     }
 
-                    if ((int)$value === 0 && method_exists($registrationProperty, $method = 'disable' . ucfirst($key))) {
+                    if ((int)$value === 0 && method_exists($registrationProperty, $method = 'disable' . ucfirst((string)$key))) {
                         $registrationProperty->$method();
 
                         $this->logRegistrationUpdate($key, $registrationProperty);
@@ -114,9 +115,9 @@ registration {
         }
     }
 
-    public function __invoke(BeforeStoreRegistrationEvent $event): void
+    public function __invoke(BeforeStoreRegistrationEvent $beforeStoreRegistrationEvent): void
     {
-        $this->registration = $event->getRegistration();
+        $this->registration = $beforeStoreRegistrationEvent->getRegistration();
         $this->createExtensionConfigurationTemplate();
 
         $overrides = [

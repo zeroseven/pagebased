@@ -8,14 +8,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class FlexFormSheetConfiguration
 {
-    protected string $key;
     protected string $title;
+
     protected array $fields = [];
 
-    public function __construct(string $key, string $title = null)
+    public function __construct(protected string $key, string $title = null)
     {
-        $this->key = $key;
-        $this->title = $title ?? $key;
+        $this->title = $title ?? $this->key;
     }
 
     public static function makeInstance(string $key, string $title = null): self

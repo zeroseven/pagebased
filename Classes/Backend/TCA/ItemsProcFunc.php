@@ -24,7 +24,7 @@ class ItemsProcFunc
 
     protected function getRootPageUid(array $config): int
     {
-        if ($currentUid = $this->getPageUid($config)) {
+        if (($currentUid = $this->getPageUid($config)) !== 0) {
             return RootLineUtility::getRootPage($currentUid);
         }
 
@@ -37,7 +37,7 @@ class ItemsProcFunc
             if (($objectIdentifier = $PA['row'][DetectionUtility::REGISTRATION_FIELD_NAME] ?? null) && $registration = RegistrationService::getRegistrationByIdentifier($objectIdentifier)) {
                 return $registration;
             }
-        } catch (ValueException $e) {
+        } catch (ValueException) {
         }
 
         return null;
@@ -46,7 +46,7 @@ class ItemsProcFunc
     public function topics(array &$PA): void
     {
         if (($registration = $this->getRegistration($PA)) && $topics = GeneralUtility::makeInstance(TopicRepository::class)->findByRegistration($registration)) {
-            $PA['items'] = array_filter($PA['items'] ?? [], static fn($item) => empty($item[1]));
+            $PA['items'] = array_filter($PA['items'] ?? [], static fn(array $item): bool => empty($item[1]));
 
             foreach ($topics->toArray() as $topic) {
                 $PA['items'][] = [
@@ -61,7 +61,7 @@ class ItemsProcFunc
     public function contacts(array &$PA): void
     {
         if (($registration = $this->getRegistration($PA)) && $contacts = GeneralUtility::makeInstance(ContactRepository::class)->findByRegistration($registration)) {
-            $PA['items'] = array_filter($PA['items'] ?? [], static fn($item) => empty($item[1]));
+            $PA['items'] = array_filter($PA['items'] ?? [], static fn(array $item): bool => empty($item[1]));
 
             foreach ($contacts->toArray() as $contact) {
                 $PA['items'][] = [
@@ -75,7 +75,7 @@ class ItemsProcFunc
 
     public function filterCategories(array &$PA): void
     {
-        if ($rootPages = $this->getRootPageUid($PA)) {
+        if (($rootPages = $this->getRootPageUid($PA)) !== 0) {
             $queryConstraints = $PA['config']['foreign_table_where'] ?? '';
             $localPages = RootLineUtility::collectPagesBelow($rootPages);
             $parentPages = RootLineUtility::collectPagesAbove($this->getPageUid($PA), true);

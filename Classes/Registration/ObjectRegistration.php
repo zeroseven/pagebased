@@ -13,14 +13,21 @@ use Zeroseven\Pagebased\Utility\CastUtility;
 
 final class ObjectRegistration extends AbstractRegistrationEntityProperty
 {
-    protected ?string $controllerClassName = null;
-    protected bool $date = false;
-    protected bool $tags = false;
-    protected bool $top = false;
-    protected array $topicPageIds = [];
-    protected array $contactPageIds = [];
-    protected bool $relations = false;
-    protected ?string $overlayIconIdentifier = null;
+    private ?string $controllerClassName = null;
+
+    private bool $date = false;
+
+    private bool $tags = false;
+
+    private bool $top = false;
+
+    private array $topicPageIds = [];
+
+    private array $contactPageIds = [];
+
+    private bool $relations = false;
+
+    private ?string $overlayIconIdentifier = null;
 
     public function getDemandClassName(): string
     {
@@ -49,7 +56,7 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     {
         $this->date = true;
 
-        $sortByDate && $this->setSorting('pagebased_date', true);
+        $sortByDate && $this->setSorting('pagebased_date', true) instanceof AbstractRegistrationEntityProperty;
 
         return $this;
     }
@@ -108,8 +115,8 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     public function addTopicPageIds($pageIds): self
     {
         try {
-            $this->topicPageIds = array_merge($this->topicPageIds ?? [], array_map(static fn($pageId) => (int)$pageId, array_filter(CastUtility::array($pageIds), static fn($pageId) => MathUtility::canBeInterpretedAsInteger($pageId))));
-        } catch (TypeException $e) {
+            $this->topicPageIds = array_merge($this->topicPageIds ?? [], array_map(static fn($pageId): int => (int)$pageId, array_filter(CastUtility::array($pageIds), MathUtility::canBeInterpretedAsInteger(...))));
+        } catch (TypeException) {
         }
 
         return $this;
@@ -128,7 +135,7 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
 
     public function topicsEnabled(): bool
     {
-        return count($this->topicPageIds) > 0;
+        return $this->topicPageIds !== [];
     }
 
     public function enableContact(mixed $pageIds): self
@@ -140,8 +147,8 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
     public function addContactPageIds($pageIds): self
     {
         try {
-            $this->contactPageIds = array_merge($this->contactPageIds ?? [], array_map(static fn($pageId) => (int)$pageId, array_filter(CastUtility::array($pageIds), static fn($pageId) => MathUtility::canBeInterpretedAsInteger($pageId))));
-        } catch (TypeException $e) {
+            $this->contactPageIds = array_merge($this->contactPageIds ?? [], array_map(static fn($pageId): int => (int)$pageId, array_filter(CastUtility::array($pageIds), MathUtility::canBeInterpretedAsInteger(...))));
+        } catch (TypeException) {
         }
 
         return $this;
@@ -160,7 +167,7 @@ final class ObjectRegistration extends AbstractRegistrationEntityProperty
 
     public function contactEnabled(): bool
     {
-        return count($this->contactPageIds) > 0;
+        return $this->contactPageIds !== [];
     }
 
     public function enableRelations(): self

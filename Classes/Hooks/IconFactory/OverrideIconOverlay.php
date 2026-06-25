@@ -7,14 +7,15 @@ namespace Zeroseven\Pagebased\Hooks\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use Zeroseven\Pagebased\Domain\Model\AbstractPage;
 use Zeroseven\Pagebased\Registration\EventListener\IconRegistryEvent;
+use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
 
 class OverrideIconOverlay
 {
     public function postOverlayPriorityLookup(string $table, array $row, array $status, string $iconName = null): ?string
     {
-        if ($table === AbstractPage::TABLE_NAME && empty($iconName) && $uid = (int)($row['uid'] ?? 0)) {
-            if ($registration = ObjectUtility::isObject($uid)) {
+        if ($table === AbstractPage::TABLE_NAME && in_array($iconName, [null, '', '0'], true) && $uid = (int)($row['uid'] ?? 0)) {
+            if (($registration = ObjectUtility::isObject($uid)) instanceof Registration) {
                 if ($object = $registration->getObject()->getRepositoryClass()->findByUid($uid)) {
                     if ($object->isTop()) {
                         return 'overlay-approved';
@@ -28,10 +29,8 @@ class OverrideIconOverlay
                 return IconRegistryEvent::getOverlayIconName($registration);
             }
 
-            if (($registration = ObjectUtility::isCategory($uid)) && $category = $registration->getCategory()->getRepositoryClass()->findByUid($uid)) {
-                if ($category->getRedirectCategory()) {
-                    return 'overlay-shortcut';
-                }
+            if ($registration = ObjectUtility::isCategory($uid) && ($category = $registration->getCategory()->getRepositoryClass()->findByUid($uid)) && $category->getRedirectCategory()) {
+                return 'overlay-shortcut';
             }
         }
 

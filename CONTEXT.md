@@ -28,9 +28,26 @@ A free-text label attached to Object pages. Tags are scoped per `Registration` a
 
 ## Compatibility Matrix
 
-| TYPO3  | PHP       | Status   |
-|--------|-----------|----------|
-| 12.4.x | 8.2 / 8.3 | supported |
-| 13.4.x | 8.2 / 8.3 | supported |
+| TYPO3  | PHP             | Status        |
+|--------|-----------------|---------------|
+| 12.4.x | 8.2 / 8.3       | dropped in 3.0 |
+| 13.4.x | 8.2 / 8.3 / 8.4 | supported     |
+| 14.x   | 8.2 / 8.3 / 8.4 | supported     |
 
-TypoScript is registered via `addStaticFile()` (all versions) and additionally via Site Sets (v13 only, `Configuration/Sets/Pagebased/`).
+TypoScript is registered via `addStaticFile()` (all versions) and additionally via Site Sets (v13+, `Configuration/Sets/Pagebased/`).
+
+### TYPO3 v14 notes
+
+`TypoScriptFrontendController` / `$GLOBALS['TSFE']` were removed in v14. Page id,
+page record and root line are now read through `FrontendRequestUtility`, which wraps
+the `frontend.page.information` request attribute (v13+). Cache disabling uses the
+`frontend.cache.instruction` attribute on v14 and falls back to
+`TypoScriptFrontendController::set_no_cache()` on v13. Fluid's removed
+`RenderingContext::getRequest()` is replaced by `getAttribute(ServerRequestInterface::class)`,
+and `StandaloneView` (removed in v14) is replaced by `ViewFactoryInterface` in `RenderUtility`.
+
+TYPO3 v14 ships Fluid v5, which **removed** the `CompileWithRenderStatic` trait and the
+static `renderStatic()` rendering path. All ViewHelpers (`PaginationViewHelper`,
+`Pagination/EachItemViewHelper`, `Pagination/EachStageViewHelper`) were therefore migrated
+to the instance method `render()` using `$this->arguments`, `$this->renderingContext` and
+`$this->renderChildren()`.

@@ -13,10 +13,15 @@ use Zeroseven\Pagebased\Domain\Repository\RepositoryInterface;
 abstract class AbstractRegistrationEntityProperty extends AbstractRegistration
 {
     protected ?string $className = null;
+
     protected ?string $repositoryClassName = null;
+
     protected ?string $demandClassName = null;
+
     protected ?string $sortingField = null;
+
     protected ?bool $sortingDirectionAscending = null;
+
     protected ?string $name = null;
 
     public function getClassName(): string

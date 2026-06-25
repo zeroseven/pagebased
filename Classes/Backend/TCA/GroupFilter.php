@@ -6,6 +6,7 @@ namespace Zeroseven\Pagebased\Backend\TCA;
 
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use Zeroseven\Pagebased\Registration\Registration;
 use Zeroseven\Pagebased\Utility\ObjectUtility;
 
 class GroupFilter
@@ -18,22 +19,23 @@ class GroupFilter
         if ($parent instanceof DataHandler) {
             $uid = (int)array_key_first($parent->datamap[$table] ?? []);
             $registration = ObjectUtility::isObject($uid);
-            if ($registration && $values) {
+            if ($registration instanceof Registration && $values) {
                 $newValues = [];
 
                 foreach ($values as $value) {
                     if (MathUtility::canBeInterpretedAsInteger($value)) {
                         $recordId = (int)$value;
                     } else {
-                        preg_match('/^(?:([a-z_]+)_)?(\d+)$/', $value, $matches);
+                        preg_match('/^(?:([a-z_]+)_)?(\d+)$/', (string)$value, $matches);
                         $recordId = (int)($matches[2] ?? 0);
                     }
 
-                    $recordId > 0
+                    if ($recordId > 0
                     && $recordId !== $uid
                     && ($recordRegistration = ObjectUtility::isObject($recordId))
-                    && ($recordRegistration->getIdentifier() === $registration->getIdentifier())
-                    && ($newValues[] = $value);
+                    && ($recordRegistration->getIdentifier() === $registration->getIdentifier())) {
+                        $newValues[] = $value;
+                    }
                 }
 
                 return $newValues;
