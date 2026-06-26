@@ -87,7 +87,7 @@ jobs:
           ddev composer update \
             --with "typo3/cms-core:${{ matrix.typo3-constraint }}" \
             --with "typo3/cms-install:${{ matrix.typo3-constraint }}" \
-            --no-interaction --prefer-stable --no-autoloader
+            --no-interaction --prefer-stable --no-scripts --no-autoloader
           ddev composer dump-autoload --optimize
 
       - name: Run tests
